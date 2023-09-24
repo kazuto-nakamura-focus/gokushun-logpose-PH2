@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.api.dao.db.mappers.joined.SensorJoinMapper">
+
+	<resultMap id="SensorItemDTO"
+		type="com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="contentId" property="contentId"></result>
+	</resultMap>
+	<!--  指定デバイスのセンサーリストを取得 -->
+	<select id="selectSensorList" resultMap="SensorItemDTO">
+		SELECT
+			s.id as id,
+			s.name as name,
+			c.id as contentId
+		FROM
+			ph2_sensors s
+		JOIN
+			ph2_sensor_contents c on s.sensor_content_id = c.id
+		WHERE
+			s.device_id = #{deviceId}
+	</select>
+	
+	<resultMap id="SensorUnitReference"
+		type="com.logpose.ph2.api.dto.senseor.SensorUnitReference">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="channel" property="channel"></result>
+		<result column="modelId" property="modelId"></result>
+		<result column="modelName" property="modelName"></result>
+		<result column="displayId" property="displayId"></result>
+		<result column="displayName" property="displayName"></result>
+		<result column="sizeId" property="sizeId"></result>
+		<result column="size" property="size"></result>
+		<result column="stemDiameter" property="stemDiameter"></result>
+		<result column="kst" property="kst"></result>
+	</resultMap>
+
+	<select id="selectDetail" resultMap="SensorUnitReference">
+	SELECT
+		s.id as id, 
+		s.name as name,
+		s.channel as channel,
+		sm.id as modelId,
+		sm.code as modelName,
+		sc.id as displayId,
+		sc.name as displayName,
+		sz.id as sizeId,
+		sz.size as size,
+		s.sm as stemDiameter,
+		s.kst as kst
+		FROM
+		ph2_sensors s
+		left JOIN
+		ph2_sensor_models sm on s.sensor_model_id = sm.id
+		left JOIN
+		ph2_sensor_contents sc on s.sensor_content_id = sc.id
+		left JOIN
+		ph2_sensor_sizes sz on s.sensor_size_id = sz.id
+		WHERE
+		s.device_id = #{deviceId}
+		ORDER BY name DESC;
+	</select>
+</mapper>

@@ -1,0 +1,49 @@
+{
+    "data": {
+        "labels": [
+            "January",
+            "February",
+            "March",
+            "April",
+            "May",
+            "June"
+        ],
+        "datasets": [
+            {
+                "label": "Line Dataset",
+                "data": [
+                    10,
+                    50,
+                    20,
+                    30,
+                    30,
+                    40
+                ],
+                "borderColor": "#CFD8DC",
+                "fill": false,
+                "type": "line",
+                "lineTension": 0.3
+            }
+        ]
+    },
+    "options": {
+        "scales": {
+            "xAxes": [
+                {
+                    "scaleLabel": {
+                        "display": true,
+                        "labelString": "Week"
+                    }
+                }
+            ],
+            "yAxes": [
+                {
+                    "ticks": {
+                        "beginAtZero": true,
+                        "stepSize": 10
+                    }
+                }
+            ]
+        }
+    }
+}

@@ -1,0 +1,92 @@
+[
+    {
+        "id": 3,
+        "name": "Debug",
+        "location": "和歌山",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "大和食品株式会社",
+        "registeredDate": "2023/04/08 16:51:49"
+    },
+    {
+        "id": 6,
+        "name": "kofu",
+        "location": "甲府",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "福田コンサルタント株式会社",
+        "registeredDate": "2023/04/08 16:51:36"
+    },
+    {
+        "id": 12,
+        "name": "MBSDTEST",
+        "location": "mbsd",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "瑛太製薬株式会社",
+        "registeredDate": "2023/04/08 16:51:45"
+    },
+    {
+        "id": 7,
+        "name": "nirasaki",
+        "location": "韮崎",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "安藤株式会社",
+        "registeredDate": "2023/04/08 16:51:39"
+    },
+    {
+        "id": 9,
+        "name": "NZ",
+        "location": "NZ",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "湊株式会社",
+        "registeredDate": "2023/04/08 16:51:42"
+    },
+    {
+        "id": 8,
+        "name": "サイドレス",
+        "location": "葡萄専心サイドレス",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "株式会社GREENCOLLAR",
+        "registeredDate": "2023/04/08 16:51:28"
+    },
+    {
+        "id": 1,
+        "name": "葡萄専心イチノセ",
+        "location": "葡萄専心イチノセ",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "小山食品株式会社",
+        "registeredDate": "2023/04/08 16:51:32"
+    },
+    {
+        "id": 2,
+        "name": "北杜AKB1",
+        "location": "北杜AKB",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "平野株式会社",
+        "registeredDate": "2023/04/25 16:48:59"
+    },
+    {
+        "id": 4,
+        "name": "北杜AKB3",
+        "location": "北杜AKB",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "株式会社GREENCOLLAR",
+        "registeredDate": "2023/04/25 16:48:40"
+    },
+    {
+        "id": 5,
+        "name": "明野",
+        "location": "明野",
+        "latitude": null,
+        "longitude": null,
+        "contructor": "株式会社GREENCOLLAR",
+        "registeredDate": "2023/04/25 16:48:40"
+    }
+]

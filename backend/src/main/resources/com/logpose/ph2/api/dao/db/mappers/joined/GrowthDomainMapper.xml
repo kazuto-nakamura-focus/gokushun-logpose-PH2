@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper">
+
+	<resultMap id="DailyBaseDataDTO"
+		type="com.logpose.ph2.api.dto.DailyBaseDataDTO">
+		<result column="dayId" property="dayId"></result>
+		<result column="lapse_day" property="lapseDay"></result>
+		<result column="date" property="date"></result>
+		<result column="tm" property="tm"></result>
+		<result column="average" property="average"></result>
+		<result column="cdd" property="cdd"></result>
+		<result column="par" property="par"></result>
+		<result column="isReal" property="isReal"></result>
+	</resultMap>
+
+
+	<select id="selectDailyata" resultMap="DailyBaseDataDTO">
+		SELECT
+		dd.id as dayId,
+		dd.lapse_day as lapse_day,
+		dd.date as date,
+		db.tm = tm,
+		db.average as average,
+		db.cdd as cdd,
+		db.par as par,
+		#{isReal} as isReal
+		FROM
+		ph2_device_day dd
+		JOIN
+		ph2_daily_base_data db on dd.id=db.day_id
+		WHERE
+		dd.device_id = #{deviceId}
+		AND
+	 	<if test="date != null">
+		dd.date <![CDATA[>=]]> #{date}
+		AND
+		</if>
+		dd.year = #{year}
+		ORDER BY dd.date asc
+	</select>
+	
+
+	<resultMap id="FDataEntity"
+		type="com.logpose.ph2.api.dao.db.entity.joined.FDataEntity">
+		<result column="date" property="date"></result>
+		<result column="value" property="value"></result>
+	</resultMap>
+
+	<select id="selectValueAndDays" resultMap="FDataEntity">
+		SELECT
+		dd.date as date,
+		md.f_value as value
+		FROM
+		ph2_device_day dd
+		JOIN
+		ph2_model_data md ON dd.id = md.day_id
+		WHERE
+		dd.device_id = #{deviceId}
+		AND
+		dd.year = #{year}
+		ORDER BY dd.lapse_day
+	</select>
+
+	<resultMap id="AnnotationDTO"
+		type="com.logpose.ph2.api.dao.db.entity.joined.AnnotationDTO">
+		<result column="name" property="name"></result>
+		<result column="value" property="value"></result>
+	</resultMap>
+	<select id="selectFValues" resultMap="AnnotationDTO">
+		select
+			stage_name as name,
+			accumulated_f as value
+		from 
+			ph2_real_growth_f_stage
+		where
+			device_id = #{deviceId}
+		and
+			year = #{year}
+	</select>
+</mapper>

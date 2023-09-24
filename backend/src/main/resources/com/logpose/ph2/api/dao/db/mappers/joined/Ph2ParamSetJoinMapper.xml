@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.api.dao.db.mappers.joined.Ph2ParamSetJoinMapper">
+
+	<resultMap id="ParamSetDTO"
+		type="com.logpose.ph2.api.dto.ParamSetDTO">
+		<result column="date" property="date"></result>
+		<result column="userId" property="userId"></result>
+		<result column="name" property="name"></result>
+		<result column="comment" property="comment"></result>
+		<result column="id" property="id"></result>
+		<result column="deviceId" property="deviceId"></result>
+		<result column="year" property="year"></result>
+		<result column="parameterName" property="parameterName"></result>
+		<result column="defaultFlg" property="defaultFlg"></result>
+	</resultMap>
+	
+	 <select id="listParamerSet" resultMap="ParamSetDTO">
+	 	SELECT
+	 		distinct
+	 		p.id as id,
+	 		p.device_id as deviceId,
+	 		p.year as year,
+	 		p.name as parameterName,
+	 		p.default_flag as defaultFlg,
+	 		h.updated_at as date,
+			u.id as userId,
+			u.username as name,
+			h.comment as comment
+		FROM
+			ph2_paramset_catalog p
+		JOIN
+			ph2_paramset_history h on p.id=h.paramset_id
+		JOIN
+			ph2_users u on h.user_id = u.id
+		WHERE
+			p.model_id = #{modelId}
+		AND
+			h.latest = true
+		ORDER BY parameterName DESC
+	 </select>
+
+	<resultMap id="HistoryDTO"
+		type="com.logpose.ph2.api.dto.HistoryDTO">
+		<result column="date" property="date"></result>
+		<result column="userId" property="userId"></result>
+		<result column="name" property="name"></result>
+		<result column="comment" property="comment"></result>
+	</resultMap>
+
+	<select id="selectHistory" resultMap="HistoryDTO">
+		SELECT
+			h.updated_at as date,
+			u.id as userId,
+			u.username as name,
+			h.comment as comment
+		FROM
+			ph2_paramset_history h
+		JOIN
+			ph2_users u on h.user_id = u.id
+		WHERE
+			h.paramset_id = #{paramsetId}
+		ORDER BY date DESC
+	</select>
+	
+	<select id="selectLatestHistory" resultMap="HistoryDTO">
+		SELECT
+			h.updated_at as date,
+			u.id as userId,
+			u.username as name,
+			h.comment as comment
+		FROM
+			ph2_paramset_history h
+		JOIN
+			ph2_users u on h.user_id = u.id
+		WHERE
+			h.paramset_id = #{paramsetId}
+		AND
+			h.latest = true
+	</select>
+</mapper>

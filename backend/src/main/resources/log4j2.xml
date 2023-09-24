@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+
+    <!-- 設定ファイル内から参照するプロパティの定義 -->
+    <Properties>
+        <!-- パスは実行時に指定。現在日付込み -->
+        <Property name="filename">${sys:logDirectory}YourAppName-${date:yyyyMMdd}.log</Property>
+    </Properties>
+
+    <!-- ログ出力先とログフォーマットの定義 -->
+    <Appenders>
+        <Console name="consoleAppender" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n%ex"/>
+        </Console>
+    </Appenders>
+
+    <!-- パッケージ×ログレベル毎のログ出力先（Appender）を定義 -->
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="consoleAppender"/>
+        </Root>
+		<Logger name="com.logpose.ph2.api.dao.db.mappers" level="trace">
+        
+            <AppenderRef ref="consoleAppender"/>
+        </Logger>
+    </Loggers>
+
+</Configuration>

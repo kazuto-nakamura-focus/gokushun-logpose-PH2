@@ -1,0 +1,10 @@
+
+‐ローカル環境のURL一覧‐
+・利用者のフロントエンドURL
+　‐http://gokusyun.localhost
+・利用者のバックエンドURL
+　‐http://gokusyun.localhost/backend/api
+
+‐警告の対処
+・「Experimental support for decorators error」
+　‐Visual Studio Codeの設定で、Implicit Project Config:Experimental Decoratorsにチェックをつける

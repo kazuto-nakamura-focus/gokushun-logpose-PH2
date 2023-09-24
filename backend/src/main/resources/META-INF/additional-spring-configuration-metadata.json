@@ -1,0 +1,82 @@
+{"properties": [
+  {
+    "name": "paramset.default.growth.be",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.growth.be'"
+  },
+  {
+    "name": "paramset.default.growth.bd",
+    "type": "java.lang.String",
+    "description": "A description for 'paramset.default.growth.bd'"
+  },
+  {
+    "name": "paramset.default.growth.ae",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.growthae'"
+  },
+  {
+    "name": "paramset.default.growth.ad",
+    "type": "java.lang.String",
+    "description": "A description for 'paramset.default.growth.ad'"
+  },
+  {
+    "name": "paramset.default.fStage.start",
+    "type": "java.lang.Short",
+    "description": "A description for 'paramset.default.fStage.start'"
+  },
+  {
+    "name": "paramset.default.fStage.end",
+    "type": "java.lang.Short",
+    "description": "A description for 'paramset.default.fStage.end'"
+  },
+  {
+    "name": "paramset.default.fStage.sig",
+    "type": "java.lang.Short",
+    "description": "A description for 'paramset.default.fStage.sig'"
+  },
+  {
+    "name": "paramset.default.fStage.interval",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.fStage.interval'"
+  },
+  {
+    "name": "paramset.default.fStage.sig",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.fStage.sig'"
+  },
+  {
+    "name": "paramset.default.fStage.name",
+    "type": "java.lang.String",
+    "description": "A description for 'paramset.default.fStage.name'"
+  },
+  {
+    "name": "paramset.default.fStage.sprout",
+    "type": "java.lang.Short",
+    "description": "A description for 'paramset.default.fStage.sprout'"
+  },
+  {
+    "name": "paramset.default.leafArea.area.a",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.leafArea.area.a'"
+  },
+  {
+    "name": "paramset.default.leafArea.area.b",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.leafArea.area.b'"
+  },
+  {
+    "name": "paramset.default.leafArea.count.d",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.leafArea.count.d'"
+  },
+  {
+    "name": "paramset.default.leafArea.area.c",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.leafArea.area.c'"
+  },
+  {
+    "name": "paramset.default.leafArea.count.c",
+    "type": "java.lang.Double",
+    "description": "A description for 'paramset.default.leafArea.count.c'"
+  }
+]}

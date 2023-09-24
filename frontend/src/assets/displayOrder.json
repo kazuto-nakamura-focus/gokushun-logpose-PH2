@@ -1,0 +1,28 @@
+{
+    "labels": [
+        {
+            "name": "土壌水分(pF)",
+            "variable": "土壌水分(pF)"
+        },
+        {
+            "name": "日射(W/㎡)",
+            "variable": "日射(W/㎡)"
+        },
+        {
+            "name": "デンドロ(μm)",
+            "variable": "デンドロ(μm)"
+        },       
+        {
+            "name": "湿度(%RH)",
+            "variable": "湿度(%RH)"
+        }, 
+        {
+            "name": "温度(℃)",
+            "variable": "温度(℃)"
+        }, 
+        {
+            "name": "葉面濡れ(raw counts)",
+            "variable": "葉面濡れ(raw counts)"
+        }
+    ]
+}

@@ -1,0 +1,12 @@
+{
+  "id": 1,
+  "leafAreaTitle": "ワイン葡萄2022年版",
+  "leafAreaAA": -0.6,
+  "leafAreaAB": 8.6,
+  "leafAreaAC": 0,
+  "leafAreaNC": 0,
+  "leafAreaND": 0,
+  "content": "2022年用に作成したモデル式。萌芽後のパラメータを調整。",
+  "author": "極　旬太郎",
+  "dateTime": "2023-03-20"
+}

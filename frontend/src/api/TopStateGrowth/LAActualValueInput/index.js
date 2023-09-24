@@ -1,0 +1,49 @@
+import axios from "@/lib/axiosHooks";
+
+//新梢数取得処理
+const useLeafValueShootDetail = (deviceId, date) => {
+  const config = {
+    params: {
+      deviceId,
+      date
+    },
+  };
+  //->LeafShootDTO
+  return axios.get("/leaf/value/shoot", config);
+};
+//新梢辺り葉枚数・平均個葉面積検索処理
+const useLeafValueAreaAndCountDetail = (deviceId, date) => {
+  const config = {
+    params: {
+      deviceId,
+      date
+    },
+  };
+  //->LeafvaluesDTO
+  return axios.get("/leaf/value/areaAndCount", config);
+};
+
+//新梢数の登録
+//->LeafShootDTO
+const useLeafValueShoot = (data) => {
+  const config = {
+    params: {},
+  };
+  return axios.post("/leaf/value/shoot", data, config);
+};
+
+//新梢辺り葉枚数・平均個葉面積登録処理
+//->LeafvaluesDTO
+const useLeafValueAreaAndCount = (data) => {
+  const config = {
+    params: {},
+  };
+  return axios.post("/leaf/value/areaAndCount", data, config);
+};
+
+export { 
+  useLeafValueShootDetail,
+  useLeafValueAreaAndCountDetail,
+  useLeafValueShoot, 
+  useLeafValueAreaAndCount 
+};

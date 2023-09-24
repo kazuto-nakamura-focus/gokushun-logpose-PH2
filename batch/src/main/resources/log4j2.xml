@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration xmlns:xi="http://www.w3.org/2001/XInclude"
+	packages="com.odds_park.poc.api.common.logging" status="INFO">
+	<Properties>
+		<Property name="app_name">PoC</Property>
+		<Property name="date">%d{yyyy-MM-dd HH:mm:ss.SSS}</Property>
+		<Property name="daily_log">logs/app${app_name}_%d{yyyy-MM-dd}.log
+		</Property>
+	</Properties>
+	<appenders>
+		<!-- システム用コンソールログ -->
+		<!--アプリケーション 用コンソールログ -->
+		<Console name="Stdout" target="SYSTEM_OUT">
+		<!--<JsonLayout properties="true" locationInfo="true"
+				compact="false" complete="true" />  -->	
+		</Console>
+		<RollingFile name="File" fileName="logs/app.log"
+			filePattern="${daily_log}.gz">
+			<PatternLayout
+				pattern="${date}, [${app_name}], [ %-5level ], %logger{10}, %msg %n" />
+			<Policies>
+				<TimeBasedTriggeringPolicy />
+			</Policies>
+		</RollingFile>
+		<appender name="ASYNC">
+			<appender-ref ref="Stdout" />
+			<appender-ref ref="File" />
+		</appender>
+
+	</appenders>
+	<loggers>
+	  <Logger name="com.logpose.ph2.batch.dao.db.mappers" level="trace"/>
+	   <Logger name="com.logpose.ph2.batch.domain" level="trace"/>
+		<root level="info">
+			<appender-ref ref="Stdout" />
+			<appender-ref ref="File" />
+		</root>
+	</loggers>
+</configuration>

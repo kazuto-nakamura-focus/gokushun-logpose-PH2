@@ -1,0 +1,23 @@
+[
+    {
+        "no": 1,
+        "growing_season_name": "萌芽1",
+        "el_stage_interval": "1-4",
+        "f_value_interval": 50,
+        "accumulation_f_value": 50
+    },
+    {
+        "no": 2,
+        "growing_season_name": "萌芽2",
+        "el_stage_interval": "5-9",
+        "f_value_interval": 50,
+        "accumulation_f_value": 100
+    },
+    {
+        "no": 3,
+        "growing_season_name": "萌芽3",
+        "el_stage_interval": "10-14",
+        "f_value_interval": 50,
+        "accumulation_f_value": 150
+    }
+]

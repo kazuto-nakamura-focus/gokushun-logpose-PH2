@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.api.dao.db.mappers.joined.TopDomainMapper">
+
+	<resultMap id="DataSummaryDTO"
+		type="com.logpose.ph2.api.dto.DataSummaryDTO">
+		<result column="field_id" property="fieldId"></result>
+		<result column="field" property="field"></result>
+		<result column="device_id" property="deviceId"></result>
+		<result column="device" property="device"></result>
+	</resultMap>
+
+	<select id="selectFieldDeviceList" resultMap="DataSummaryDTO">
+	SELECT
+		ph2_devices."id" AS device_id,
+		ph2_devices."name" AS device,
+		ph2_fields."id" AS field_id,
+		ph2_fields."name" AS field
+	FROM
+		ph2_fields
+	JOIN ph2_devices ON ph2_fields.id = ph2_devices.field_id
+	ORDER BY
+		field, device
+	</select>
+	
+	<resultMap id="FieldDTO"
+		type="com.logpose.ph2.api.dto.element.FieldData">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="value" property="value"></result>
+		<result column="casted_at" property="castedAt"></result>
+	</resultMap>
+	
+	<select id="selectFieldDataList" resultMap="FieldDTO">
+	SELECT
+		ph2_dashboard.content_id as id,
+		ph2_dashboard.value as value,
+		ph2_dashboard.casted_at as casted_at,
+		ph2_sensor_contents.name as name
+	FROM
+		ph2_dashboard
+	JOIN
+  		ph2_sensor_contents on ph2_dashboard.content_id = ph2_sensor_contents."id"
+	WHERE
+		ph2_dashboard.casted_at in(
+			select
+				Max(ph2_dashboard.casted_at)
+			FROM
+				ph2_dashboard
+			JOIN
+  				ph2_sensor_contents on ph2_dashboard.content_id = ph2_sensor_contents."id"
+  			WHERE
+  				ph2_dashboard.casted_at  <![CDATA[>=]]> #{date}
+  			AND
+  				ph2_dashboard.device_id = #{deviceId}
+  			)
+	and
+		ph2_dashboard.device_id = #{deviceId}
+	</select>
+	
+	<select id="selectRawData" resultMap="FieldDTO">
+	SELECT
+		ph2_dashboard.content_id as id,
+		ph2_dashboard.value as value,
+		ph2_dashboard.casted_at as casted_at,
+		ph2_sensor_contents.name as name
+	FROM
+		ph2_dashboard
+	JOIN
+  		ph2_sensor_contents on ph2_dashboard.content_id = ph2_sensor_contents."id"
+	WHERE
+		ph2_dashboard.casted_at  <![CDATA[>=]]>  #{startDate}
+	and
+		ph2_dashboard.casted_at  <![CDATA[<=]]>  #{endDate}
+	and
+		ph2_dashboard.device_id = #{deviceId}
+	order by 
+		ph2_dashboard.casted_at desc
+	</select>
+    <select id="selectDeviceDataList" resultMap="FieldDTO">
+	SELECT
+		ph2_devices."id" AS ID,
+		ph2_dashboard."value" as value,
+		ph2_dashboard.casted_at AS casted_at,
+		ph2_devices."name" AS NAME
+	FROM
+		ph2_dashboard
+	JOIN ph2_devices ON ph2_dashboard.device_id =ph2_devices."id"
+	JOIN (
+		SELECT
+			ph2_dashboard.device_id AS ID,
+			ph2_dashboard.content_id AS content_id,
+			MAX ( ph2_dashboard.casted_at ) AS casted_at
+		FROM
+			ph2_dashboard
+		WHERE
+			ph2_dashboard.content_id = #{contentId}
+		AND ph2_dashboard.casted_at <![CDATA[>=]]> #{date}
+		GROUP BY
+			ph2_dashboard.device_id, ph2_dashboard.content_id
+		) tmp 
+		ON ph2_dashboard.device_id = tmp."id" 
+			and ph2_dashboard.casted_at = tmp.casted_at
+			and ph2_dashboard.content_id = tmp.content_id
+	JOIN ph2_fields on ph2_devices.field_id = ph2_fields.id
+	ORDER BY
+		ph2_fields."name" , ph2_devices."name"
+	</select>
+	
+	<resultMap id="ModelTargetDTO"
+		type="com.logpose.ph2.api.dto.ModelTargetDTO">
+		<result column="field_id" property="fieldId"></result>
+		<result column="field_name" property="field"></result>
+		<result column="device_id" property="deviceId"></result>
+		<result column="device_name" property="device"></result>
+		<result column="year" property="year"></result>
+	</resultMap>
+	
+	<select id="selectModelTargets" resultMap="ModelTargetDTO">
+	SELECT
+		pf.id as field_id,
+		pf.name as field_name,
+		pd.id as device_id,
+		pd.name as device_name,
+		dd.year as year
+		FROM
+		ph2_device_day dd
+		JOIN
+		ph2_model_data md ON dd.id = md.day_id
+		JOIN
+		ph2_devices pd on dd.device_id = pd."id"
+		JOIN
+		ph2_fields pf ON pd.field_id = pf.id
+		WHERE
+			dd.lapse_day = 0
+		ORDER BY field_name, device_name, year
+	</select>
+</mapper>

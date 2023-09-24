@@ -1,0 +1,46 @@
+[
+    {
+        "id":"1",
+        "name":"デバイス１",
+        "field":"フィールド1",
+        "brand":"ブランド1",
+        "registeredDate":"2023/04/04",
+        "sigfoxId":"sigfoxId1"
+    },
+    
+    {
+        "id":"2",
+        "name":"デバイス2",
+        "field":"フィールド2",
+        "brand":"ブランド2",
+        "registeredDate":"2023/04/04",
+        "sigfoxId":"sigfoxId2"
+    },
+    
+    {
+        "id":"3",
+        "name":"デバイス3",
+        "field":"フィールド3",
+        "brand":"ブランド3",
+        "registeredDate":"2023/04/04",
+        "sigfoxId":"sigfoxId1"
+    },
+    
+    {
+        "id":"4",
+        "name":"デバイス4",
+        "field":"フィールド1",
+        "brand":"ブランド1",
+        "registeredDate":"2023/04/04",
+        "sigfoxId":"sigfoxId1"
+    },
+    
+    {
+        "id":"5",
+        "name":"デバイス5",
+        "field":"フィールド1",
+        "brand":"ブランド1",
+        "registeredDate":"2023/04/04",
+        "sigfoxId":"sigfoxId1"
+    }
+]

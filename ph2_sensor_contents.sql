@@ -1,0 +1,10 @@
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (1, '温度', 1, 'temperature', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (2, '湿度', 1, 'humidity', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (3, '日射', 1, 'sunlight', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (4, '樹液流', 4, 'sapflow', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (5, 'デンドロ', 1, 'dendrometer', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (6, '葉面濡れ', 1, 'leaf_wetness', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (7, '土壌水分', 1, 'soil_water', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (8, '土壌温度', 1, 'soil_temperature', '2023-04-10 18:01:25.691955', '2023-04-10 18:01:25.691955');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (9, '日射', 1, 'sunlight2', '2023-08-29 00:00:56.152449', '2023-08-29 00:00:56.152449');
+INSERT INTO "ph2_sensor_contents" ("id", "name", "channel_size", "code", "created_at", "updated_at") VALUES (10, '樹液流', 1, 'sapflow2', '2023-08-29 00:02:38.272725', '2023-08-29 00:02:38.272725');

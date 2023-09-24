@@ -1,0 +1,92 @@
+[
+  {
+    "title": "葡萄専心イチノセ",
+    "variable": "ichinose",
+    "state": false,
+    "params": [
+      {
+        "name": "param1",
+        "unit": "単位1"
+      },
+      {
+        "name": "param2",
+        "unit": "単位2"
+      }
+    ]
+  },
+  {
+    "title": "北社AKB1",
+    "variable": "akb1",
+    "state": false,
+    "params": [
+      {
+        "name": "param1",
+        "unit": "単位1"
+      },
+      {
+        "name": "param2",
+        "unit": "単位2"
+      }
+    ]
+  },
+  {
+    "title": "北社AKB3",
+    "variable": "akb2",
+    "state": false,
+    "params": [
+      {
+        "name": "param1",
+        "unit": "単位1"
+      },
+      {
+        "name": "param2",
+        "unit": "単位2"
+      }
+    ]
+  },
+  {
+    "title": "葡萄専心サイドレス",
+    "variable": "sideress",
+    "state": false,
+    "params": [
+      {
+        "name": "param1",
+        "unit": "単位1"
+      },
+      {
+        "name": "param2",
+        "unit": "単位2"
+      }
+    ]
+  },
+  {
+    "title": "明野",
+    "variable": "meino",
+    "state": false,
+    "params": [
+      {
+        "name": "param1",
+        "unit": "単位1"
+      },
+      {
+        "name": "param2",
+        "unit": "単位2"
+      }
+    ]
+  },
+  {
+    "title": "NZ",
+    "variable": "nz",
+    "state": false,
+    "params": [
+      {
+        "name": "param1",
+        "unit": "単位1"
+      },
+      {
+        "name": "param2",
+        "unit": "単位2"
+      }
+    ]
+  }
+]

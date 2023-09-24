@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedMapper">
+
+	<resultMap id="SensorDataDTO"
+		type="com.logpose.ph2.batch.dto.SensorDataDTO">
+		<result column="deviceId" property="deviceId"></result>
+		<result column="sensorId" property="sensorId"></result>
+		<result column="channel" property="channel"></result>
+		<result column="sensorContentId" property="sensorContentId"></result>
+		<result column="channelSize" property="channelSize"></result>
+		<result column="kst" property="kst"></result>
+		<result column="sm" property="sm"></result>
+		<result column="size" property="size"></result>
+		<result column="dxd" property="dxd"></result>
+		<result column="dxu" property="dxu"></result>
+		<result column="rs" property="rs"></result>
+		<result column="code" property="code"></result>
+	</resultMap>	
+	
+	 <select id="getSensorData" resultMap="SensorDataDTO">
+	 	SELECT
+	 		distinct
+	 		sn.device_id as deviceId,
+	 		sn.id as sensorId,
+	 		sn.channel as channel,
+	 		sn.sensor_content_id as sensorContentId,
+	 		sc.channel_size as channelSize,
+			sn.kst as kst,
+			sn.sm as sm,
+			ss.size as size,
+			ss.dxd as dxd,
+			ss.dxu as dxu,
+			ss.rs as rs,
+			sm.code as code
+		FROM
+			ph2_sensors sn
+		JOIN
+			ph2_sensor_sizes ss on sn.sensor_size_id=ss.id
+		JOIN
+			ph2_sensor_models sm on sn.sensor_model_id=sm.id
+		JOIN
+			ph2_sensor_contents sc on sn.sensor_content_id = sc.id
+		WHERE
+			sn.device_id = #{deviceId}
+	 </select>
+
+	
+</mapper>

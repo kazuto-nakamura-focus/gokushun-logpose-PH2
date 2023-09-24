@@ -1,0 +1,472 @@
+<template>
+  <v-app>
+    <v-container>
+      <template>
+        <v-row v-if="mode == 'update'">
+          <!-- 更新モードの時表示-->
+          <v-col align="right">
+            <v-icon right icon="mdi-vuetify" @click="deleteDeviceInfo()"
+              >mdi-trash-can-outline</v-icon
+            >
+          </v-col>
+        </v-row>
+
+        <v-row justify="center">
+          <v-col cols="3">
+            <div>デバイス名</div>
+
+            <v-text-field
+              dense
+              hide-details="auto"
+              outlined
+              v-model="deviceInfoData.name"
+            ></v-text-field>
+
+            <p></p>
+
+            <div>圃場</div>
+
+            <v-select
+              v-bind:items="useFieldInfoDataList"
+              dense
+              outlined
+              @change="setField"
+              v-model="deviceInfoData.fieldId"
+              item-text="name"
+              item-value="id"
+              return-object
+            ></v-select>
+
+            <div>品種</div>
+
+            <v-text-field
+              dense
+              hide-details="auto"
+              outlined
+              v-model="deviceInfoData.brand"
+            ></v-text-field>
+
+            <p></p>
+
+            <div>Sigfox Device ID</div>
+
+            <v-text-field
+              dense
+              hide-details="auto"
+              outlined
+              v-model="deviceInfoData.sigFoxDeviceId"
+            ></v-text-field>
+
+            <p></p>
+
+            <div>基準日</div>
+
+            <v-text-field
+              dense
+              hide-details="auto"
+              outlined
+              placeholder="01/01"
+              v-model="deviceInfoData.baseDateShort"
+            ></v-text-field>
+          </v-col>
+
+          <v-col cols="6">
+            <div>センサー</div>
+
+            <div style="height: 325px">
+              <div style="height: 325px; box-sizing: border-box">
+                <AgGridVue
+                  style="width: 100%; height: 100%"
+                  class="ag-theme-gs"
+                  :columnDefs="columnDefs"
+                  @grid-ready="onGridReady"
+                  :rowData="rowData"
+                  sizeColumn
+                  @cell-clicked="onCellClicked"
+                >
+                </AgGridVue>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
+
+        <v-card-actions>
+          <v-spacer></v-spacer>
+
+          <div class="GS_ButtonArea">
+            <v-btn
+              color="primary"
+              class="ma-2 white--text"
+              elevation="2"
+              @click="update()"
+              >{{ label }}</v-btn
+            >
+
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              @click="back()"
+              >キャンセル</v-btn
+            >
+          </div>
+        </v-card-actions>
+
+      </template>
+    </v-container>
+  </v-app>
+</template>
+
+<script>
+import {
+  useDeviceInfoAdd,
+  useDeviceInfoUpdate, //* 更新モードの時使用
+  useDeviceInfoRemove,
+} from "@/api/ManagementScreenTop/MSDevice";
+import { AgGridVue } from "ag-grid-vue";
+
+function RemoveCellRenderer() {
+  let eGui = document.createElement("div");
+  eGui.innerHTML = `
+  <div>
+  <button data-action="remove" >-</button>
+  </div>`;
+  return eGui;
+}
+
+function AddCellRenderer() {
+  let eGui = document.createElement("div");
+  eGui.innerHTML = `
+  <div>
+  <button data-action="add" >+</button>
+  </div>`;
+  return eGui;
+}
+
+export default {
+  props: {
+    mode: {
+      type: String,
+      required: true,
+    },
+    //* 更新モードの時使用
+    onEnd: {
+      type: Function,
+      required: false,
+    },
+    useFieldInfoDataList: Array, //* 圃場一覧
+    useDeviceMasters: Object, //* マスター情報一覧
+    useDeviceInfoData: Object, //デバイス詳細
+  },
+
+  data() {
+    return {
+      label: this.mode == "update" ? "更新" : "追加",
+      columnDefs: [
+        {
+          field: "name",
+          singleClickEdit: true,
+          headerName: "センサ―名",
+          editable: true,
+          resizable: true,
+          width: 100,
+        },
+        {
+          field: "modelId",
+          headerName: "センサー型番",
+          singleClickEdit: true,
+          resizable: true,
+          editable: true,
+          width: 150,
+          cellEditor: "agSelectCellEditor",
+          cellEditorParams: {
+            values: this.extractKeys(
+              this.$options.propsData.useDeviceMasters.sensorModels
+            ),
+          },
+          refData: this.useDeviceMasters.sensorModels,
+          valueListGap: 0,
+        },
+        {
+          field: "channel",
+          headerName: "チャンネル",
+          singleClickEdit: true,
+          resizable: true,
+          editable: true,
+          width: 80,
+          cellEditor: "agSelectCellEditor",
+          cellEditorParams: {
+            values: [
+              "1",
+              "2",
+              "3",
+              "4",
+              "5",
+              "6",
+              "7",
+              "8",
+              "9",
+              "10",
+              "11",
+              "12",
+              "13",
+              "14",
+              "15",
+              "16",
+            ],
+            valueListGap: 0,
+          },
+        },
+
+        {
+          field: "displayId",
+          headerName: "表示名",
+          singleClickEdit: true,
+          resizable: true,
+          editable: true,
+          width: 125,
+          cellEditor: "agSelectCellEditor",
+          cellEditorParams: {
+            values: this.extractKeys(
+              this.$options.propsData.useDeviceMasters.sensorContents
+            ),
+          },
+          refData: this.useDeviceMasters.sensorContents,
+          valueListGap: 0,
+        },
+        {
+          field: "sizeId",
+          singleClickEdit: true,
+          headerName: "サイズ",
+          resizable: true,
+          editable: true,
+          width: 125,
+          cellEditor: "agSelectCellEditor",
+          cellEditorParams: {
+            values: this.extractKeys(
+              this.$options.propsData.useDeviceMasters.sensorSizes
+            ),
+          },
+          refData: this.useDeviceMasters.sensorSizes,
+          valueListGap: 0,
+        },
+        {
+          field: "kst",
+          singleClickEdit: true,
+          colId: "kst",
+          headerName: "Kst",
+          resizable: true,
+          width: 100,
+
+          editable: (params) => params.data.displayName == "樹液流",
+          cellStyle: (params) => {
+            if (params.data.displayName != "樹液流") {
+              return { backgroundColor: "#aaa" };
+            }
+            //  return null;
+          },
+        },
+        {
+          field: "stemDiameter",
+          singleClickEdit: true,
+          colId: "stemDiameter",
+          headerName: "茎径(mm)",
+          resizable: true,
+          width: 100,
+          editable: (params) => params.data.displayName == "樹液流",
+          cellStyle: (params) => {
+            if (params.data.displayName != "樹液流") {
+              return { backgroundColor: "#aaa" };
+            }
+            //  return null;
+          },
+        },
+        {
+          field: "remove",
+          headerName: "削除",
+          cellRenderer: RemoveCellRenderer,
+          colId: "remove",
+          editable: false,
+          width: 75,
+        },
+        {
+          field: "add",
+          headerName: "追加",
+          cellRenderer: AddCellRenderer,
+          colId: "add",
+          editable: false,
+          width: 75,
+        },
+      ],
+      rowData: [],
+      selections: null,
+      skelton: {
+          id: null,
+          name: null,
+          channel: null,
+          modelId: null,
+          modelName: null,
+          displayId: null,
+          displayName: null,
+          stemDiameter: null,
+          kst: null,
+          sizeId: null,
+          size: null,
+        },
+      deviceInfoData:
+        null != this.useDeviceInfoData
+          ? this.useDeviceInfoData
+          : Object.assign({}, this.skelton),
+      sensorList: null,
+      // sensorData: null, //マスターセンサーデータ
+    };
+  },
+
+  components: {
+    AgGridVue,
+  },
+
+  mounted() {
+console.log(this.mode);
+console.log(this.useFieldInfoDataList);
+console.log(this.useDeviceMasters);
+  },
+  methods: {
+    extractKeys(mappings) {
+      var value = Object.keys(mappings);
+      return value;
+    },
+    //センサーマスターデータをcellEditorParamsに格納
+    getValues() {
+      if (this.mode == "update") {
+        this.sensorList = this.useDeviceInfoData.sensorItems;
+      } else {
+        this.sensorList = [];
+      }
+      return { values: this.sensorList };
+    },
+
+    setField(item) {
+      this.deviceInfoData.fieldId = item.id;
+    },
+
+    update: function () {
+      const message =
+        this.mode == "update"
+          ? "更新してもよろしいですか？"
+          : "登録してもよろしいですか？";
+      const deviceId = this.mode == "update" ? this.deviceInfoData.id : null;
+      if (confirm(message)) {
+        console.log("updateRowData", this.rowData);
+        const data = {
+          //デバイス情報
+          id: deviceId,
+          name: this.deviceInfoData.name,
+          fieldId: this.deviceInfoData.fieldId,
+          brand: this.deviceInfoData.brand,
+          sigFoxDeviceId: this.deviceInfoData.sigFoxDeviceId,
+          baseDateShort: this.deviceInfoData.baseDateShort,
+          //センサー情報
+          sensorItems: this.rowData,
+        };
+
+        console.log("update_data", data);
+
+        if (this.mode == "update") {
+          //デバイス情報更新(API)
+          useDeviceInfoUpdate(data)
+            .then((response) => {
+              //成功時
+              const { status, message } = response["data"];
+              if(status === 0){
+                alert("更新を成功しました。");
+                this.onEnd(true);
+              }else{
+                throw new Error(message);
+              }
+            })
+            .catch((error) => {
+              //失敗時
+              console.log(error);
+              alert("更新を失敗しました。");
+            });
+        } else {
+          useDeviceInfoAdd(data)
+            .then((response) => {
+              //成功時
+              const { status, message } = response["data"];
+              if(status === 0){
+                alert("登録を成功しました。");
+                this.onEnd(true);
+              }else{
+                throw new Error(message);
+              }
+            })
+            .catch((error) => {
+              //失敗時
+              console.log(error);
+              alert("登録を失敗しました。");
+            });
+        }
+      }
+    },
+
+    deleteDeviceInfo: function () {
+      if (confirm("削除してもよろしいですか？")) {
+        //デバイス情報削除(API)
+        console.log("deleteDeviceInfo", this.deviceInfoData.id);
+        useDeviceInfoRemove(this.deviceInfoData.id)
+          .then((response) => {
+            //成功時
+            const { status, message } = response["data"];
+            if(status === 0){ 
+              this.onEnd(true);
+            }else{
+              throw new Error(message);
+            }
+          })
+          .catch((error) => {
+            //失敗時
+            console.log(error);
+          });
+      }
+    },
+    back: function () {
+      this.onEnd(false);
+    },
+    //gridApi使用設定
+    onGridReady: function (params) {
+      this.gridApi = params.api;
+      this.gridColumnApi = params.columnAPI;
+      var row = Object.assign({}, this.skelton);
+      this.rowData = [row];
+
+      if (this.useDeviceInfoData.sensorItems.length === 0) {
+        this.gridApi.forEachNode((node) => this.rowData.push(node.data));
+        const rowDataArray = [...this.rowData];
+        console.log("rowDataArray", rowDataArray);
+      } else {
+        this.rowData = [...this.useDeviceInfoData.sensorItems];
+        console.log("MSEditDevice_rowData(3):", this.rowData);
+      }
+    },
+
+    //row追加・削除
+    onCellClicked(params) {
+      if (params.column.colId === "remove") {
+        this.rowData = this.rowData.filter((item) => item.id != params.data.id);
+        params.api.applyTransaction({
+          remove: [params.node.data],
+        });
+      }
+      if (params.column.colId === "add") {
+        var row = Object.assign({}, this.skelton);
+        this.rowData.push(row);
+        params.api.applyTransaction({
+          add: [row],
+        });
+      }
+    },
+  },
+};
+</script>

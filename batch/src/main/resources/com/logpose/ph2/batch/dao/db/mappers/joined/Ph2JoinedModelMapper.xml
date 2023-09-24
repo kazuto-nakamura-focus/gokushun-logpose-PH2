@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedModelMapper">
+
+	<resultMap id="BaseDataDTO"
+		type="com.logpose.ph2.batch.dto.BaseDataDTO">
+		<result column="castedAt" property="castedAt"></result>
+		<result column="temperature" property="temperature"></result>
+		<result column="insolation" property="insolation"></result>
+	</resultMap>	
+	
+	 <select id="getBaseData" resultMap="BaseDataDTO">
+	 	SELECT
+	 		r.casted_at as castedAt,
+	 		b.temperature as temperature,
+	 		i.insolation_intensity as insolation
+		FROM
+			ph2_rel_base_data r
+		JOIN
+			ph2_base_data b on r.id=b.relation_id
+	    LEFT JOIN
+			ph2_insolation_data i on r.id=i.relation_id
+		WHERE
+			r.device_id = #{deviceId}
+		AND
+			r.casted_at  <![CDATA[<]]> #{endDate}
+		AND
+			r.casted_at  <![CDATA[>=]]> #{startDate}
+			ORDER BY r.casted_at ASC
+	 </select>
+	 
+	    <select id="countEffectiveData" resultType="java.lang.Long">
+		SELECT
+			count(ph2_device_day.*)
+		FROM
+			ph2_device_day
+		JOIN
+			ph2_model_data ON ph2_device_day.id = ph2_model_data.day_id 
+		WHERE
+			ph2_device_day.device_id = #{deviceId}
+		AND
+			ph2_device_day.date =#{date}
+  	 </select>
+
+</mapper>

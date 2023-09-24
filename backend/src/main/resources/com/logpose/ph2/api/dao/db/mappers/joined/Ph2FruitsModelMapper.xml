@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.api.dao.db.mappers.joined.Ph2FruitsModelMapper">
+
+	<resultMap id="ModelDTO"
+		type="com.logpose.ph2.api.dao.db.entity.joined.FruitModelDataEntity">
+		<result column="fruitsAverage" property="fruitsAverage"></result>
+		<result column="fruitsCount" property="fruitsCount"></result>
+		<result column="tm" property="tm"></result>
+		<result column="leafCount" property="leafCount"></result>
+		<result column="realArea" property="realArea"></result>
+		<result column="culmitiveCnopyPs" property="culmitiveCnopyPs"></result>
+		<result column="crownLeafArea" property="crownLeafArea"></result>
+	</resultMap>	
+	
+	 <select id="getModelData" resultMap="ModelDTO">
+	 	SELECT
+	 		rf.average as fruitsAverage,
+	 		rf.count as fruitsCount,
+	 		md.tm as tm,
+	 		rla.count as leafArea, <!-- 新梢辺り葉枚数  -->
+	 		rfc.count as leafCount,  <!-- 新梢数  -->
+			md.culmitive_cnopy_ps as culmitiveCnopyPs,
+			md.crown_leaf_area as crownLeafArea
+		FROM
+			ph2_real_fruits_data rf
+		JOIN
+			ph2_model_data md on rf.device_id=md.device_id
+		AND
+			ph2_real_leaf_shoots_area rfa on rf.device_id=rfa.device_id
+		AND
+			ph2_real_leaf_shoots_count rfc on rf.device_id=rfc.device_id
+		WHERE
+			rf.device_id = #{deviceId}
+		AND
+			md.target_date =#{targetDate}
+	 </select>
+
+	
+</mapper>

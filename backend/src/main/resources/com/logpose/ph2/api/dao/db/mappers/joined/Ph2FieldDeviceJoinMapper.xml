@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper
+	namespace="com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceSetJoinMapper">
+
+	<resultMap id="DeviceInfo"
+		type="com.logpose.ph2.api.dto.element.DeviceInfo">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="brand" property="brand"></result>
+	</resultMap>
+
+	<select id="selectDeviceInfoByField" resultMap="DeviceInfo">
+		SELECT
+		d.id as id,
+		d.name as name,
+		b.name as brand
+		FROM
+		ph2_rel_field_device rel
+		JOIN
+		ph2_fields f on rel.field_id = f.id
+		JOIN
+		ph2_brand_master b on rel.brand_id = b.id
+		JOIN
+		ph2_devices d on rel.device_id = d.id
+		WHERE
+		f.id =  #{fieldId}
+		ORDER BY name DESC
+	</select>
+
+	<!-- ************************************************************************** -->
+	<resultMap id="DeviceInfoDTO"
+		type="com.logpose.ph2.api.dto.DeviceInfoDTO">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="fieldId" property="fieldId"></result>
+		<result column="field" property="field"></result>
+		<result column="brandId" property="brandId"></result>
+		<result column="brand" property="brand"></result>
+		<result column="registeredDate" property="registeredDate"></result>
+	</resultMap>
+	
+	<select id="selectDeviceList" resultMap="DeviceInfoDTO">
+		SELECT
+		d.id as id,
+		d.name as name,
+		f.id as fieldId,
+		f.name as field,
+		d.brand as brand,
+		to_char(d.created_at, 'yyyy/mm/dd') as registeredDate
+		FROM
+		ph2_devices d
+		JOIN
+		ph2_fields f on d.field_id = f.id
+		ORDER BY name DESC
+	</select>
+	
+		<!-- ************************************************************************** -->
+	<resultMap id="DeviceDetailDTO"
+		type="com.logpose.ph2.api.dto.device.DeviceDetailDTO">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="fieldId" property="fieldId"></result>
+		<result column="field" property="field"></result>
+		<result column="baseDate" property="baseDate"></result>
+	<!-- 	<result column="brandId" property="brandId"></result> -->
+		<result column="brand" property="brand"></result>
+		<result column="registeredDate" property="registeredDate"></result>
+		<result column="sigFoxDeviceId" property="sigFoxDeviceId"></result>
+	</resultMap>
+	
+	<select id="selectDeviceDetail" resultMap="DeviceDetailDTO">
+		SELECT
+		d.id as id,
+		d.name as name,
+		d.base_date as baseDate, 
+		f.id as fieldId,
+		f.name as field,
+		d.brand as brand,
+		to_char(d.created_at, 'yyyy/mm/dd') as registeredDate,
+		d.sigfox_device_id as sigFoxDeviceId
+		FROM
+		ph2_devices d
+		JOIN
+		ph2_fields f on d.field_id = f.id
+		where
+		d.id = #{deviceId}
+		ORDER BY name DESC
+	</select>
+</mapper>

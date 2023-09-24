@@ -1,0 +1,34 @@
+[
+    {
+        "no": 1,
+        "growing_season_name": "萌芽1",
+        "el_stage_interval": "1-4",
+        "f_value_interval": 50,
+        "accumulation_f_value": 50,
+        "achievement": ""
+    },
+    {
+        "no": 2,
+        "growing_season_name": "萌芽2",
+        "el_stage_interval": "1-4",
+        "f_value_interval": 50,
+        "accumulation_f_value": 100,
+        "achievement": "2022-03-29"
+    },
+    {
+        "no": 3,
+        "growing_season_name": "萌芽3",
+        "el_stage_interval": "1-4",
+        "f_value_interval": 50,
+        "accumulation_f_value": 150,
+        "achievement": ""
+    },
+    {
+        "no": 4,
+        "growing_season_name": "萌芽4",
+        "el_stage_interval": "1-4",
+        "f_value_interval": 50,
+        "accumulation_f_value": 200,
+        "achievement": ""
+    }
+]

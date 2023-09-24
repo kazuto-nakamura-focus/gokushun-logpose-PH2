@@ -1,0 +1,58 @@
+{
+  "1": {
+    "title": "生育ステージ",
+    "buttons": [
+      {
+        "name": "実績値入力",
+        "key": "refGEActualValueInput",
+        "type": 0
+      },
+      {
+        "name": "F値テーブル編集",
+        "key": "refReferenceFValue",
+        "type": 1
+      },
+      {
+        "name": "パラメータセット編集",
+        "key": "refGEParameterSets",
+        "type": 2
+      }
+    ]
+  },
+  "2": {
+    "title": "葉面積",
+    "buttons": [
+      {
+        "name": "実績値入力",
+        "key": "refLAActualValueInput",
+        "type":3
+
+      },
+      {
+        "name": "パラメータセット編集",
+        "key": "refLAParameterSets",
+        "type": 4
+      }
+    ]
+  },
+  "3": {
+    "title": "光合成量",
+    "buttons": [
+      {
+        "name": "実績値入力",
+        "key": "refPEActualValueInput",
+        "type":5
+      },
+      {
+        "name": "パラメータセット編集",
+        "key": "refPEParameterSets",
+        "type": 6
+      }
+    ]
+  },
+  "4": {
+    "title": "着果量/着果負担",
+    "buttons": [],
+    "type": 7
+  }
+}

@@ -1,0 +1,1155 @@
+[
+    {
+        "id": 30,
+        "name": "明野 2本",
+        "fieldId": 5,
+        "field": "明野",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 29,
+        "name": "北杜AKB3 2本",
+        "fieldId": 4,
+        "field": "北杜AKB3",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "北杜AKB1　3本　旧",
+        "fieldId": 2,
+        "field": "北杜AKB1",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1101,
+        "name": "北社AKB1　3本　新",
+        "fieldId": 2,
+        "field": "北杜AKB1",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 31,
+        "name": "葡萄専心サイドレス3本",
+        "fieldId": 8,
+        "field": "サイドレス",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 53,
+        "name": "葡萄専心イチノセ2本(新)",
+        "fieldId": 1,
+        "field": "新葡萄専心イチノセ",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "葡萄専心イチノセ2本(旧)",
+        "fieldId": 1,
+        "field": "新葡萄専心イチノセ",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 24,
+        "name": "新規デバイス 3",
+        "fieldId": 3,
+        "field": "Debug",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 23,
+        "name": "新規デバイス 2",
+        "fieldId": 3,
+        "field": "Debug",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1091,
+        "name": "新規デバイス 2",
+        "fieldId": 6,
+        "field": "kofu",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1093,
+        "name": "新規デバイス 2",
+        "fieldId": 12,
+        "field": "MBSDTEST",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 27,
+        "name": "新規デバイス 1",
+        "fieldId": 7,
+        "field": "nirasaki",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1099,
+        "name": "新規デバイス 1",
+        "fieldId": 1,
+        "field": "新葡萄専心イチノセ",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 26,
+        "name": "新規デバイス 1",
+        "fieldId": 6,
+        "field": "kofu",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "name": "新規デバイス 1",
+        "fieldId": 3,
+        "field": "Debug",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1092,
+        "name": "新規デバイス 1",
+        "fieldId": 12,
+        "field": "MBSDTEST",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1100,
+        "name": "新規デバイス 1",
+        "fieldId": 4,
+        "field": "北杜AKB3",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 32,
+        "name": "NZ 3本phase2",
+        "fieldId": 9,
+        "field": "NZ",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 33,
+        "name": "NZ 2本phase1",
+        "fieldId": 9,
+        "field": "NZ",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 25,
+        "name": "Nishioka TEST",
+        "fieldId": 3,
+        "field": "Debug",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1087,
+        "name": "MBSDTEST",
+        "fieldId": 12,
+        "field": "MBSDTEST",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 22,
+        "name": "Field Test System",
+        "fieldId": 3,
+        "field": "Debug",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 34,
+        "name": "CliveNZ2本",
+        "fieldId": 9,
+        "field": "NZ",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    },
+    {
+        "id": 1094,
+        "name": "123456",
+        "fieldId": 12,
+        "field": "MBSDTEST",
+        "brandId": 1,
+        "brand": "シャインマスカット",
+        "registeredDate": "0001/01/01",
+        "sigFoxDeviceId": "77122B",
+        "sensorItems": [
+            {
+                "id": 61,
+                "name": "日射",
+                "channel": 16,
+                "modelNumberId": 4,
+                "modelNumber": null,
+                "displayNameId": 3,
+                "displayName": "日射",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 59,
+                "name": "湿度",
+                "channel": 14,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 2,
+                "displayName": "湿度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            },
+            {
+                "id": 58,
+                "name": "温度",
+                "channel": 13,
+                "modelNumberId": 3,
+                "modelNumber": null,
+                "displayNameId": 1,
+                "displayName": "温度",
+                "sizeId": 6,
+                "size": 30,
+                "stemDiameter": 3.0
+            }
+        ]
+    }
+]

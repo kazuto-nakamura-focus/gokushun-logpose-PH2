@@ -1,0 +1,69 @@
+[
+    { 
+        "text": "日時", 
+        "value": "col1", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "樹液流1(g/h)", 
+        "value": "col2", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "樹液流2(g/h)", 
+        "value": "col3", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "デンドロ(μm)", 
+        "value": "col4", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "葉面濡れ(raw counts)", 
+        "value": "col5", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "土壌水分(pF)", 
+        "value": "col6", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "土壌温度(℃)", 
+        "value": "col7", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "温度(℃)", 
+        "value": "col8", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "湿度(％RH)", 
+        "value": "col9", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "日射(W/㎡)", 
+        "value": "col10", 
+        "align": "center",
+        "sortable": false
+    },
+    { 
+        "text": "日射(μmol/㎡s)", 
+        "value": "col11", 
+        "align": "center",
+        "sortable": false
+    }
+
+]

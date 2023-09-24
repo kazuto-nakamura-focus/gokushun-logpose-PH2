@@ -1,0 +1,164 @@
+{
+    "sun": [
+      {
+        "name": "葡萄専心イチノセ",
+        "data": [72, 80, 75, 52, 97, 54, 93, 95, 63, 76, 79, 94],
+        "borderColor" : "plum"
+      },
+      {
+        "name": "北社AKB1",
+        "data": [94, 94, 84, 73, 87, 59, 55, 83, 92, 54, 81, 75],
+        "borderColor" : "mediumslateblue"
+      },
+      {
+        "name": "北社AKB3",
+        "data": [55, 92, 92, 83, 56, 70, 93, 54, 70, 52, 87, 77],
+        "borderColor" : "darkorange"
+      },
+      {
+        "name": "葡萄専心サイドレス",
+        "data": [57, 72, 63, 74, 82, 56, 87, 85, 59, 77, 80, 61],
+        "borderColor" : "forestgreen"
+      },
+      {
+        "name": "明野",
+        "data": [76, 97, 61, 89, 53, 54, 66, 50, 76, 57, 89, 52]
+      },
+      {
+        "name": "NZ",
+        "data": [93, 90, 70, 83, 82, 69, 80, 51, 54, 67, 87, 98],
+        "borderColor" : "darkred"
+      }
+    ],
+    "water": [
+      {
+        "name": "葡萄専心イチノセ",
+        "data": [95, 70, 80, 65, 69, 80, 100, 100, 72, 81, 45, 70],
+        "borderColor" : "plum"
+      },
+      {
+        "name": "北社AKB3",
+        "data": [77, 56, 94, 65, 82, 71, 59, 77, 57, 99, 65, 60],
+        "borderColor" : "darkorange"
+      },
+      {
+        "name": "明野",
+        "data": [87, 89, 96, 96, 79, 57, 67, 73, 85, 68, 61, 84],
+        "borderColor" : "forestgreen"
+      },
+      {
+        "name": "NZ",
+        "data": [89, 92, 66, 52, 95, 99, 73, 87, 88, 98, 60, 99],
+        "borderColor" : "darkred"
+      }
+    ],
+    "dendro": [
+      {
+        "name": "葡萄専心イチノセ",
+        "data": [66, 76, 63, 76, 66, 85, 95, 67, 59, 51, 50, 50],
+        "borderColor" : "plum"
+      },
+      {
+        "name": "北社AKB3",
+        "data": [65, 84, 78, 73, 99, 63, 50, 92, 98, 89, 85, 93],
+        "borderColor" : "darkorange"
+      },
+      {
+        "name": "明野",
+        "data": [61, 97, 58, 60, 50, 80, 92, 72, 80, 97, 93, 80],
+        "borderColor" : "forestgreen"
+      },
+      {
+        "name": "NZ",
+        "data": [72, 53, 63, 56, 78, 76, 67, 77, 54, 63, 94, 77],
+        "borderColor" : "darkred"
+      }
+    ],
+    "humid": [
+      {
+        "name": "葡萄専心イチノセ",
+        "data": [90, 57, 93, 61, 87, 96, 63, 99, 90, 70, 58, 83],
+        "borderColor" : "plum"
+      },
+      {
+        "name": "北社AKB1",
+        "data": [57, 76, 64, 55, 59, 93, 74, 58, 78, 99, 99, 81],
+        "borderColor" : "mediumslateblue"
+      },
+      {
+        "name": "北社AKB3",
+        "data": [91, 69, 72, 62, 67, 84, 64, 85, 68, 59, 65, 73],
+        "borderColor" : "darkorange"
+      },
+      {
+        "name": "葡萄専心サイドレス",
+        "data": [55, 56, 60, 94, 68, 80, 90, 66, 91, 61, 94, 100],
+        "borderColor" : "darkviolet"
+      },
+      {
+        "name": "明野",
+        "data": [68, 72, 88, 52, 72, 72, 68, 86, 68, 87, 87, 58],
+        "borderColor" : "forestgreen"
+      },
+      {
+        "name": "NZ",
+        "data": [69, 96, 79, 66, 92, 88, 76, 69, 87, 94, 56, 94],
+        "borderColor" : "darkred"
+      }
+    ],
+    "tempa": [
+      {
+        "name": "葡萄専心イチノセ",
+        "data": [90, 67, 85, 81, 69, 68, 53, 88, 61, 92, 91, 80],
+        "borderColor" : "plum"
+      },
+      {
+        "name": "北社AKB1",
+        "data": [80, 70, 78, 79, 76, 54, 86, 63, 80, 61, 68, 67],
+        "borderColor" : "mediumslateblue"
+      },
+      {
+        "name": "北社AKB3",
+        "data": [89, 93, 99, 75, 55, 82, 97, 100, 59, 80, 98, 93],
+        "borderColor" : "darkorange"
+      },
+      {
+        "name": "葡萄専心サイドレス",
+        "data": [56, 89, 71, 74, 98, 91, 81, 81, 50, 53, 84, 94],
+        "borderColor" : "darkviolet"
+      },
+      {
+        "name": "明野",
+        "data": [62, 99, 84, 71, 76, 63, 52, 55, 70, 91, 90, 88],
+        "borderColor" : "forestgreen"
+      },
+      {
+        "name": "NZ",
+        "data": [61, 68, 73, 100, 90, 59, 61, 56, 57, 53, 75, 88],
+        "borderColor" : "darkred"
+      }
+    ],
+    "wetness": [
+      {
+        "name": "葡萄専心イチノセ",
+        "data": [86, 71, 66, 56, 83, 87, 59, 89, 86, 90, 79, 98],
+        "borderColor" : "plum"
+      },
+      {
+        "name": "北社AKB3",
+        "data": [55, 87, 84, 63, 96, 99, 81, 98, 79, 72, 88, 65],
+        "borderColor" : "darkorange"
+      },
+      {
+        "name": "明野",
+        "data": [88, 75, 73, 88, 55, 66, 61, 76, 100, 82, 79, 94],
+        "borderColor" : "forestgreen"
+      },
+      {
+        "name": "NZ",
+        "data": [51, 84, 88, 89, 91, 91, 62, 84, 73, 56, 79, 65],
+        "borderColor" : "darkred"
+      }
+    ]
+  }
+  

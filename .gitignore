@@ -38,3 +38,5 @@ pnpm-debug.log*
 /backend/build/test-results/test/binary/output.bin.idx
 /backend/build/test-results/test/binary/results.bin
 /backend/src/main/java/com/logpose/ph2/api/configration/TestConfig.java
+*.xlsx
+*.bak
