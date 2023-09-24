@@ -130,6 +130,7 @@ public class FIeldService
 		field.setLocation(dto.getLocation());
 		field.setLongitude(dto.getLongitude());
 		field.setName(dto.getName());
+		field.setCommenceDate(dto.getContructor());
 		field.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		field.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		

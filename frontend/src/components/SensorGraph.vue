@@ -252,6 +252,7 @@ export default {
         this.selectedHour.hour
       );
     },
+    
     unset() {
       this.sensorList.length = 0;
       this.CanShowSublist = false;

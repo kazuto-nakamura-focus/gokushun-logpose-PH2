@@ -89,6 +89,7 @@ export class SensorChart {
     parent.isLoading = true;
     this.data.parent = parent;
   }
+  
   setOptions(title, ytitle, source) {
     //* タイトル
     this.data.chartOptions.title.text = title;

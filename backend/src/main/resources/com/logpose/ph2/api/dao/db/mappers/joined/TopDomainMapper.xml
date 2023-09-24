@@ -76,7 +76,7 @@
 	and
 		ph2_dashboard.device_id = #{deviceId}
 	order by 
-		ph2_dashboard.casted_at desc
+		ph2_dashboard.casted_at asc
 	</select>
     <select id="selectDeviceDataList" resultMap="FieldDTO">
 	SELECT
