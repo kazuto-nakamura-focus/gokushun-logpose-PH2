@@ -1,0 +1,40 @@
+.DS_Store
+node_modules
+/logs
+/logshi_0801
+# /dist
+
+# local lock json
+package-lock.json
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Editor directories and files
+.idea
+.vscode
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.jar
+/.github/workflows/main.yml
+/backend/build/reports/tests/test/classes/com.logpose.ph2.api.LogposePh2ApiApplicationTests.html
+/backend/build/reports/tests/test/css/base-style.css
+/backend/build/reports/tests/test/css/style.css
+/backend/build/reports/tests/test/index.html
+/backend/build/reports/tests/test/js/report.js
+/backend/build/reports/tests/test/packages/com.logpose.ph2.api.html
+/backend/build/test-results/test/TEST-com.logpose.ph2.api.LogposePh2ApiApplicationTests.xml
+/backend/build/test-results/test/binary/output.bin
+/backend/build/test-results/test/binary/output.bin.idx
+/backend/build/test-results/test/binary/results.bin
+/backend/src/main/java/com/logpose/ph2/api/configration/TestConfig.java

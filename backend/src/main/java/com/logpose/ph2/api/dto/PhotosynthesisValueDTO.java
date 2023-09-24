@@ -1,0 +1,20 @@
+package com.logpose.ph2.api.dto;
+
+import lombok.Data;
+
+/**
+ * 光合成推定実績値更新
+ *
+ */
+@Data
+public class PhotosynthesisValueDTO
+	{
+	//* デバイスID
+	private Long deviceId;
+	//* 実測日
+	private String date;
+	//* f値
+	private Float f;
+	//* g値
+	private Float g;
+	}
