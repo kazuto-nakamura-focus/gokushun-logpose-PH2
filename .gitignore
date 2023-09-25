@@ -25,7 +25,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-*.jar
+#*.jar
 /.github/workflows/main.yml
 /backend/build/reports/tests/test/classes/com.logpose.ph2.api.LogposePh2ApiApplicationTests.html
 /backend/build/reports/tests/test/css/base-style.css

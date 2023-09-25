@@ -144,7 +144,7 @@ export default {
       this.isEditMode = isEditMode;
       if (this.isEditMode) {
         if (null == this.afterParameterSetData) {
-          this.afterParameterSetData = this.beforeParameterSetData;
+          this.afterParameterSetData = Object.assign({},this.beforeParameterSetData);
         }
       }
     },
