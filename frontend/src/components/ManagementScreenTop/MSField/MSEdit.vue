@@ -233,8 +233,10 @@ class MapHandler {
 //* --------------------------------------------------
 // 更新・追加オブジェクトの生成
 //* --------------------------------------------------
-var createFieldObject = function (soruce) {
+var createFieldObject = function (soruce, mapHandler) {
   const nowDate = moment().format("YYYY/MM/DD hh:mm:ss");
+  soruce.latitude = parseFloat(mapHandler.latitude);
+  soruce.longitude = parseFloat(mapHandler.longitude);
   //POSTやPUT例
   var id = (null == soruce.id)?null:parseInt(soruce.id);
   const data = {
@@ -242,8 +244,8 @@ var createFieldObject = function (soruce) {
     name: soruce.name,
     location: soruce.location,
     latitude: soruce.latitude,
-    longitude: soruce.longitude,
-    contructor: soruce.contructor,
+    longitude: parseFloat(mapHandler.longitude),
+    contructor: soruce.longitude,
     registeredDate: nowDate,
   };
   return data;
@@ -491,7 +493,7 @@ export default {
     update: function () {
       if (confirm("更新してもよろしいですか？")) {
         // 更新オブジェクトの作成
-        const data = createFieldObject(this.fieldInfoData);
+        const data = createFieldObject(this.fieldInfoData, this.mapHandler);
 
         console.log("update_data", data);
 
@@ -518,7 +520,7 @@ export default {
     add: function () {
       if (confirm("追加してもよろしいですか？")) {
         // 更新オブジェクトの作成
-        const data = createFieldObject(this.fieldInfoData);
+        const data = createFieldObject(this.fieldInfoData, this.mapHandler);
 
         console.log("update_data", data);
 

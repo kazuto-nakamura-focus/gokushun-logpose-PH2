@@ -122,7 +122,7 @@ import { Loader } from "@googlemaps/js-api-loader";
 import { useFieldList } from "@/api/ManagementScreenTop/MSField";
 import { useFieldInfo } from "@/api/ManagementScreenTop/MSField";
 import { useFieldInfoRemove } from "@/api/ManagementScreenTop/MSField";
-import MSEdit from "./MSEdit";
+import MSEdit from "./MSEdit.vue";
 import moment from "moment";
 import mSEditDeviceWrapper from "@/components/ManagementScreenTop/MSDevice/MSEditDevice/MSEditDeviceWrapper.vue";
 import { commonEnvConfig } from "@/config/envConfig";
