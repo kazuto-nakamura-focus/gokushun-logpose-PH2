@@ -1,0 +1,87 @@
+name: gokushun-ph2-it-deploy
+
+on:
+  push:
+    branches:
+      - auto_build_test
+
+jobs:
+  build_and_deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v2
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '16'
+
+    - name: Install Front Dependencies
+      run: |
+        npm install
+      working-directory: ./frontend
+
+    - name: Build Front
+      run: |
+        npm run build
+      working-directory: ./frontend
+
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'temurin' # See 'Supported distributions' for available options
+        java-version: '17'
+
+    - name: Build Backend
+      run: |
+        chmod +x ./gradlew 
+        ./gradlew clean build  
+      working-directory: ./backend
+
+    # - name: Heroku login credentials
+    #   run: |
+    #     cat > ~/.netrc <<EOF
+    #       machine api.heroku.com
+    #         login $HEROKU_EMAIL
+    #         password $HEROKU_API_KEY
+    #       machine git.heroku.com
+    #         login $HEROKU_EMAIL
+    #         password $HEROKU_API_KEY
+    #     EOF
+    #   env:
+    #     HEROKU_API_KEY: ${{ secrets.HEROKU_API_KEY }}
+    #     # HEROKU_EMAIL: ${{ secrets.HEROKU_EMAIL }}
+    # - name: Add Heroku remote
+    #   run: heroku git:remote --app gokushun-ph2-it  
+    #   env:
+    #     # HEROKU_APP_NAME: ${{ secrets.HEROKU_APP_NAME }}
+    # - name: Push to Heroku
+    #   run: git push heroku main
+
+
+    # - name: Deploy to Heroku
+    #   run: |
+    #     # ビルド済みのファイルをデプロイ先にアップロードする。
+    #     heroku login -i
+    #     heroku git:remote -a gokushun-ph2-it
+    #     git add .
+    #     git commit -a -m "Deploy App"
+    #     git push heroku main
+    #   run: |
+    #     echo $HEROKU_API_KEY | heroku login -i
+    #     heroku git:remote -a your-heroku-app-name
+    #     git push heroku main
+    #   env:
+    #     HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+
+
+    - name: Deploy to Heroku
+      env:
+        HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+      run: |
+        git pull
+        git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/gokushun-ph2-it.git
+        git push heroku main
+  
