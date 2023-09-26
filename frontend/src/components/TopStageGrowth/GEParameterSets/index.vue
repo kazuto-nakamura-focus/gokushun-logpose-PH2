@@ -140,6 +140,7 @@ export default {
   },
 
   mounted() {
+    this.isEditMode = false;s
     this.shared.mount(this);
   },
   updated() {},

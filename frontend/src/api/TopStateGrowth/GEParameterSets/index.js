@@ -47,7 +47,7 @@ const useGrowthParamSetUpdate = (data) => {
   const config = {
     params: {},
   };
-  return axios.post("/growth/paramSet", data, config);
+  return axios.put("/growth/paramSet", data, config);
 };
 
 //生育推定パラメータセット追加
@@ -56,7 +56,7 @@ const useGrowthParamSetAdd = (data) => {
     params: {
     },
   };
-  return axios.put("/growth/paramSet", data, config);
+  return axios.post("/growth/paramSet", data, config);
 };
 
 //生育推定パラメータセット削除
