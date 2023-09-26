@@ -115,11 +115,12 @@ export default {
       )
         .then((response) => {
           this.defaultId = response.data.data;
+          this.$refs.refParameterSet.initialize(this.defaultId);
           //* 入力パネルの設定
           this.sharedInput.setUp(
             this.$refs.refParameterSet,
-            function (obj) {
-              obj.initialize(this.defaultId);
+            function () {
+            //  obj.initialize(this.defaultId);
             }.bind(this),
             function (paramId) {
               this.changeItem(paramId);
@@ -143,7 +144,7 @@ export default {
     //*----------------------------
     changeItem: function (selectedId) {
       if (null == selectedId) selectedId = this.defaultId;
-      this.$refs.refParameterSet.initialize(selectedId);
+    //  this.$refs.refParameterSet.initialize(selectedId);
       this.$refs.refHistory.initialize(selectedId);
     },
     //*----------------------------

@@ -142,6 +142,7 @@ export default {
     //*----------------------------
     setEditMode(isEditMode) {
       this.isEditMode = isEditMode;
+      // 編集モードのとき編集後データの設定
       if (this.isEditMode) {
         if (null == this.afterParameterSetData) {
           this.afterParameterSetData = Object.assign({},this.beforeParameterSetData);

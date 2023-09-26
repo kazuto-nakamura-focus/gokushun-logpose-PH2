@@ -200,8 +200,10 @@ export default {
         .then((response) => {
           console.log(response);
           const paramSetList = response["data"].data;
-          this.parameterSetList = paramSetList;
-
+          this.parameterSetList.length = 0;
+          for(const item of paramSetList){
+            this.parameterSetList.push(item);
+          }
           this.$nextTick(
             function () {
               //* 下位パネルの初期化
@@ -213,7 +215,8 @@ export default {
                 }.bind(this),
                 function (param) {
                   // 下位で作成された詳細データを共有
-                  this.beforeParameterSetData = Object.assign({}, param);
+                  this.beforeParameterSetData = param;
+                  this.afterParameterSetData = Object.assign({}, this.beforeParameterSetData);
                   this.title = param.parameterName;
                 }.bind(this)
               );
@@ -242,8 +245,8 @@ export default {
     // パラメータの選択の変更
     //*----------------------------
     getItem(item) {
-      this.paramId = item.id;
-      this.shared.onConclude(this.paramId);
+      this.paramId = item;
+      this.$refs.refParameterSets.initialize(this.paramId);
     },
     //*----------------------------
     // 上書き保存
