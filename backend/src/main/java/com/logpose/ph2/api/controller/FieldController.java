@@ -24,7 +24,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @CrossOrigin(
-		origins = { "http://localhost:8080" },
+		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
 		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
 		allowCredentials = "true")
 @RestController
@@ -97,7 +97,7 @@ public class FieldController
 		{
 		ResponseDTO	as_dto = new ResponseDTO();
 		try
-			{			
+			{
 			FieldDetailDTO as_result = this.fIeldService.getInfo(fieldId);
 			as_dto.setSuccess(as_result);
 			}
