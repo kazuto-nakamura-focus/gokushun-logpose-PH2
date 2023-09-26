@@ -37,8 +37,16 @@ jobs:
     - name: Build Backend
       run: |
         chmod +x ./gradlew 
-        ./gradlew clean build  
+        ./gradlew clean bootJar
+        cp ./build/libs/logpose-ph2-api-0.0.1-SNAPSHOT.jar ./jar/logpose-ph2-api-0.0.1-SNAPSHOT.jar
       working-directory: ./backend
+
+    - name: Build Batch
+      run: |
+        chmod +x ./gradlew 
+        ./gradlew clean bootJar
+        cp ./build/libs/logpose-ph2-batch-0.0.1-SNAPSHOT.jar ./jar/logpose-ph2-batch-0.0.1-SNAPSHOT.jar
+      working-directory: ./batch
 
     # - name: Heroku login credentials
     #   run: |
@@ -76,12 +84,11 @@ jobs:
     #   env:
     #     HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
-
-    - name: Deploy to Heroku
-      env:
-        HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-      run: |
-        git pull
-        git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/gokushun-ph2-it.git
-        git push heroku main
+    # - name: Deploy to Heroku
+    #   env:
+    #     HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+    #   run: |
+    #     git pull
+    #     git remote add heroku https://heroku:$HEROKU_API_KEY@git.heroku.com/gokushun-ph2-it.git
+    #     git push heroku main
   
