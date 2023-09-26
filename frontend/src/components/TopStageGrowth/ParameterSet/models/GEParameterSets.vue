@@ -172,7 +172,8 @@ export default {
     //*----------------------------
     // 追加処理
     //*----------------------------
-    addData() {
+    addData(name) {
+      this.afterParameterSetData.parameterName = name;
       useGrowthParamSetAdd(this.afterParameterSetData)
         .then((response) => {
           //成功時
@@ -180,8 +181,12 @@ export default {
           if (results.status != 0) {
             console.log(results.message);
             alert("生育推定パラメータセットの追加に失敗しました。");
+          }else{
+            alert("生育推定パラメータセットを追加しました。");
+            // 追加されたデータを親と共有する
+            this.shared.onConclude(this.afterParameterSetData);
           }
-        })
+        }).bind(this)
         .catch((error) => {
           console.log(error);
         });
@@ -196,7 +201,11 @@ export default {
           const results = response["data"];
           if (results.status != 0) {
             console.log(results.message);
-            alert("生育推定パラメータセットの追加に失敗しました。");
+            alert("生育推定パラメータセットの更新に失敗しました。");
+          }else{
+            alert("生育推定パラメータセットを更新しました。");
+            // 追加されたデータを親と共有する
+            this.shared.onConclude(this.afterParameterSetData);
           }
         })
         .catch((error) => {

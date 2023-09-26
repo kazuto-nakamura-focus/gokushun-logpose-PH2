@@ -41,7 +41,7 @@
           single-line
           full-width
           filled
-          readonly
+          :readonly = "!isEditMode"
         ></v-text-field>
         <div class="text-subtitle-1">編集者</div>
         <v-text-field
@@ -50,7 +50,7 @@
           single-line
           full-width
           filled
-          readonly
+          :readonly = "!isEditMode"
         ></v-text-field>
       </div>
 
@@ -108,7 +108,7 @@
           color="primary"
           class="ma-2 white--text"
           elevation="2"
-          v-show="parameterList.length > 2"
+          v-show="parameterSetList.length > 2"
           @click="deleteParameterSet"
           :disabled="isDisabledDeleteBtn"
           >削除</v-btn
@@ -161,6 +161,7 @@ export default {
     peParameterSets,
   },
   mounted() {
+    this.isEditMode = false;
     this.shared.mount(this);
   },
   data() {
@@ -212,7 +213,7 @@ export default {
                 }.bind(this),
                 function (param) {
                   // 下位で作成された詳細データを共有
-                  this.beforeParameterSetData = param;
+                  this.beforeParameterSetData = Object.assign({}, param);
                   this.title = param.parameterName;
                 }.bind(this)
               );
@@ -248,7 +249,7 @@ export default {
     // 上書き保存
     //*----------------------------
     overwriteSave() {
-      this.$ref.refParameterSets.putData(); // 更新処理
+      this.$refs.refParameterSets.putData(); // 更新処理
     },
     //*----------------------------
     // 追加処理
@@ -262,9 +263,9 @@ export default {
     //パラメータセット名の外部から制御
     handleSubmitParameterSetName: function (name) {
       //APIリクエスト処理を追記
-      this.afterParameterSetData.parameterName = name;
-      this.afterParameterSetData.id = null;
-      this.$ref.refParameterSets.addData(); // 追加処理
+   //  this.afterParameterSetData.parameterName = name;
+   //   this.afterParameterSetData.id = null;
+      this.$refs.refParameterSets.addData(name); // 追加処理
       this.$refs.refParameterSetName.close();
     },
     //*----------------------------

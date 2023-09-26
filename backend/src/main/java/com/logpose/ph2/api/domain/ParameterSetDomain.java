@@ -131,6 +131,7 @@ public class ParameterSetDomain
 		dto.setName(latest.getName());
 		dto.setParameterName(catalog.getName());
 		dto.setUserId(latest.getUserId());
+		dto.setDefaultFlg(catalog.getDefaultFlag());
 		}
 
 	// --------------------------------------------------
