@@ -502,7 +502,7 @@ public class GrowthDomain
 	// --------------------------------------------------
 	public void updateParamSet(GrowthParamSetDTO dto) throws ParseException
 		{
-		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.FRUIT);
+		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.GROWTH);
 
 		Ph2ParamsetGrowthEntity entity = this.ph2ParamsetGrowthMapper
 				.selectByPrimaryKey(dto.getId());

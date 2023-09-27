@@ -18,19 +18,31 @@
           ref="refParameterSets"
           v-if="modelId == 1"
           @getItem="getItem"
-          :shared="sharedInput"
+          @addData="addData"
+          @updateData="updateData"
+          :isEditMode="isEditMode"
+          :beforeParameterSetData="beforeParameterSetData"
+          :afterParameterSetData="afterParameterSetData"
         ></geParameterSets>
         <laParameterSets
           ref="refParameterSets"
           v-else-if="modelId == 2"
           @getItem="getItem"
-          :shared="sharedInput"
+          @addData="addData"
+          @updateData="updateData"
+          :isEditMode="isEditMode"
+          :beforeParameterSetData="beforeParameterSetData"
+          :afterParameterSetData="afterParameterSetData"
         ></laParameterSets>
         <peParameterSets
           ref="refParameterSets"
           v-else-if="modelId == 3"
           @getItem="getItem"
-          :shared="sharedInput"
+          @addData="addData"
+          @updateData="updateData"
+          :isEditMode="isEditMode"
+          :beforeParameterSetData="beforeParameterSetData"
+          :afterParameterSetData="afterParameterSetData"
         ></peParameterSets>
       </div>
       <div v-if="!isEditMode">
@@ -138,18 +150,16 @@
 </template>
 
 <script>
-import { MountController } from "@/lib/mountController.js";
 import ParameterSetNameDialog from "@/components/parts/ParameterSetName";
 import geParameterSets from "./models/GEParameterSets.vue";
 import laParameterSets from "./models/LAParameterSet.vue";
 import peParameterSets from "./models/PEParameterSets.vue";
 import {
-  useGrowthParamSetList,
+  useParamSetList,
   useParamSetDelete,
-} from "@/api/TopStateGrowth/GEParameterSets/index";
+} from "@/api/ParameterSetAPI.js";
 
 export default {
-  name: "ParameterSetName",
   props: {
     shared: Object,
     modelId: Number,
@@ -170,8 +180,7 @@ export default {
       paramId: 0,
       parameterSetList: [],
       beforeParameterSetData: {},
-      afterParameterSetData: null,
-      sharedInput: new MountController(),
+      afterParameterSetData: {},
       isEditMode: false,
       isDisableButtos: true,
       // ruleParameterSetData: (value) => !!value || "パラメータデータを入力してください。",
@@ -196,27 +205,17 @@ export default {
       this.paramId = paramId;
 
       //* パラメータセットリストの取得
-      useGrowthParamSetList(this.modelId)
+      useParamSetList(this.modelId)
         .then((response) => {
           console.log(response);
           const paramSetList = response["data"].data;
-          this.parameterSetList = paramSetList;
-
+          this.parameterSetList.length = 0;
+          for(const item of paramSetList){
+            this.parameterSetList.push(item);
+          }
           this.$nextTick(
             function () {
-              //* 下位パネルの初期化
-              this.sharedInput.setUp(
-                this.$refs.refParameterSets,
-                function (comp) {
-              //* 下位パネルにマウント指示
-                  comp.initialize(this.paramId);
-                }.bind(this),
-                function (param) {
-                  // 下位で作成された詳細データを共有
-                  this.beforeParameterSetData = Object.assign({}, param);
-                  this.title = param.parameterName;
-                }.bind(this)
-              );
+              this.$refs.refParameterSets.initialize(this.paramId);
             }.bind(this)
           );
         })
@@ -230,26 +229,41 @@ export default {
     // 編集モードの初期化
     //*----------------------------
     setEditable(mode) {
-      this.isEditMode = mode;
-      this.$refs.refParameterSets.setEditMode(mode);
+      this.isEditMode = mode; // 子コンポーネントに伝達
+      // 編集モードの場合
       if (this.isEditMode) {
         if (null == this.afterParameterSetData) {
-          this.afterParameterSetData = this.beforeParameterSetData;
+          this.afterParameterSetData = Object.assign({},this.beforeParameterSetData);
         }
       }
+    },
+    //*----------------------------
+    // 子コンポーネントからの詳細データの取得
+    //*----------------------------
+    updateData(data){
+      this.beforeParameterSetData = data;
+      this.afterParameterSetData = Object.assign({},this.beforeParameterSetData);
+    },
+    //*----------------------------
+    // 子コンポーネントからの追加実施
+    //*----------------------------
+    addData(id){
+     this.initialize(id);
     },
     //*----------------------------
     // パラメータの選択の変更
     //*----------------------------
     getItem(item) {
-      this.paramId = item.id;
-      this.shared.onConclude(this.paramId);
+      this.paramId = item;
+      this.$refs.refParameterSets.initialize(this.paramId);
+      this.$emit("changeItem", this.paramId);
     },
     //*----------------------------
     // 上書き保存
     //*----------------------------
     overwriteSave() {
-      this.$refs.refParameterSets.putData(); // 更新処理
+      this.$refs.refParameterSets.updateData(this.afterParameterSetData); // 更新処理
+      this.$emit("changeItem", this.paramId);
     },
     //*----------------------------
     // 追加処理
@@ -262,11 +276,10 @@ export default {
     //*----------------------------
     //パラメータセット名の外部から制御
     handleSubmitParameterSetName: function (name) {
-      //APIリクエスト処理を追記
-   //  this.afterParameterSetData.parameterName = name;
-   //   this.afterParameterSetData.id = null;
-      this.$refs.refParameterSets.addData(name); // 追加処理
+      this.afterParameterSetData.parameterName = name;
+      this.$refs.refParameterSets.addData(this.afterParameterSetData); // 追加処理
       this.$refs.refParameterSetName.close();
+      this.$emit("changeItem", this.paramId);
     },
     //*----------------------------
     // 削除
@@ -280,7 +293,7 @@ export default {
             console.log(results.message);
             alert("パラメータセットの削除に失敗しました。");
           } else {
-            this.shared.onConclude(this.paramId);
+            this.$emit("reset");
           }
         })
         .catch((error) => {

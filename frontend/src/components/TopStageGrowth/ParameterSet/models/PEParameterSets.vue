@@ -28,7 +28,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.fieldF"
+                :value="beforeData.fieldF"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">g</v-subheader>
               <v-text-field
@@ -38,7 +38,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.fieldG"
+                :value="beforeData.fieldG"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -53,7 +53,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.weibullA"
+                :value="beforeData.weibullA"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">β</v-subheader>
               <v-text-field
@@ -63,7 +63,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.weibullB"
+                :value="beforeData.weibullB"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">λ</v-subheader>
               <v-text-field
@@ -73,14 +73,14 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.weibullL"
+                :value="beforeData.weibullL"
               ></v-text-field>
             </v-row>
           </v-col>
         </v-row>
       </v-container>
     </div>
-    <div v-if="isEditMode && afterParameterSetData != null">
+    <div v-if="isEditMode && afterData != null">
       <div class="text-subtitle-1">編集後</div>
       <v-container class="photosynthesis">
         <v-row>
@@ -105,8 +105,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.fieldF"
-                @change="onDisable"
+                v-model.trim.number="afterData.fieldF"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">g</v-subheader>
               <v-text-field
@@ -114,8 +113,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.fieldG"
-                @change="onDisable"
+                v-model.trim.number="afterData.fieldG"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -128,8 +126,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.weibullA"
-                @change="onDisable"
+                v-model.trim.number="afterData.weibullA"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">β</v-subheader>
               <v-text-field
@@ -137,8 +134,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.weibullB"
-                @change="onDisable"
+                v-model.trim.number="afterData.weibullB"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">λ</v-subheader>
               <v-text-field
@@ -146,8 +142,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.weibullL"
-                @change="onDisable"
+                v-model.trim.number="afterData.weibullL"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -165,32 +160,19 @@ import {
 } from "@/api/TopStateGrowth/PEParameterSets/index";
 
 export default {
-  name: "ParameterSetName",
   props: {
-    shared: Object,
+    isEditMode: Boolean,
+    beforeParameterSetData: Object,
+    afterParameterSetData: Object,
   },
-  mounted() {
-    this.shared.mount(this);
-  },
+
   data() {
     return {
-      isEditMode: false,
-      beforeParameterSetData: {},
-      afterParameterSetData: null,
+      beforeData:this.beforeParameterSetData,
+      afterData: this.afterParameterSetData,
     };
   },
   methods: {
-    //*----------------------------
-    // 表示モードの設定
-    //*----------------------------
-    setEditMode(isEditMode) {
-      this.isEditMode = isEditMode;
-      if (this.isEditMode) {
-        if (null == this.afterParameterSetData) {
-          this.afterParameterSetData = this.beforeParameterSetData;
-        }
-      }
-    },
     //*----------------------------
     // 光合成量パラメータセット詳細取得
     //*----------------------------
@@ -203,9 +185,9 @@ export default {
             console.log(results.message);
             alert("光合成量パラメータセット詳細取得に失敗しました。");
           } else {
-            this.beforeParameterSetData = results.data;
-            this.afterParameterSetData = results.data;
-            this.shared.onConclude(this.beforeParameterSetData); // 上位クラスと共有
+            this.beforeData = results.data;
+            this.afterData = Object.assign({}, this.beforeData);
+            this.$emit("updateData", results.data);
           }
         })
         .catch((error) => {
@@ -216,8 +198,13 @@ export default {
     //*----------------------------
     // 追加処理
     //*----------------------------
-    addData() {
-      usePhotosynthesisParamSetAdd(this.afterParameterSetData)
+    addData(parentData) {
+      parentData.fieldF = this.afterData.fieldF;
+      parentData.fieldG = this.afterData.fieldG;
+      parentData.weibullA = this.afterData.weibullA;
+      parentData.weibullB = this.afterData.weibullB;
+      parentData.weibullL = this.afterData.weibullL;
+      usePhotosynthesisParamSetAdd(parentData)
         .then((response) => {
           //成功時
           const results = response["data"];
@@ -225,7 +212,8 @@ export default {
             console.log(results.message);
             alert("光合成量パラメータセットの追加に失敗しました。");
           } else {
-            this.$emit("getItem", results.data);
+            alert("光合成量パラメータセットを追加しました。");
+            this.$emit("addData", parentData);
           }
         })
         .catch((error) => {
@@ -235,8 +223,13 @@ export default {
     //*----------------------------
     // 更新処理
     //*----------------------------
-    putData() {
-      usePhotosynthesisParamSetUpdate(this.afterParameterSetData)
+    updateData(parentData) {
+      parentData.fieldF = this.afterData.fieldF;
+      parentData.fieldG = this.afterData.fieldG;
+      parentData.weibullA = this.afterData.weibullA;
+      parentData.weibullB = this.afterData.weibullB;
+      parentData.weibullL = this.afterData.weibullL;
+      usePhotosynthesisParamSetUpdate(parentData)
         .then((response) => {
           //成功時
           const results = response["data"];
@@ -244,7 +237,8 @@ export default {
             console.log(results.message);
             alert("光合成量パラメータセットの更新に失敗しました。");
           } else {
-            this.$emit("getItem", results.data);
+            alert("光合成量パラメータセットを更新しました。");
+            this.$emit("updateData", parentData);
           }
         })
         .catch((error) => {
