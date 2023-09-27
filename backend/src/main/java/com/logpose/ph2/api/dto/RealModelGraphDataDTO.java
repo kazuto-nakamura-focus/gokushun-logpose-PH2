@@ -20,4 +20,6 @@ public class RealModelGraphDataDTO extends GraphDataDTO
 	private List<Double> predictValues = new ArrayList<>();
 	// * グラフのアノテーションデータ
 	private List<AnnotationDTO> annotations;
+	// * カテゴリー
+	private List<String> category = new ArrayList<>();
 	}

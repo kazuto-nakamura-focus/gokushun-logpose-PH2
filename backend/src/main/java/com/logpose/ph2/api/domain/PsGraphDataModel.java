@@ -1,7 +1,9 @@
 package com.logpose.ph2.api.domain;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntity;
@@ -49,6 +51,7 @@ public class PsGraphDataModel
 		if (null == realG)
 			realG = params.getFieldG().floatValue();
 		double prev = 0;
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
 		for (DailyBaseDataDTO data : days)
 			{
 			this.dayIds.add(data.getDayId());
@@ -80,6 +83,9 @@ public class PsGraphDataModel
 				{
 				this.psModel.getPredictValues().add(value);
 				}
+			// * 取得日
+			Date castDay = data.getDate();
+			this.psModel.getCategory().add(sdf.format(castDay));
 			}
 		DailyBaseDataDTO first = days.get(0);
 		DailyBaseDataDTO last = days.get(days.size() - 1);

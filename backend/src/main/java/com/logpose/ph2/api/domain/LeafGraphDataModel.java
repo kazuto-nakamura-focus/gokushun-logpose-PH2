@@ -1,7 +1,9 @@
 package com.logpose.ph2.api.domain;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
@@ -42,6 +44,7 @@ public class LeafGraphDataModel
 		double maxTla = Double.MIN_VALUE;
 		double minLc = Double.MAX_VALUE;
 		double maxLc = Double.MIN_VALUE;
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
 		for (DailyBaseDataDTO data : days)
 			{
 			this.dayIds.add(data.getDayId());
@@ -67,6 +70,10 @@ public class LeafGraphDataModel
 				this.leafCoundModel.getPredictValues().add(lc);
 				this.leafAreaModel.getPredictValues().add(tla);
 				}
+			// * 取得日
+			Date castDay = data.getDate();
+			this.leafCoundModel.getCategory().add(sdf.format(castDay));
+			this.leafAreaModel.getCategory().add(sdf.format(castDay));
 			}
 		DailyBaseDataDTO first = days.get(0);
 		DailyBaseDataDTO last = days.get(days.size() - 1);
