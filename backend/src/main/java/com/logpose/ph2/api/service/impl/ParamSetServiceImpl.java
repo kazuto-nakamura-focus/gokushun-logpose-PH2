@@ -77,7 +77,7 @@ public class ParamSetServiceImpl implements  ParamSetService
 	 */
 	// --------------------------------------------------
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(rollbackFor = Exception.class)
 	public void removeParamSet(long paramId)
 		{
 		this.parameterSetlDomain.removeParamSet(paramId);

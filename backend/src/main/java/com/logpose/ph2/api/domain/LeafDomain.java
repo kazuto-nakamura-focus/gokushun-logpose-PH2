@@ -388,7 +388,7 @@ public class LeafDomain
 	// --------------------------------------------------
 	public void updateParamSet(LeafParamSetDTO dto)
 		{
-		parameterSetDomain.update(dto, ModelMaster.FRUIT);
+		parameterSetDomain.update(dto, ModelMaster.LEAF);
 
 		Ph2ParamsetLeafAreaEntity area = this.ph2ParamsetLeafAreaMapper
 				.selectByPrimaryKey(dto.getId());
@@ -418,7 +418,7 @@ public class LeafDomain
 		{
 		if (null == id)
 			{
-			id = parameterSetDomain.add(dto, ModelMaster.FRUIT);
+			id = parameterSetDomain.add(dto, ModelMaster.LEAF);
 			}
 		Ph2ParamsetLeafAreaEntity area = new Ph2ParamsetLeafAreaEntity();
 		area.setParamsetId(id);

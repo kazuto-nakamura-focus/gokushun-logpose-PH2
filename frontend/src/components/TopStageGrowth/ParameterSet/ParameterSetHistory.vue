@@ -25,12 +25,9 @@
 <script>
 import VuePerfectScrollbar from "vue-perfect-scrollbar";
 import "vue2-perfect-scrollbar/dist/vue2-perfect-scrollbar.css";
-import { useGrowthParamSetHistory } from "@/api/TopStateGrowth/GEParameterSets";
+import { useParamSetHistory } from "@/api/ParameterSetAPI.js";
 
 export default {
-  props: {
-    shared /** MountController */: { required: true },
-  },
   data() {
     return {
       histories: [],
@@ -40,13 +37,10 @@ export default {
   components: {
     VuePerfectScrollbar,
   },
-  mounted() {
-    this.shared.mount(this);
-  },
   methods: {
     initialize: function (paramId) {
       this.histories.length = 0;
-      useGrowthParamSetHistory(paramId).then((history_response) => {
+      useParamSetHistory(paramId).then((history_response) => {
         const history_datas = history_response["data"]["data"];
         for (let history_data of history_datas) {
           const history = {

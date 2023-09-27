@@ -274,7 +274,7 @@ public class PhotoSynthesisDomain
 	// --------------------------------------------------
 	public void updateParamSet(PhotosynthesisParamSetDTO dto)
 		{
-		parameterSetDomain.update(dto, ModelMaster.FRUIT);
+		parameterSetDomain.update(dto, ModelMaster.PHOTO);
 
 		Ph2ParamsetPsFieldEntity field = this.ph2ParamsetPsFieldMapper
 				.selectByPrimaryKey(dto.getId());
@@ -304,7 +304,7 @@ public class PhotoSynthesisDomain
 		{
 		if (null == id)
 			{
-			 id = parameterSetDomain.add(dto, ModelMaster.FRUIT);
+			 id = parameterSetDomain.add(dto, ModelMaster.PHOTO);
 			}
 		Ph2ParamsetPsFieldEntity field = new Ph2ParamsetPsFieldEntity();
 		field.setParamsetId(id);
