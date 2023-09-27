@@ -118,7 +118,7 @@ export class SensorChart {
       }
     }
     this.data.chartOptions.yaxis.max = source.YEnd;
-    this.data.chartOptions.yaxis.min = source.XStart;
+    this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;
 
   }
