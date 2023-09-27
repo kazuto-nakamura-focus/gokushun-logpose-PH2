@@ -40,7 +40,7 @@ const usePhotosynthesisParamSetUpdate = (data) => {
  //   params: {},
   withCredential:true,
   };
-  return axios.post("/photosynthesis/paramSet", data, config);
+  return axios.put("/photosynthesis/paramSet", data, config);
 };
 
 //光合成推定パラメータセット追加
@@ -49,7 +49,7 @@ const usePhotosynthesisParamSetAdd = (data) => {
     params: {},
     withCredential:true,
   };
-  return axios.put("/photosynthesis/paramSet", data, config);
+  return axios.post("/photosynthesis/paramSet", data, config);
 };
 
 //光合成推定パラメータセット削除

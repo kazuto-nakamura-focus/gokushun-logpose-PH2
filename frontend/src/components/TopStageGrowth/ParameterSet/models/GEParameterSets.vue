@@ -19,7 +19,7 @@
                   outlined
                   filled
                   readonly
-                  :value="beforeParameterSetData.bd"
+                  :value="beforeData.bd"
                 ></v-text-field>
                 <v-subheader class="ma-0 pa-1">e</v-subheader>
                 <v-text-field
@@ -29,7 +29,7 @@
                   outlined
                   filled
                   readonly
-                  :value="beforeParameterSetData.be"
+                  :value="beforeData.be"
                 ></v-text-field>
               </v-row>
             </v-col>
@@ -44,7 +44,7 @@
                   outlined
                   filled
                   readonly
-                  :value="beforeParameterSetData.ad"
+                  :value="beforeData.ad"
                 ></v-text-field>
                 <v-subheader class="ma-0 pa-1">e</v-subheader>
                 <v-text-field
@@ -54,7 +54,7 @@
                   outlined
                   filled
                   readonly
-                  :value="beforeParameterSetData.ae"
+                  :value="beforeData.ae"
                 ></v-text-field>
               </v-row>
             </v-col>
@@ -62,7 +62,7 @@
         </v-container>
       </div>
 
-      <div v-if="isEditMode && afterParameterSetData != null">
+      <div v-if="isEditMode && afterData != null">
         <div class="text-subtitle-1">編集後パラメータ</div>
         <v-container class="sprout">
           <v-row>
@@ -75,7 +75,7 @@
                   dense
                   hide-details="auto"
                   outlined
-                  v-model.trim.number="afterParameterSetData.bd"
+                  v-model.trim.number="afterData.bd"
                 ></v-text-field>
                 <v-subheader class="ma-0 pa-1">e</v-subheader>
                 <v-text-field
@@ -83,7 +83,7 @@
                   dense
                   hide-details="auto"
                   outlined
-                  v-model.trim.number="afterParameterSetData.be"
+                  v-model.trim.number="afterData.be"
                 ></v-text-field>
               </v-row>
             </v-col>
@@ -96,7 +96,7 @@
                   dense
                   hide-details="auto"
                   outlined
-                  v-model.trim.number="afterParameterSetData.ad"
+                  v-model.trim.number="afterData.ad"
                 ></v-text-field>
                 <v-subheader class="ma-0 pa-1">e</v-subheader>
                 <v-text-field
@@ -104,7 +104,7 @@
                   dense
                   hide-details="auto"
                   outlined
-                  v-model.trim.number="afterParameterSetData.ae"
+                  v-model.trim.number="afterData.ae"
                 ></v-text-field>
               </v-row>
             </v-col>
@@ -124,31 +124,18 @@ import {
 
 export default {
   props: {
-    shared: Object,
+    isEditMode:Boolean,
+    beforeParameterSetData: Object,
+    afterParameterSetData:Object,
   },
   data() {
     return {
-      isEditMode: false,
-      beforeParameterSetData: {},
-      afterParameterSetData: null,
+      beforeData:this.beforeParameterSetData,
+      afterData:this.afterParameterSetData
     };
   },
-  mounted() {
-    this.shared.mount(this);
-  },
+
   methods: {
-    //*----------------------------
-    // 表示モードの設定
-    //*----------------------------
-    setEditMode(isEditMode) {
-      this.isEditMode = isEditMode;
-      // 編集モードのとき編集後データの設定
-      if (this.isEditMode) {
-        if (null == this.afterParameterSetData) {
-          this.afterParameterSetData = Object.assign({},this.beforeParameterSetData);
-        }
-      }
-    },
     //*----------------------------
     // 生育推定パラメータセット詳細取得
     //*----------------------------
@@ -161,8 +148,9 @@ export default {
             console.log(results.message);
             alert("生育推定パラメータセット詳細取得に失敗しました。");
           } else {
-            this.beforeParameterSetData = results.data;
-            this.shared.onConclude(this.beforeParameterSetData); // 上位クラスと共有
+            this.beforeData = results.data;
+            this.afterData = Object.assign({}, this.beforeData);
+          this.$emit("updateData",results.data );
           }
         })
         .catch((error) => {
@@ -170,12 +158,16 @@ export default {
           console.log(error);
         });
     },
+
     //*----------------------------
     // 追加処理
     //*----------------------------
-    addData(name) {
-      this.afterParameterSetData.parameterName = name;
-      useGrowthParamSetAdd(this.afterParameterSetData)
+    addData(parentData) {
+      parentData.bd = this.afterData.bd;
+      parentData.be = this.afterData.be;
+      parentData.ad = this.afterData.ad;
+      parentData.ae = this.afterData.ae;
+      useGrowthParamSetAdd(parentData)
         .then((response) => {
           //成功時
           const results = response["data"];
@@ -184,8 +176,7 @@ export default {
             alert("生育推定パラメータセットの追加に失敗しました。");
           }else{
             alert("生育推定パラメータセットを追加しました。");
-            // 追加されたデータを親と共有する
-            this.shared.onConclude(this.afterParameterSetData);
+           this.$emit('addData',results.data );
           }
         }).bind(this)
         .catch((error) => {
@@ -195,8 +186,12 @@ export default {
     //*----------------------------
     // 更新処理
     //*----------------------------
-    putData() {
-      useGrowthParamSetUpdate(this.afterParameterSetData)
+    updateData(parentData) {
+      parentData.bd = this.afterData.bd;
+      parentData.be = this.afterData.be;
+      parentData.ad = this.afterData.ad;
+      parentData.ae = this.afterData.ae;
+      useGrowthParamSetUpdate(parentData)
         .then((response) => {
           //成功時
           const results = response["data"];
@@ -205,8 +200,7 @@ export default {
             alert("生育推定パラメータセットの更新に失敗しました。");
           }else{
             alert("生育推定パラメータセットを更新しました。");
-            // 追加されたデータを親と共有する
-            this.shared.onConclude(this.afterParameterSetData);
+            this.$emit('updateData',parentData );
           }
         })
         .catch((error) => {

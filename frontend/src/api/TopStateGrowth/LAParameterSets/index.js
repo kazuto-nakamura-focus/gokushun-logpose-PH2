@@ -39,7 +39,7 @@ const useLeafParamSetUpdate = (data) => {
   const config = {
     params: {},
   };
-  return axios.post("/leaf/paramSet", data, config);
+  return axios.put("/leaf/paramSet", data, config);
 };
 
 //葉面積・葉枚数パラメータセット追加
@@ -47,7 +47,7 @@ const useLeafParamSetAdd = (data) => {
   const config = {
     params: {},
   };
-  return axios.put("/leaf/paramSet", data, config);
+  return axios.post("/leaf/paramSet", data, config);
 };
 
 //葉面積・葉枚数パラメータセット削除

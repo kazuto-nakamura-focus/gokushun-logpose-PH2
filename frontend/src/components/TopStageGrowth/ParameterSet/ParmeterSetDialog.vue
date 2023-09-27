@@ -27,6 +27,7 @@
                       :shared="sharedInput"
                       :modelId="modelItem"
                       @changeItem="changeItem"
+                      @reset="setData"
                       @close="close"
                     />
                   </div>
@@ -44,7 +45,6 @@
               <v-tab-item value="tab-3">
                 <parameter-set-history
                   ref="refHistory"
-                  :shared="sharedHistory"
                 ></parameter-set-history>
               </v-tab-item>
             </v-tabs>
@@ -73,7 +73,6 @@ export default {
       isDialog: false,
       modelItem: this.modelId,
       sharedInput: new MountController(),
-      sharedHistory: new MountController(),
       tabModel: "tab-1",
       defaultId: null,
       isEditMode : false,
@@ -116,24 +115,7 @@ export default {
         .then((response) => {
           this.defaultId = response.data.data;
           this.$refs.refParameterSet.initialize(this.defaultId);
-          //* 入力パネルの設定
-          this.sharedInput.setUp(
-            this.$refs.refParameterSet,
-            function () {
-            //  obj.initialize(this.defaultId);
-            }.bind(this),
-            function (paramId) {
-              this.changeItem(paramId);
-            }.bind(this)
-          );
-          //* 更新履歴の設定
-          this.sharedHistory.setUp(
-            this.$refs.refHistory,
-            function (obj) {
-              obj.initialize(this.defaultId);
-            }.bind(this),
-            function () {}
-          );
+          this.$refs.refHistory.initialize(this.defaultId);
         })
         .catch((error) => {
           console.log(error);
@@ -144,7 +126,6 @@ export default {
     //*----------------------------
     changeItem: function (selectedId) {
       if (null == selectedId) selectedId = this.defaultId;
-    //  this.$refs.refParameterSet.initialize(selectedId);
       this.$refs.refHistory.initialize(selectedId);
     },
     //*----------------------------

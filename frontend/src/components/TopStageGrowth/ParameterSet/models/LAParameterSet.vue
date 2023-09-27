@@ -29,7 +29,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.areaA"
+                :value="beforeData.areaA"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">b</v-subheader>
               <v-text-field
@@ -39,7 +39,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.areaB"
+                :value="beforeData.areaB"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">c</v-subheader>
               <v-text-field
@@ -49,7 +49,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.areaC"
+                :value="beforeData.areaC"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -64,7 +64,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.countC"
+                :value="beforeData.countC"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">d</v-subheader>
               <v-text-field
@@ -74,7 +74,7 @@
                 outlined
                 filled
                 readonly
-                :value="beforeParameterSetData.countD"
+                :value="beforeData.countD"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -82,7 +82,7 @@
       </v-container>
     </div>
 
-    <div v-if="isEditMode && afterParameterSetData != null">
+    <div v-if="isEditMode && afterData != null">
       <div class="text-subtitle-1">編集後</div>
       <v-container class="leafArea">
         <v-row>
@@ -107,8 +107,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.areaA"
-                @change="onDisable"
+                v-model.trim.number="afterData.areaA"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">b</v-subheader>
               <v-text-field
@@ -116,8 +115,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.areaB"
-                @change="onDisable"
+                v-model.trim.number="afterData.areaB"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">c</v-subheader>
               <v-text-field
@@ -125,8 +123,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.areaC"
-                @change="onDisable"
+                v-model.trim.number="afterData.areaC"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -139,8 +136,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.countC"
-                @change="onDisable"
+                v-model.trim.number="afterData.countC"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">d</v-subheader>
               <v-text-field
@@ -148,8 +144,7 @@
                 dense
                 hide-details="auto"
                 outlined
-                v-model.trim.number="afterParameterSetData.countD"
-                @change="onDisable"
+                v-model.trim.number="afterData.countD"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -168,30 +163,18 @@ import {
 
 export default {
   props: {
-    shared: Object,
+    isEditMode:Boolean,
+    beforeParameterSetData: Object,
+    afterParameterSetData:Object,
   },
-  mounted() {
-    this.shared.mount(this);
-  },
+
   data() {
     return {
-      isEditMode: false,
-      beforeParameterSetData: {},
-      afterParameterSetData: null,
+      beforeData:this.beforeParameterSetData,
+      afterData:this.afterParameterSetData
     };
   },
   methods: {
-    //*----------------------------
-    // 表示モードの設定
-    //*----------------------------
-    setEditMode(isEditMode) {
-      this.isEditMode = isEditMode;
-      if (this.isEditMode) {
-        if (null == this.afterParameterSetData) {
-          this.afterParameterSetData = this.beforeParameterSetData;
-        }
-      }
-    },
     //*----------------------------
     // 葉面積パラメータセット詳細取得
     //*----------------------------
@@ -204,8 +187,9 @@ export default {
             console.log(results.message);
             alert("葉面積パラメータセット詳細取得に失敗しました。");
           } else {
-            this.beforeParameterSetData = results.data;
-            this.shared.onConclude(this.beforeParameterSetData); // 上位クラスと共有
+            this.beforeData = results.data;
+            this.afterData = Object.assign({}, this.beforeData);
+            this.$emit('updateData',results.data );
           }
         })
         .catch((error) => {
@@ -216,14 +200,22 @@ export default {
     //*----------------------------
     // 追加処理
     //*----------------------------
-    addData() {
-      useLeafParamSetAdd(this.afterParameterSetData)
+    addData(parentData) {
+      parentData.areaA = this.afterData.areaA;
+      parentData.areaB = this.afterData.areaB;
+      parentData.areaC = this.afterData.areaC;
+      parentData.countC = this.afterData.countC;
+      parentData.countD = this.afterData.countD;
+      useLeafParamSetAdd(parentData)
         .then((response) => {
           //成功時
           const results = response["data"];
           if (results.status != 0) {
             console.log(results.message);
             alert("葉面積パラメータセットの追加に失敗しました。");
+          }else {
+            alert("葉面積パラメータセットを追加しました。");
+            this.$emit('addData',results.data );
           }
         })
         .catch((error) => {
@@ -233,14 +225,22 @@ export default {
     //*----------------------------
     // 更新処理
     //*----------------------------
-    putData() {
-      useLeafParamSetUpdate(this.afterParameterSetData)
+    updateData(parentData) {
+      parentData.areaA = this.afterData.areaA;
+      parentData.areaB = this.afterData.areaB;
+      parentData.areaC = this.afterData.areaC;
+      parentData.countC = this.afterData.countC;
+      parentData.countD = this.afterData.countD;
+      useLeafParamSetUpdate(parentData)
         .then((response) => {
           //成功時
           const results = response["data"];
           if (results.status != 0) {
             console.log(results.message);
             alert("葉面積パラメータセットの更新に失敗しました。");
+          } else{
+            alert("葉面積パラメータセットを更新しました。");
+            this.$emit('updateData',parentData );
           }
         })
         .catch((error) => {
