@@ -22,9 +22,9 @@ export class GrowthChart {
             autoSelected: 'zoom'
           },
           events: {
-            parent : null,
-            mounted: function() {
-            this.data.parent.isLoading = false;
+            parent: null,
+            mounted: function () {
+              this.data.parent.isLoading = false;
             }.bind(this)
           }
         },
@@ -90,7 +90,7 @@ export class GrowthChart {
       }
     }
   }
-  setLoadingParent(parent){
+  setLoadingParent(parent) {
     parent.isLoading = true;
     this.data.parent = parent;
   }
@@ -127,10 +127,8 @@ export class GrowthChart {
       categories.push(startDate);
       startDate = moment(startDate).add(1, 'day');
     }
-    for (let i = 0; i < source.predictValues.length; i++) {
-      // categories.push(moment(startDate).format("MM/DD"));
-      categories.push(startDate);
-      startDate = moment(startDate).add(1, 'day');
-    }
+    this.data.chartOptions.yaxis.max = source.YEnd;
+    this.data.chartOptions.yaxis.min = source.YStart;
+    this.data.chartOptions.xaxis.categories = source.category;
   }
 }

@@ -2,6 +2,7 @@ package com.logpose.ph2.api.domain;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -307,12 +308,17 @@ public class GrowthDomain
 				.selectModelDataByType(deviceId, year);
 		List<Double> values = new ArrayList<>();
 		List<Double> predictValues = new ArrayList<>();
+		List<String> category = new ArrayList<>();
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
 		for (ModelDataEntity entity : entites)
 			{
 			if (entity.getIsReal())
 				values.add(entity.getfValue());
 			else
 				predictValues.add(entity.getfValue());
+			// * 取得日
+			Date castDay = entity.getDate();
+			category.add(sdf.format(castDay));
 			}
 		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
 		// * 最小値・最大値の設定
@@ -326,6 +332,7 @@ public class GrowthDomain
 		// * 値の設定
 		resultData.setValues(values);
 		resultData.setPredictValues(predictValues);
+		resultData.setCategory(category);
 		// * アノテーションデータの生成
 		List<AnnotationDTO> annotations = this.growthDomainMapper
 				.selectFValues(deviceId, year);
