@@ -41,10 +41,10 @@ public class LeafDomain
 	// ===============================================
 	@Autowired
 	private DailyDataAlgorythm dailyDataAlgorythm;
-	
+
 	@Autowired
 	ParameterSetDomain parameterSetDomain;
-	
+
 	@Autowired
 	private DefaultLeafCountParameters defaultLeafCountParameters;
 
@@ -69,7 +69,7 @@ public class LeafDomain
 	private LeafDomainMapper leafDomainMapper;
 	@Autowired
 	private DeviceDayDomain deviceDayDomain;
-	
+
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
 
@@ -200,62 +200,78 @@ public class LeafDomain
 			// * デバイスID、統計開始日から年度を取得。
 			year = this.deviceDayDomain.getYear(deviceId, startDate);
 			}
-		LeafGraphDataModel model= this.getModelGraphData(deviceId, year, startDate);
+		LeafGraphDataModel model = this.getModelGraphData(deviceId, year, startDate);
 		this.deviceDayDomain.updateModelData(deviceId, year, model);
 		}
+
 	// --------------------------------------------------
-		/**
-		 * 葉面積モデルグラフデータ取得
-		 *    モデルテーブルから検索してデータを取得する
-		 *
-		 * @param deviceId デバイスID
-		 * @param year 対象年度
-		 * @return GraphDataDTO
-		 * @throws ParseException 
-		 */
-		// --------------------------------------------------
-		public List<RealModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
-				throws ParseException
+	/**
+	 * 葉面積モデルグラフデータ取得
+	 *    モデルテーブルから検索してデータを取得する
+	 *
+	 * @param deviceId デバイスID
+	 * @param year 対象年度
+	 * @return GraphDataDTO
+	 * @throws ParseException 
+	 */
+	// --------------------------------------------------
+	public List<RealModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
+			throws ParseException
+		{
+		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
+		RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
+
+		List<ModelDataEntity> entites = this.ph2ModelDataMapper
+				.selectModelDataByType(deviceId, year);
+		List<Double> values = new ArrayList<>();
+		List<Double> predictValues = new ArrayList<>();
+
+		Double minArea = Double.MAX_VALUE;
+		Double maxArea = Double.MIN_VALUE;
+		Double minCount = Double.MAX_VALUE;
+		Double maxCount = Double.MIN_VALUE;
+		for (ModelDataEntity entity : entites)
 			{
-			RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
-			RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
-			
-			List<ModelDataEntity> entites = this.ph2ModelDataMapper
-					.selectModelDataByType(deviceId, year);
-			List<Double> values = new ArrayList<>();
-			List<Double> predictValues = new ArrayList<>();
-			for (ModelDataEntity entity : entites)
+			if (entity.getIsReal())
 				{
-				if (entity.getIsReal())
-					{
-					areaModel.getValues().add(entity.getCrownLeafArea());
-					countModel.getValues().add(entity.getLeafCount());
-					}
-				else
-					{
-					areaModel.getPredictValues().add(entity.getCrownLeafArea());
-					countModel.getPredictValues().add(entity.getLeafCount());					
-					}
+				areaModel.getValues().add(entity.getCrownLeafArea());
+				countModel.getValues().add(entity.getLeafCount());
 				}
-			// * 最小値・最大値の設定
-			ModelDataEntity first = entites.get(0);
-			ModelDataEntity last = entites.get(entites.size() - 1);
-			areaModel
-					.setXStart(DateTimeUtility.getStringFromDate(first.getDate()));
-			areaModel.setXEnd(DateTimeUtility.getStringFromDate(last.getDate()));
-			countModel.setXStart(areaModel.getXStart());
-			countModel.setXEnd(areaModel.getXEnd());
-			
-			areaModel.setYStart(entites.get(0).getCrownLeafArea());
-			areaModel.setYEnd(entites.get(entites.size() - 1).getCrownLeafArea());
-			countModel.setYStart(entites.get(0).getLeafCount());
-			countModel.setYEnd(entites.get(entites.size() - 1).getLeafCount());
-			// * 値の設定
-			List<RealModelGraphDataDTO> resultData = new ArrayList<>();
-			resultData.add(areaModel);
-			resultData.add(countModel);
-			return resultData;
+			else
+				{
+				areaModel.getPredictValues().add(entity.getCrownLeafArea());
+				countModel.getPredictValues().add(entity.getLeafCount());
+				}
+			double area = (null == entity.getCrownLeafArea()) ? 0 : entity.getCrownLeafArea();
+			if (minArea > area)
+				minArea = area;
+			if (maxArea < area)
+				maxArea = area;
+			double count = (null == entity.getLeafCount()) ? 0 : entity.getLeafCount();
+			if (minCount > count)
+				minCount = count;
+			if (maxCount < count)
+				maxCount = count;
 			}
+		// * 最小値・最大値の設定
+		ModelDataEntity first = entites.get(0);
+		ModelDataEntity last = entites.get(entites.size() - 1);
+		areaModel
+				.setXStart(DateTimeUtility.getStringFromDate(first.getDate()));
+		areaModel.setXEnd(DateTimeUtility.getStringFromDate(last.getDate()));
+		countModel.setXStart(areaModel.getXStart());
+		countModel.setXEnd(areaModel.getXEnd());
+
+		areaModel.setYStart(minArea);
+		areaModel.setYEnd(maxArea);
+		countModel.setYStart(minCount);
+		countModel.setYEnd(maxCount);
+		// * 値の設定
+		List<RealModelGraphDataDTO> resultData = new ArrayList<>();
+		resultData.add(areaModel);
+		resultData.add(countModel);
+		return resultData;
+		}
 
 	// --------------------------------------------------
 	/**
@@ -436,9 +452,10 @@ public class LeafDomain
 		count.setValueC(dto.getCountC());
 		count.setValueD(dto.getCountD());
 		this.ph2ParamsetLeafCountMapper.insert(count);
-		
+
 		return id;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * デフォルト値の設定

@@ -133,14 +133,14 @@ export default {
     initialize: function () {
       this.isDialog = true;
       //圃場名
-      this.fieldName = this.$store.getters.selectedData.selectedFields[0].name
-      this.fieldId = this.$store.getters.selectedData.selectedFields[0].id
+      this.fieldName = this.$store.getters.selectedField.name;
+      this.fieldId = this.$store.getters.selectedField.id;
       //デバイス名
-      this.deviceName = this.$store.getters.selectedData.selectedDevices[0].name
-      this.deviceId = this.$store.getters.selectedData.selectedDevices[0].id
+      this.deviceName = this.$store.getters.selectedDevice.name;
+      this.deviceId = this.$store.getters.selectedDevice.id;
       //年度
-      this.year = this.$store.getters.selectedData.selectedYears[0].variable
-      this.getUseGrowthFAll()
+      this.year = this.$store.getters.selectedYear.id;
+      this.getUseGrowthFAll();
     },
     close: function () {
       this.isDialog = false;
