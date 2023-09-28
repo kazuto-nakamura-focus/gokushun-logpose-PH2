@@ -109,9 +109,10 @@ public interface GrowthService
 	 * @param date 日付
 	 * @return F値
 	 * @throws ParseException 
+	 * @throws Exception 
 	 */
 	// --------------------------------------------------
-	public ValueDateDTO getFData(Long deviceId, Date date) throws ParseException;
+	public ValueDateDTO getFData(Long deviceId, Date date) throws Exception;
 
 	// --------------------------------------------------
 	/**

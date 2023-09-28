@@ -153,7 +153,7 @@ public class GrowthServiceImpl implements GrowthService
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public ValueDateDTO getFData(Long deviceId, Date date) throws ParseException
+	public ValueDateDTO getFData(Long deviceId, Date date) throws Exception
 		{
 		return this.growthDomain.getRealFData(deviceId, date);
 		}

@@ -64,8 +64,9 @@ export default {
             picker: null,
             dataChangeStatus: null,
 
-            fieldName: this.$store.getters.selectedData.selectedFields[0].name,
-            deviceId: this.$store.getters.selectedData.selectedDevices[0].id,
+            fieldName: this.$store.getters.selectedField.name,
+            deviceId: this.$store.getters.selectedDevice.id,
+            year:this.$store.getters.selectedYear.id,
             date: moment().format("YYYY-MM-DD"),
             fValueInterval: 0,
             elStageIntervalFormatterStatus: false,
@@ -132,10 +133,10 @@ export default {
             this.saveAccumulatedF = setData.accumulatedF
             if (setData.targetDate) {
                 //F値取得API
-                this.getUseGrowthFData(setData.targetDate, this.deviceId)
+                this.getUseGrowthFData(setData.targetDate)
                 this.picker = setData.targetDate
             } else {
-                this.getUseGrowthFData(this.date, this.deviceId)
+                this.getUseGrowthFData(this.date)
             }
         },
         onGridReady: function () { },
@@ -183,15 +184,16 @@ export default {
             this.fValueInterval = 0
             this.$emit('cancel')
         },
-        async getUseGrowthFData(year, deviceId) {
+        async getUseGrowthFData(date) {
             //生育推定実績値取得
-            await useGrowthFData(year, deviceId)
+            await useGrowthFData(date, this.deviceId)
                 .then((response) => {
                     const results = response["data"];
-                    if (results.data) {
-                        this.fValueInterval = results.data.value
+                    if(results.status==1){
+                        alert(results.message);
+                        this.fValueInterval = 0;
                     } else {
-                        this.fValueInterval = 0
+                        this.fValueInterval = results.data.value;
                     }
                 })
                 .catch((error) => {
