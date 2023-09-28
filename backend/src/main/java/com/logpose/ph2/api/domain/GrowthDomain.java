@@ -417,10 +417,10 @@ public class GrowthDomain
 		{
 		// * モデルテーブルから該当する日付にもっとも近い過去の実績値を取得する
 		ValueDateDTO value = this.ph2ModelDataMapper.selectRealFValueByDate(deviceId,
-				date);
+				date, true);
 		if (null == value)
 			{
-			throw new RuntimeException("該当する実績データはありません。");
+			throw new RuntimeException("指定された日付に該当する実績データはありません。");
 			}
 		return value;
 		}

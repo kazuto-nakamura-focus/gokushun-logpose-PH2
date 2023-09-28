@@ -265,7 +265,7 @@
 	</resultMap>
 	
     <select id="selectRealFValueByDate" resultMap="ValueDateDTO">
-    SELECT ONE
+    SELECT
         md.f_value as value,
         dd.date as date
     FROM
@@ -279,6 +279,7 @@
     AND
     	dd.has_real = #{isReal}
     ORDER BY dd.date desc
+	limit 1
     
   </select>
 </mapper>
