@@ -59,5 +59,5 @@ public interface Ph2ModelDataMapper {
 
 	List<ModelDataEntity> selectModelDataByType(@Param("deviceId") Long deviceId, @Param("year") Short year);
 
-	ValueDateDTO selectRealFValueByDate(@Param("deviceId") Long deviceId, @Param("date") Date date);
+	ValueDateDTO selectRealFValueByDate(@Param("deviceId") Long deviceId, @Param("date") Date date, @Param("isReal") boolean isReal);
 }

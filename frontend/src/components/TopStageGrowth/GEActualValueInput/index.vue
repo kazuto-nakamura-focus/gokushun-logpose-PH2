@@ -149,12 +149,17 @@ export default {
     },
     //実績値入力画面展開
     onCellClicked(params) {
+      // * クリックされたフィールドの情報を取得する
       this.gridApi = params.api;
       this.gridColumnApi = params.columnApi;
 
       if (params.column.colId === 'targetDate') {
-        //修正するデータ
+        // 未定義の場合はNULLに設定
+        if(params.node.data.targetDate === undefined){
+          params.node.data.targetDate = null;
+        }
         const editOrder = params.node.data.order
+        // 対象となる
         const editTargetDate = params.node.data.targetDate
 
         //初期今日の日付データ設定（初期実績値がnullの場合：今日日付をdefault値に保存）
