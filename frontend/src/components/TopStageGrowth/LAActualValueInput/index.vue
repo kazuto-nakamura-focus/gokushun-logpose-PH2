@@ -20,11 +20,10 @@
                 </v-card-text>
               </v-col>
             </v-row>
-            <div class="text-subtitle-1">
-              新梢数
-            </div>
+            <div class="text-subtitle-1">新梢数</div>
             <v-subheader class="ma-0 mt-n3 pa-0">
-              (芽掻きのタイミングで実施) センサーを装着している樹をサンプルとしてカウントしてください
+              (芽掻きのタイミングで実施)
+              センサーを装着している樹をサンプルとしてカウントしてください
             </v-subheader>
             <div>
               <v-container class="sprout">
@@ -32,10 +31,14 @@
                   <v-col cols="9">
                     <v-row>
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
+                        <v-subheader class="ma-0 mt-n5 pa-0"
+                          >実測日</v-subheader
+                        >
                       </v-col>
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0">新梢数</v-subheader>
+                        <v-subheader class="ma-0 mt-n5 pa-0"
+                          >新梢数</v-subheader
+                        >
                       </v-col>
                       <v-col cols="4"></v-col>
                     </v-row>
@@ -46,24 +49,49 @@
                   <v-col cols="9">
                     <v-row>
                       <v-col cols="4">
-                        <v-menu v-model="menu1" :close-on-content-click="false" :nudge-right="40"
-                          transition="scale-transition" offset-y min-width="auto">
+                        <v-menu
+                          v-model="menu1"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
                           <template v-slot:activator="{ on, attrs }">
-                            <v-text-field class="ma-0 mt-n8 pl-1 pr-1" v-model="leafAreaValueData.leafAreaNDate"
-                              v-bind="attrs" v-on="on" outlined dense></v-text-field>
+                            <v-text-field
+                              class="ma-0 mt-n8 pl-1 pr-1"
+                              v-model="leafAreaValueData.leafAreaNDate"
+                              v-bind="attrs"
+                              v-on="on"
+                              outlined
+                              dense
+                            ></v-text-field>
                           </template>
-                          <v-date-picker v-model="leafAreaValueData.leafAreaNDate" @input="menu1 = false"></v-date-picker>
+                          <v-date-picker
+                            v-model="leafAreaValueData.leafAreaNDate"
+                            @input="menu1 = false"
+                          ></v-date-picker>
                         </v-menu>
                         <!-- <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
                             v-model.number="leafAreaValueData.leafAreaNDate"></v-text-field> -->
                       </v-col>
                       <v-col cols="4">
-                        <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
-                          v-model.number="leafAreaValueData.leafAreaNValue"></v-text-field>
+                        <v-text-field
+                          class="ma-0 mt-n8 pl-1 pr-1"
+                          dense
+                          hide-details="auto"
+                          outlined
+                          v-model.number="leafAreaValueData.leafAreaNValue"
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="4">
-                        <v-btn color="primary" class="ma-0 mt-n12 pl-1 pr-1 white--text" elevation="2"
-                          @click="saveNew()">保存</v-btn>
+                        <v-btn
+                          color="primary"
+                          class="ma-0 mt-n12 pl-1 pr-1 white--text"
+                          elevation="2"
+                          @click="saveNew()"
+                          >保存</v-btn
+                        >
                       </v-col>
                     </v-row>
                   </v-col>
@@ -72,26 +100,33 @@
               </v-container>
             </div>
 
-            <div class="text-subtitle-1  mt-5">
-              葉面積・葉枚数
-            </div>
+            <div class="text-subtitle-1 mt-5">葉面積・葉枚数</div>
             <v-subheader class="ma-0 mt-n3 pa-0">
               (測定タイミング : )
             </v-subheader>
             <div>
-              <v-container class="sprout" v-for="leafAreaAreaData in leafAreaValueData.leafAreaAreaDataList"
-                :key="leafAreaAreaData.id">
+              <v-container
+                class="sprout"
+                v-for="leafAreaAreaData in leafAreaValueData.leafAreaAreaDataList"
+                :key="leafAreaAreaData.id"
+              >
                 <v-row>
                   <v-col cols="7">
                     <v-row>
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
+                        <v-subheader class="ma-0 mt-n5 pa-0"
+                          >実測日</v-subheader
+                        >
                       </v-col>
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0">新梢あたり葉枚数</v-subheader>
+                        <v-subheader class="ma-0 mt-n5 pa-0"
+                          >新梢あたり葉枚数</v-subheader
+                        >
                       </v-col>
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0">平均個葉面積</v-subheader>
+                        <v-subheader class="ma-0 mt-n5 pa-0"
+                          >平均個葉面積</v-subheader
+                        >
                       </v-col>
                     </v-row>
                   </v-col>
@@ -99,7 +134,9 @@
                   <v-col cols="4">
                     <v-row>
                       <v-col cols="12">
-                        <v-subheader class="ma-0 mt-n5 pa-0">実測樹幹葉面積</v-subheader>
+                        <v-subheader class="ma-0 mt-n5 pa-0"
+                          >実測樹幹葉面積</v-subheader
+                        >
                       </v-col>
                     </v-row>
                   </v-col>
@@ -108,26 +145,53 @@
                   <v-col cols="7">
                     <v-row>
                       <v-col cols="4">
-                        <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40"
-                          transition="scale-transition" offset-y min-width="auto">
+                        <v-menu
+                          v-model="menu2"
+                          :close-on-content-click="false"
+                          :nudge-right="40"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
                           <template v-slot:activator="{ on, attrs }">
-                            <v-text-field class="ma-0 mt-n8 pl-1 pr-1" v-model="leafAreaAreaData.leafAreaADate"
-                              v-bind="attrs" v-on="on" outlined dense></v-text-field>
+                            <v-text-field
+                              class="ma-0 mt-n8 pl-1 pr-1"
+                              v-model="leafAreaAreaData.leafAreaADate"
+                              v-bind="attrs"
+                              v-on="on"
+                              outlined
+                              dense
+                            ></v-text-field>
                           </template>
-                          <v-date-picker v-model="leafAreaAreaData.leafAreaADate" @input="menu2 = false"></v-date-picker>
+                          <v-date-picker
+                            v-model="leafAreaAreaData.leafAreaADate"
+                            @input="menu2 = false"
+                          ></v-date-picker>
                         </v-menu>
                         <!-- <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
                             v-model.number="leafAreaAreaData.leafAreaADate"></v-text-field> -->
                       </v-col>
                       <v-col cols="4">
-                        <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
+                        <v-text-field
+                          class="ma-0 mt-n8 pl-1 pr-1"
+                          dense
+                          hide-details="auto"
+                          outlined
                           v-model.number="leafAreaAreaData.leafAreaAValue"
-                          @change="onChangeValue(leafAreaAreaData.id)"></v-text-field>
+                          @change="onChangeValue(leafAreaAreaData.id)"
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="4">
-                        <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
-                          v-model.number="leafAreaAreaData.leafAreaAValueAverage"
-                          @change="onChangeValue(leafAreaAreaData.id)"></v-text-field>
+                        <v-text-field
+                          class="ma-0 mt-n8 pl-1 pr-1"
+                          dense
+                          hide-details="auto"
+                          outlined
+                          v-model.number="
+                            leafAreaAreaData.leafAreaAValueAverage
+                          "
+                          @change="onChangeValue(leafAreaAreaData.id)"
+                        ></v-text-field>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -135,12 +199,25 @@
                   <v-col cols="4">
                     <v-row>
                       <v-col cols="6">
-                        <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined suffix="㎠" filled
-                          readonly v-model.number="leafAreaAreaData.leafAreaAValueTotal"></v-text-field>
+                        <v-text-field
+                          class="ma-0 mt-n8 pl-1 pr-1"
+                          dense
+                          hide-details="auto"
+                          outlined
+                          suffix="㎠"
+                          filled
+                          readonly
+                          v-model.number="leafAreaAreaData.leafAreaAValueTotal"
+                        ></v-text-field>
                       </v-col>
                       <v-col cols="6">
-                        <v-btn color="primary" class="ma-0 mt-n12 pl-1 pr-1 white--text" elevation="2"
-                          @click="saveArea(leafAreaAreaData.id)">保存</v-btn>
+                        <v-btn
+                          color="primary"
+                          class="ma-0 mt-n12 pl-1 pr-1 white--text"
+                          elevation="2"
+                          @click="saveArea(leafAreaAreaData.id)"
+                          >保存</v-btn
+                        >
                       </v-col>
                     </v-row>
                   </v-col>
@@ -151,19 +228,30 @@
                 <v-row>
                   <v-col cols="10"></v-col>
                   <v-col cols="2">
-                    <v-btn color="primary" class="ma-2 white--text" elevation="2" fab @click="addrow()">
+                    <v-btn
+                      color="primary"
+                      class="ma-2 white--text"
+                      elevation="2"
+                      fab
+                      @click="addrow()"
+                    >
                       <v-icon>mdi-plus</v-icon>
                     </v-btn>
                   </v-col>
                 </v-row>
               </v-container>
             </div>
-
           </v-container>
 
           <div class="GS_ButtonArea">
             <!-- <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="save()">保存</v-btn> -->
-            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">キャンセル</v-btn>
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              @click="close()"
+              >キャンセル</v-btn
+            >
           </div>
         </v-card>
       </v-dialog>
@@ -178,15 +266,15 @@ import {
   useLeafValueShootDetail,
   useLeafValueAreaAndCountDetail,
   useLeafValueShoot,
-  useLeafValueAreaAndCount
+  useLeafValueAreaAndCount,
 } from "@/api/TopStateGrowth/LAActualValueInput";
 
 export default {
-  name: 'LAActualValueInput',
+  name: "LAActualValueInput",
   props: {
     shared /** MountController */: { required: true },
     selectedField: Array,
-    selectedDevices: Array
+    selectedDevices: Array,
   },
 
   data() {
@@ -196,7 +284,7 @@ export default {
       isDialog: false,
       title: "", // 選ばれたモデル種別
       field: {}, // 選ばれた圃場
-      year:0,
+      year: 0,
       // selected: null,
       device: {},
       // params: [],
@@ -216,7 +304,7 @@ export default {
             leafAreaAValue: 0,
             leafAreaAValueAverage: 0,
             leafAreaAValueTotal: 0,
-          }
+          },
         ],
       },
     };
@@ -231,7 +319,6 @@ export default {
   },
   methods: {
     initialize: function (data) {
-   
       //年度
       this.year = this.$store.getters.selectedYear.id;
       // タイトル
@@ -240,12 +327,12 @@ export default {
       this.field = {
         id: this.$store.getters.selectedField.id,
         name: this.$store.getters.selectedField.name,
-      }
+      };
       // デバイス
       this.device = {
         id: this.$store.getters.selectedDevice.id,
         name: this.$store.getters.selectedDevice.name,
-      }
+      };
       //this.isDialog = true;
 
       //新梢数取得処理
@@ -260,15 +347,15 @@ export default {
             .then((count_response) => {
               console.log(count_response);
               const la_count_data = count_response["data"]["data"];
-              const data_list = []
+              const data_list = [];
               const count_data = {
                 id: 0,
                 leafAreaADate: la_count_data.date,
                 leafAreaAValue: la_count_data.count,
                 leafAreaAValueAverage: la_count_data.averageArea,
                 leafAreaAValueTotal: la_count_data.totalArea,
-              }
-              data_list.push(count_data)
+              };
+              data_list.push(count_data);
               this.leafAreaValueData.leafAreaAreaDataList = data_list;
             })
             .catch((error) => {
@@ -288,15 +375,20 @@ export default {
         deviceId: this.device.id,
         date: this.leafAreaValueData.leafAreaNDate,
         count: this.leafAreaValueData.leafAreaNValue,
-      }
+      };
       // console.log("--- data ---");
       console.log(data);
       //新梢数の登録
       useLeafValueShoot(data)
         .then((response) => {
-          console.log(response);
-          this.isDialog = false;
-          this.shared.onConclude(this.value);
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("登録が完了しました。");
+            this.isDialog = false;
+          } else {
+            alert("登録が失敗しました。");
+            throw new Error(message);
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -309,39 +401,48 @@ export default {
         deviceId: this.device.id,
         date: this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaADate,
         count: this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValue,
-        averageArea: this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueAverage,
-        totalArea: this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueTotal
-      }
+        averageArea:
+          this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueAverage,
+        totalArea:
+          this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueTotal,
+      };
       // console.log("--- data ---");
       console.log(data);
 
       //新梢辺り葉枚数・平均個葉面積登録処理
       useLeafValueAreaAndCount(data)
         .then((response) => {
-          console.log(response);
-          this.isDialog = false;
-          this.shared.onConclude(this.value);
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("登録が完了しました。");
+            this.isDialog = false;
+          } else {
+            alert("登録が失敗しました。");
+            throw new Error(message);
+          }
+          //          this.shared.onConclude(this.value);
         })
         .catch((error) => {
           console.log(error);
         });
     },
     addrow: function () {
-      this.leafAreaValueData.leafAreaAreaDataList.push(
-        {
-          id: this.leafAreaValueData.leafAreaAreaDataList.length,
-          leafAreaADate: moment().format("YYYY-MM-DD"),
-          leafAreaAValue: 0,
-          leafAreaAValueAverage: 0,
-          leafAreaAValueTotal: 0,
-        }
-      );
+      this.leafAreaValueData.leafAreaAreaDataList.push({
+        id: this.leafAreaValueData.leafAreaAreaDataList.length,
+        leafAreaADate: moment().format("YYYY-MM-DD"),
+        leafAreaAValue: 0,
+        leafAreaAValueAverage: 0,
+        leafAreaAValueTotal: 0,
+      });
     },
 
     onChangeValue: function (id) {
-      const aValue = this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValue;
-      const aValueAverage = this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueAverage;
-      this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueTotal = aValue * aValueAverage;
+      const aValue =
+        this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValue;
+      const aValueAverage =
+        this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueAverage;
+      this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueTotal =
+        aValue * aValueAverage;
     },
   },
 };
