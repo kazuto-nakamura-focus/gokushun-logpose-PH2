@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.service.impl;
 
 import java.text.ParseException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -122,6 +123,10 @@ public class LeafServiceImpl implements LeafService
 		entity.setDeviceId(dto.getDeviceId());
 		entity.setTargetDate(DateTimeUtility.getDateFromString(dto.getDate()));
 		entity.setCount(dto.getCount());
+		// TODO Year はいるのかな？
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(entity.getTargetDate());
+		entity.setYear((short) cal.get(Calendar.YEAR));
 		this.leafDomain.addShootCount(entity);
 		}
 
