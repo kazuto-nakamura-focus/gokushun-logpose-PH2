@@ -23,10 +23,11 @@
           dense
         ></v-text-field>
       </template>
+
       <v-date-picker
         v-model="date"
-        :min="getStartDate"
-        :max="getEndDate"
+        :min="minDate"
+        :max="maxDate"
         @input="menu = false"
         @change="handleChangeDate"
       ></v-date-picker>
@@ -47,31 +48,24 @@ export default {
     };
   },
 
-  mounted() {
-    this.shared.mount(this);
-  },
   methods: {
     initialize: function (selectedYear) {
       // 年度
       const year = selectedYear.id;
-      console.log(year);
       // 開始日
       this.minDate = year.toString() + "-" + selectedYear.startDate;
       // 開始日からmoment
       const momentData = moment(this.minDate);
       this.minDate = momentData.format("YYYY-MM-DD");
-      // 一年後の一日前
-      momentData.add(1, "y");
-      momentData.add(-1, "d");
       // 最終日
-      this.maxDate = momentData.format("YYYY-MM-DD");
+      this.maxDate = moment().format("YYYY-MM-DD");
     },
 
     handleChangeDate() {
       if (this.date < this.minDate || this.date > this.maxDate) {
         alert("日付は年度内を指定してください。");
       } else {
-        this.shared.onConclude(this.date);
+        this.$emit("onChange", this.date);
       }
     },
   },

@@ -8,27 +8,10 @@
           <v-card-text>
             (PAMで計測した「f」と「g」の値を入力してください。)
           </v-card-text>
+          <!-- タイトル部分 -->
+           <input-header ref="titleHeader" />
+          <!-- 入力部分 -->
           <v-container>
-            <v-row :align="align" no-gutters>
-              <v-col :cols="4">
-                <v-card-text>
-                  圃場名<br />
-                  <p class="font-weight-bold">{{ field.name }}</p>
-                </v-card-text>
-              </v-col>
-              <v-col>
-                <v-card-text>
-                  デバイス名<br />
-                  <p class="font-weight-bold">{{ device.name }}</p>
-                </v-card-text>
-              </v-col>
-              <v-col>
-                <v-card-text>
-                  年度<br />
-                  <p class="font-weight-bold">{{ year }}</p>
-                </v-card-text>
-              </v-col>
-            </v-row>
             <div class="text-subtitle-1">イールド値モデルパラメータ</div>
             <div>
               <v-container class="sprout">
@@ -39,12 +22,12 @@
                     </v-row>
                   </v-col>
                   <v-col cols="4">
-                    <div style="margin:0;padding:0">
+                    <div style="margin: 0; padding: 0">
                       <ph-2-date-picker
-                        :shared="sharedDate"
                         ref="date"
                         width="100%"
-                        style="margin:0;padding:0"
+                        @onChange="handleDate"
+                        style="margin: 0; padding: 0"
                       />
                     </div>
                   </v-col>
@@ -108,7 +91,7 @@
 import moment from "moment";
 import { mdiExitToApp } from "@mdi/js";
 import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
-import { MountController } from "@/lib/mountController.js";
+import InputHeader from "./InputHeader.vue";
 
 import {
   usePhotosynthesisValuesUpdate,
@@ -125,6 +108,11 @@ export default {
 
   data() {
     return {
+      selectedItems: {
+        selectedField: this.$store.getters.selectedField,
+        selectedDevice: this.$store.getters.selectedDevice,
+        year: this.$store.getters.selectedYear,
+      },
       value: "",
       date: moment().format("YYYY-MM-DD"),
       isDialog: false,
@@ -137,7 +125,6 @@ export default {
       menu: false,
       year: 0,
 
-      sharedDate: new MountController(),
       selectedDate: null,
 
       // headers: HEADERS,
@@ -152,6 +139,7 @@ export default {
 
   components: {
     Ph2DatePicker,
+    InputHeader,
   },
 
   mounted() {
@@ -159,15 +147,13 @@ export default {
   },
   methods: {
     initialize: function (data) {
-      this.sharedDate.setUp(
-        this.$refs.date,
-        function (comp) {
-          comp.initialize(data.menu.selectedYear);
-        }.bind(this),
-        function (date) {
-          this.selectedDate = date;
+      this.$nextTick(
+        function () {
+          this.$refs.date.initialize(data.menu.selectedYear);
+          this.$refs.titleHeader.initialize(data.menu);
         }.bind(this)
       );
+      
       //年度
       this.year = this.$store.getters.selectedYear.id;
       // タイトル
@@ -195,6 +181,9 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    handleDate(date){
+      this.date = date;
     },
     close: function () {
       this.isDialog = false;

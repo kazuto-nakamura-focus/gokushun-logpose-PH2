@@ -3,12 +3,14 @@
   <v-container>
     <v-card elevation="0" class="ma-1">
       <v-subheader>実測値入力</v-subheader>
+      <!-- タイトル部分 -->
+      <input-header ref="titleHeader" />
+      <!-- 入力部分 -->
       <v-row>
         <v-col cols="10">
           <v-row>
             <v-col cols="3">
-              <v-subheader class="ma-0 mt-n5 pa-0">
-              </v-subheader>
+              <v-subheader class="ma-0 mt-n5 pa-0"> </v-subheader>
             </v-col>
             <v-col cols="2">
               <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
@@ -32,25 +34,55 @@
               <div class="ma-0 mt-n5 pa-0 pl-4">着生後芽かき処理時</div>
             </v-col>
             <v-col cols="2">
-              <v-menu v-model="menu1" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-                offset-y min-width="auto">
+              <v-menu
+                v-model="menu1"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" v-model="fruitValueSproutTreatment.date"
-                    readonly v-bind="attrs" v-on="on" outlined dense></v-text-field>
+                  <v-text-field
+                    class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                    v-model="fruitValueSproutTreatment.date"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    outlined
+                    dense
+                  ></v-text-field>
                 </template>
-                <v-date-picker v-model="fruitValueSproutTreatment.date" @input="menu1 = false"></v-date-picker>
+                <v-date-picker
+                  v-model="fruitValueSproutTreatment.date"
+                  @input="menu1 = false"
+                ></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="2">
-              <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" dense hide-details="auto" outlined
-                v-model.number="fruitValueSproutTreatment.weight"></v-text-field>
+              <v-text-field
+                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                dense
+                hide-details="auto"
+                outlined
+                v-model.number="fruitValueSproutTreatment.weight"
+              ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" dense hide-details="auto" outlined
-                v-model.number="fruitValueSproutTreatment.count"></v-text-field>
+              <v-text-field
+                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                dense
+                hide-details="auto"
+                outlined
+                v-model.number="fruitValueSproutTreatment.count"
+              ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="saveUseFruitValueSproutTreatment">保存</v-btn>
+              <v-btn
+                class="primary ma-0 mt-n12 pl-1 pr-1"
+                @click="saveUseFruitValueSproutTreatment"
+                >保存</v-btn
+              >
             </v-col>
           </v-row>
         </v-col>
@@ -59,29 +91,58 @@
         <v-col cols="10">
           <v-row>
             <v-col cols="3">
-              <div class="ma-0 mt-n5 pa-0 pl-4">E-L 27～31の生育ステージ時
-              </div>
+              <div class="ma-0 mt-n5 pa-0 pl-4">E-L 27～31の生育ステージ時</div>
             </v-col>
             <v-col cols="2">
-              <v-menu v-model="menu2" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-                offset-y min-width="auto">
+              <v-menu
+                v-model="menu2"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" v-model="fruitValueELStage.date" readonly
-                    v-bind="attrs" v-on="on" outlined dense></v-text-field>
+                  <v-text-field
+                    class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                    v-model="fruitValueELStage.date"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    outlined
+                    dense
+                  ></v-text-field>
                 </template>
-                <v-date-picker v-model="fruitValueELStage.date" @input="menu2 = false"></v-date-picker>
+                <v-date-picker
+                  v-model="fruitValueELStage.date"
+                  @input="menu2 = false"
+                ></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="2">
-              <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" dense hide-details="auto" outlined
-                v-model.number="fruitValueELStage.weight"></v-text-field>
+              <v-text-field
+                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                dense
+                hide-details="auto"
+                outlined
+                v-model.number="fruitValueELStage.weight"
+              ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" dense hide-details="auto" outlined
-                v-model.number="fruitValueELStage.count"></v-text-field>
+              <v-text-field
+                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                dense
+                hide-details="auto"
+                outlined
+                v-model.number="fruitValueELStage.count"
+              ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="saveUseFruitValueELStage">保存</v-btn>
+              <v-btn
+                class="primary ma-0 mt-n12 pl-1 pr-1"
+                @click="saveUseFruitValueELStage"
+                >保存</v-btn
+              >
             </v-col>
           </v-row>
         </v-col>
@@ -93,25 +154,55 @@
               <div class="ma-0 mt-n5 pa-0 pl-4">袋かけ時</div>
             </v-col>
             <v-col cols="2">
-              <v-menu v-model="menu3" :close-on-content-click="false" :nudge-right="40" transition="scale-transition"
-                offset-y min-width="auto">
+              <v-menu
+                v-model="menu3"
+                :close-on-content-click="false"
+                :nudge-right="40"
+                transition="scale-transition"
+                offset-y
+                min-width="auto"
+              >
                 <template v-slot:activator="{ on, attrs }">
-                  <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" v-model="fruitValueBagging.date" readonly
-                    v-bind="attrs" v-on="on" outlined dense></v-text-field>
+                  <v-text-field
+                    class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                    v-model="fruitValueBagging.date"
+                    readonly
+                    v-bind="attrs"
+                    v-on="on"
+                    outlined
+                    dense
+                  ></v-text-field>
                 </template>
-                <v-date-picker v-model="fruitValueBagging.date" @input="menu3 = false"></v-date-picker>
+                <v-date-picker
+                  v-model="fruitValueBagging.date"
+                  @input="menu3 = false"
+                ></v-date-picker>
               </v-menu>
             </v-col>
             <v-col cols="2">
-              <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" dense hide-details="auto" outlined
-                v-model.number="fruitValueBagging.weight"></v-text-field>
+              <v-text-field
+                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                dense
+                hide-details="auto"
+                outlined
+                v-model.number="fruitValueBagging.weight"
+              ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-text-field class="ma-0 mt-n8 pl-1 pr-1 text_field_size" dense hide-details="auto" outlined
-                v-model.number="fruitValueBagging.count"></v-text-field>
+              <v-text-field
+                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+                dense
+                hide-details="auto"
+                outlined
+                v-model.number="fruitValueBagging.count"
+              ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="saveUseFruitValueBagging">保存</v-btn>
+              <v-btn
+                class="primary ma-0 mt-n12 pl-1 pr-1"
+                @click="saveUseFruitValueBagging"
+                >保存</v-btn
+              >
             </v-col>
           </v-row>
         </v-col>
@@ -151,7 +242,13 @@
 </template>
 
 <script>
-import { useFruitValues, useFruitValueSproutTreatment, useFruitValueELStage, useFruitValueBagging } from "@/api/TopStateGrowth/index"
+import {
+  useFruitValues,
+  useFruitValueSproutTreatment,
+  useFruitValueELStage,
+  useFruitValueBagging,
+} from "@/api/TopStateGrowth/index";
+import InputHeader from "./InputHeader.vue";
 
 // const fruitValuesDTOData = {
 //   burden: 0.5,	//* 着果負担
@@ -165,18 +262,19 @@ export default {
     selectedMenu: Object,
     selectedField: Array,
     selectedYears: Array,
-    selectedDevices: Array
+    selectedDevices: Array,
   },
   components: {
+    InputHeader,
   },
   data() {
     return {
       fieldId: null, // 選ばれた圃場ID
-      devicesId: this.$store.getters.selectedData.selectedDevices[0].id,// 選ばれたデバイスID
+      devicesId: this.$store.getters.selectedData.selectedDevices[0].id, // 選ばれたデバイスID
       year: this.$store.getters.selectedData.selectedYears[0].variable, //年度
 
       fruitValues: {
-        burden: null,	//* 着果負担
+        burden: null, //* 着果負担
         amount: null, //* 積算推定樹冠光合成量あたりの着果量（g/mol
         count: null, //* 実測着果数/樹冠葉面積（房数/㎠）
       },
@@ -203,86 +301,98 @@ export default {
       menu1: false,
       menu2: false,
       menu3: false,
-
     };
   },
   mounted() {
     this.shared.mount(this);
-    this.getUseFruitValues()
+    this.getUseFruitValues();
   },
   methods: {
+    initialize: function (data) {
+    this.$nextTick(
+        function () {
+          this.$refs.date.initialize(data.menu.selectedYear);
+          this.$refs.titleHeader.initialize(data.menu);
+        }.bind(this)
+      );
+    },
     getUseFruitValues() {
       //圃場着果量着果負担詳細取得
-      useFruitValues(this.devicesId, this.year).then((response) => {
-        //成功時
-        const results = response["data"];
-        console.log(this.devicesId);
-        console.log(this.year);
-        this.fruitValues = results.data
-      }).catch((error) => {
-        //失敗時
-        console.log(error);
-      })
+      useFruitValues(this.devicesId, this.year)
+        .then((response) => {
+          //成功時
+          const results = response["data"];
+          console.log(this.devicesId);
+          console.log(this.year);
+          this.fruitValues = results.data;
+        })
+        .catch((error) => {
+          //失敗時
+          console.log(error);
+        });
     },
     saveUseFruitValueSproutTreatment: function () {
       const data = {
-        "deviceId": parseInt(this.devicesId),
-        "year": this.year,
-        "eventId": null,
-        ...this.fruitValueSproutTreatment
-      }
-      console.log("saveUseFruitValueSproutTreatment", data)
+        deviceId: parseInt(this.devicesId),
+        year: this.year,
+        eventId: null,
+        ...this.fruitValueSproutTreatment,
+      };
+      console.log("saveUseFruitValueSproutTreatment", data);
       //着生後芽かき処理時実績値更新
       useFruitValueSproutTreatment(data)
         .then((response) => {
           const results = response["data"];
-          console.log("results", results)
-          this.getUseFruitValues()
-        }).catch((error) => {
+          console.log("results", results);
+          this.getUseFruitValues();
+        })
+        .catch((error) => {
           //失敗時
           console.log(error);
         });
     },
     saveUseFruitValueELStage: function () {
       const data = {
-        "deviceId": parseInt(this.devicesId),
-        "year": this.year,
-        "eventId": null,
-        ...this.fruitValueELStage
-      }
+        deviceId: parseInt(this.devicesId),
+        year: this.year,
+        eventId: null,
+        ...this.fruitValueELStage,
+      };
       ////E-L 27～31の生育ステージ時実績値更新処理
       useFruitValueELStage(data)
         .then((response) => {
           const results = response["data"];
-          console.log("results", results)
-          this.getUseFruitValues()
-        }).catch((error) => {
+          console.log("results", results);
+          this.getUseFruitValues();
+        })
+        .catch((error) => {
           //失敗時
           console.log(error);
         });
     },
     saveUseFruitValueBagging: function () {
       const data = {
-        "deviceId": parseInt(this.devicesId),
-        "year": this.year,
-        "eventId": null,
-        ...this.fruitValueBagging
-      }
+        deviceId: parseInt(this.devicesId),
+        year: this.year,
+        eventId: null,
+        ...this.fruitValueBagging,
+      };
       //袋かけ時実績値更新処理
       useFruitValueBagging(data)
         .then((response) => {
           const results = response["data"];
-          console.log("results", results)
-          this.getUseFruitValues()
-        }).catch((error) => {
+          console.log("results", results);
+          this.getUseFruitValues();
+        })
+        .catch((error) => {
           //失敗時
           console.log(error);
         });
     },
     //圃場、年度変更し処理
     updateTable() {
-      this.getUseFruitValues()
-    }
+      this.getUseFruitValues();
+    },
   },
 };
 </script>

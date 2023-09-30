@@ -6,27 +6,10 @@
       <v-dialog v-model="isDialog" width="700" height="700">
         <v-card>
           <v-card-title>実績値入力</v-card-title>
+          <!-- タイトル部分 -->
+          <input-header ref="titleHeader" />
+          <!-- 入力部分 -->          
           <v-container>
-            <v-row no-gutters>
-              <v-col :cols="3">
-                <v-card-text>
-                  圃場名<br />
-                  <p class="font-weight-bold">{{ fieldName }}</p>
-                </v-card-text>
-              </v-col>
-              <v-col>
-                <v-card-text>
-                  デバイス名<br />
-                  <p class="font-weight-bold">{{ deviceName }}</p>
-                </v-card-text>
-              </v-col>
-              <v-col>
-                <v-card-text>
-                  年度<br />
-                  <p class="font-weight-bold">{{ year }}</p>
-                </v-card-text>
-              </v-col>
-            </v-row>
             <v-card-text>
               現在の累積F値<br />
               <p class="font-weight-bold">{{ fValueInterval }}</p>
@@ -62,6 +45,7 @@ import EditDialog from "../GEActualValueInput/EditDialog/index.vue"
 import { useGrowthFAll } from "@/api/TopStateGrowth/GEFValue/index";
 import { useGrowthFData } from "@/api/TopStateGrowth/GEActualValueInput/index"
 import { useGrowthFDataUpdate } from "@/api/TopStateGrowth/GEActualValueInput/index"
+import InputHeader from "./InputHeader.vue";
 
 export default {
   name: 'GEActualValueInput',
@@ -71,6 +55,7 @@ export default {
   components: {
     AgGridVue,
     EditDialog,
+    InputHeader,
   },
   data() {
     return {
@@ -122,7 +107,12 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi;
   },
   methods: {
-    initialize: function () {
+    initialize: function (data) {
+      this.$nextTick(
+        function () {
+          this.$refs.titleHeader.initialize(data.menu);
+        }.bind(this)
+      );
       this.isDialog = true;
       //圃場名
       this.fieldName = this.$store.getters.selectedField.name;

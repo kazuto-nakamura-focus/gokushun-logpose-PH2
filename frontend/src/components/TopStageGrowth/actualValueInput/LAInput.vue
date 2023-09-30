@@ -5,21 +5,10 @@
       <v-dialog v-model="isDialog" width="900">
         <v-card>
           <v-card-title v-if="title != null">実績値入力</v-card-title>
+                    <!-- タイトル部分 -->
+                    <input-header ref="titleHeader" />
+                    <!-- 入力部分 -->
           <v-container>
-            <v-row no-gutters>
-              <v-col :cols="4">
-                <v-card-text>
-                  圃場名<br />
-                  <p class="font-weight-bold">{{ field.name }}</p>
-                </v-card-text>
-              </v-col>
-              <v-col>
-                <v-card-text>
-                  デバイス名<br />
-                  <p class="font-weight-bold">{{ device.name }}</p>
-                </v-card-text>
-              </v-col>
-            </v-row>
             <div class="text-subtitle-1">新梢数</div>
             <v-subheader class="ma-0 mt-n3 pa-0">
               (芽掻きのタイミングで実施)
@@ -261,6 +250,7 @@
 <script>
 import moment from "moment";
 import { mdiExitToApp } from "@mdi/js";
+import InputHeader from "./InputHeader.vue";
 
 import {
   useLeafValueShootDetail,
@@ -311,7 +301,7 @@ export default {
   },
 
   components: {
-    // SvgIcon,
+    InputHeader,
   },
 
   mounted() {
@@ -319,6 +309,12 @@ export default {
   },
   methods: {
     initialize: function (data) {
+      this.$nextTick(
+        function () {
+ //         this.$refs.date.initialize(data.menu.selectedYear);
+          this.$refs.titleHeader.initialize(data.menu);
+        }.bind(this)
+      );
       //年度
       this.year = this.$store.getters.selectedYear.id;
       // タイトル
