@@ -58,7 +58,7 @@ import { AgGridVue } from "ag-grid-vue";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import "@/style/ag-theme-gs.css"
-import EditDialog from "./EditDialog/index.vue"
+import EditDialog from "../GEActualValueInput/EditDialog/index.vue"
 import { useGrowthFAll } from "@/api/TopStateGrowth/GEFValue/index";
 import { useGrowthFData } from "@/api/TopStateGrowth/GEActualValueInput/index"
 import { useGrowthFDataUpdate } from "@/api/TopStateGrowth/GEActualValueInput/index"

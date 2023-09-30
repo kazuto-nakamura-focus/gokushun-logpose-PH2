@@ -29,59 +29,75 @@
                 </v-card-text>
               </v-col>
             </v-row>
-            <div class="text-subtitle-1">
-              イールド値モデルパラメータ
-            </div>
+            <div class="text-subtitle-1">イールド値モデルパラメータ</div>
             <div>
               <v-container class="sprout">
                 <v-row>
-                  <v-col cols="4">
-                      <v-row>
-                        <v-subheader class="ma-0 pa-1">実績日</v-subheader>
-                        <v-menu
-                          v-model="menu"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              class="ma-0 pa-1"
-                              v-model="photosynthesisValueData.photosynthesisDate"
-                              v-bind="attrs"
-                              v-on="on"
-                              outlined
-                              dense
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                            v-model="photosynthesisValueData.photosynthesisDate"
-                            @input="menu = false"
-                          ></v-date-picker>
-                        </v-menu>
-                      </v-row>
+                  <v-col cols="1">
+                    <v-row>
+                      <v-subheader class="ma-0 pa-1">実績日</v-subheader>
+                    </v-row>
                   </v-col>
-                  <v-col cols="6">
-                      <v-row>
-                          <v-subheader class="ma-0 pa-1">f</v-subheader>
-                          <v-text-field class="ma-0 pa-1" dense hide-details="auto" outlined
-                              v-model.number="photosynthesisValueData.photosynthesisValueF"></v-text-field>
-                          <v-subheader class="ma-0 pa-1">g</v-subheader>
-                          <v-text-field class="ma-0 pa-1" dense hide-details="auto" outlined
-                              v-model.number="photosynthesisValueData.photosynthesisValueG"></v-text-field>
-                      </v-row>
+                  <v-col cols="4">
+                    <div style="margin:0;padding:0">
+                      <ph-2-date-picker
+                        :shared="sharedDate"
+                        ref="date"
+                        width="100%"
+                        style="margin:0;padding:0"
+                      />
+                    </div>
+                  </v-col>
+
+                  <v-col cols="3">
+                    <v-row>
+                      <v-subheader class="ma-0 pa-1">f</v-subheader>
+                      <v-text-field
+                        class="ma-0 pa-1"
+                        dense
+                        hide-details="auto"
+                        outlined
+                        v-model.number="
+                          photosynthesisValueData.photosynthesisValueF
+                        "
+                      ></v-text-field>
+                    </v-row>
+                  </v-col>
+                  <v-col cols="3">
+                    <v-row>
+                      <v-subheader class="ma-0 pa-1">g</v-subheader>
+
+                      <v-text-field
+                        class="ma-0 pa-1"
+                        dense
+                        hide-details="auto"
+                        outlined
+                        v-model.number="
+                          photosynthesisValueData.photosynthesisValueG
+                        "
+                      ></v-text-field>
+                    </v-row>
                   </v-col>
                 </v-row>
               </v-container>
             </div>
-
           </v-container>
 
           <div class="GS_ButtonArea">
-            <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="save()">保存</v-btn>
-            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">キャンセル</v-btn>
+            <v-btn
+              color="primary"
+              class="ma-2 white--text"
+              elevation="2"
+              @click="save()"
+              >保存</v-btn
+            >
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              @click="close()"
+              >キャンセル</v-btn
+            >
           </div>
         </v-card>
       </v-dialog>
@@ -91,18 +107,20 @@
 <script>
 import moment from "moment";
 import { mdiExitToApp } from "@mdi/js";
+import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
+import { MountController } from "@/lib/mountController.js";
 
-import { 
+import {
   usePhotosynthesisValuesUpdate,
-  usePhotosynthesisValuesDetail 
+  usePhotosynthesisValuesDetail,
 } from "@/api/TopStateGrowth/PEActualValueInput";
 
 export default {
-  name: 'PEActualValueInput',
-  props: { 
-    shared /** MountController */: { required: true } ,
+  name: "PEActualValueInput",
+  props: {
+    shared /** MountController */: { required: true },
     selectedField: Array,
-    selectedDevices: Array
+    selectedDevices: Array,
   },
 
   data() {
@@ -117,7 +135,10 @@ export default {
       // params: [],
       path: mdiExitToApp,
       menu: false,
-      year:0,
+      year: 0,
+
+      sharedDate: new MountController(),
+      selectedDate: null,
 
       // headers: HEADERS,
 
@@ -130,7 +151,7 @@ export default {
   },
 
   components: {
-    // SvgIcon,
+    Ph2DatePicker,
   },
 
   mounted() {
@@ -138,6 +159,15 @@ export default {
   },
   methods: {
     initialize: function (data) {
+      this.sharedDate.setUp(
+        this.$refs.date,
+        function (comp) {
+          comp.initialize(data.menu.selectedYear);
+        }.bind(this),
+        function (date) {
+          this.selectedDate = date;
+        }.bind(this)
+      );
       //年度
       this.year = this.$store.getters.selectedYear.id;
       // タイトル
@@ -146,26 +176,25 @@ export default {
       this.field = {
         id: this.$store.getters.selectedField.id,
         name: this.$store.getters.selectedField.name,
-      }
+      };
       // デバイス
       this.device = {
         id: this.$store.getters.selectedDevice.id,
         name: this.$store.getters.selectedDevice.name,
-      }
+      };
       //this.isDialog = true;
 
       //光合成推定実績取得
-      usePhotosynthesisValuesDetail(this.device.id, this.photosynthesisValueData.photosynthesisDate)
-      .then((response) => {
-        console.log(response);
-        const ps_data = response["data"]["data"];
-        this.photosynthesisValueData.photosynthesisValueF = ps_data.f;
-        this.photosynthesisValueData.photosynthesisValueG = ps_data.g;
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-
+      usePhotosynthesisValuesDetail(this.device.id, this.selectedDate)
+        .then((response) => {
+          console.log(response);
+          const ps_data = response["data"]["data"];
+          this.photosynthesisValueData.photosynthesisValueF = ps_data.f;
+          this.photosynthesisValueData.photosynthesisValueG = ps_data.g;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     close: function () {
       this.isDialog = false;
@@ -173,26 +202,26 @@ export default {
     save: function () {
       const data = {
         deviceId: this.device.id,
-        date: this.photosynthesisValueData.photosynthesisDate,
+        date: this.selectedDate,
         f: this.photosynthesisValueData.photosynthesisValueF,
         g: this.photosynthesisValueData.photosynthesisValueG,
-      }
+      };
 
       // console.log("--- data ---");
       console.log(data);
 
       //光合成推定実績値更新
       usePhotosynthesisValuesUpdate(data)
-      .then((response) => {
-        console.log(response);
-        this.isDialog = false;
-        this.shared.onConclude(this.value);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+        .then((response) => {
+          console.log(response);
+          this.isDialog = false;
+          this.shared.onConclude(this.value);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
-
+    handleChangeDate() {},
   },
 };
 </script>

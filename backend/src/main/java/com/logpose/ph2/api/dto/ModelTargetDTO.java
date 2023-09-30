@@ -15,4 +15,5 @@ public class ModelTargetDTO
 	private Long deviceId;
 	private String device;
 	private Short year;
+	private String startDate;
 	}

@@ -115,6 +115,7 @@
 		<result column="device_id" property="deviceId"></result>
 		<result column="device_name" property="device"></result>
 		<result column="year" property="year"></result>
+		<result column="startDate" property="startDate"></result>
 	</resultMap>
 	
 	<select id="selectModelTargets" resultMap="ModelTargetDTO">
@@ -123,7 +124,8 @@
 		pf.name as field_name,
 		pd.id as device_id,
 		pd.name as device_name,
-		dd.year as year
+		dd.year as year,
+		pf.commence_date as startDate
 		FROM
 		ph2_device_day dd
 		JOIN
