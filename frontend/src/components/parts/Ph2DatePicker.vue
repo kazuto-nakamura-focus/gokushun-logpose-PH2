@@ -1,5 +1,6 @@
 <!--実績値入力-->
 <template>
+  <div>
     <v-menu
       v-model="menu"
       :close-on-content-click="false"
@@ -32,23 +33,24 @@
         @change="handleChangeDate"
       ></v-date-picker>
     </v-menu>
+  </div>
 </template>
   <script>
 import moment from "moment";
 
 export default {
-  props: { shared /** MountController */: { required: true } },
   data() {
     return {
       date: moment().format("YYYY-MM-DD"),
       minDate:null,
       maxDate: null,
       menu: true,
+      id:null,
     };
   },
 
   methods: {
-    initialize: function (selectedYear) {
+    initialize: function (selectedYear, id) {
       // 年度
       const year = selectedYear.id;
       // 開始日
@@ -58,13 +60,18 @@ export default {
       this.minDate = momentData.format("YYYY-MM-DD");
       // 最終日
       this.maxDate = moment().format("YYYY-MM-DD");
+      // このコンポーネントのID
+      this.id = id;
+      this.$emit("onChange", this.date, this.id);
     },
-
+    setDate(date){
+      this.date = date;
+    },
     handleChangeDate() {
       if (this.date < this.minDate || this.date > this.maxDate) {
         alert("日付は年度内を指定してください。");
       } else {
-        this.$emit("onChange", this.date);
+        this.$emit("onChange", this.date, this.id);
       }
     },
   },

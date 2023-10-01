@@ -3,9 +3,9 @@
   <v-container>
     <v-card elevation="0" class="ma-1">
       <v-subheader>実測値入力</v-subheader>
-      <!-- タイトル部分 -->
-      <input-header ref="titleHeader" />
+      <v-divider></v-divider>
       <!-- 入力部分 -->
+      <v-container>
       <v-row>
         <v-col cols="10">
           <v-row>
@@ -209,6 +209,7 @@
       </v-row>
       <br />
       <br />
+     </v-container>
       <v-divider class="divider_top" />
       <v-row>
         <v-col cols="3">
@@ -248,7 +249,6 @@ import {
   useFruitValueELStage,
   useFruitValueBagging,
 } from "@/api/TopStateGrowth/index";
-import InputHeader from "./InputHeader.vue";
 
 // const fruitValuesDTOData = {
 //   burden: 0.5,	//* 着果負担
@@ -264,14 +264,12 @@ export default {
     selectedYears: Array,
     selectedDevices: Array,
   },
-  components: {
-    InputHeader,
-  },
+
   data() {
     return {
       fieldId: null, // 選ばれた圃場ID
-      devicesId: this.$store.getters.selectedData.selectedDevices[0].id, // 選ばれたデバイスID
-      year: this.$store.getters.selectedData.selectedYears[0].variable, //年度
+      devicesId: this.$store.getters.selectedDevice.id, // 選ばれたデバイスID
+      year: this.$store.getters.selectedYear.id, //年度
 
       fruitValues: {
         burden: null, //* 着果負担
@@ -312,7 +310,6 @@ export default {
     this.$nextTick(
         function () {
           this.$refs.date.initialize(data.menu.selectedYear);
-          this.$refs.titleHeader.initialize(data.menu);
         }.bind(this)
       );
     },

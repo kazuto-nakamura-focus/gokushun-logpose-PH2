@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <v-container>
-      <v-dialog v-model="isDialog" width="700">
+      <v-dialog v-model="isDialog" width="700" persistent>
         <v-card>
           <v-card-title v-if="title != null">実績値入力</v-card-title>
           <v-card-text>
@@ -22,7 +22,7 @@
                     </v-row>
                   </v-col>
                   <v-col cols="4">
-                    <div style="margin: 0; padding: 0">
+                    <div style="margin-top: -10px; padding: 0">
                       <ph-2-date-picker
                         ref="date"
                         width="100%"
@@ -72,7 +72,7 @@
               color="primary"
               class="ma-2 white--text"
               elevation="2"
-              @click="save()"
+              @click="register()"
               >保存</v-btn
             >
             <v-btn
@@ -80,7 +80,7 @@
               class="ma-2 black--text"
               elevation="2"
               @click="close()"
-              >キャンセル</v-btn
+              >閉じる</v-btn
             >
           </div>
         </v-card>
@@ -189,7 +189,7 @@ export default {
     close: function () {
       this.isDialog = false;
     },
-    save: function () {
+    register: function () {
       const data = {
         deviceId: this.device.id,
         date: this.selectedDate,
@@ -204,8 +204,13 @@ export default {
       usePhotosynthesisValuesUpdate(data)
         .then((response) => {
           console.log(response);
-          this.isDialog = false;
-          this.shared.onConclude(this.value);
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("登録が完了しました。");
+          } else {
+            alert("登録が失敗しました。");
+            throw new Error(message);
+          }
         })
         .catch((error) => {
           console.log(error);

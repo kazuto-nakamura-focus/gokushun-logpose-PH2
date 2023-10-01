@@ -2,14 +2,14 @@
 <template>
   <v-container class="container_de">
     <div class="felx_de">
-      <v-row class="row_wrap">
+  <!--   <v-row class="row_wrap">
         <v-col cols="1" class="row_hd">
         </v-col>
         <v-col class="row_de" v-for="(data, i) in fVActualValueTitle" :key="i">
           <v-subheader>{{ data }}
           </v-subheader>
         </v-col>
-      </v-row>
+      </v-row>-->
       <v-divider class="divider_top" />
       <v-row>
         <v-col cols="1" class="row_hd">

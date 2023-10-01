@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <v-container>
-      <v-dialog v-model="isDialog" width="900">
+      <v-dialog v-model="isDialog" width="900" persistent>
         <v-card>
           <v-card-title v-if="title != null">実績値入力</v-card-title>
           <!-- タイトル部分 -->
@@ -39,11 +39,11 @@
                     <v-row>
                       <v-col cols="4">
                         <ph-2-date-picker
-                        ref="countDate"
-                        width="100%"
-                        @onChange="handleCountDate"
-                        class="ma-0 mt-n8 pl-1 pr-1"
-                      />
+                          ref="countDate"
+                          width="100%"
+                          @onChange="handleCountDate"
+                          class="ma-0 mt-n8 pl-1 pr-1"
+                        />
                       </v-col>
                       <v-col cols="4">
                         <v-text-field
@@ -115,12 +115,14 @@
                   <v-col cols="7">
                     <v-row>
                       <v-col cols="4">
-                        <ph-2-date-picker
-                        ref="areaDate"
-                        width="100%"
-                        @onChange="handleAreaDate"
-                        style="margin: 0; padding: 0"
-                      />
+                        <div style="margin-top: -40px !important">
+                          <ph-2-date-picker
+                            ref="areaRealDate"
+                            width="100%"
+                            @onChange="handleAreaDate"
+                            style="margin: 0; padding: 0"
+                          />
+                        </div>
                         <!-- <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
                             v-model.number="leafAreaAreaData.leafAreaADate"></v-text-field> -->
                       </v-col>
@@ -203,7 +205,7 @@
               class="ma-2 black--text"
               elevation="2"
               @click="close()"
-              >キャンセル</v-btn
+              >閉じる</v-btn
             >
           </div>
         </v-card>
@@ -239,13 +241,14 @@ export default {
       isDialog: false,
       title: "", // 選ばれたモデル種別
       field: {}, // 選ばれた圃場
-      year: 0,
       // selected: null,
       device: {},
       // params: [],
       path: mdiExitToApp,
       menu1: false,
       menu2: false,
+
+      selectedMenu: null,
 
       // headers: HEADERS,
 
@@ -275,15 +278,16 @@ export default {
   },
   methods: {
     initialize: function (data) {
-      this.$nextTick(
-        function () {
-          this.$refs.areaDate.initialize(data.menu.selectedYear);
-          this.$refs.countDate.initialize(data.menu.selectedYear);
-          this.$refs.titleHeader.initialize(data.menu);
-        }.bind(this)
-      );
-      //年度
-      this.year = this.$store.getters.selectedYear.id;
+      this.selectedMenu = data.menu;
+      this.$nextTick(function () {
+        const id = this.leafAreaValueData.leafAreaAreaDataList.length;
+        this.$refs.areaRealDate[0].initialize(
+          this.selectedMenu.selectedYear,
+          id
+        );
+        this.$refs.countDate.initialize(this.selectedMenu.selectedYear);
+        this.$refs.titleHeader.initialize(this.selectedMenu);
+      });
       // タイトル
       this.title = data.title;
       // 圃場
@@ -311,15 +315,17 @@ export default {
               console.log(count_response);
               const la_count_data = count_response["data"]["data"];
               const data_list = [];
-              const count_data = {
-                id: 0,
-                leafAreaADate: la_count_data.date,
-                leafAreaAValue: la_count_data.count,
-                leafAreaAValueAverage: la_count_data.averageArea,
-                leafAreaAValueTotal: la_count_data.totalArea,
-              };
-              data_list.push(count_data);
-              this.leafAreaValueData.leafAreaAreaDataList = data_list;
+              if (null != la_count_data.date) {
+                const count_data = {
+                  id: 0,
+                  leafAreaADate: la_count_data.date,
+                  leafAreaAValue: la_count_data.count,
+                  leafAreaAValueAverage: la_count_data.averageArea,
+                  leafAreaAValueTotal: la_count_data.totalArea,
+                };
+                data_list.push(count_data);
+                this.leafAreaValueData.leafAreaAreaDataList = data_list;
+              }
             })
             .catch((error) => {
               console.log(error);
@@ -329,10 +335,10 @@ export default {
           console.log(error);
         });
     },
-    handleAreaDate(date){
-      this.leafAreaValueData.leafAreaNDate = date;
+    handleAreaDate(date, id) {
+      this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaADate = date;
     },
-    handleCount(date){
+    handleCountDate(date) {
       this.leafAreaValueData.leafAreaNDate = date;
     },
     close: function () {
@@ -395,6 +401,7 @@ export default {
           console.log(error);
         });
     },
+    // 行追加時
     addrow: function () {
       this.leafAreaValueData.leafAreaAreaDataList.push({
         id: this.leafAreaValueData.leafAreaAreaDataList.length,
@@ -402,6 +409,15 @@ export default {
         leafAreaAValue: 0,
         leafAreaAValueAverage: 0,
         leafAreaAValueTotal: 0,
+      });
+      const size = this.leafAreaValueData.leafAreaAreaDataList.length;
+      // 日付入力表示
+      this.$nextTick(function () {
+        const id = this.leafAreaValueData.leafAreaAreaDataList.length;
+        this.$refs.areaRealDate[size - 1].initialize(
+          this.selectedMenu.selectedYear,
+          id
+        );
       });
     },
 

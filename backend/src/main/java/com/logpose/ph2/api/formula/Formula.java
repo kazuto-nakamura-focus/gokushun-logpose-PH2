@@ -64,7 +64,7 @@ public class Formula
 	/**
 	 * 樹冠葉面積モデル式
 	 * @param days 萌芽日数
-	 * 	@param count 実測新梢数
+	 * @param count 実測新梢数
 	 * @param params 葉面積モデルパラメータ
 	 * @param dayData 日にちデータ
 	 * @return 葉枚数
