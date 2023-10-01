@@ -1,7 +1,11 @@
 <template>
   <v-app>
     <v-container class="spacing-playground pa-5" fluid>
-      <targetMenu ref="targetMenu" :shared="sharedMenu" :model="isModel"></targetMenu>
+      <targetMenu
+        ref="targetMenu"
+        :shared="sharedMenu"
+        :model="isModel"
+      ></targetMenu>
       <div v-if="bodyStatus">
         <template>
           <v-container>
@@ -23,27 +27,17 @@
           </v-container>
         </template>
       </div>
-      <ph2GraphContainer ref="gfa"></ph2GraphContainer>
+      <ph2GraphContainer
+        ref="gfa"
+        v-if="bodyStatus && selectedMenu.selectedModel.id != 4"
+      ></ph2GraphContainer>
 
-      <div
-        v-if="
-          selectedMenu != null &&
-          selectedMenu.variable == 'fruiting' &&
-          selectedField.length > 0 &&
-          selectedDevices.length > 0 &&
-          selectedYears.length > 0
-        "
-      >
-        <FVParameterSets
-          v-if="selectedFieldOnly"
-          ref="refFVParameterSets"
-          :shared="sharedDetail"
-        />
+      <div v-if="bodyStatus && selectedMenu.selectedModel.id == 4">
         <FVActualValueInput
-          v-else
-          ref="refFVActualValueInput"
-          :shared="sharedDetail"
-        />
+        ref="refFVActualValueInput"
+        :shared="sharedDetail"
+      />
+
       </div>
     </v-container>
 
@@ -62,10 +56,10 @@
       :selectedDevices="selectedDevices"
     />
     <parmeter-set-dialog
-    ref="refLAParameterSets"
-    :shared="sharedParam[4]"
-    :modelId="leafModel"
-  />
+      ref="refLAParameterSets"
+      :shared="sharedParam[4]"
+      :modelId="leafModel"
+    />
     <PEActualValueInput
       ref="refPEActualValueInput"
       :shared="sharedParam[5]"
@@ -88,20 +82,19 @@ import ph2GraphContainer from "@/components/GrowthModel/Ph2GraphContainer.vue";
 import allEditButtons from "@/components/TopStageGrowth/hooks/editButtons.json";
 import { DeviceParser } from "@/lib/deviceParser.js";
 import { DialogController, MountController } from "@/lib/mountController.js";
-import GEActualValueInput from "@/components/TopStageGrowth/GEActualValueInput";
+import GEActualValueInput from "@/components/TopStageGrowth/actualValueInput/GEMainInput.vue";
 import ParmeterSetDialog from "@/components/TopStageGrowth/ParameterSet/ParmeterSetDialog.vue";
 import ReferenceFValue from "@/components/TopStageGrowth/ReferenceFValue";
-import FVActualValueInput from "@/components/TopStageGrowth/FVActualValueInput";
-import FVParameterSets from "@/components/TopStageGrowth/FVParameterSets";
-import LAActualValueInput from "@/components/TopStageGrowth/LAActualValueInput";
-import PEActualValueInput from "@/components/TopStageGrowth/PEActualValueInput";
+import FVActualValueInput from "@/components/TopStageGrowth/actualValueInput/FVInput.vue";
+import LAActualValueInput from "@/components/TopStageGrowth/actualValueInput/LAInput.vue";
+import PEActualValueInput from "@/components/TopStageGrowth/actualValueInput/PEInput.vue";
 import { TopDataParser } from "@/lib/topDataParser";
 
 export default {
   data() {
     return {
       // 定数
-      isModel:true,
+      isModel: true,
       growthModel: 1,
       leafModel: 2,
       photoModel: 3,
@@ -154,8 +147,10 @@ export default {
             allEditButtons[this.selectedMenu.selectedModel.id].buttons;
           this.editButtons.splice(0);
           this.editButtons.push(...editButtons);
-          // * グラフの表示
-          this.$refs.gfa.setGraphData(this.selectedMenu);
+          if (this.selectedMenu.selectedModel.id != 4) {
+            // * グラフの表示
+            this.$refs.gfa.setGraphData(this.selectedMenu);
+          }
         }
       }.bind(this)
     );
@@ -171,7 +166,6 @@ export default {
     LAActualValueInput,
     PEActualValueInput,
     FVActualValueInput,
-    FVParameterSets,
   },
   created: function () {
     // console.log("store", this.$store.getters.sourceData);

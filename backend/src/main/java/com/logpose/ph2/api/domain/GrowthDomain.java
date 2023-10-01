@@ -420,7 +420,15 @@ public class GrowthDomain
 				date, true);
 		if (null == value)
 			{
-			throw new RuntimeException("指定された日付に該当する実績データはありません。");
+			try
+				{
+				String errorDate = DateTimeUtility.getStringFromDate(date);
+				throw new RuntimeException("指定された日付("+ errorDate+")に該当する実績データはまだありません。");
+				}
+			catch (ParseException e)
+				{
+				e.printStackTrace();
+				}
 			}
 		return value;
 		}
