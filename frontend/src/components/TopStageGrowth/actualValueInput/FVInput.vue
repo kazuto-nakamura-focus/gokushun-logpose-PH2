@@ -1,22 +1,21 @@
 <!--着果量着果負担表示画面-->
 <template>
-  <v-container>
+  <v-container dense>
     <v-card elevation="0" class="ma-1">
       <v-subheader>実測値入力</v-subheader>
-      <v-divider></v-divider>
+      <v-divider class="divider_center"></v-divider>
       <!-- 入力部分 -->
-      <v-container>
       <v-row>
         <v-col cols="10">
           <v-row>
             <v-col cols="3">
               <v-subheader class="ma-0 mt-n5 pa-0"> </v-subheader>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="3">
               <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
             </v-col>
             <v-col cols="2">
-              <v-subheader class="ma-0 mt-n5 pa-0">平均房重（ｇ）</v-subheader>
+              <v-subheader class="ma-0 mt-n5 pa-0"><small>平均房重（ｇ）</small></v-subheader>
             </v-col>
             <v-col cols="2">
               <v-subheader class="ma-0 mt-n5 pa-0">実測着果数</v-subheader>
@@ -33,31 +32,16 @@
             <v-col cols="3">
               <div class="ma-0 mt-n5 pa-0 pl-4">着生後芽かき処理時</div>
             </v-col>
-            <v-col cols="2">
-              <v-menu
-                v-model="menu1"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                    v-model="fruitValueSproutTreatment.date"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    outlined
-                    dense
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="fruitValueSproutTreatment.date"
-                  @input="menu1 = false"
-                ></v-date-picker>
-              </v-menu>
+            <v-col cols="3">
+              <div style="margin-top: -40px; padding: 0">
+                <ph-2-date-picker
+                  ref="date"
+                  width="100%"
+                  @onChange="handleSproutDate"
+                  style="margin: 0; padding: 0"
+                  dense
+                />
+              </div>
             </v-col>
             <v-col cols="2">
               <v-text-field
@@ -93,31 +77,16 @@
             <v-col cols="3">
               <div class="ma-0 mt-n5 pa-0 pl-4">E-L 27～31の生育ステージ時</div>
             </v-col>
-            <v-col cols="2">
-              <v-menu
-                v-model="menu2"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                    v-model="fruitValueELStage.date"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    outlined
-                    dense
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="fruitValueELStage.date"
-                  @input="menu2 = false"
-                ></v-date-picker>
-              </v-menu>
+            <v-col cols="3">
+              <div style="margin-top: -40px; padding: 0">
+                <ph-2-date-picker
+                  ref="date"
+                  width="100%"
+                  @onChange="handlElDate"
+                  style="margin: 0; padding: 0"
+                  dense
+                />
+                </div>
             </v-col>
             <v-col cols="2">
               <v-text-field
@@ -153,31 +122,16 @@
             <v-col cols="3">
               <div class="ma-0 mt-n5 pa-0 pl-4">袋かけ時</div>
             </v-col>
-            <v-col cols="2">
-              <v-menu
-                v-model="menu3"
-                :close-on-content-click="false"
-                :nudge-right="40"
-                transition="scale-transition"
-                offset-y
-                min-width="auto"
-              >
-                <template v-slot:activator="{ on, attrs }">
-                  <v-text-field
-                    class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                    v-model="fruitValueBagging.date"
-                    readonly
-                    v-bind="attrs"
-                    v-on="on"
-                    outlined
-                    dense
-                  ></v-text-field>
-                </template>
-                <v-date-picker
-                  v-model="fruitValueBagging.date"
-                  @input="menu3 = false"
-                ></v-date-picker>
-              </v-menu>
+            <v-col cols="3">
+              <div style="margin-top: -40px; padding: 0">
+                <ph-2-date-picker
+                  ref="date"
+                  width="100%"
+                  @onChange="handleBaggageDate"
+                  style="margin: 0; padding: 0"
+                  dense
+                />
+              </div>
             </v-col>
             <v-col cols="2">
               <v-text-field
@@ -207,9 +161,6 @@
           </v-row>
         </v-col>
       </v-row>
-      <br />
-      <br />
-     </v-container>
       <v-divider class="divider_top" />
       <v-row>
         <v-col cols="3">
@@ -249,6 +200,7 @@ import {
   useFruitValueELStage,
   useFruitValueBagging,
 } from "@/api/TopStateGrowth/index";
+import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
 
 // const fruitValuesDTOData = {
 //   burden: 0.5,	//* 着果負担
@@ -301,6 +253,9 @@ export default {
       menu3: false,
     };
   },
+  components: {
+    Ph2DatePicker,
+  },
   mounted() {
     this.shared.mount(this);
     this.getUseFruitValues();
@@ -312,6 +267,15 @@ export default {
           this.$refs.date.initialize(data.menu.selectedYear);
         }.bind(this)
       );
+    },
+    handleSproutDate(date){
+      this.fruitValueSproutTreatment.date = date;
+    },
+    handleElDate(date){
+      this.fruitValueELStage.date = date;
+    },
+    handleBaggageDate(date){
+      this.fruitValueBagging.date = date;
     },
     getUseFruitValues() {
       //圃場着果量着果負担詳細取得
@@ -398,18 +362,18 @@ export default {
 @import "@/style/common.css";
 
 .divider_top {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   color: "black";
 }
 
 .divider_center {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 10px;
+  margin-bottom: 10px;
   color: "black";
 }
 
 .divider_bottom {
-  margin-top: 20px;
+  margin-top: 10px;
   color: "black";
 }
 
