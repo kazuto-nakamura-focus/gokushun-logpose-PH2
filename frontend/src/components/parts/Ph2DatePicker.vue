@@ -1,6 +1,5 @@
 <!--実績値入力-->
 <template>
-  <div style="diplay: inline">
     <v-menu
       v-model="menu"
       :close-on-content-click="false"
@@ -10,6 +9,7 @@
       filled
       width="200"
       min-width="auto"
+      dense
       style="margin: 0; padding: 0"
     >
       <template v-slot:activator="{ on, attrs }">
@@ -32,7 +32,6 @@
         @change="handleChangeDate"
       ></v-date-picker>
     </v-menu>
-  </div>
 </template>
   <script>
 import moment from "moment";

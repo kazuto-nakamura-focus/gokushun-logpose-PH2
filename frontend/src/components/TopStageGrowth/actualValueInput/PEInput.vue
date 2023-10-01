@@ -28,6 +28,7 @@
                         width="100%"
                         @onChange="handleDate"
                         style="margin: 0; padding: 0"
+                        dense
                       />
                     </div>
                   </v-col>

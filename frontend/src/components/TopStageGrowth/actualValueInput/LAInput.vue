@@ -5,9 +5,9 @@
       <v-dialog v-model="isDialog" width="900">
         <v-card>
           <v-card-title v-if="title != null">実績値入力</v-card-title>
-                    <!-- タイトル部分 -->
-                    <input-header ref="titleHeader" />
-                    <!-- 入力部分 -->
+          <!-- タイトル部分 -->
+          <input-header ref="titleHeader" />
+          <!-- 入力部分 -->
           <v-container>
             <div class="text-subtitle-1">新梢数</div>
             <v-subheader class="ma-0 mt-n3 pa-0">
@@ -38,31 +38,12 @@
                   <v-col cols="9">
                     <v-row>
                       <v-col cols="4">
-                        <v-menu
-                          v-model="menu1"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              class="ma-0 mt-n8 pl-1 pr-1"
-                              v-model="leafAreaValueData.leafAreaNDate"
-                              v-bind="attrs"
-                              v-on="on"
-                              outlined
-                              dense
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                            v-model="leafAreaValueData.leafAreaNDate"
-                            @input="menu1 = false"
-                          ></v-date-picker>
-                        </v-menu>
-                        <!-- <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
-                            v-model.number="leafAreaValueData.leafAreaNDate"></v-text-field> -->
+                        <ph-2-date-picker
+                        ref="countDate"
+                        width="100%"
+                        @onChange="handleCountDate"
+                        class="ma-0 mt-n8 pl-1 pr-1"
+                      />
                       </v-col>
                       <v-col cols="4">
                         <v-text-field
@@ -134,29 +115,12 @@
                   <v-col cols="7">
                     <v-row>
                       <v-col cols="4">
-                        <v-menu
-                          v-model="menu2"
-                          :close-on-content-click="false"
-                          :nudge-right="40"
-                          transition="scale-transition"
-                          offset-y
-                          min-width="auto"
-                        >
-                          <template v-slot:activator="{ on, attrs }">
-                            <v-text-field
-                              class="ma-0 mt-n8 pl-1 pr-1"
-                              v-model="leafAreaAreaData.leafAreaADate"
-                              v-bind="attrs"
-                              v-on="on"
-                              outlined
-                              dense
-                            ></v-text-field>
-                          </template>
-                          <v-date-picker
-                            v-model="leafAreaAreaData.leafAreaADate"
-                            @input="menu2 = false"
-                          ></v-date-picker>
-                        </v-menu>
+                        <ph-2-date-picker
+                        ref="areaDate"
+                        width="100%"
+                        @onChange="handleAreaDate"
+                        style="margin: 0; padding: 0"
+                      />
                         <!-- <v-text-field class="ma-0 mt-n8 pl-1 pr-1" dense hide-details="auto" outlined
                             v-model.number="leafAreaAreaData.leafAreaADate"></v-text-field> -->
                       </v-col>
@@ -251,6 +215,7 @@
 import moment from "moment";
 import { mdiExitToApp } from "@mdi/js";
 import InputHeader from "./InputHeader.vue";
+import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
 
 import {
   useLeafValueShootDetail,
@@ -301,6 +266,7 @@ export default {
   },
 
   components: {
+    Ph2DatePicker,
     InputHeader,
   },
 
@@ -311,7 +277,8 @@ export default {
     initialize: function (data) {
       this.$nextTick(
         function () {
- //         this.$refs.date.initialize(data.menu.selectedYear);
+          this.$refs.areaDate.initialize(data.menu.selectedYear);
+          this.$refs.countDate.initialize(data.menu.selectedYear);
           this.$refs.titleHeader.initialize(data.menu);
         }.bind(this)
       );
@@ -361,6 +328,12 @@ export default {
         .catch((error) => {
           console.log(error);
         });
+    },
+    handleAreaDate(date){
+      this.leafAreaValueData.leafAreaNDate = date;
+    },
+    handleCount(date){
+      this.leafAreaValueData.leafAreaNDate = date;
     },
     close: function () {
       this.isDialog = false;
