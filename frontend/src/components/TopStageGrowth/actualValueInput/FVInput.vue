@@ -15,7 +15,9 @@
               <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
             </v-col>
             <v-col cols="2">
-              <v-subheader class="ma-0 mt-n5 pa-0"><small>平均房重（ｇ）</small></v-subheader>
+              <v-subheader class="ma-0 mt-n5 pa-0"
+                ><small>平均房重（ｇ）</small></v-subheader
+              >
             </v-col>
             <v-col cols="2">
               <v-subheader class="ma-0 mt-n5 pa-0">実測着果数</v-subheader>
@@ -35,7 +37,7 @@
             <v-col cols="3">
               <div style="margin-top: -40px; padding: 0">
                 <ph-2-date-picker
-                  ref="date"
+                  ref="date1"
                   width="100%"
                   @onChange="handleSproutDate"
                   style="margin: 0; padding: 0"
@@ -80,13 +82,13 @@
             <v-col cols="3">
               <div style="margin-top: -40px; padding: 0">
                 <ph-2-date-picker
-                  ref="date"
+                  ref="date2"
                   width="100%"
-                  @onChange="handlElDate"
+                  @onChange="handleElDate"
                   style="margin: 0; padding: 0"
                   dense
                 />
-                </div>
+              </div>
             </v-col>
             <v-col cols="2">
               <v-text-field
@@ -125,7 +127,7 @@
             <v-col cols="3">
               <div style="margin-top: -40px; padding: 0">
                 <ph-2-date-picker
-                  ref="date"
+                  ref="date3"
                   width="100%"
                   @onChange="handleBaggageDate"
                   style="margin: 0; padding: 0"
@@ -261,20 +263,22 @@ export default {
     this.getUseFruitValues();
   },
   methods: {
-    initialize: function (data) {
-    this.$nextTick(
+    initialize: function (menu) {
+      this.$nextTick(
         function () {
-          this.$refs.date.initialize(data.menu.selectedYear);
-        }.bind(this)
+          this.$refs.date1.initialize(menu.selectedYear);
+          this.$refs.date2.initialize(menu.selectedYear);
+          this.$refs.date3.initialize(menu.selectedYear);
+        }
       );
     },
-    handleSproutDate(date){
+    handleSproutDate(date) {
       this.fruitValueSproutTreatment.date = date;
     },
-    handleElDate(date){
+    handleElDate(date) {
       this.fruitValueELStage.date = date;
     },
-    handleBaggageDate(date){
+    handleBaggageDate(date) {
       this.fruitValueBagging.date = date;
     },
     getUseFruitValues() {
@@ -303,9 +307,14 @@ export default {
       //着生後芽かき処理時実績値更新
       useFruitValueSproutTreatment(data)
         .then((response) => {
-          const results = response["data"];
-          console.log("results", results);
-          this.getUseFruitValues();
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("登録が完了しました。");
+            this.getUseFruitValues();
+          } else {
+            alert("登録が失敗しました。");
+            throw new Error(message);
+          }
         })
         .catch((error) => {
           //失敗時
@@ -322,9 +331,14 @@ export default {
       ////E-L 27～31の生育ステージ時実績値更新処理
       useFruitValueELStage(data)
         .then((response) => {
-          const results = response["data"];
-          console.log("results", results);
-          this.getUseFruitValues();
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("登録が完了しました。");
+            this.getUseFruitValues();
+          } else {
+            alert("登録が失敗しました。");
+            throw new Error(message);
+          }
         })
         .catch((error) => {
           //失敗時
@@ -341,9 +355,14 @@ export default {
       //袋かけ時実績値更新処理
       useFruitValueBagging(data)
         .then((response) => {
-          const results = response["data"];
-          console.log("results", results);
-          this.getUseFruitValues();
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("登録が完了しました。");
+            this.getUseFruitValues();
+          } else {
+            alert("登録が失敗しました。");
+            throw new Error(message);
+          }
         })
         .catch((error) => {
           //失敗時
