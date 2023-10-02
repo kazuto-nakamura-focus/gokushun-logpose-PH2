@@ -34,10 +34,8 @@
 
       <div v-if="bodyStatus && selectedMenu.selectedModel.id == 4">
         <FVActualValueInput
-        ref="refFVActualValueInput"
-        :shared="sharedDetail"
-      />
-
+          ref="refFVActualValueInput"
+        />
       </div>
     </v-container>
 
@@ -121,7 +119,6 @@ export default {
       DeviceParser: new DeviceParser(),
       index: 0,
       //ここから、ユーが追加
-      sharedDetail: new DialogController(),
       TopDataParser: new TopDataParser(),
       editButtons: [],
       filterGrouthList: [],
@@ -150,6 +147,10 @@ export default {
           if (this.selectedMenu.selectedModel.id != 4) {
             // * グラフの表示
             this.$refs.gfa.setGraphData(this.selectedMenu);
+          } else {
+            this.$nextTick(function () {
+              this.$refs.refFVActualValueInput.initialize(this.selectedMenu);
+            });
           }
         }
       }.bind(this)
