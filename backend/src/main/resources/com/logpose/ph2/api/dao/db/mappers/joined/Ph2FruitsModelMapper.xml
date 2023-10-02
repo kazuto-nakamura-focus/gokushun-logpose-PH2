@@ -18,23 +18,27 @@
 	 	SELECT
 	 		rf.average as fruitsAverage,
 	 		rf.count as fruitsCount,
-	 		md.tm as tm,
-	 		rla.count as leafArea, <!-- 新梢辺り葉枚数  -->
+	 		db.tm as tm,
+	 		rfa.count as leafArea, <!-- 新梢辺り葉枚数  -->
 	 		rfc.count as leafCount,  <!-- 新梢数  -->
 			md.culmitive_cnopy_ps as culmitiveCnopyPs,
 			md.crown_leaf_area as crownLeafArea
 		FROM
 			ph2_real_fruits_data rf
+	   	JOIN
+	   		ph2_device_day dd on rf.device_id=dd.device_id
+	   	JOIN
+	   		ph2_daily_base_data db on dd.id=db.day_id
 		JOIN
-			ph2_model_data md on rf.device_id=md.device_id
-		AND
+			ph2_model_data md on dd.id=md.day_id
+		JOIN
 			ph2_real_leaf_shoots_area rfa on rf.device_id=rfa.device_id
-		AND
+		JOIN
 			ph2_real_leaf_shoots_count rfc on rf.device_id=rfc.device_id
 		WHERE
 			rf.device_id = #{deviceId}
 		AND
-			md.target_date =#{targetDate}
+			dd.date =#{targetDate}
 	 </select>
 
 	

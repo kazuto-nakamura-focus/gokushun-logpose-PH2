@@ -27,7 +27,7 @@ public class FruitDomain
 	private Ph2RealFruitsDataMapper ph2RealFruitsDataMapper;
 
 	@Autowired
-	private Ph2FruitsModelMapper ｐh2FruitsModelMapper;
+	private Ph2FruitsModelMapper ph2FruitsModelMapper;
 
 	@Autowired
 	private Ph2ParamsetLeafCountMapper ph2ParamsetLeafCountMapper;
@@ -52,7 +52,7 @@ public class FruitDomain
 		 cal.add(Calendar.DATE, -1);
 		 
 		//* データの取得
-		List<FruitModelDataEntity> data = this.ｐh2FruitsModelMapper.listParamerSet(deviceId, cal.getTime());
+		List<FruitModelDataEntity> data = this.ph2FruitsModelMapper.getModelData(deviceId, cal.getTime());
 		if(0 == data.size()) return return_value;
 		FruitModelDataEntity source = data.get(0);
 		

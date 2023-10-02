@@ -116,11 +116,10 @@ const usePhotosynthesisGraphReal = (deviceId, year, paramSetId) => {
 };
 
 //圃場着果量着果負担詳細取得
-const useFruitValues = (deviceId, date) => {
+const useFruitValues = (deviceId) => {
   const config = {
     params: {
       deviceId,
-      date,
     },
   };
   return axios.get("/fruit/values", config);

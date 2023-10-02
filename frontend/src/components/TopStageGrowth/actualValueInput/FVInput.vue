@@ -212,7 +212,6 @@ import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
 
 export default {
   props: {
-    shared /** MountController */: { required: true },
     selectedMenu: Object,
     selectedField: Array,
     selectedYears: Array,
@@ -259,7 +258,6 @@ export default {
     Ph2DatePicker,
   },
   mounted() {
-    this.shared.mount(this);
     this.getUseFruitValues();
   },
   methods: {
@@ -283,13 +281,20 @@ export default {
     },
     getUseFruitValues() {
       //圃場着果量着果負担詳細取得
-      useFruitValues(this.devicesId, this.year)
+      useFruitValues(this.devicesId)
         .then((response) => {
           //成功時
-          const results = response["data"];
+          const { status, message, data } = response["data"];
+          if (status === 0) {
+            this.fruitValues.burden = (null==data.burden)?"未設定":data.burden;
+            this.fruitValues.amount = (null==data.amount)?"未設定":data.amount;
+            this.fruitValues.count = (null==data.count)?"未設定":data.count;
+          } else {
+            alert("詳細取得ができませんでした。");
+            throw new Error(message);
+          }
           console.log(this.devicesId);
           console.log(this.year);
-          this.fruitValues = results.data;
         })
         .catch((error) => {
           //失敗時

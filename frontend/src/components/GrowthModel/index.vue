@@ -35,7 +35,6 @@
       <div v-if="bodyStatus && selectedMenu.selectedModel.id == 4">
         <FVActualValueInput
           ref="refFVActualValueInput"
-          :shared="sharedDetail"
         />
       </div>
     </v-container>
@@ -120,7 +119,6 @@ export default {
       DeviceParser: new DeviceParser(),
       index: 0,
       //ここから、ユーが追加
-      sharedDetail: new MountController(),
       TopDataParser: new TopDataParser(),
       editButtons: [],
       filterGrouthList: [],
