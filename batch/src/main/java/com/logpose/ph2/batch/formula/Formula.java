@@ -36,6 +36,7 @@ public class Formula
 		double y = 1 / (Math.log(rs / 10000) / 3900 + (1 / 298.15)) - 273.15;
 		return y * 0.82 + 4.65;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 湿度を算出する
@@ -46,9 +47,9 @@ public class Formula
 	// --------------------------------------------------
 	public static double toHumidity(double x)
 		{
-		return (x-141)/28.2;
+		return (x - 141) / 28.2;
 		}
-	
+
 	// --------------------------------------------------
 	/**
 	 * 日射強度を算出する
@@ -92,9 +93,9 @@ public class Formula
 		x3 = 1 / (Math.log(x3 / 10000) / 3435 + (1 / 298.15)) - 273.15;
 		x4 = 1 / (Math.log(x4 / 10000) / 3435 + (1 / 298.15)) - 273.15;
 		// * 各種変数
-		double ch1 = x4 - x2;
-		double tr1 = x4 - x2;
-		double td1 = x3 - x2;
+		double ch1 = x2 - x4;
+		double tr1 = x2 - x4;
+		double td1 = x2 - x3;
 		double tu1 = x2 - x1;
 		double tf1 = x1 - x3;
 		if (0 == tr1)
@@ -105,11 +106,12 @@ public class Formula
 		double qd1 = kst * Math.pow((sm / 2), 2) * Math.PI * td1 / dxd;
 		double qin = Math.pow(5, 2) / rs;
 		double k1 = 0;
-		if ((ch1 != 0) && (qu1 != 0) && (qd1 != 0) && (x2 - x1) != 0)
+		// if ((ch1 != 0) && (qu1 != 0) && (qd1 != 0) && (x2 - x1) != 0)
+		if ((ch1 != 0) && (qu1 != 0) && (qd1 != 0) && tr1 != 0)
 			{
 			k1 = (qin - (qu1 + qd1)) / tr1;
 			}
-		else 
+		else
 			{
 			return null;
 			}
@@ -139,7 +141,7 @@ public class Formula
 			}
 		return null;
 		}
-	
+
 	// --------------------------------------------------
 	/**
 	 * 茎の半径の変位量を算出する
@@ -150,8 +152,9 @@ public class Formula
 	// --------------------------------------------------
 	public static double toDendro(double x)
 		{
-		return 11000*(x/5000) / ( 1+Math.sqrt(2) );
+		return 11000 * (x / 5000) / (1 + Math.sqrt(2));
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 土壌水分 量を算出する
@@ -162,9 +165,10 @@ public class Formula
 	// --------------------------------------------------
 	public static double toMoisture(double x)
 		{
-		double y =  85.357 * x/1000;
+		double y = 85.357 * x / 1000;
 		return Math.log10(y * 10.197);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * PARを算出する
@@ -176,5 +180,5 @@ public class Formula
 	public static double toPAR(double x)
 		{
 		return x * 600;
-		}	
+		}
 	}
