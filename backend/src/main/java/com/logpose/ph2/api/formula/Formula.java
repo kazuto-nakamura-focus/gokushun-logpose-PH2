@@ -32,14 +32,23 @@ public class Formula
 	// --------------------------------------------------
 	/**
 	 * ワイブル分布
+	 * param double 萌芽日までの日数
 	 * return ワイブル分布値
 	 */
 	// --------------------------------------------------
 	public static double getWible(double x)
 		{
 		// ワイブル分布=(α/β((x/β)^(α−1))*(exp(−(x/β)^α))*λ
-		return (WA / WB * (Math.pow((x / WB), (WA - 1))))
-				* (Math.exp(-1 * Math.pow( (x / WB), WA))) * WL;
+		// $waibull = ($waibull_a / $waibull_b * (($dab /
+		// $waibull_b)**($waibull_a - 1)) * (exp(-1*($dab /
+		// $waibull_b)**$waibull_a ) * $waibull_c));
+		// waibull = WA / WB * ((x /WB)**(WA - 1)) * (exp(-1*(x /WB)**WA ) * WL);
+		/*	return WA / WB * (Math.pow((x / WB), (WA - 1)))
+		* (Math.exp(Math.pow(-1 * (x / WB), WA))) * WL;*/
+		double tmp = Math.pow(-1 * (x / WB), WA)*10000;
+		tmp = Math.exp(tmp)*WL;
+		tmp = tmp/10000;
+		return WA / WB * (Math.pow((x / WB), (WA - 1)))*tmp;
 		}
 
 	// --------------------------------------------------
@@ -99,7 +108,7 @@ public class Formula
 		{
 		// Σ(f*exp(g*PAR)*PAR/2.02*600*樹冠葉面積/1000)*44/1000
 		return prev +
-				(f *( Math.exp(g* PAR)) * PAR / 2.02 * 600 * leafArea / 1000)
+				(f * (Math.exp(g * PAR)) * PAR / 2.02 * 600 * leafArea / 1000)
 						* 44 / 1000;
 		}
 
