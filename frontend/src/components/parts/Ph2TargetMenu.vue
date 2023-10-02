@@ -189,6 +189,7 @@ export default {
               year = {
                 id: data.year,
                 name: data.year,
+                startDate:data.startDate,
                 active: false,
               };
               device.yearMap.set(data.year, year);
