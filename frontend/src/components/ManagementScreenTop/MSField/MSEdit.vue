@@ -38,7 +38,6 @@
                 'v-sheet--readonly': !isEditMode,
                 'pa-0': isEditMode,
               }"
-              class="v-sheet--readonly"
               :light="true"
               style="width: 100%; height: 400px"
             />
@@ -75,7 +74,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="5">
             <v-row>
-              <v-col cols="12">
+              <v-col :cols="!isEditMode ? 12 : 9">
                 <v-text-field
                   :readonly="!isEditMode"
                   v-bind:background-color="bgcolor"
@@ -86,6 +85,15 @@
                   filled
                   v-model="fieldInfoData.location"
                 ></v-text-field>
+              </v-col>
+              <v-col v-if="isEditMode" cols="3">
+                <v-btn
+                  color="primary"
+                  class="white--text"
+                  elevation="2"
+                  @click="changeFocusLatLng()"
+                  >検索</v-btn
+                >
               </v-col>
             </v-row>
             <p></p>
@@ -195,7 +203,7 @@ import {
 } from "@/api/ManagementScreenTop/MSDevice";
 import moment from "moment";
 
-import { commonEnvConfig } from "@/config/envConfig";
+import { mapLoaderOptions, mapOptions } from "./mapConfig";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true },
@@ -211,13 +219,17 @@ class MapHandler {
     if (null == data.longitude || null == data.latitude) {
       useMapLocation(data.location)
         .then((response) => {
-          var coordinates = response.data[0]["geometry"]["coordinates"];
-          data.longitude = coordinates[0];
-          data.latitude = coordinates[1];
-          data.location = response.data[0]["properties"]["title"];
-          this.longitude = data.longitude;
-          this.latitude = data.latitude;
-          callBack.apply(thisArgs);
+          const responseData = response["data"];
+          //データが存在するかを確認後、処理
+          if(responseData && responseData.length > 0){
+            var coordinates = responseData[0]["geometry"]["coordinates"];
+            data.longitude = coordinates[0];
+            data.latitude = coordinates[1];
+            data.location = responseData[0]["properties"]["title"];
+            this.longitude = data.longitude;
+            this.latitude = data.latitude;
+            callBack.apply(thisArgs);
+          }
         })
         .catch((error) => {
           //失敗時
@@ -296,6 +308,9 @@ export default {
       splitArr: [],
       marker: null,
       address: "",
+      
+      mapLoader: null,
+      map: null,
     };
   },
 
@@ -338,48 +353,30 @@ export default {
     // 地図の初期化
     //* -----------------------------------------------
     setMap() {
-      new Loader({
-        // apiKey: "(ご自分で利用しているgoogleMapキー)",
-        apiKey: commonEnvConfig.googleMapApiKey,
-        version: "frozen",
-        libraries: ["places", "drawing", "geometry", "visualization"],
-        language: "ja",
-      })
-        .load()
+      if(this.mapLoader == null) this.mapLoader = new Loader(mapLoaderOptions);
+      this.mapLoader.load()
         .then((google) => {
-          this.google = google;
+          if(this.google == null) this.google = google;
+
           // 地図の初期化
-          var node = document.getElementById("map");
-          this.map = new google.maps.Map(node, {
+          this.map = new google.maps.Map(document.getElementById("map"), {
             // 初期表示設定
-            zoom: 17,
-            center: {
-              lat: this.mapHandler.latitude,
-              lng: this.mapHandler.longitude,
-            },
-            fullscreenControl: false,
-            mapTypeControl: false,
-            streetViewControl: true,
-            streetViewControlOptions: {
-              position: google.maps.ControlPosition.LEFT_BOTTOM,
-            },
-            zoomControl: true,
-            zoomControlOptions: {
-              position: google.maps.ControlPosition.LEFT_BOTTOM,
-            },
-            scaleControl: true,
-
-            clickableIcons: true,
-            draggable: true,
-            disableDoubleClickZoom: true,
-            scrollwheel: true,
+            ...mapOptions,
+            //フォーカスを充てる座標を指定
+            center: { lat: this.mapHandler.latitude, lng: this.mapHandler.longitude, }, 
+            click: (event) => {
+              console.log(event);
+            }
           });
-
-          // ↓
-          // こちらにレスポンスとして受け取ったgoogleやthis.mapを使用すれば、
-          this.map.addListener("click", this.handleMapClick);
-          // 通常通りvueでもJavaScriptAPIを利用できます。
-          // ↑
+          
+          if(this.marker){
+            this.marker.setMap(null); 
+          }
+          this.marker = new google.maps.Marker({
+            position:{lat:this.mapHandler.latitude, lng: this.mapHandler.longitude,},
+            map: this.map,
+            title: "位置情報"
+          });
         })
         .catch((e) => {
           console.error(e);
@@ -575,6 +572,50 @@ export default {
           });
       }
     },
+
+    changeFocusLatLng: function() {
+      const { location } = this.fieldInfoData;
+      if(!location) return;
+
+      useMapLocation(location)
+        .then((response) => {
+          
+          //場所検索後の座標を取得・格納
+          const responseData = response["data"];
+          //データが存在するかを確認後、処理
+          if(responseData && responseData.length > 0){
+          
+            const coordinates = response.data[0]["geometry"]["coordinates"];
+            const latitude = coordinates[1];
+            const longitude = coordinates[0];
+            
+            const google = this.google;
+            const map = this.map;
+
+            //画面に描画している緯度・経度を更新する。
+            const mapHandler = this.mapHandler;
+            mapHandler["latitude"] = latitude;
+            mapHandler["longitude"] = longitude;
+
+            if(this.marker){
+              this.marker.setMap(null); 
+            }
+            this.marker = new google.maps.Marker({
+              position:{lat:latitude, lng: longitude},
+              map: map,
+              title: "位置情報"
+            });
+
+            const newCenter = new google.maps.LatLng(latitude, longitude);
+            map.setCenter(newCenter);
+          }
+        })
+        .catch((error) => {
+          //失敗時
+          console.log(error);
+        });
+
+    }
   },
 };
 </script>
