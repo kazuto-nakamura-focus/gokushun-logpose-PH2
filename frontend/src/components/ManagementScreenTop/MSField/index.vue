@@ -164,7 +164,7 @@ export default {
         this.map = new google.maps.Map(document.getElementById("map"), {
           // 初期表示設定
           zoom: 17,
-          center: { lat: 35.692195, lng: 139.759854 }, // マルティスープ本社
+          center: { lat: 35.692195, lng: 139.759854 }, // ここに取得した緯度経度代入
           fullscreenControl: false,
           mapTypeControl: false,
           streetViewControl: true,
@@ -185,7 +185,7 @@ export default {
 
         // ↓
         // こちらにレスポンスとして受け取ったgoogleやthis.mapを使用すれば、
-        this.map.addListener("click", this.handleMapClick);
+       this.map.addListener("click", this.handleMapClick);
         // 通常通りvueでもJavaScriptAPIを利用できます。
         // ↑
       })
@@ -262,6 +262,20 @@ export default {
   methods: {
     handleDeviceDetailInfo: function (data) {
       this.selectedDevice.id = data.id;
+    },
+    handleMapClick(event) {
+      if (this.marker) {
+        this.marker.setMap(null)
+      }
+      const latLng = event.latLng
+      const latitude = latLng.lat()
+      const longitude = latLng.lng()
+      this.marker = new this.google.maps.Marker({
+        position: { lat: latitude, lng: longitude },
+        map: this.map
+      })
+      this.getAddressFromLatLng({ lat: latitude, lng: longitude })
+      this.inputValue = latitude + "," + longitude
     },
 
     clickRow: function (item) {
