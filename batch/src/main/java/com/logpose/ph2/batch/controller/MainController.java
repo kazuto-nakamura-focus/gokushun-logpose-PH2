@@ -27,7 +27,7 @@ public class MainController
 	@Autowired
 	private ModelDataApplyrService modelDataApplyrService;
 
-	/*@Scheduled(fixedRate = 600000)
+	@Scheduled(fixedRate = 600000)
 	public void fetchSigfoxData()
 		{
 		LOGGER.info("基礎データテーブル作成開始");
@@ -44,10 +44,10 @@ public class MainController
 			{
 			e.printStackTrace();
 			}
-		}*/
+		}
 
 	// @Scheduled(cron = "0 0 0 * * *", zone = "Asia/Tokyo")
-	@Scheduled(fixedRate = 1200000)
+	/*@Scheduled(fixedRate = 1200000)
 	//@Scheduled(fixedDelay = 86400000)
 	public void createModel()
 		{
@@ -64,6 +64,6 @@ public class MainController
 			{
 			e.printStackTrace();
 			}
-		}
+		}*/
 
 	}
