@@ -30,6 +30,7 @@
 		<result column="name" property="name"></result>
 		<result column="value" property="value"></result>
 		<result column="casted_at" property="castedAt"></result>
+		<result column="sensorName" property="sensorName"></result>
 	</resultMap>
 	
 	<select id="selectFieldDataList" resultMap="FieldDTO">
@@ -51,12 +52,12 @@
 			JOIN
   				ph2_sensor_contents on ph2_dashboard.content_id = ph2_sensor_contents."id"
   			WHERE
-  				ph2_dashboard.casted_at  <![CDATA[>=]]> #{date}
-  			AND
   				ph2_dashboard.device_id = #{deviceId}
   			)
 	and
 		ph2_dashboard.device_id = #{deviceId}
+	ORDER BY 
+		ph2_dashboard.content_id
 	</select>
 	
 	<select id="selectRawData" resultMap="FieldDTO">
@@ -78,14 +79,17 @@
 	order by 
 		ph2_dashboard.casted_at asc
 	</select>
+	
     <select id="selectDeviceDataList" resultMap="FieldDTO">
 	SELECT
 		ph2_devices."id" AS ID,
 		ph2_dashboard."value" as value,
 		ph2_dashboard.casted_at AS casted_at,
-		ph2_devices."name" AS NAME
+		ph2_devices."name" AS NAME,
+		ph2_sensors.name as sensorName
 	FROM
 		ph2_dashboard
+	JOIN ph2_sensors on ph2_dashboard.sensor_id = ph2_sensors.id
 	JOIN ph2_devices ON ph2_dashboard.device_id =ph2_devices."id"
 	JOIN (
 		SELECT
@@ -96,7 +100,7 @@
 			ph2_dashboard
 		WHERE
 			ph2_dashboard.content_id = #{contentId}
-		AND ph2_dashboard.casted_at <![CDATA[>=]]> #{date}
+		<!--AND ph2_dashboard.casted_at <![CDATA[>=]]> #{date}  -->
 		GROUP BY
 			ph2_dashboard.device_id, ph2_dashboard.content_id
 		) tmp 
@@ -105,7 +109,7 @@
 			and ph2_dashboard.content_id = tmp.content_id
 	JOIN ph2_fields on ph2_devices.field_id = ph2_fields.id
 	ORDER BY
-		ph2_fields."name" , ph2_devices."name"
+		ph2_fields."name" , ph2_devices."name", ph2_sensors."name"
 	</select>
 	
 	<resultMap id="ModelTargetDTO"

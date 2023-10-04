@@ -38,11 +38,7 @@ import { DialogController } from "@/lib/mountController.js";
 import GEActualValueInput from "@/components/TopStageGrowth/GEActualValueInput";
 import allEditButtons from "@/components/TopStageGrowth/hooks/editButtons.json";
 import GEParameterSets from "@/components/TopStageGrowth/GEParameterSets";
-//import ReferenceFValue from "@/components/TopStageGrowth/ReferenceFValue";
-//import LAActualValueInput from "@/components/TopStageGrowth/Input";
-//import LAParameterSets from "@/components/TopStageGrowth/LAParameterSets";
-//import PEActualValueInput from "@/components/TopStageGrowth/PEActualValueInput";
-//import PEParameterSets from "@/components/TopStageGrowth/PEParameterSets";
+
 export default {
   data() {
     return {
