@@ -145,8 +145,10 @@ export default {
           this.editButtons.splice(0);
           this.editButtons.push(...editButtons);
           if (this.selectedMenu.selectedModel.id != 4) {
+            this.$nextTick(function () {
             // * グラフの表示
             this.$refs.gfa.setGraphData(this.selectedMenu);
+            });
           } else {
             this.$nextTick(function () {
               this.$refs.refFVActualValueInput.initialize(this.selectedMenu);
