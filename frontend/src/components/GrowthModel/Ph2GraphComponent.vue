@@ -1,11 +1,11 @@
 <template>
   <v-card>
     <!-- 表示ボタン -->
-    <div @click="handleClose()">
+    <div>
       <div @click="handleClose()">
         <v-btn class="ma-1" color="gray" depressed>
           <!-- グラフに属するデバイスの階層表示 -->
-          {{ titlePath }} (x)
+          {{ titlePath }}
           <!-- 閉じるボタン -->
           <v-icon>mdi-close</v-icon>
         </v-btn>
