@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.batch.dao.db.entity.MessagesEnyity;
+import com.logpose.ph2.common.dao.db.entity.MessagesEnyity;
 @Component
 public final class BaseDataGeneratorModules
 	{

@@ -2,7 +2,7 @@ package com.logpose.ph2.batch.formula;
 
 import java.util.Calendar;
 
-import com.logpose.ph2.batch.dto.SensorDataDTO;
+import com.logpose.ph2.common.dto.SensorDataDTO;
 
 public class Formula
 	{

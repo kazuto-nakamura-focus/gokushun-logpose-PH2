@@ -12,18 +12,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.batch.alg.DeviceDayAlgorithm;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.batch.dao.db.entity.Ph2ModelDataEntity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2SystemStatusEntity;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DailyBaseDataMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DevicesMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2ModelDataMapper;
-import com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedModelMapper;
-import com.logpose.ph2.batch.domain.ModelDataDomain;
 import com.logpose.ph2.batch.domain.StatusDomain;
-import com.logpose.ph2.batch.dto.ModelRefDataDTO;
+import com.logpose.ph2.common.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.common.dao.db.entity.Ph2DeviceDayEntityExample;
+import com.logpose.ph2.common.dao.db.entity.Ph2ModelDataEntity;
+import com.logpose.ph2.common.dao.db.entity.Ph2SystemStatusEntity;
+import com.logpose.ph2.common.dao.db.mappers.Ph2DailyBaseDataMapper;
+import com.logpose.ph2.common.dao.db.mappers.Ph2DeviceDayMapper;
+import com.logpose.ph2.common.dao.db.mappers.Ph2DevicesMapper;
+import com.logpose.ph2.common.dao.db.mappers.Ph2ModelDataMapper;
+import com.logpose.ph2.common.dao.db.mappers.joined.Ph2JoinedModelMapper;
+import com.logpose.ph2.common.dto.ModelRefDataDTO;
 
 @Service
 public class ModelDataGeneratorService
@@ -33,8 +32,6 @@ public class ModelDataGeneratorService
 	// ===============================================
 	private static Logger LOG = LogManager
 			.getLogger(ModelDataGeneratorService.class);
-	@Autowired
-	private ModelDataDomain modelDataDomain;
 	@Autowired
 	private Ph2DevicesMapper ph2DeviceMapper;
 	@Autowired
