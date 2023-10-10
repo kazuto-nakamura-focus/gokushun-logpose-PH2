@@ -70,7 +70,7 @@
             ></v-text-field>
 
             <div>タイムゾーン</div>
-           <!--<v-select
+            <!--<v-select
               v-model="deviceInfoData.timeZone"
               :items="timeZone"
               width="60"
@@ -121,7 +121,7 @@
               >{{ label }}</v-btn
             >
             <v-btn
-              v-if="deviceInfoData.id!=null"
+              v-if="deviceInfoData.id != null"
               color="primary"
               class="ma-2 white--text"
               elevation="2"
@@ -148,10 +148,11 @@ import {
   useDeviceInfoAdd,
   useDeviceInfoUpdate, //* 更新モードの時使用
   useDeviceInfoRemove,
+  useLoadData,
 } from "@/api/ManagementScreenTop/MSDevice";
 import { AgGridVue } from "ag-grid-vue";
-import moment from 'moment-timezone';
-import 'moment/locale/ja';
+import moment from "moment-timezone";
+import "moment/locale/ja";
 
 function RemoveCellRenderer() {
   let eGui = document.createElement("div");
@@ -445,8 +446,25 @@ export default {
       }
     },
 
-    dataLoad:function() {
-
+    dataLoad: function () {
+     const data = {
+        deviceId: this.deviceInfoData.id,
+      };
+      useLoadData(data)
+        .then((response) => {
+          //成功時
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("センサーデータのロードを開始しました。（５～１０分)");
+            this.onEnd(true);
+          } else {
+            throw new Error(message);
+          }
+        })
+        .catch((error) => {
+          //失敗時
+          console.log(error);
+        });
     },
     deleteDeviceInfo: function () {
       if (confirm("削除してもよろしいですか？")) {
