@@ -79,4 +79,6 @@ public interface Ph2DevicesMapper {
 	int updateByPrimaryKey(Ph2DevicesEnyity row);
 
 	List<ModelRefDataDTO> selectDeviceList();
+
+	List<Ph2DevicesEnyity> selectAll();
 }

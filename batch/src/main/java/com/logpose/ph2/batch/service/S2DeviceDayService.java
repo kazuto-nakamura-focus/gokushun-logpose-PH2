@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.batch.alg.DeviceDayAlgorithm;
-import com.logpose.ph2.common.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.common.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.common.dao.db.entity.Ph2DevicesEnyity;
-import com.logpose.ph2.common.dao.db.mappers.Ph2DeviceDayMapper;
+import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntityExample;
+import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
 
 @Component
 public class S2DeviceDayService

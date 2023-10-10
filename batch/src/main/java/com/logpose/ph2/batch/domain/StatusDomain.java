@@ -5,8 +5,9 @@ import java.util.Calendar;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.common.dao.db.entity.Ph2SystemStatusEntity;
-import com.logpose.ph2.common.dao.db.mappers.Ph2SystemStatusMapper;
+import com.logpose.ph2.batch.dao.db.entity.Ph2SystemStatusEntity;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2SystemStatusMapper;
+
 
 /**
  * SystemStatusテーブルのドメイン

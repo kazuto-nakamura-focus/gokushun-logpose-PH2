@@ -7,18 +7,18 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.common.dao.db.entity.Ph2BaseDataEntity;
-import com.logpose.ph2.common.dao.db.entity.Ph2DashBoardEntity;
-import com.logpose.ph2.common.dao.db.entity.Ph2InsolationDataEntity;
-import com.logpose.ph2.common.dao.db.entity.Ph2RelBaseDataEntity;
-import com.logpose.ph2.common.dao.db.entity.Ph2RelBaseDataEntityExample;
-import com.logpose.ph2.common.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.common.dao.db.mappers.Ph2DashBoardMapper;
-import com.logpose.ph2.common.dao.db.mappers.Ph2InsolationDataMapper;
-import com.logpose.ph2.common.dao.db.mappers.Ph2RelBaseDataMapper;
-import com.logpose.ph2.common.dao.db.mappers.Ph2VoltageDataMapper;
-import com.logpose.ph2.common.dao.db.mappers.joined.Ph2JoinedMapper;
-import com.logpose.ph2.common.dto.SensorDataDTO;
+import com.logpose.ph2.batch.dao.db.entity.Ph2BaseDataEntity;
+import com.logpose.ph2.batch.dao.db.entity.Ph2DashBoardEntity;
+import com.logpose.ph2.batch.dao.db.entity.Ph2InsolationDataEntity;
+import com.logpose.ph2.batch.dao.db.entity.Ph2RelBaseDataEntity;
+import com.logpose.ph2.batch.dao.db.entity.Ph2RelBaseDataEntityExample;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2BaseDataMapper;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2DashBoardMapper;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2InsolationDataMapper;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2RelBaseDataMapper;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2VoltageDataMapper;
+import com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedMapper;
+import com.logpose.ph2.batch.dto.SensorDataDTO;
 import com.logpose.ph2.batch.formula.Formula;
 
 @Component

@@ -11,10 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.logpose.ph2.common.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.common.domain.GrowthDomain;
-import com.logpose.ph2.common.domain.LeafDomain;
-import com.logpose.ph2.common.domain.PhotoSynthesisDomain;
+import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
+
 
 @Service
 public class S4ModelDataApplyrService

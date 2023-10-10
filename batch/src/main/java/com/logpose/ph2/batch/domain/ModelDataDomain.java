@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.logpose.ph2.batch.configraion.DefaultUrlParameters;
-import com.logpose.ph2.common.dao.db.mappers.Ph2DailyBaseDataMapper;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.batch.dto.DeviceDateDTO;
 import com.logpose.ph2.batch.dto.ResponseDTO;
 

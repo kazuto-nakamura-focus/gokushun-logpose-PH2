@@ -365,6 +365,13 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
+      <select id="selectAll" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from ph2_devices
+  </select>
+  
+ 
   	<resultMap id="ModelRefDataDTO" type="com.logpose.ph2.batch.dto.ModelRefDataDTO">
 		<result column="deviceId" property="deviceId" />
 		<result column="baseDate" property="baseDate" />
