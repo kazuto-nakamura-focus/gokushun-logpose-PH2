@@ -17,7 +17,6 @@ import com.logpose.ph2.batch.dao.db.mappers.Ph2DashBoardMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2InsolationDataMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2VoltageDataMapper;
-import com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.batch.dto.SensorDataDTO;
 import com.logpose.ph2.batch.formula.Formula;
 
@@ -27,8 +26,7 @@ public class BaseDataGenerator
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	@Autowired
-	Ph2JoinedMapper ph2JoinedMapper;
+
 	@Autowired
 	Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	@Autowired
@@ -51,11 +49,8 @@ public class BaseDataGenerator
 	 * @return 処理をした受信日
 	 */
 	// -----------------------------------------------------------------
-	public Date generate(Long deviceId, DataListModel dataList)
+	public Date generate(Long deviceId, List<SensorDataDTO> records, DataListModel dataList)
 		{
-// * センサーデータの取得
-		List<SensorDataDTO> records = this.ph2JoinedMapper
-				.getSensorData(deviceId);
 // * 関係レコードの取得または追加取得
 		Ph2RelBaseDataEntityExample relexm = new Ph2RelBaseDataEntityExample();
 		relexm.createCriteria().andCastedAtEqualTo(dataList.getCastedAt())

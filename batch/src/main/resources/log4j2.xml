@@ -33,7 +33,6 @@
 	   <Logger name="com.logpose.ph2.batch.domain" level="trace"/>
 		<root level="info">
 			<appender-ref ref="Stdout" />
-			<appender-ref ref="File" />
 		</root>
 	</loggers>
 </configuration>

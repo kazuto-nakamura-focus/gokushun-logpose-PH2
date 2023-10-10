@@ -25,13 +25,13 @@
 			targetProject="logpose-ph2-batch/src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
-
+	<!-- 
 		<table tableName="ph2_model_data" domainObjectName="Ph2ModelDataEntity"
 			mapperName="Ph2ModelDataMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
-	<!-- 	<table tableName="ph2_rel_base_data" domainObjectName="Ph2RelBaseDataEntity"
+	<table tableName="ph2_rel_base_data" domainObjectName="Ph2RelBaseDataEntity"
 			mapperName="Ph2RelBaseDataMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
@@ -104,13 +104,13 @@
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
 		
-		
+		-->
 	  <table tableName="ph2_devices" domainObjectName="Ph2DevicesEnyity"
 			mapperName="Ph2DevicesMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
-
+	<!--
 		<table tableName="ph2_sensor_contents"
 			domainObjectName="Ph2SensorContentsEntity"
 			mapperName="Ph2SensorContentsMapper" enableInsert="true"

@@ -16,23 +16,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.batch.dao.db.entity.MessagesEnyity;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DashBoardEntityExample;
+import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntityExample;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.batch.dao.db.entity.Ph2RelBaseDataEntityExample;
 import com.logpose.ph2.batch.dao.db.mappers.MessagesMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2BaseDataMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2DashBoardMapper;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2InsolationDataMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2RelBaseDataMapper;
+import com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.batch.domain.BaseDataGenerator;
 import com.logpose.ph2.batch.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.batch.domain.DataListModel;
+import com.logpose.ph2.batch.dto.SensorDataDTO;
 
 @Service
 public class S1DeviceDataLoaderService
 	{
 	@Autowired
 	private Ph2DevicesMapper ph2DeviceMapper;
+	@Autowired
+	private Ph2DeviceDayMapper ph2DeviceDayMapper;
 	@Autowired
 	private MessagesMapper messagesMapper;
 	@Autowired
@@ -47,6 +53,8 @@ public class S1DeviceDataLoaderService
 	Ph2BaseDataMapper ph2BaseDataMapper;
 	@Autowired
 	Ph2InsolationDataMapper ph2InsolationDataMapper;
+	@Autowired
+	Ph2JoinedMapper ph2JoinedMapper;
 	
 	public Ph2DevicesEnyity getDeviceInfo(Long deviceId)
 		{
@@ -70,6 +78,7 @@ public class S1DeviceDataLoaderService
 		Date firstDate = null;
 		Date lastDate = null;
 // * メッセージからデータを取得する
+		List<SensorDataDTO> records = null;
 		try (Cursor<MessagesEnyity> messageCorsor = this.messagesMapper
 				.selectByCastedAt(device.getId(), device.getTz(), startDate))
 			{
@@ -81,6 +90,7 @@ public class S1DeviceDataLoaderService
 				MessagesEnyity message = messages.next();
 				if(isFirst)
 					{
+					records = this.ph2JoinedMapper.getSensorData(device.getId());
 					firstDate = message.getCastedAt();
 					this.deleteTables(device.getId(), firstDate);
 					isFirst = false;
@@ -89,7 +99,7 @@ public class S1DeviceDataLoaderService
 					{
 					lastDate = message.getCastedAt();
 					}
-				messageData = this.createTables(device, messageData, message);
+				messageData = this.createTables(device, records, messageData, message);
 				}
 			}
 		catch (Exception e)
@@ -113,6 +123,7 @@ public class S1DeviceDataLoaderService
 	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	private DataListModel createTables(
 			Ph2DevicesEnyity device,
+			List<SensorDataDTO> records,
 			DataListModel dataListModel,
 			MessagesEnyity message)
 		{
@@ -124,7 +135,7 @@ public class S1DeviceDataLoaderService
 // * とDBへの登録 を実行する。
 			if (dataListModel.getCount() == 16)
 				{
-				this.baseDataGenerator.generate(message.getDeviceId(), dataListModel);
+				this.baseDataGenerator.generate(message.getDeviceId(), records, dataListModel);
 				}
 	
 		return dataListModel;
@@ -142,6 +153,7 @@ public class S1DeviceDataLoaderService
 			}
 		return strs;
 		}
+	@Transactional(propagation=Propagation.REQUIRES_NEW)
 	private void deleteTables(long deviceId, Date date)
 		{
 		Ph2RelBaseDataEntityExample relexm = new Ph2RelBaseDataEntityExample();
@@ -152,5 +164,12 @@ public class S1DeviceDataLoaderService
 		Ph2DashBoardEntityExample exm = new Ph2DashBoardEntityExample();
 		exm.createCriteria().andCastedAtGreaterThanOrEqualTo(date).andDeviceIdEqualTo(deviceId);
 		this.dashboardMapper.deleteByExample(exm);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		short year = (short) cal.get(Calendar.YEAR);
+		Ph2DeviceDayEntityExample dexm = new Ph2DeviceDayEntityExample();
+		dexm.createCriteria().andYearGreaterThanOrEqualTo(year);
+		this.ph2DeviceDayMapper.deleteByExample(dexm);
 		}
 	}

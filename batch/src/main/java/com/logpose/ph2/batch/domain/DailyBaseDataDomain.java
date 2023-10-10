@@ -15,10 +15,9 @@ import com.logpose.ph2.batch.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.batch.dto.BaseDataDTO;
 import com.logpose.ph2.batch.formula.Formula;
-import com.logpose.ph2.batch.service.S2DeviceDayService;
 
 @Component
-public class DailyBaseDataDomain extends S2DeviceDayService
+public class DailyBaseDataDomain
 	{
 	// ===============================================
 	// クラスメンバー

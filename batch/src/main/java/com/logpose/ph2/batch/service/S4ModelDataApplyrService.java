@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
-
+import com.logpose.ph2.batch.domain.ModelDataDomain;
 
 @Service
 public class S4ModelDataApplyrService
@@ -22,37 +22,45 @@ public class S4ModelDataApplyrService
 	// ===============================================
 	private static Logger LOG = LogManager
 			.getLogger(S4ModelDataApplyrService.class);
+	@Autowired
+	private ModelDataDomain modelDataDomain;
 
-	@Autowired	
-	private GrowthDomain growthDomain;
-	@Autowired	
-	private LeafDomain leafDomain;
-	@Autowired	
-	private PhotoSynthesisDomain photoSynthesisDomain;
 	// ===============================================
 	// 公開関数群
 	// ===============================================
 	@Transactional(rollbackFor = Exception.class)
 	public void doService(List<Ph2DeviceDayEntity> deviceDays, Date startDay) throws ParseException
 		{
+		LOG.info("モデルデータの作成を開始します。", startDay);
 		// * 年度の開始日まで移動
 		List<Ph2DeviceDayEntity> tmp = new ArrayList<>();
-		for(Ph2DeviceDayEntity entity :deviceDays )
+		for (Ph2DeviceDayEntity entity : deviceDays)
 			{
-			if(entity.getLapseDay() == 1)
+			if (entity.getLapseDay() == 1)
 				{
-				//  既に３６５日以上用意されている
-				if(tmp.size() >= 365)
+				// 既に３６５日以上用意されている
+				if (tmp.size() >= 365)
 					{
 					Ph2DeviceDayEntity deviceDay = tmp.get(0);
-					
-					this.growthDomain.updateModelTable(deviceDay.getDeviceId(), deviceDay.getYear(), startDay);
-					this.leafDomain.updateModelTable(deviceDay.getDeviceId(), deviceDay.getYear(), startDay);
-					this.photoSynthesisDomain.updateModelTable(deviceDay.getDeviceId(), deviceDay.getYear(), startDay);
+					if (deviceDay.getHasReal())
+						{
+						this.modelDataDomain.doService(deviceDay.getDeviceId(), deviceDay.getYear(),
+								startDay);
+						}
 					}
 				tmp.clear();
 				}
 			tmp.add(entity);
 			}
+		if (tmp.size() >= 0)
+			{
+			Ph2DeviceDayEntity deviceDay = tmp.get(0);
+			if (deviceDay.getHasReal())
+				{
+				this.modelDataDomain.doService(deviceDay.getDeviceId(), deviceDay.getYear(),
+						startDay);
+				}
+			}
+		LOG.info("モデルデータの作成が終了しました。", startDay);
 		}
 	}

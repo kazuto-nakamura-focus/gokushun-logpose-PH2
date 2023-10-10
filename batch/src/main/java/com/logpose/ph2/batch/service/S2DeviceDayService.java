@@ -79,6 +79,8 @@ public class S2DeviceDayService
 				}
 			}
 		short year = (short) startCal.get(Calendar.YEAR);
+		System.out.println(startCal.getTime());
+		System.out.println(endCal.getTime());
 		for (; startCal.getTimeInMillis() < endCal.getTimeInMillis(); startCal.add(Calendar.DATE,
 				1))
 			{
@@ -96,8 +98,9 @@ public class S2DeviceDayService
 				entity.setDeviceId(device.getId());
 				entity.setHasReal(false);
 				entity.setLapseDay((short) index++);
-				entity.setYear((short) startCal.get(year));
-				this.ph2DeviceDayMapper.insert(entity);
+				entity.setYear((short) startCal.get(Calendar.YEAR));
+				long id = this.ph2DeviceDayMapper.insert(entity);
+				entity.setId(id);
 				}
 			else
 				{
@@ -109,6 +112,7 @@ public class S2DeviceDayService
 					(startCal.get(Calendar.DATE)==baseDate.get(Calendar.DATE)) )
 				{
 				year++;
+				index = 1;
 				}
 			}
 		return deviceDays;

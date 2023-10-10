@@ -8,15 +8,18 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.utility.DateTimeUtility;
+import com.logpose.ph2.batch.alg.DateTimeUtility;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.batch.service.S1DeviceDataLoaderService;
 import com.logpose.ph2.batch.service.S2DeviceDayService;
 import com.logpose.ph2.batch.service.S3DailyBaseDataGeneratorService;
 import com.logpose.ph2.batch.service.S4ModelDataApplyrService;
+
+
 @Component
 public class DeviceDataLoader
 	{
@@ -25,11 +28,11 @@ public class DeviceDataLoader
 	// ===============================================
 	private static Logger LOG = LogManager.getLogger(DeviceDataLoader.class);
 	
-	//@Value("${deviceId}")
-	private Long deviceId = (long) 31;
-	//@Value("${isAll}")
+	@Autowired
+	private ApplicationArguments arguments;
+	
+	private Long deviceId = null;
 	private boolean isAll = true;	
-	//@Value("${date}")
 	private String date = null;	
 	
 	@Autowired
@@ -44,6 +47,7 @@ public class DeviceDataLoader
 	// ===============================================
 	// 公開関数群
 	// ===============================================
+		
 	// --------------------------------------------------------
 	/**
 	 * デバイスデータの生成を行う
@@ -55,6 +59,26 @@ public class DeviceDataLoader
 	//public void load(Long deviceId, boolean isAll, String date) 
 	public void load() 
 		{
+		String args[] = arguments.getSourceArgs();
+		if( args[1].equals("-") )
+			{
+			deviceId = null;
+			}
+		else
+			{
+			deviceId = Long.valueOf(args[1]);
+			}
+		isAll = Boolean.valueOf(args[2]);
+		if( args[3].equals("-") )
+			{
+			date = null;
+			}
+		else
+			{
+			date =args[3];
+			}
+		
+		
 // * デバイスの指定が無い場合、全てのデバイスを対象とする
 		if(null == deviceId)
 			{
@@ -72,6 +96,7 @@ public class DeviceDataLoader
 	
 	public void loadDevice(Long deviceId, boolean isAll, String date)
 		{
+		LOG.info("デバイスデータのローディングを開始します。", deviceId);
 //* 開始日の設定
 		Date startDate = null;
 		if(!isAll)
@@ -98,10 +123,16 @@ public class DeviceDataLoader
 			{
 			//* デバイス情報の取得
 			Ph2DevicesEnyity device = this.s1deviceDataLoaderService.getDeviceInfo(deviceId);
+			// * デバイス情報に開始日・タイムゾーン情報が無い場合終了
+			if((null == device.getBaseDate())||(null == device.getTz()))
+				{
+				return;
+				}
+			
 			//* メッセージから基本情報の取得
 			startDate = s1deviceDataLoaderService.loadMessages(device, startDate);
 			// * 日付をまたがった場合、以下の処理を行う
-			if(null != null )
+			if(null != startDate )
 				{
 				List<Ph2DeviceDayEntity> deviceDays = this.s2deviceDayService.initDeviceDay(device, startDate);
 				this.s3dailyBaseDataGeneratorService.doService(deviceDays, startDate);
@@ -114,6 +145,6 @@ public class DeviceDataLoader
 			e.printStackTrace();
 			return;
 			}
-
+		LOG.info("デバイスデータのローディングが終了しました。");
 		}
 	}

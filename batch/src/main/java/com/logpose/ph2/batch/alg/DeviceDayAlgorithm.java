@@ -31,6 +31,7 @@ public class DeviceDayAlgorithm
 		else
 			{
 			Calendar deviceDay = Calendar.getInstance();
+			deviceDay.setTime(base);
 			baseDate.set(Calendar.MONTH, deviceDay.get(Calendar.MONTH));
 			baseDate.set(Calendar.DATE, deviceDay.get(Calendar.DATE));
 			}
@@ -55,10 +56,11 @@ public class DeviceDayAlgorithm
 	 *  当日の最初
 	 */
 	// --------------------------------------------------
-	public Date getNextDayZeroHour()
+	public Date getNextDayZeroHour(Date date)
 		{
 		Calendar deviceDay = Calendar.getInstance();
-		deviceDay.set(Calendar.DATE, 1);
+		deviceDay.setTime(date);
+		deviceDay.add(Calendar.DATE, 1);
 		this.setTimeZero(deviceDay);
 		return deviceDay.getTime();
 		}

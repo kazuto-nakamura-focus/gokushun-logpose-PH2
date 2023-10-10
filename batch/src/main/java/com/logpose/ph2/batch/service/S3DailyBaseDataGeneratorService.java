@@ -48,9 +48,12 @@ public class S3DailyBaseDataGeneratorService
 			{
 			List<BaseDataDTO> tmRecords = this.ph2JoinedModelMapper.getBaseData(
 					deviceDay.getDeviceId(), deviceDay.getDate(),
-					this.deviceDayAlgorithm.getNextDayZeroHour());
-		   this.addTmData(deviceDay, tmRecords);
-			this.setIsolationData(deviceDay, tmRecords);
+					this.deviceDayAlgorithm.getNextDayZeroHour(deviceDay.getDate()));
+			if (tmRecords.size() > 0)
+				{
+				this.addTmData(deviceDay, tmRecords);
+				this.setIsolationData(deviceDay, tmRecords);
+				}
 			}
 		LOG.info("日ベースのデータ作成終了");
 		}
@@ -90,16 +93,34 @@ public class S3DailyBaseDataGeneratorService
 				min = temperature;
 			else if (temperature > max)
 				max = temperature;
-			}	
+			}
 		device.setHasReal(true);
 		this.ph2DeviceDayMapper.updateByPrimaryKey(device);
 		// * 日別基礎データテーブルに追加
-		Ph2DailyBaseDataEntity entity = new Ph2DailyBaseDataEntity();
+		Ph2DailyBaseDataEntityExample exm = new Ph2DailyBaseDataEntityExample();
+		exm.createCriteria().andDayIdEqualTo(device.getId());
+		Ph2DailyBaseDataEntity entity;
+		List<Ph2DailyBaseDataEntity> entities = this.ph2DailyBaseDataMapper.selectByExample(exm);
+		if (entities.size() > 0)
+			{
+			entity = entities.get(0);
+			}
+		else
+			{
+			entity = new Ph2DailyBaseDataEntity();
+			}
 		entity.setDayId(device.getId());
 		entity.setAverage(sum / count);
 		entity.setTm((min + max) / 2 - 10);
 		entity.setCdd((min + max) / 2 - 9.18);
-		this.ph2DailyBaseDataMapper.insert(entity);
+		if (entities.size() > 0)
+			{
+			this.ph2DailyBaseDataMapper.updateByExample(entity, exm);
+			}
+		else
+			{
+			this.ph2DailyBaseDataMapper.insert(entity);
+			}
 		}
 
 	public void setIsolationData(Ph2DeviceDayEntity device, List<BaseDataDTO> tmRecords)
