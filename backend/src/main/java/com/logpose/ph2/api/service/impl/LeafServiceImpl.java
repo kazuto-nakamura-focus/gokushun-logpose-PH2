@@ -49,9 +49,9 @@ public class LeafServiceImpl implements LeafService
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateDateModel(Long deviceId, Date date) throws ParseException
+	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException
 		{
-		this.leafDomain.updateModelTable(deviceId, null, date);
+		this.leafDomain.updateModelTable(deviceId, year, date);
 		}
 
 	// --------------------------------------------------

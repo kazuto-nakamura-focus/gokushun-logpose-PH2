@@ -59,6 +59,7 @@ public class PhotosynthesisController
 		try
 			{
 			this.photosynthesisService.updateDateModel(dto.getDeviceId(),
+					dto.getYear(),
 					dto.getDate());
 			as_dto.setSuccess(null);
 			}

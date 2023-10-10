@@ -27,10 +27,11 @@ public class ModelDataDomain
 	Ph2DailyBaseDataMapper ph2DailyBaseDataMapper;
 
 	// --------------------------------------------------------------------
-	public void setGrowthModel(Long deviceId, Date date)
+	public void setGrowthModel(Long deviceId, Short year, Date date)
 		{
 		DeviceDateDTO arg = new DeviceDateDTO();
 		arg.setDate(date);
+		arg.setYear(year);
 		arg.setDeviceId(deviceId);
 		ResponseDTO response = this.send(params.getGrowthUrl(), HttpMethod.PUT,
 				arg);
@@ -41,10 +42,11 @@ public class ModelDataDomain
 		}
 
 	// --------------------------------------------------------------------
-	public void setLeafModel(Long deviceId, Date date)
+	public void setLeafModel(Long deviceId, Short year, Date date)
 		{
 		DeviceDateDTO arg = new DeviceDateDTO();
 		arg.setDate(date);
+		arg.setYear(year);
 		arg.setDeviceId(deviceId);
 		ResponseDTO response = this.send(params.getLeafUrl(), HttpMethod.PUT,
 				arg);
@@ -55,10 +57,11 @@ public class ModelDataDomain
 		}
 
 	// --------------------------------------------------------------------
-	public void setPsModel(Long deviceId, Date date)
+	public void setPsModel(Long deviceId, Short year, Date date)
 		{
 		DeviceDateDTO arg = new DeviceDateDTO();
 		arg.setDate(date);
+		arg.setYear(year);
 		arg.setDeviceId(deviceId);
 		ResponseDTO response = this.send(params.getPsUrl(), HttpMethod.PUT,
 				arg);
@@ -92,13 +95,13 @@ public class ModelDataDomain
 			}
 		}
 
-	public void doService(long deviceId)
+	public void doService(long deviceId, short year, Date startDate)
 		{
 		Calendar cal = Calendar.getInstance();
 		Date today = cal.getTime();
-		this.setGrowthModel(deviceId, today);
-		this.setLeafModel(deviceId, today);
-		this.setPsModel(deviceId, today);
+		this.setGrowthModel(deviceId, year, startDate);
+		this.setLeafModel(deviceId, year, startDate);
+		this.setPsModel(deviceId, year, startDate);
 		}
 
 	}

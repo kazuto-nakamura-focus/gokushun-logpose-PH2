@@ -1,85 +1,64 @@
-package com.logpose.ph2.batch.domain;
+package com.logpose.ph2.batch.service;
 
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.batch.alg.DeviceDayAlgorithm;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DailyBaseDataEntity;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DailyBaseDataEntityExample;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntityExample;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
+import com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedModelMapper;
 import com.logpose.ph2.batch.dto.BaseDataDTO;
 import com.logpose.ph2.batch.formula.Formula;
 
-@Component
-public class DailyBaseDataDomain
+@Service
+public class S3DailyBaseDataGeneratorService
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	private static Logger LOG = LogManager
+			.getLogger(S3DailyBaseDataGeneratorService.class);
+	@Autowired
+	private Ph2JoinedModelMapper ph2JoinedModelMapper;
+	@Autowired
+	private DeviceDayAlgorithm deviceDayAlgorithm;
 	@Autowired
 	private Ph2DeviceDayMapper ph2DeviceDayMapper;
 	@Autowired
-	private Ph2DailyBaseDataMapper ph2DailyBaseDataMapper;
+	Ph2DailyBaseDataMapper ph2DailyBaseDataMapper;
 
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * デバイス日付テーブルと日別基礎データテーブルにデータを
-	 * 追加する
-	 */
-	// --------------------------------------------------
-	public void createTMValues(Long deviceId, YearDateModel yearDateModel, List<BaseDataDTO> records)
+	@Transactional(rollbackFor = Exception.class)
+	public void doService(List<Ph2DeviceDayEntity> deviceDays, Date startDate)
 		{
-		Calendar date = null;
-		Calendar recordTime = null;
-		List<BaseDataDTO> tempList = new ArrayList<>();
-
-		for (BaseDataDTO record : records)
+		LOG.info("日ベースのデータ作成開始");
+		for (Ph2DeviceDayEntity deviceDay : deviceDays)
 			{
-			// * 対象データのレコード時刻を設定
-			recordTime = Calendar.getInstance();
-			recordTime.setTime(record.getCastedAt());
-			// * 対象データのレコード時刻から年度と経過日を設定
-			//	yearDateModel.setYear(record.getCastedAt());
-			// * 日にちの変更があった場合
-			if (date != null)
+			List<BaseDataDTO> tmRecords = this.ph2JoinedModelMapper.getBaseData(
+					deviceDay.getDeviceId(), deviceDay.getDate(),
+					this.deviceDayAlgorithm.getNextDayZeroHour(deviceDay.getDate()));
+			if (tmRecords.size() > 0)
 				{
-				if (date.getTime().getTime() == record.getCastedAt().getTime())
-					{
-					continue;
-					}
-				if ((date.get(Calendar.YEAR) != recordTime.get(Calendar.YEAR)) ||
-						(date.get(Calendar.MONTH) != recordTime.get(Calendar.MONTH)) ||
-						(date.get(Calendar.DATE) != recordTime.get(Calendar.DATE)))
-					{
-					if (tempList.size() > 0)
-						{
-						long id = this.addTmData(deviceId, yearDateModel, tempList);
-						this.setIsolationData(id, deviceId, yearDateModel, tempList);
-						tempList.clear();
-						}
-					}
+				this.addTmData(deviceDay, tmRecords);
+				this.setIsolationData(deviceDay, tmRecords);
 				}
-			date = recordTime;
-			tempList.add(record);
 			}
-
-		if (tempList.size() > 0)
-			{
-			long id = this.addTmData(deviceId, yearDateModel, tempList);
-			this.setIsolationData(id, deviceId, yearDateModel, tempList);
-			}
+		LOG.info("日ベースのデータ作成終了");
 		}
 
-	private long addTmData(Long deviceId, YearDateModel yearDateModel, List<BaseDataDTO> tempList)
+	private void addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList)
 		{
 		float min = tempList.get(0).getTemperature();
 		float max = min;
@@ -115,32 +94,36 @@ public class DailyBaseDataDomain
 			else if (temperature > max)
 				max = temperature;
 			}
-		// * 日付データテーブルに追加
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(tempList.get(0).getCastedAt());
-		cal.set(Calendar.HOUR_OF_DAY, 0);
-		cal.set(Calendar.MINUTE, 0);
-		cal.set(Calendar.SECOND, 0);
-		cal.set(Calendar.MILLISECOND, 0);
-		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId)
-			.andDateEqualTo(cal.getTime());
-		Ph2DeviceDayEntity ddEntity = this.ph2DeviceDayMapper.selectByExample(exm).get(0);
-		long id = ddEntity.getId();
-		ddEntity.setHasReal(true);
-		this.ph2DeviceDayMapper.updateByPrimaryKey(ddEntity);
+		device.setHasReal(true);
+		this.ph2DeviceDayMapper.updateByPrimaryKey(device);
 		// * 日別基礎データテーブルに追加
-		Ph2DailyBaseDataEntity entity = new Ph2DailyBaseDataEntity();
-		entity.setDayId(id);
+		Ph2DailyBaseDataEntityExample exm = new Ph2DailyBaseDataEntityExample();
+		exm.createCriteria().andDayIdEqualTo(device.getId());
+		Ph2DailyBaseDataEntity entity;
+		List<Ph2DailyBaseDataEntity> entities = this.ph2DailyBaseDataMapper.selectByExample(exm);
+		if (entities.size() > 0)
+			{
+			entity = entities.get(0);
+			}
+		else
+			{
+			entity = new Ph2DailyBaseDataEntity();
+			}
+		entity.setDayId(device.getId());
 		entity.setAverage(sum / count);
 		entity.setTm((min + max) / 2 - 10);
 		entity.setCdd((min + max) / 2 - 9.18);
-		this.ph2DailyBaseDataMapper.insert(entity);
-		// * 作成された日付データテーブルのレコードIDを返却する。
-		return id;
+		if (entities.size() > 0)
+			{
+			this.ph2DailyBaseDataMapper.updateByExample(entity, exm);
+			}
+		else
+			{
+			this.ph2DailyBaseDataMapper.insert(entity);
+			}
 		}
 
-	public void setIsolationData(Long id, Long deviceId, YearDateModel yearDateModel, List<BaseDataDTO> tmRecords)
+	public void setIsolationData(Ph2DeviceDayEntity device, List<BaseDataDTO> tmRecords)
 		{
 		List<BaseDataDTO> records = new ArrayList<>();
 		for (BaseDataDTO data : tmRecords)
@@ -183,7 +166,7 @@ public class DailyBaseDataDomain
 			}
 
 		Ph2DailyBaseDataEntityExample exm = new Ph2DailyBaseDataEntityExample();
-		exm.createCriteria().andDayIdEqualTo(id);
+		exm.createCriteria().andDayIdEqualTo(device.getId());
 		Ph2DailyBaseDataEntity entity = this.ph2DailyBaseDataMapper.selectByExample(exm).get(0);
 		entity.setPar(sum);
 		this.ph2DailyBaseDataMapper.updateByExample(entity, exm);

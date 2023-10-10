@@ -3,23 +3,13 @@ package com.logpose.ph2.batch.alg;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import com.logpose.ph2.batch.domain.StatusDomain;
 @Component
 public class DeviceDayAlgorithm
 	{
 	// ===============================================
-	// クラスメンバー
-	// ===============================================
-	@Autowired
-	private StatusDomain statusDomain;
-
-	// ===============================================
 	// 公開関数
 	// ===============================================
-
 	// --------------------------------------------------
 	/**
 	 *  デバイスの今年の基準日を設定する
@@ -41,12 +31,12 @@ public class DeviceDayAlgorithm
 		else
 			{
 			Calendar deviceDay = Calendar.getInstance();
+			deviceDay.setTime(base);
 			baseDate.set(Calendar.MONTH, deviceDay.get(Calendar.MONTH));
 			baseDate.set(Calendar.DATE, deviceDay.get(Calendar.DATE));
 			}
 		return baseDate;
 		}
-
 	// --------------------------------------------------
 	/**
 	 *  日付を00:00:00 000に設定する
@@ -60,5 +50,30 @@ public class DeviceDayAlgorithm
 		date.set(Calendar.MINUTE, 0);
 		date.set(Calendar.SECOND, 0);
 		date.set(Calendar.MILLISECOND, 0);
+		}
+	// --------------------------------------------------
+	/**
+	 *  当日の最初
+	 */
+	// --------------------------------------------------
+	public Date getNextDayZeroHour(Date date)
+		{
+		Calendar deviceDay = Calendar.getInstance();
+		deviceDay.setTime(date);
+		deviceDay.add(Calendar.DATE, 1);
+		this.setTimeZero(deviceDay);
+		return deviceDay.getTime();
+		}
+	// --------------------------------------------------
+	/**
+	 *  前日の取得
+	 */
+	// --------------------------------------------------
+	public Date getPreviousDay()
+		{
+		Calendar deviceDay = Calendar.getInstance();
+		deviceDay.set(Calendar.DATE, -1);
+		this.setTimeZero(deviceDay);
+		return deviceDay.getTime();
 		}
 	}

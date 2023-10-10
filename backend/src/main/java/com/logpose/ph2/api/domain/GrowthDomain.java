@@ -216,7 +216,7 @@ public class GrowthDomain
 		RealModelGraphDataDTO data = this.getModelGraphData(deviceId, year,
 				startDate, param);
 		// *モデルデータテーブルに生育推定モデルデータを設定する
-		short startDay = 0;
+		short startDay = 1;
 		startDay = this.deviceDayDomain.updateModelData(startDay, deviceId,
 				year, data.getValues());
 		this.deviceDayDomain.updateModelData(startDay, deviceId, year,
