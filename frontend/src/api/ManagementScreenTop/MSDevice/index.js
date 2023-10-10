@@ -16,6 +16,13 @@ const useDeviceInfoAdd = (data) => {
   return axios.post("/device/info", data, config);
 };
 
+const useLoadData = (data) => {
+  const config = {
+    params: {},
+  };
+  return axios.post("/device/sensorData", data, config);
+};
+
 //デバイス情報更新
 const useDeviceInfoUpdate = (data) => {
   const config = {
@@ -55,4 +62,5 @@ export {
   useDeviceInfoAdd,
   useDeviceInfoUpdate,
   useDeviceMastersAPI,
+  useLoadData,
 };

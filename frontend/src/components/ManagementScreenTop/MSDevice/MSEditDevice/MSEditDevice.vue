@@ -68,6 +68,25 @@
               placeholder="01/01"
               v-model="deviceInfoData.baseDateShort"
             ></v-text-field>
+
+            <div>タイムゾーン</div>
+           <!--<v-select
+              v-model="deviceInfoData.timeZone"
+              :items="timeZone"
+              width="60"
+              item-text="name"
+              item-value="id"
+              dense
+              return-object
+            ></v-select>-->
+            <v-select
+              v-model="deviceInfoData.timeZone"
+              :items="timeZone"
+              width="60"
+              item-text="name"
+              item-value="id"
+              dense
+            ></v-select>
           </v-col>
 
           <v-col cols="6">
@@ -101,6 +120,14 @@
               @click="update()"
               >{{ label }}</v-btn
             >
+            <v-btn
+              v-if="deviceInfoData.id!=null"
+              color="primary"
+              class="ma-2 white--text"
+              elevation="2"
+              @click="dataLoad()"
+              >センサーデータのロード</v-btn
+            >
 
             <v-btn
               color="gray"
@@ -111,7 +138,6 @@
             >
           </div>
         </v-card-actions>
-
       </template>
     </v-container>
   </v-app>
@@ -124,6 +150,8 @@ import {
   useDeviceInfoRemove,
 } from "@/api/ManagementScreenTop/MSDevice";
 import { AgGridVue } from "ag-grid-vue";
+import moment from 'moment-timezone';
+import 'moment/locale/ja';
 
 function RemoveCellRenderer() {
   let eGui = document.createElement("div");
@@ -161,6 +189,7 @@ export default {
 
   data() {
     return {
+      timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
       columnDefs: [
         {
@@ -301,18 +330,18 @@ export default {
       rowData: [],
       selections: null,
       skelton: {
-          id: null,
-          name: null,
-          channel: null,
-          modelId: null,
-          modelName: null,
-          displayId: null,
-          displayName: null,
-          stemDiameter: null,
-          kst: null,
-          sizeId: null,
-          size: null,
-        },
+        id: null,
+        name: null,
+        channel: null,
+        modelId: null,
+        modelName: null,
+        displayId: null,
+        displayName: null,
+        stemDiameter: null,
+        kst: null,
+        sizeId: null,
+        size: null,
+      },
       deviceInfoData:
         null != this.useDeviceInfoData
           ? this.useDeviceInfoData
@@ -327,9 +356,13 @@ export default {
   },
 
   mounted() {
-console.log(this.mode);
-console.log(this.useFieldInfoDataList);
-console.log(this.useDeviceMasters);
+    let txList = moment.tz.names();
+    for (const item of txList) {
+      this.timeZone.push({
+        name: item,
+        id: item,
+      });
+    }
   },
   methods: {
     extractKeys(mappings) {
@@ -366,6 +399,7 @@ console.log(this.useDeviceMasters);
           brand: this.deviceInfoData.brand,
           sigFoxDeviceId: this.deviceInfoData.sigFoxDeviceId,
           baseDateShort: this.deviceInfoData.baseDateShort,
+          timeZone: this.deviceInfoData.timeZone,
           //センサー情報
           sensorItems: this.rowData,
         };
@@ -378,10 +412,10 @@ console.log(this.useDeviceMasters);
             .then((response) => {
               //成功時
               const { status, message } = response["data"];
-              if(status === 0){
+              if (status === 0) {
                 alert("更新を成功しました。");
                 this.onEnd(true);
-              }else{
+              } else {
                 throw new Error(message);
               }
             })
@@ -395,10 +429,10 @@ console.log(this.useDeviceMasters);
             .then((response) => {
               //成功時
               const { status, message } = response["data"];
-              if(status === 0){
+              if (status === 0) {
                 alert("登録を成功しました。");
                 this.onEnd(true);
-              }else{
+              } else {
                 throw new Error(message);
               }
             })
@@ -411,6 +445,9 @@ console.log(this.useDeviceMasters);
       }
     },
 
+    dataLoad:function() {
+
+    },
     deleteDeviceInfo: function () {
       if (confirm("削除してもよろしいですか？")) {
         //デバイス情報削除(API)
@@ -419,9 +456,9 @@ console.log(this.useDeviceMasters);
           .then((response) => {
             //成功時
             const { status, message } = response["data"];
-            if(status === 0){ 
+            if (status === 0) {
               this.onEnd(true);
-            }else{
+            } else {
               throw new Error(message);
             }
           })
