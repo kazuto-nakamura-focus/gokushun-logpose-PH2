@@ -92,6 +92,7 @@ public class DeviceDataLoader
 			{
 			this.loadDevice(this.deviceId, this.isAll, this.date);
 			}
+		System.exit(0);
 		}
 	
 	public void loadDevice(Long deviceId, boolean isAll, String date)
@@ -146,5 +147,6 @@ public class DeviceDataLoader
 			return;
 			}
 		LOG.info("デバイスデータのローディングが終了しました。");
+
 		}
 	}

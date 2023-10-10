@@ -63,7 +63,7 @@
 		<result column="fieldId" property="fieldId"></result>
 		<result column="field" property="field"></result>
 		<result column="baseDate" property="baseDate"></result>
-	<!-- 	<result column="brandId" property="brandId"></result> -->
+		<result column="timeZone" property="timeZone"></result>
 		<result column="brand" property="brand"></result>
 		<result column="registeredDate" property="registeredDate"></result>
 		<result column="sigFoxDeviceId" property="sigFoxDeviceId"></result>
@@ -77,6 +77,7 @@
 		f.id as fieldId,
 		f.name as field,
 		d.brand as brand,
+		d.tz as timeZone,
 		to_char(d.created_at, 'yyyy/mm/dd') as registeredDate,
 		d.sigfox_device_id as sigFoxDeviceId
 		FROM
