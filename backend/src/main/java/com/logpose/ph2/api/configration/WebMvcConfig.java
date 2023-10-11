@@ -8,7 +8,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
   @Override
   public void addCorsMappings(CorsRegistry registry) {
 		registry.addMapping("/*")
-				.allowedOrigins("http://localhost:8080")
+				.allowedOrigins("http://localhost:8080", "https://gokushun-ph2-it.herokuapp.com:8080")
 				.allowedMethods("GET", "PUT", "DELETE", "POST")
 				.allowedHeaders("X-Requested-With, X-HTTP-Method-Override, Content-Type, Accept")
 				.allowCredentials(true);
