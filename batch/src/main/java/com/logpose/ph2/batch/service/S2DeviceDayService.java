@@ -12,7 +12,9 @@ import com.logpose.ph2.batch.alg.DeviceDayAlgorithm;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntityExample;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.batch.dao.db.entity.Ph2ModelDataEntity;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
+import com.logpose.ph2.batch.dao.db.mappers.Ph2ModelDataMapper;
 
 @Component
 public class S2DeviceDayService
@@ -22,6 +24,8 @@ public class S2DeviceDayService
 	// ===============================================
 	@Autowired
 	private Ph2DeviceDayMapper ph2DeviceDayMapper;
+	@Autowired
+	private Ph2ModelDataMapper ph2ModelDataMapper;
 	@Autowired
 	private DeviceDayAlgorithm deviceDayAlgorithm;
 
@@ -78,7 +82,6 @@ public class S2DeviceDayService
 				this.ph2DeviceDayMapper.deleteByExample(exm);
 				}
 			}
-		short year = (short) startCal.get(Calendar.YEAR);
 		System.out.println(startCal.getTime());
 		System.out.println(endCal.getTime());
 		for (; startCal.getTimeInMillis() < endCal.getTimeInMillis(); startCal.add(Calendar.DATE,
@@ -101,6 +104,10 @@ public class S2DeviceDayService
 				entity.setYear((short) startCal.get(Calendar.YEAR));
 				long id = this.ph2DeviceDayMapper.insert(entity);
 				entity.setId(id);
+// * データモデルの準備
+				Ph2ModelDataEntity model = new Ph2ModelDataEntity();
+				model.setDayId(id);
+				this.ph2ModelDataMapper.insert(model);
 				}
 			else
 				{
@@ -111,7 +118,6 @@ public class S2DeviceDayService
 			if((startCal.get(Calendar.MONTH)==baseDate.get(Calendar.MONTH))&&
 					(startCal.get(Calendar.DATE)==baseDate.get(Calendar.DATE)) )
 				{
-				year++;
 				index = 1;
 				}
 			}

@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.batch.domain.ModelDataDomain;
@@ -28,7 +27,6 @@ public class S4ModelDataApplyrService
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	@Transactional(rollbackFor = Exception.class)
 	public void doService(List<Ph2DeviceDayEntity> deviceDays, Date startDay) throws ParseException
 		{
 		LOG.info("モデルデータの作成を開始します。", startDay);
