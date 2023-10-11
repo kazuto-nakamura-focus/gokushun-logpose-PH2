@@ -24,6 +24,8 @@ public class DeviceInfoDTO extends Label //* IDとデバイス名
 	private Integer brandId;
 	//* 品種
 	private String brand;
+	//* タイムゾーン
+	private String timeZone;
 	//* 基準日
 	private Date baseDate;
 	//* 基準日表示用

@@ -20,6 +20,8 @@ public class DeviceUpdateDTO extends Label
 	private String brand;
 	//* 基準日表示用
 	private String baseDateShort;
+	//* タイムゾーン
+	private String timeZone;
 	// SigFox device id
 	private String sigFoxDeviceId;
 	

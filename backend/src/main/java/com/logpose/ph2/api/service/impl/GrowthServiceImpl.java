@@ -46,9 +46,9 @@ public class GrowthServiceImpl implements GrowthService
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateDateModel(Long deviceId, Date date) throws ParseException
+	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException
 		{
-		this.growthDomain.updateModelTable(deviceId, null, date);
+		this.growthDomain.updateModelTable(deviceId, year, date);
 		}
 
 	// --------------------------------------------------

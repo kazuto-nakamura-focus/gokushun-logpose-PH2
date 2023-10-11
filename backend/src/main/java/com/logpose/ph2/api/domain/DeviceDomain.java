@@ -79,6 +79,7 @@ public class DeviceDomain
 		{
 		//* 対象となるデバイスをテーブルから取得する
 		Ph2DevicesEnyity target = this.phDevicesMapper.selectByPrimaryKey(dto.getId());
+		//* 統計開始日またはタイムゾーンが変更された
 		this.setEntity(target, dto);
 		this.phDevicesMapper.updateByPrimaryKey(target);
 		}
@@ -130,6 +131,7 @@ public class DeviceDomain
 		target.setSigfoxDeviceId(dto.getSigFoxDeviceId());
 		target.setBaseDate(baseDate);
 		target.setBrand(dto.getBrand());
+		target.setTz(dto.getTimeZone());
 		target.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		}
 	}

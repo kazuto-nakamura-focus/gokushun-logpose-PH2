@@ -1,5 +1,8 @@
 package com.logpose.ph2.api.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -9,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.domain.DeviceDomain;
 import com.logpose.ph2.api.domain.MasterDomain;
 import com.logpose.ph2.api.domain.SensorDomain;
@@ -134,6 +138,16 @@ public class DeviceServiceImpl implements DeviceService
 		List<SensorUnitReference> sensors = this.sensorDomain.getSensors(deviceId);
 		result.setSensorItems(sensors);
 		return result;
+		}
+	@Override
+	public void load(DataLoadDTO dto) throws IOException
+		{
+		Path p1 = Paths.get("logpose-ph2-batch-0.0.1-SNAPSHOT.jar");
+		Path p2 = p1.toAbsolutePath();
+		ProcessBuilder pb = new ProcessBuilder("java", "-jar",
+				String.valueOf(dto.getDeviceId()), "true", "-", p2.toUri().getPath());
+		Process p = pb.start();
+		
 		}
 
 	}

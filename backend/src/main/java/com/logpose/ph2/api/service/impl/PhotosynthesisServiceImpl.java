@@ -143,10 +143,9 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateDateModel(Long deviceId, Date date) throws ParseException
+	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException
 		{
-		this.photoSynthesisDomain.updateModelTable(deviceId, null, date);
-		
+		this.photoSynthesisDomain.updateModelTable(deviceId, year, date);
 		}
 
 	@Override

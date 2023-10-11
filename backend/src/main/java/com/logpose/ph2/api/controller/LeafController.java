@@ -60,7 +60,7 @@ public class LeafController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.leafService.updateDateModel(dto.getDeviceId(),
+			this.leafService.updateDateModel(dto.getDeviceId(), dto.getYear(),
 					dto.getDate());
 			as_dto.setSuccess(null);
 			}

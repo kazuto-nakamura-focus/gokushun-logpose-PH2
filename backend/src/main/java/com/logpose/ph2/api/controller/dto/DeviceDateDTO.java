@@ -9,6 +9,8 @@ public class DeviceDateDTO
 	{
 	//* デバイスID
 	private Long deviceId;
+	
+	private Short year;
 	//* 日付
 	private Date date;
 	}

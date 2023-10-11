@@ -139,7 +139,7 @@
 		JOIN
 		ph2_fields pf ON pd.field_id = pf.id
 		WHERE
-			dd.lapse_day = 0
+			dd.lapse_day = 1
 		ORDER BY field_name, device_name, year
 	</select>
 </mapper>

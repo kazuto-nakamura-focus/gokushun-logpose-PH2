@@ -65,7 +65,7 @@ public class GrowthController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.growthService.updateDateModel(dto.getDeviceId(),
+			this.growthService.updateDateModel(dto.getDeviceId(), dto.getYear(),
 					dto.getDate());
 			as_dto.setSuccess(null);
 			}

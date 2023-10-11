@@ -80,5 +80,7 @@ public interface Ph2RelBaseDataMapper {
 	 */
 	int updateByPrimaryKey(Ph2RelBaseDataEntity row);
 
+	Date selectLatest(@Param("deviceId") Long deviceId);
+	
 	Date selectOldDate();
 }
