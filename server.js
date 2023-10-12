@@ -12,12 +12,12 @@ const app = express();
 //バックエンドアプリのJARファイルパス
 const BACKEND_JAR_PATH =
   "./backend/jar/logpose-ph2-api-0.0.1-SNAPSHOT.jar";
-const BATCH_JAR_PATH =
-  "./batch/jar/logpose-ph2-batch-0.0.1-SNAPSHOT.jar";
+// const BATCH_JAR_PATH =
+//   "./batch/jar/logpose-ph2-batch-0.0.1-SNAPSHOT.jar";
 
 //バックエンドアプリを起動
 const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=prd"]);
-const batchProcess = spawn("java", ["-jar", BATCH_JAR_PATH, "--spring.profiles.active=prd"]);
+// const batchProcess = spawn("java", ["-jar", BATCH_JAR_PATH, "--spring.profiles.active=prd"]);
 
 //バックエンド起動時のコールバック関数登録
 backendProcess.stdout.on("data", (data) => {
@@ -32,18 +32,18 @@ backendProcess.on("close", (code) => {
   console.log(`Backend process exited with code ${code}`);
 });
 
-//バッチ起動時のコールバック関数登録
-batchProcess.stdout.on("data", (data) => {
-  console.log(`Batch Process:${data}`);
-});
+// //バッチ起動時のコールバック関数登録
+// batchProcess.stdout.on("data", (data) => {
+//   console.log(`Batch Process:${data}`);
+// });
 
-batchProcess.stderr.on("data", (data) => {
-  console.log(`Batch Error:${data}`);
-});
+// batchProcess.stderr.on("data", (data) => {
+//   console.log(`Batch Error:${data}`);
+// });
 
-batchProcess.on("close", (code) => {
-  console.log(`Batch process exited with code ${code}`);
-});
+// batchProcess.on("close", (code) => {
+//   console.log(`Batch process exited with code ${code}`);
+// });
 
 //パスに/apiが付くURLは、バックエンドURLに設定
 app.use(
@@ -64,5 +64,5 @@ app.listen(port, () => {
 
 process.on("exit", () => {
   backendProcess.kill();
-  batchProcess.kill();
+  // batchProcess.kill();
 });
