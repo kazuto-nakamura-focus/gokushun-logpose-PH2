@@ -25,7 +25,11 @@ import com.logpose.ph2.api.service.DeviceService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+<<<<<<< HEAD
 @CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET,
+=======
+@CrossOrigin(origins = { "http://localhost:8080", "https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET,
+>>>>>>> main
 		RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE }, allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/device")
