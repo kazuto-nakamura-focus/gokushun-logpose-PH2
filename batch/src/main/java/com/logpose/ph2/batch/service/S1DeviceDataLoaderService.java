@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.batch.dao.db.entity.MessagesEnyity;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DashBoardEntityExample;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntityExample;
 import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.batch.dao.db.entity.Ph2RelBaseDataEntityExample;
 import com.logpose.ph2.batch.dao.db.mappers.MessagesMapper;
@@ -165,11 +164,11 @@ public class S1DeviceDataLoaderService
 		exm.createCriteria().andCastedAtGreaterThanOrEqualTo(date).andDeviceIdEqualTo(deviceId);
 		this.dashboardMapper.deleteByExample(exm);
 		
-		Calendar cal = Calendar.getInstance();
+	/*	Calendar cal = Calendar.getInstance();
 		cal.setTime(date);
 		short year = (short) cal.get(Calendar.YEAR);
 		Ph2DeviceDayEntityExample dexm = new Ph2DeviceDayEntityExample();
 		dexm.createCriteria().andYearGreaterThanOrEqualTo(year);
-		this.ph2DeviceDayMapper.deleteByExample(dexm);
+		this.ph2DeviceDayMapper.deleteByExample(dexm);*/
 		}
 	}
