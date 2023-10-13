@@ -41,4 +41,11 @@ public class Configration
 		{
 		return new DefaultPsParameters();
 		}
+	
+	@Bean
+	@ConfigurationProperties(prefix = "loghorse.batch.api")
+	public DefaultUrlParameters configUrl()
+		{
+		return new DefaultUrlParameters();
+		}
 	}
