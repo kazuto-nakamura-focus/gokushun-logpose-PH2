@@ -1,4 +1,4 @@
-package com.logpose.ph2.batch.dao.db.mappers.joined;
+package com.logpose.ph2.api.dao.db.mappers.joined;
 
 import java.util.List;
 
