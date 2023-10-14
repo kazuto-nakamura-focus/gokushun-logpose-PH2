@@ -6,6 +6,10 @@
 		<property name="autoDelimitKeyWords" value="true" />
 		<property name="beginningDelimiter" value="`" />
 		<property name="endingDelimiter" value="`" />
+		<commentGenerator>
+			<property name="suppressDate" value="true" />
+			<property name="addRemarkComments" value="false" />
+		</commentGenerator>
 		<jdbcConnection
 			connectionURL="jdbc:postgresql://localhost:5432/public"
 			driverClass="org.postgresql.Driver" password="root" userId="postgres" />
@@ -25,271 +29,137 @@
 			targetProject="logpose-ph2-api/src/main/java" type="XMLMAPPER">
 			<property name="enableSubPackages" value="true" />
 		</javaClientGenerator>
-	<!-- 				<table tableName="ph2_real_ps_amount"
-			domainObjectName="Ph2RealPsAmountEntity"
-			mapperName="Ph2RealPsAmountMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
+		<!-- <table tableName="ph2_real_ps_amount" domainObjectName="Ph2RealPsAmountEntity" 
+			mapperName="Ph2RealPsAmountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_fields" domainObjectName="Ph2FieldsEntity" 
+			mapperName="Ph2FieldsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_device_day" domainObjectName="Ph2DeviceDayEntity" 
+			mapperName="Ph2DeviceDayMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_rel_base_data" domainObjectName="Ph2RelBaseDataEntity" 
+			mapperName="Ph2RelBaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_base_data" domainObjectName="Ph2BaseDataEntity" 
+			mapperName="Ph2BaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_daily_base_data" domainObjectName="Ph2DailyBaseDataEntity" 
+			mapperName="Ph2DailyBaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> -->
+		<!--<table tableName="ph2_insolation_data" domainObjectName="Ph2InsolationDataEntity" 
+			mapperName="Ph2InsolationDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_voltage_data" domainObjectName="Ph2VoltageDataEntity" 
+			mapperName="Ph2VoltageDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_dashboard" domainObjectName="Ph2DashBoardEntity" 
+			mapperName="Ph2DashBoardMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_model_data" domainObjectName="Ph2ModelDataEntity" 
+			mapperName="Ph2ModelDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> -->
 
-				<table tableName="ph2_fields" domainObjectName="Ph2FieldsEntity"
-			mapperName="Ph2FieldsMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-
-		<table tableName="ph2_device_day" domainObjectName="Ph2DeviceDayEntity"
-			mapperName="Ph2DeviceDayMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-	<table tableName="ph2_rel_base_data" domainObjectName="Ph2RelBaseDataEntity"
-			mapperName="Ph2RelBaseDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-		  <table tableName="ph2_base_data" domainObjectName="Ph2BaseDataEntity"
-			mapperName="Ph2BaseDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_daily_base_data" domainObjectName="Ph2DailyBaseDataEntity"
-			mapperName="Ph2DailyBaseDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>-->
-		<!--<table tableName="ph2_insolation_data" domainObjectName="Ph2InsolationDataEntity"
-			mapperName="Ph2InsolationDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-
-		<table tableName="ph2_voltage_data" domainObjectName="Ph2VoltageDataEntity"
-			mapperName="Ph2VoltageDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-	
-       <table tableName="ph2_dashboard" domainObjectName="Ph2DashBoardEntity"
-			mapperName="Ph2DashBoardMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-	
-		<table tableName="ph2_model_data" domainObjectName="Ph2ModelDataEntity"
-			mapperName="Ph2ModelDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>	-->
-		<!--
 		<table tableName="messages" domainObjectName="MessagesEnyity"
 			mapperName="MessagesMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
-		
-		
-	    <table tableName="ph2_users" domainObjectName="Ph2UsersEntity"
-			mapperName="Ph2UsersMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-		
-
-		<table tableName="ph2_brand_master"
-			domainObjectName="Ph2BrandMasterEntity"
-			mapperName="Ph2BrandMasterMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-		-->
-	  <table tableName="ph2_devices" domainObjectName="Ph2DevicesEnyity"
-			mapperName="Ph2DevicesMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-<!--
-		<table tableName="ph2_sensor_contents"
-			domainObjectName="Ph2SensorContentsEntity"
-			mapperName="Ph2SensorContentsMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_sensor_models"
-			domainObjectName="Ph2SensorModelsEntity" mapperName="Ph2SensorModelsMapper"
+		<!-- <table tableName="ph2_users" domainObjectName="Ph2UsersEntity" mapperName="Ph2UsersMapper" 
+			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_brand_master" 
+			domainObjectName="Ph2BrandMasterEntity" mapperName="Ph2BrandMasterMapper" 
+			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> -->
+		<table tableName="ph2_devices"
+			domainObjectName="Ph2DevicesEnyity" mapperName="Ph2DevicesMapper"
 			enableInsert="true" enableSelectByPrimaryKey="true"
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
 			modelType="flat">
 		</table>
-		<table tableName="ph2_sensor_sizes"
-			domainObjectName="SensorSizesEntity" mapperName="SensorSizesMapper"
-			enableInsert="true" enableSelectByPrimaryKey="true"
-			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
-			modelType="flat">
-		</table>
-				<table tableName="ph2_rel_field_device" domainObjectName="Ph2RelFieldDeviceEntity"
-			mapperName="Ph2RelFieldDeviceMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-
-		<table tableName="ph2_sensors" domainObjectName="Ph2SensorsEntity"
-			mapperName="Ph2SensorsMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
- 
-		<table tableName="ph2_model_master"
-			domainObjectName="Ph2ModelMasterEntity"
-			mapperName="Ph2ModelMasterMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-  		<table tableName="ph2_paramset_catalog"
-			domainObjectName="Ph2ParamsetCatalogEntity"
-			mapperName="Ph2ParamsetCatalogMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-		<table tableName="ph2_paramset_history"
-			domainObjectName="Ph2ParamsetHistoryEntity"
-			mapperName="Ph2ParamsetHistoryMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-
-		
-		<table tableName="ph2_paramset_growth"
-			domainObjectName="Ph2ParamsetGrowthEntity"
-			mapperName="Ph2ParamsetGrowthMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_paramset_leaf_area"
-			domainObjectName="Ph2ParamsetLeafAreaEntity"
-			mapperName="Ph2ParamsetLeafAreaMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_paramset_leaf_count"
-			domainObjectName="Ph2ParamsetLeafCountEntity"
-			mapperName="Ph2ParamsetLeafCountMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_paramset_ps_field"
-			domainObjectName="Ph2ParamsetPsFieldEntity"
-			mapperName="Ph2ParamsetPsFieldMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_paramset_ps_weibull"
-			domainObjectName="Ph2ParamsetPsWeibullEntity"
-			mapperName="Ph2ParamsetPsWeibullMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-		
-		<table tableName="ph2_real_leaf_shoots_area"
-			domainObjectName="Ph2RealLeafShootsAreaEntity"
-			mapperName="Ph2RealLeafShootsAreaMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_real_leaf_shoots_count"
-			domainObjectName="Ph2RealLeafShootsCountEntity"
-			mapperName="Ph2RealLeafShootsCountMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>--><!-- 
-		<table tableName="ph2_real_fruits_data"
-			domainObjectName="Ph2RealFruitsDataEntity"
-			mapperName="Ph2RealFruitsDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_real_ps_amount"
-			domainObjectName="Ph2RealPsAmountEntity"
-			mapperName="Ph2RealPsAmountMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_real_growth_f_stage"
-			domainObjectName="Ph2RealGrowthFStageEntity"
-			mapperName="Ph2RealGrowthFStageMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>-->
-		<!--
-		<table tableName="ph2_fdata"
-			domainObjectName="Ph2FDataEntity"
-			mapperName="Ph2FDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-	   		<table tableName="ph2_dashboards_rel"
-			domainObjectName="Ph2DashboardsRelEntity"
-			mapperName="Ph2DashboardsRelMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		<table tableName="ph2_default_model_key_values"
-			domainObjectName="Ph2DefaultModelKeyValuesEntity"
-			mapperName="Ph2DefaultModelKeyValuesMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-
-		<table tableName="ph2_el_stage_master"
-			domainObjectName="Ph2ElStageMasterEntity"
-			mapperName="Ph2ElStageMasterMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>	
-
-		<table tableName="ph2_raw_data"
-			domainObjectName="Ph2RawDataEntity"
-			mapperName="Ph2RawDataMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-		
-		<table tableName="ph2_real_fruits_bearing"
-			domainObjectName="Ph2RealFruitsBearingEntity"
-			mapperName="Ph2RealFruitsBearingMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-
-
-
-		<table tableName="ph2_real_growth_f_date"
-			domainObjectName="Ph2RealGrowthFDateEntity"
-			mapperName="Ph2RealGrowthFDateMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
-
-
-		<table tableName="ph2_temperature" domainObjectName="Ph2TemperatureEntity"
-			mapperName="Ph2TemperatureMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>  
-		
-	    <table tableName="ph2_system_status" domainObjectName="Ph2SystemStatusEntity"
-			mapperName="Ph2SystemStatusMapper" enableInsert="true"
-			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
-			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table> -->
+		<!-- <table tableName="ph2_sensor_contents" domainObjectName="Ph2SensorContentsEntity" 
+			mapperName="Ph2SensorContentsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_sensor_models" domainObjectName="Ph2SensorModelsEntity" 
+			mapperName="Ph2SensorModelsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_sensor_sizes" domainObjectName="SensorSizesEntity" 
+			mapperName="SensorSizesMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_rel_field_device" domainObjectName="Ph2RelFieldDeviceEntity" 
+			mapperName="Ph2RelFieldDeviceMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_sensors" domainObjectName="Ph2SensorsEntity" 
+			mapperName="Ph2SensorsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_model_master" domainObjectName="Ph2ModelMasterEntity" 
+			mapperName="Ph2ModelMasterMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_paramset_catalog" domainObjectName="Ph2ParamsetCatalogEntity" 
+			mapperName="Ph2ParamsetCatalogMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_paramset_history" domainObjectName="Ph2ParamsetHistoryEntity" 
+			mapperName="Ph2ParamsetHistoryMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_paramset_growth" domainObjectName="Ph2ParamsetGrowthEntity" 
+			mapperName="Ph2ParamsetGrowthMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_paramset_leaf_area" domainObjectName="Ph2ParamsetLeafAreaEntity" 
+			mapperName="Ph2ParamsetLeafAreaMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_paramset_leaf_count" domainObjectName="Ph2ParamsetLeafCountEntity" 
+			mapperName="Ph2ParamsetLeafCountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_paramset_ps_field" domainObjectName="Ph2ParamsetPsFieldEntity" 
+			mapperName="Ph2ParamsetPsFieldMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_paramset_ps_weibull" domainObjectName="Ph2ParamsetPsWeibullEntity" 
+			mapperName="Ph2ParamsetPsWeibullMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_real_leaf_shoots_area" domainObjectName="Ph2RealLeafShootsAreaEntity" 
+			mapperName="Ph2RealLeafShootsAreaMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_real_leaf_shoots_count" domainObjectName="Ph2RealLeafShootsCountEntity" 
+			mapperName="Ph2RealLeafShootsCountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> --><!-- <table tableName="ph2_real_fruits_data" domainObjectName="Ph2RealFruitsDataEntity" 
+			mapperName="Ph2RealFruitsDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_real_ps_amount" domainObjectName="Ph2RealPsAmountEntity" 
+			mapperName="Ph2RealPsAmountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_real_growth_f_stage" domainObjectName="Ph2RealGrowthFStageEntity" 
+			mapperName="Ph2RealGrowthFStageMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> -->
+		<!-- <table tableName="ph2_fdata" domainObjectName="Ph2FDataEntity" mapperName="Ph2FDataMapper" 
+			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_dashboards_rel" 
+			domainObjectName="Ph2DashboardsRelEntity" mapperName="Ph2DashboardsRelMapper" 
+			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_default_model_key_values" 
+			domainObjectName="Ph2DefaultModelKeyValuesEntity" mapperName="Ph2DefaultModelKeyValuesMapper" 
+			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_el_stage_master" 
+			domainObjectName="Ph2ElStageMasterEntity" mapperName="Ph2ElStageMasterMapper" 
+			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_raw_data" 
+			domainObjectName="Ph2RawDataEntity" mapperName="Ph2RawDataMapper" enableInsert="true" 
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+			modelType="flat"> </table> <table tableName="ph2_real_fruits_bearing" domainObjectName="Ph2RealFruitsBearingEntity" 
+			mapperName="Ph2RealFruitsBearingMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_real_growth_f_date" domainObjectName="Ph2RealGrowthFDateEntity" 
+			mapperName="Ph2RealGrowthFDateMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_temperature" domainObjectName="Ph2TemperatureEntity" 
+			mapperName="Ph2TemperatureMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> <table tableName="ph2_system_status" domainObjectName="Ph2SystemStatusEntity" 
+			mapperName="Ph2SystemStatusMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table> -->
 	</context>
 </generatorConfiguration>
