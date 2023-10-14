@@ -149,7 +149,7 @@
     insert into ph2_device_day (id, device_id, date, 
       year, lapse_day, has_real
       )
-    values (nextval('ph2_device_day_seq'),  #{deviceId,jdbcType=BIGINT}, #{date,jdbcType=DATE}, 
+    values (#{id,jdbcType=BIGINT},  #{deviceId,jdbcType=BIGINT}, #{date,jdbcType=DATE}, 
       #{year,jdbcType=SMALLINT}, #{lapseDay,jdbcType=SMALLINT}, #{hasReal,jdbcType=BIT}
       )
 	RETURNING id
@@ -312,4 +312,22 @@
  	AND
  	    ph2_device_day.date = #{date}
   </select>
+
+	<insert id="multiRowInsert">
+		insert into ph2_device_day (id, device_id, date, year, lapse_day,
+		has_real)
+		values
+		<foreach collection="targets" item="item" separator=",">
+			(#{item.id,jdbcType=BIGINT}, #{item.deviceId,jdbcType=BIGINT},
+			#{item.date,jdbcType=DATE},
+			#{item.year,jdbcType=SMALLINT}, #{item.lapseDay,jdbcType=SMALLINT}, #{item.hasReal,jdbcType=BIT})
+		</foreach>
+	</insert>
+	
+	<select id="selectMaxId" resultType="java.lang.Long">
+   	select
+   		max(id)
+   	from
+   		ph2_device_day
+   </select>
 </mapper>

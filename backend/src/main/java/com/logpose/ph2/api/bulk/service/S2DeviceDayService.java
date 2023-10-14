@@ -1,6 +1,5 @@
 package com.logpose.ph2.api.bulk.service;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -12,10 +11,10 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
+import com.logpose.ph2.api.dao.db.cache.DeviceDayCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
-import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 
@@ -39,7 +38,6 @@ public class S2DeviceDayService
 	@Transactional(rollbackFor = Exception.class)
 	public List<Ph2DeviceDayEntity> initDeviceDay(Ph2DevicesEnyity device, Date startDate)
 		{
-		List<Ph2DeviceDayEntity> deviceDays = new ArrayList<>();
 		Calendar star_date_cal = Calendar.getInstance();
 		star_date_cal.setTime(startDate);
 		this.deviceDayAlgorithm.setTimeZero(star_date_cal);
@@ -84,7 +82,11 @@ public class S2DeviceDayService
 				this.ph2DeviceDayMapper.deleteByExample(exm);
 				}
 			}
+		startDate = star_date_cal.getTime();
+		Date endDate = end_date_cal.getTime();
 		int index = 1;
+		Long maxId = this.ph2DeviceDayMapper.selectMaxId();
+		DeviceDayCacher cacher = new DeviceDayCacher(maxId, ph2DeviceDayMapper, ph2ModelDataMapper);
 		for (; star_date_cal.getTimeInMillis() < end_date_cal.getTimeInMillis(); star_date_cal.add(Calendar.DATE,
 				1))
 			{
@@ -109,20 +111,13 @@ public class S2DeviceDayService
 				entity.setHasReal(false);
 				entity.setLapseDay((short) index);
 				entity.setYear((short) star_date_cal.get(Calendar.YEAR));
-				long id = this.ph2DeviceDayMapper.insert(entity);
-				entity.setId(id);
-// * データモデルの準備
-				Ph2ModelDataEntity model = new Ph2ModelDataEntity();
-				model.setDayId(id);
-				this.ph2ModelDataMapper.insert(model);
-				}
-			else
-				{
-				entity = records.get(0);
+				cacher.addDeviceDayData(entity);
 				}
 			index++;
-			deviceDays.add(entity);
 			}
-		return deviceDays;
+		cacher.flush();
+		exm.createCriteria().andDeviceIdEqualTo(device.getId())
+		.andDateGreaterThanOrEqualTo(startDate).andDateLessThan(endDate); 
+		return this.ph2DeviceDayMapper.selectByExample(exm);
 		}
 	}

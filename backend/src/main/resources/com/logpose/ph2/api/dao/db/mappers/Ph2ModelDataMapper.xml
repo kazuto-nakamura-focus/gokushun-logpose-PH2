@@ -335,6 +335,15 @@
     	dd.has_real = #{isReal}
     ORDER BY dd.date desc
 	limit 1
-    
   </select>
+	<insert id="multiRowInsert">
+		insert into ph2_model_data (day_id, f_value, culmitive_cnopy_ps,
+		crown_leaf_area, leaf_count)
+		values
+		<foreach collection="targets" item="item" separator=",">
+			(#{item.dayId,jdbcType=BIGINT}, #{item.fValue,jdbcType=DOUBLE},
+			#{item.culmitiveCnopyPs,jdbcType=DOUBLE},
+			#{item.crownLeafArea,jdbcType=DOUBLE}, #{item.leafCount,jdbcType=DOUBLE})
+		</foreach>
+	</insert>
 </mapper>

@@ -80,4 +80,8 @@ public interface Ph2DeviceDayMapper {
 	int updateByPrimaryKey(Ph2DeviceDayEntity row);
 
 	Short getYear(@Param("deviceId") Long deviceId,  @Param("date") Date date);
+	
+	int multiRowInsert(@Param("targets") List<Ph2DeviceDayEntity> targets);
+	
+	Long selectMaxId();
 }
