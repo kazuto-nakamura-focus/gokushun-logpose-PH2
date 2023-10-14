@@ -2,9 +2,9 @@ package com.logpose.ph2.api.formula;
 
 import java.util.Calendar;
 
-import com.logpose.ph2.api.bulk.dto.SensorDataDTO;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
+import com.logpose.ph2.api.dto.SensorDataDTO;
 
 public class Formula
 	{

@@ -8,21 +8,22 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.bulk.service.S1DeviceDataLoaderService;
 import com.logpose.ph2.api.bulk.service.S2DeviceDayService;
 import com.logpose.ph2.api.bulk.service.S3DailyBaseDataGeneratorService;
 import com.logpose.ph2.api.bulk.service.S4ModelDataApplyrService;
+import com.logpose.ph2.api.controller.dto.DataLoadDTO;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dto.ResponseDTO;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
 
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -59,27 +60,25 @@ public class DeviceDataLoader
 	 * @param date
 	 */
 	// --------------------------------------------------------
-	@PostMapping("/masters")
+	@PostMapping("/load")
 	public ResponseDTO masters(HttpServletRequest httpReq,
-			@RequestParam("deviceId") Long deviceId,
-			@RequestParam("isAll") Boolean isAll,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("startDate") Date startDate)
+			@RequestBody @Validated DataLoadDTO  dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
 // * デバイスの指定が無い場合、全てのデバイスを対象とする
-			if (null == deviceId)
+			if (null == dto.getDeviceId())
 				{
 				List<Ph2DevicesEnyity> devices = this.s1deviceDataLoaderService.getDeviceAllInfo();
 				for (Ph2DevicesEnyity device : devices)
 					{
-					this.loadDevice(device.getId(), isAll, startDate);
+					this.loadDevice(device.getId(), dto.getIsAll(), dto.getStartDate());
 					}
 				}
 			else
 				{
-				this.loadDevice(deviceId, isAll, startDate);
+				this.loadDevice(dto.getDeviceId(), dto.getIsAll(), dto.getStartDate());
 				}
 			as_dto.setSuccess(null);
 			}

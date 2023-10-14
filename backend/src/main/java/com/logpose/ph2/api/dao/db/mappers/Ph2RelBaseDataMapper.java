@@ -83,4 +83,8 @@ public interface Ph2RelBaseDataMapper {
 	Date selectLatest(@Param("deviceId") Long deviceId);
 	
 	Date selectOldDate();
+	
+	Long selectMaxId();
+	
+	int multiRowInsert(@Param("targets") List<Ph2RelBaseDataEntity> targets);
 }

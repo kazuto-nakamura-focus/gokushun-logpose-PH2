@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorContentsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorContentsEntityExample;
+import com.logpose.ph2.api.dto.element.Label;
 @Mapper
 public interface Ph2SensorContentsMapper {
 

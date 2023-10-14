@@ -17,27 +17,25 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.bulk.domain.BaseDataGenerator;
 import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
-import com.logpose.ph2.api.bulk.dto.SensorDataDTO;
-import com.logpose.ph2.batch.dao.db.entity.MessagesEnyity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DashBoardEntityExample;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2RelBaseDataEntityExample;
-import com.logpose.ph2.batch.dao.db.mappers.MessagesMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DashBoardMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DevicesMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2InsolationDataMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2RelBaseDataMapper;
-import com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedMapper;
+import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
+import com.logpose.ph2.api.dao.db.entity.MessagesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntityExample;
+import com.logpose.ph2.api.dao.db.mappers.MessagesMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
+import com.logpose.ph2.api.dto.SensorDataDTO;
 
 @Service
 public class S1DeviceDataLoaderService
 	{
 	@Autowired
 	private Ph2DevicesMapper ph2DeviceMapper;
-	@Autowired
-	private Ph2DeviceDayMapper ph2DeviceDayMapper;
 	@Autowired
 	private MessagesMapper messagesMapper;
 	@Autowired
@@ -78,6 +76,9 @@ public class S1DeviceDataLoaderService
 		Date lastDate = null;
 // * メッセージからデータを取得する
 		List<SensorDataDTO> records = null;
+		Long id = this.ph2RelBaseDataMapper.selectMaxId();
+		MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
+				ph2BaseDataMapper, dashboardMapper, ph2InsolationDataMapper);
 		try (Cursor<MessagesEnyity> messageCorsor = this.messagesMapper
 				.selectByCastedAt(device.getId(), device.getTz(), startDate))
 			{
@@ -98,13 +99,14 @@ public class S1DeviceDataLoaderService
 					{
 					lastDate = message.getCastedAt();
 					}
-				messageData = this.createTables(device, records, messageData, message);
+				messageData = this.createTables(device, records, messageData, message, cache);
 				}
 			}
 		catch (Exception e)
 			{
 			throw e;
 			}
+		cache.flush();
 		if((firstDate != null) &&(lastDate != null) )
 			{
 			Calendar startCal = Calendar.getInstance();
@@ -124,7 +126,8 @@ public class S1DeviceDataLoaderService
 			Ph2DevicesEnyity device,
 			List<SensorDataDTO> records,
 			DataListModel dataListModel,
-			MessagesEnyity message)
+			MessagesEnyity message,
+			MinutesCacher cache)
 		{
 // * レコード内のrawデータを３文字づつ抽出し、文字リストを作成する。
 			List<String> data = splitByLength(message.getRaw(), 3);
@@ -134,7 +137,7 @@ public class S1DeviceDataLoaderService
 // * とDBへの登録 を実行する。
 			if (dataListModel.getCount() == 16)
 				{
-				this.baseDataGenerator.generate(message.getDeviceId(), records, dataListModel);
+				this.baseDataGenerator.generate(message.getDeviceId(), records, dataListModel, cache);
 				}
 	
 		return dataListModel;

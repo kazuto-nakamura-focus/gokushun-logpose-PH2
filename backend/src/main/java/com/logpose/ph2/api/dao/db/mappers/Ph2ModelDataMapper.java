@@ -1,5 +1,6 @@
 package com.logpose.ph2.api.dao.db.mappers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -7,6 +8,8 @@ import org.apache.ibatis.annotations.Param;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntityExample;
+import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
+import com.logpose.ph2.api.dto.ValueDateDTO;
 @Mapper
 public interface Ph2ModelDataMapper {
 

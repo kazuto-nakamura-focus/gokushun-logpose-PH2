@@ -1,4 +1,4 @@
-package com.logpose.ph2.api.bulk.dto;
+package com.logpose.ph2.api.dto;
 
 import lombok.Data;
 

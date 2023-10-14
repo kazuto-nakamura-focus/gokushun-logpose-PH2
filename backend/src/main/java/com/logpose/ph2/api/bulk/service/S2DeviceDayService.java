@@ -12,12 +12,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DevicesEnyity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2ModelDataEntity;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2ModelDataMapper;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntity;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 
 @Component
 public class S2DeviceDayService

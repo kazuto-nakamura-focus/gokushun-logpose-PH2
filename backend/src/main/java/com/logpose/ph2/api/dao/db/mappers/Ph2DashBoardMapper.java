@@ -56,4 +56,6 @@ public interface Ph2DashBoardMapper {
 	 */
 	int updateByExample(@Param("row") Ph2DashBoardEntity row,
 			@Param("example") Ph2DashBoardEntityExample example);
+	
+	int multiRowInsert(@Param("targets") List<Ph2DashBoardEntity> targets);
 }

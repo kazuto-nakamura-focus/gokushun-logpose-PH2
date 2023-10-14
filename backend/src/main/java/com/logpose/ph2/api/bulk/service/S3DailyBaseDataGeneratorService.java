@@ -11,14 +11,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
-import com.logpose.ph2.api.bulk.dto.BaseDataDTO;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DailyBaseDataEntity;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DailyBaseDataEntityExample;
-import com.logpose.ph2.batch.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DailyBaseDataMapper;
-import com.logpose.ph2.batch.dao.db.mappers.Ph2DeviceDayMapper;
-import com.logpose.ph2.batch.dao.db.mappers.joined.Ph2JoinedModelMapper;
-import com.logpose.ph2.batch.formula.Formula;
+import com.logpose.ph2.api.dao.db.entity.Ph2DailyBaseDataEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DailyBaseDataEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
+import com.logpose.ph2.api.dto.BaseDataDTO;
+import com.logpose.ph2.api.formula.Formula;
 
 @Service
 public class S3DailyBaseDataGeneratorService

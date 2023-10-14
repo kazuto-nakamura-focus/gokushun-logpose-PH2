@@ -241,4 +241,15 @@
 		AND CAST ( casted_at AS TIME ) <![CDATA[<=]]>CAST ( #{endTime} AS TIME )
 		ORDER BY casted_at
   </select>
+
+	<insert id="multiRowInsert">
+		insert into ph2_dashboard (device_id, casted_at, content_id,
+		value, sensor_id)
+		values
+		<foreach collection="targets" item="item" separator=",">
+			(#{item.deviceId,jdbcType=BIGINT}, #{item.castedAt,jdbcType=TIMESTAMP},
+			#{item.contentId,jdbcType=BIGINT},
+			#{item.value,jdbcType=VARCHAR}, #{item.sensorId,jdbcType=BIGINT})
+		</foreach>
+	</insert>
 </mapper>

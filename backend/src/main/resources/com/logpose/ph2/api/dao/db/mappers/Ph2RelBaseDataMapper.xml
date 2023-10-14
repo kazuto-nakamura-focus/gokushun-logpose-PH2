@@ -145,7 +145,7 @@
     -->
     insert into ph2_rel_base_data (id, device_id,
       casted_at)
-    values (nextval('ph2_rel_base_data_seq'), #{deviceId,jdbcType=BIGINT}, 
+    values (#{id,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, 
       #{castedAt,jdbcType=TIMESTAMP})
       RETURNING id
   </select>
@@ -261,4 +261,20 @@
    	from
    		ph2_rel_base_data
    </select>
+
+   <select id="selectMaxId" resultType="java.lang.Long">
+   	select
+   		max(id)
+   	from
+   		ph2_rel_base_data
+   </select>
+   
+	<insert id="multiRowInsert">
+		insert into ph2_rel_base_data (id, device_id, casted_at)
+		values
+		<foreach collection="targets" item="item" separator=",">
+			(#{item.id,jdbcType=BIGINT}, #{item.deviceId,jdbcType=BIGINT},
+			#{item.castedAt,jdbcType=TIMESTAMP})
+		</foreach>
+	</insert>
 </mapper>

@@ -54,4 +54,6 @@ public interface Ph2InsolationDataMapper {
 	 */
 	int updateByExample(@Param("row") Ph2InsolationDataEntity row,
 			@Param("example") Ph2InsolationDataEntityExample example);
+	
+	int multiRowInsert(@Param("targets") List<Ph2InsolationDataEntity> targets);
 }
