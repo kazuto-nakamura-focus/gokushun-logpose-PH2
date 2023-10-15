@@ -5,6 +5,15 @@
         <v-app>
           <v-container>
             <v-row>
+              <v-col align="left">
+                <v-btn
+                  color="primary"
+                  class="ma-2 white--text"
+                  elevation="2"
+                  @click="load()"
+                  >センサーデータのロード</v-btn
+                >
+              </v-col>
               <v-col align="right">
                 <v-icon
                   v-if="!isDeleteMode"
@@ -73,6 +82,7 @@
         :selectedDevice="selectedDevice"
         :onEnd="fromDevice"
       />
+      <confirmDailog :shared="sharedConfirm" ref="confirm" />
     </v-container>
   </v-app>
 </template>
@@ -81,10 +91,11 @@
 import {
   useDeviceList,
   useDeviceInfoRemove,
+  useLoadData,
 } from "@/api/ManagementScreenTop/MSDevice";
 import MSEditDeviceWrapper from "./MSEditDevice/MSEditDeviceWrapper.vue";
-// import MSDeviceData from "@/assets/testData/MSDevice.json"; //
-// import MSFieldData from "@/assets/testData/MSField.json"; //
+import confirmDailog from "@/components/dialog/confirmDialog.vue";
+import { DialogController } from "@/lib/mountController.js";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true },
@@ -100,9 +111,10 @@ export default {
       headers: HEADERS,
       display: "list",
       isDeleteMode: false,
+      sharedConfirm: new DialogController(),
 
       useDeviceInfoDataList: [], //
-      selectedDevice : {id:null},
+      selectedDevice: { id: null },
     };
   },
 
@@ -123,6 +135,7 @@ export default {
 
   components: {
     MSEditDeviceWrapper,
+    confirmDailog,
   },
 
   created: function () {},
@@ -131,6 +144,48 @@ export default {
     clickRow: function (item) {
       this.selectedDevice.id = item.id;
       this.display = "deviceEdit";
+    },
+    // ======================================================
+    // ボタン選択時
+    // ======================================================
+    load: function () {
+      this.sharedConfirm.setUp(
+        this.$refs.confirm,
+        function (confirm) {
+          confirm.initialize(
+            "全てのセンサーデータが変更されますが、よろしいですか？処理時間は１時間ほどかかります。",
+            "はい",
+            "いいえ"
+          );
+        },
+        function (action) {
+          if (action) {
+            this.callLoader();
+          }
+        }.bind(this)
+      );
+    },
+    callLoader: function () {
+      const data = {
+        deviceId: null,
+        isAll: true,
+        startDate: null,
+      };
+      useLoadData(data)
+        .then((response) => {
+          //成功時
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("センサーデータのロードが完了しました。");
+            this.onEnd(true);
+          } else {
+            throw new Error(message);
+          }
+        })
+        .catch((error) => {
+          //失敗時
+          console.log(error);
+        });
     },
 
     add: function () {

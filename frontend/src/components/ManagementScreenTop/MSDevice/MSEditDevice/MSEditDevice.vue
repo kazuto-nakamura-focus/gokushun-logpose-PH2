@@ -446,16 +446,18 @@ export default {
       }
     },
 
-    dataLoad: function () {
+    dataLoad: async function () {
      const data = {
         deviceId: this.deviceInfoData.id,
+        isAll:true,
+        startDate:null
       };
-      useLoadData(data)
+      await useLoadData(data)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];
           if (status === 0) {
-            alert("センサーデータのロードを開始しました。（５～１０分)");
+            alert("センサーデータのロードが完了しました。");
             this.onEnd(true);
           } else {
             throw new Error(message);

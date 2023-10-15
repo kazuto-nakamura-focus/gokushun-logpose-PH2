@@ -13,9 +13,9 @@
                         </v-container>
                         <v-card-actions style="text-align:center" width="100%">
                             <div class="text-center">
-                                <v-btn class="ma-2" color="primary" @click="onAction(true)">{{ OKAction }}
+                                <v-btn class="ma-2" color="primary" @click="doAction(true)">{{ OKAction }}
                                 </v-btn>
-                                <v-btn class="ma-2" color="primary" @click="onAction(false)">{{
+                                <v-btn class="ma-2" color="primary" @click="doAction(false)">{{
                                     nglabel
                                     }}</v-btn>
                             </div>
@@ -60,7 +60,7 @@
             // ======================================================
             // ボタン選択時
             // ======================================================
-            onAction(mode) {
+            doAction(mode) {
                 this.isDialog = false;
                 this.shared.onConclude(mode);
             }
