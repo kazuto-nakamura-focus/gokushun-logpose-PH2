@@ -121,10 +121,10 @@ public class MinutesCacher
 	// -----------------------------------------------------------------
 	public void flush()
 		{
-		insertRelBaseData();
-		insertDashBoard();
-		insertBaseData();
-		insertInsolationData();
+		if(this.relBaseData.size() > 0) insertRelBaseData();
+		if(this.baseDatum.size() > 0) insertBaseData();
+		if(this.Insolation.size() > 0) insertInsolationData();
+		if(this.dashBoads.size() > 0) insertDashBoard();
 		}
 
 	// -----------------------------------------------------------------

@@ -60,12 +60,18 @@
 		ph2_dashboard.content_id
 	</select>
 	
-	<select id="selectRawData" resultMap="FieldDTO">
+	<resultMap id="RawData" type="com.logpose.ph2.api.dto.rawData.RawData">
+		<result column="castedAt" property="castedAt"></result>
+		<result column="sensorId" property="sensorId"></result>
+		<result column="contentId" property="contentId"></result>
+		<result column="value" property="value"></result>
+	</resultMap>
+	<select id="selectRawData" resultMap="RawData">
 	SELECT
-		ph2_dashboard.content_id as id,
-		ph2_dashboard.value as value,
-		ph2_dashboard.casted_at as casted_at,
-		ph2_sensor_contents.name as name
+		ph2_dashboard.casted_at as castedAt,
+		ph2_dashboard.sensor_id as sensorId,
+		ph2_dashboard.content_id as contentId,
+		ph2_dashboard.value as value
 	FROM
 		ph2_dashboard
 	JOIN
@@ -140,6 +146,23 @@
 		ph2_fields pf ON pd.field_id = pf.id
 		WHERE
 			dd.lapse_day = 1
+		ORDER BY field_name, device_name, year
+	</select>
+	<select id="selectRawDataTargets" resultMap="ModelTargetDTO">
+	SELECT distinct
+		pf.id as field_id,
+		pf.name as field_name,
+		pd.id as device_id,
+		pd.name as device_name,
+		dd.year as year,
+		pf.commence_date as startDate
+		FROM
+		ph2_fields pf
+		JOIN
+		ph2_devices pd on pf."id" = pd.field_id
+		JOIN
+		ph2_device_day dd on pd."id" = dd.device_id
+
 		ORDER BY field_name, device_name, year
 	</select>
 </mapper>

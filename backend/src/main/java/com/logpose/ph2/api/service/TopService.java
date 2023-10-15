@@ -17,6 +17,7 @@ import com.logpose.ph2.api.dto.ModelTargetDTO;
 import com.logpose.ph2.api.dto.SelectionDTO;
 import com.logpose.ph2.api.dto.element.FieldData;
 import com.logpose.ph2.api.dto.element.Label;
+import com.logpose.ph2.api.dto.rawData.RawDataList;
 
 /**
  * トップサービスや基本サービスの提供を行う
@@ -70,7 +71,7 @@ public class TopService
 	 * @return SelectionDTO
 	 */
 	// ###############################################
-	public SelectionDTO getModels()
+	public SelectionDTO getModels(boolean isModel)
 		{
 		SelectionDTO result = new SelectionDTO();
 		// * モデルの取得
@@ -88,13 +89,13 @@ public class TopService
 			}
 		result.setModels(models);
 
-		List<ModelTargetDTO> targets = this.topDomain.getModelTargets();
+		List<ModelTargetDTO> targets = this.topDomain.getModelTargets(isModel);
 		result.setTargets(targets);
 		
 		return result;
 		}
 
-	public List<String[]> getRawData(Date startDate, Date endDate, Long deviceId)
+	public RawDataList getRawData(Date startDate, Date endDate, Long deviceId)
 		{
 		return this.topDomain.getRawData(startDate, endDate, deviceId);
 		}

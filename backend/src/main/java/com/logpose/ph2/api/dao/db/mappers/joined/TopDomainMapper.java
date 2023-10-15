@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import com.logpose.ph2.api.dto.DataSummaryDTO;
 import com.logpose.ph2.api.dto.ModelTargetDTO;
 import com.logpose.ph2.api.dto.element.FieldData;
+import com.logpose.ph2.api.dto.rawData.RawData;
 
 @Mapper
 public interface TopDomainMapper
@@ -16,9 +17,12 @@ public interface TopDomainMapper
 	List<DataSummaryDTO> selectFieldDeviceList();
 	
 	List<FieldData> selectFieldDataList(@Param("deviceId") Long deviceId, @Param("date") Date date);
-	List<FieldData> selectRawData(@Param("startDate") Date startDate, 
+	List<RawData> selectRawData(@Param("startDate") Date startDate, 
 				@Param("endDate") Date endDate,@Param("deviceId") Long deviceId);
 	List<FieldData> selectDeviceDataList(@Param("contentId") Long contentId, @Param("date") Date date);
 
 	List<ModelTargetDTO> selectModelTargets();
+	
+	List<ModelTargetDTO> selectRawDataTargets();
+	
 	}
