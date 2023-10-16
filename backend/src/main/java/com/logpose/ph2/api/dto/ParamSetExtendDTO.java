@@ -8,8 +8,18 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class ParamSetExtendDTO extends ParamSetDTO
+public class ParamSetExtendDTO
 	{
+	//* パラメータID
+	private Long id;
+	//* 対象年度
+	private Short year;
+	//* パラメータ名
+	private String parameterName;
+	//* デフォルトフラグ
+	private Boolean defaultFlg;
+	//* デバイスID
+	private Long deviceId;
 	//* デバイス名
 	private String deviceName;
 	}

@@ -17,6 +17,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetHistoryMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2ParamSetJoinMapper;
 import com.logpose.ph2.api.dto.HistoryDTO;
 import com.logpose.ph2.api.dto.ParamSetDTO;
+import com.logpose.ph2.api.dto.ParamSetExtendDTO;
 
 /**
  * パラメータセットサービス
@@ -46,9 +47,9 @@ public class ParameterSetDomain
 	 * @return List<ParamSetDTO>
 	 */
 	// --------------------------------------------------
-	public List<ParamSetDTO> getParamSetList(Integer modelId)
+	public List<ParamSetExtendDTO> getParamSetList(Integer modelId)
 		{
-		return this.ph2ParamSetJoinMapper.listParamerSet(modelId);
+		return this.ph2ParamSetJoinMapper.listSimpleParamerSet(modelId);
 		}
 	// --------------------------------------------------
 	/**

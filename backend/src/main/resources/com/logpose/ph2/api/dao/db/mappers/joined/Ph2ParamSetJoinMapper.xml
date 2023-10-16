@@ -40,7 +40,34 @@
 			h.latest = true
 		ORDER BY parameterName DESC
 	 </select>
-
+	 
+	<resultMap id="ParamSetExtendDTO"
+		type="com.logpose.ph2.api.dto.ParamSetExtendDTO">
+		<result column="id" property="id"></result>
+		<result column="year" property="year"></result>
+		<result column="parameterName" property="parameterName"></result>
+		<result column="defaultFlg" property="defaultFlg"></result>
+		<result column="deviceId" property="deviceId"></result>
+		<result column="deviceName" property="deviceName"></result>
+	</resultMap>
+	 <select id="listSimpleParamerSet" resultMap="ParamSetExtendDTO">
+	 	SELECT
+	 		distinct
+	 		p.id as id,
+	 		d.id as deviceId,
+	 		p.year as year,
+	 		p.name as parameterName,
+	 		p.default_flag as defaultFlg,
+	 		d.name as deviceName
+		FROM
+			ph2_paramset_catalog p
+		JOIN
+			ph2_devices d on p.device_id = d.id
+		WHERE
+			p.model_id = #{modelId}
+		ORDER BY d.id,  p.year DESC, p.default_flag DESC
+	 </select>
+	
 	<resultMap id="HistoryDTO"
 		type="com.logpose.ph2.api.dto.HistoryDTO">
 		<result column="date" property="date"></result>

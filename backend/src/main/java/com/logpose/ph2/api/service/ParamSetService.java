@@ -3,7 +3,7 @@ package com.logpose.ph2.api.service;
 import java.util.List;
 
 import com.logpose.ph2.api.dto.HistoryDTO;
-import com.logpose.ph2.api.dto.ParamSetDTO;
+import com.logpose.ph2.api.dto.ParamSetExtendDTO;
 
 /**
  * パラメータセットサービス
@@ -22,7 +22,7 @@ public interface ParamSetService
 	 * @return ParamSetListDTO
 	 */
 	// --------------------------------------------------
-	public List<ParamSetDTO> getParamSetList(Integer modelId);
+	public List<ParamSetExtendDTO> getParamSetList(Integer modelId);
 
 	public Long getDefaultParam(Integer modelId, Long deviceId, Short year);
 	// --------------------------------------------------

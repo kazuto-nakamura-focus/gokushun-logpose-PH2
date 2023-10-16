@@ -8,7 +8,7 @@
             width="100%"
             v-model="paramId"
             :items="parameterSetList"
-            item-text="parameterName"
+            item-text="longName"
             item-value="id"
             class="select_size ml-1"
             @change="getItem"
@@ -228,7 +228,25 @@ export default {
         .then((response) => {
           console.log(response);
           const paramSetList = response["data"].data;
+          let backList = [];
           for (const item of paramSetList) {
+            item.longName = new String();
+            let flag = item.defaultFlg ? "◎" : " - ";
+            item.longName =
+              flag +
+              item.parameterName +
+              "(" +
+              item.deviceName +
+              ":" +
+              item.year +
+              ")";
+            if (item.deviceId == this.selectedTarget.selectedDevice.id) {
+              this.parameterSetList.push(item);
+            } else {
+              backList.push(item);
+            }
+          }
+          for (const item of backList) {
             this.parameterSetList.push(item);
           }
           this.$nextTick(
