@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DailyDataAlgorythm;
 import com.logpose.ph2.api.configration.DefaultPsParameters;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsFieldEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsWeibullEntity;
@@ -344,6 +345,7 @@ public class PhotoSynthesisDomain
 			throws ParseException
 		{
 		parameterSetDomain.setDefautParamSet(ModelMaster.PHOTO, deviceId, year, paramId);
-		this.updateModelTable(deviceId, year, null);
+		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
+		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}
 	}

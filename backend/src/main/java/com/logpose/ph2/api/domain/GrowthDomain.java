@@ -504,7 +504,8 @@ public class GrowthDomain
 			throws ParseException
 		{
 		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
-		this.updateModelTable(deviceId, year, null);
+		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
+		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}
 
 	// --------------------------------------------------
