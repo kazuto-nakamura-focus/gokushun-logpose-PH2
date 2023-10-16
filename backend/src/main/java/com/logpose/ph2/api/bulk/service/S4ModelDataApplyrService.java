@@ -34,7 +34,7 @@ public class S4ModelDataApplyrService
 		List<Ph2DeviceDayEntity> tmp = new ArrayList<>();
 		for (Ph2DeviceDayEntity entity : deviceDays)
 			{
-			if (entity.getLapseDay() == 1)
+			if (entity.getLapseDay().shortValue() == 1)
 				{
 				// 既に３６５日以上用意されている
 				if (tmp.size() >= 365)

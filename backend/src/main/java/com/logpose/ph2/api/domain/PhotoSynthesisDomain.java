@@ -78,7 +78,7 @@ public class PhotoSynthesisDomain
 		List<Ph2ParamsetCatalogEntity> params = parameterSetDomain.getParamSetCatalogsByYear(
 				3, deviceId, year);
 		// * 該当するパラメータセットが存在する場合
-		if ((0 < params.size()) && (year == params.get(0).getYear()))
+		if ((0 < params.size()) && (year.intValue() == params.get(0).getYear().intValue()))
 			{
 			return this.getDetail(params.get(0).getId());
 			}
@@ -344,6 +344,16 @@ public class PhotoSynthesisDomain
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
+		// * パラメータセットの詳細を取得する
+		PhotosynthesisParamSetDTO paramInfo = this.getDetail(paramId);
+		// * 同じ年度・デバイスの場合
+		if((paramInfo.getDeviceId().longValue() != deviceId.longValue())
+				||(paramInfo.getYear().shortValue() != year.shortValue()) )
+			{
+			paramInfo.setDeviceId(deviceId);
+			paramInfo.setYear(year);
+			paramId = this.addParamSet(null, paramInfo);
+			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.PHOTO, deviceId, year, paramId);
 		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
 		this.updateModelTable(deviceId, year, deviceDay.getDate());

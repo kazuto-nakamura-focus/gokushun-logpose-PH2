@@ -288,9 +288,9 @@ export default {
           resizable: true,
           width: 100,
 
-          editable: (params) => params.data.displayName == "樹液流",
+          editable: (params) => (params.data.displayName == "樹液流")||(params.data.displayName==null),
           cellStyle: (params) => {
-            if (params.data.displayName != "樹液流") {
+            if ((params.data.displayName != null )&&(params.data.displayName != "樹液流")) {
               return { backgroundColor: "#aaa" };
             }
             //  return null;
@@ -303,9 +303,9 @@ export default {
           headerName: "茎径(mm)",
           resizable: true,
           width: 100,
-          editable: (params) => params.data.displayName == "樹液流",
+          editable: (params) => (params.data.displayName == "樹液流")||(params.data.displayName==null),
           cellStyle: (params) => {
-            if (params.data.displayName != "樹液流") {
+            if ((params.data.displayName != null )&&(params.data.displayName != "樹液流")) {
               return { backgroundColor: "#aaa" };
             }
             //  return null;

@@ -58,14 +58,15 @@
 	 		p.year as year,
 	 		p.name as parameterName,
 	 		p.default_flag as defaultFlg,
-	 		d.name as deviceName
+	 		d.name as deviceName,
+	 		p.updated_at
 		FROM
 			ph2_paramset_catalog p
 		JOIN
 			ph2_devices d on p.device_id = d.id
 		WHERE
 			p.model_id = #{modelId}
-		ORDER BY d.id,  p.year DESC, p.default_flag DESC
+		ORDER BY d.id,  p.year, p.updated_at DESC, p.default_flag DESC
 	 </select>
 	
 	<resultMap id="HistoryDTO"

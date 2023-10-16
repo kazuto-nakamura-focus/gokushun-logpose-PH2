@@ -21,7 +21,6 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.AnnotationDTO;
 import com.logpose.ph2.api.dao.db.entity.joined.FDataEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
-import com.logpose.ph2.api.dao.db.mappers.Ph2FDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetGrowthMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
@@ -57,8 +56,8 @@ public class GrowthDomain
 	private Ph2RealGrowthFStageMapper ph2RealGrowthFStageMapper;
 	@Autowired
 	private Ph2ParamsetGrowthMapper ph2ParamsetGrowthMapper;
-	@Autowired
-	private Ph2FDataMapper ph2FDataMapper;
+	/*@Autowired
+	private Ph2FDataMapper ph2FDataMapper;*/
 	@Autowired
 	private DeviceDayDomain deviceDayDomain;
 
@@ -84,10 +83,10 @@ public class GrowthDomain
 				.getParamSetCatalogsByYear(
 						1, deviceId, year);
 		// * 該当するパラメータセットが存在する場合
-		if ((0 < params.size()) && (year == params.get(0).getYear()))
+		if ((0 < params.size()) && (year.intValue() == params.get(0).getYear().intValue()))
 			{
 			return this.ph2ParamsetGrowthMapper
-					.selectByPrimaryKey(params.get(0).getDeviceId());
+					.selectByPrimaryKey(params.get(0).getId());
 			}
 		// * 存在しない場合、パラメータセット・カタログに履歴を付与して更新する
 		Long paramId = parameterSetDomain.addCatalogData(1, deviceId, year);
@@ -503,7 +502,18 @@ public class GrowthDomain
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
+		// * パラメータセットの詳細を取得する
+		GrowthParamSetDTO paramInfo = this.getDetail(paramId);
+		// * 同じ年度・デバイスの場合
+		if((paramInfo.getDeviceId().longValue() != deviceId.longValue())
+				||(paramInfo.getYear().shortValue() != year.shortValue()) )
+			{
+			paramInfo.setDeviceId(deviceId);
+			paramInfo.setYear(year);
+			paramId = this.addParamSet(null, paramInfo);
+			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
+		//  年度の最初の日を取得
 		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
 		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}

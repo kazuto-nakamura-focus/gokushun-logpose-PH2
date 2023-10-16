@@ -222,6 +222,12 @@ export default {
     initialize(paramId, selectedTarget) {
       this.paramId = paramId;
       this.selectedTarget = selectedTarget;
+      this.initParameterList(true);
+    },
+    //*----------------------------
+    // パラメータリストの初期化
+    //*----------------------------
+    initParameterList(isNew) {
       this.parameterSetList.length = 0;
       //* パラメータセットリストの取得
       useParamSetList(this.modelId)
@@ -249,11 +255,13 @@ export default {
           for (const item of backList) {
             this.parameterSetList.push(item);
           }
-          this.$nextTick(
-            function () {
-              this.$refs.refParameterSets.initialize(this.paramId);
-            }.bind(this)
-          );
+          if (isNew) {
+            this.$nextTick(
+              function () {
+                this.$refs.refParameterSets.initialize(this.paramId);
+              }.bind(this)
+            );
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -288,7 +296,7 @@ export default {
     // 子コンポーネントからの追加実施
     //*----------------------------
     addData(id) {
-      this.initialize(id);
+      this.initialize(id, this.selectedTarget);
     },
     //*----------------------------
     // パラメータのデフォルト設定を行う
@@ -310,6 +318,7 @@ export default {
               alert(
                 "対象年度の生育推定パラメータセットのデフォルトに設定されました。"
               );
+              this.initParameterList(false);
             }
           })
           .catch((error) => {
@@ -326,6 +335,7 @@ export default {
               alert(
                 "対象年度の葉面積推定パラメータセットのデフォルトに設定されました。"
               );
+              this.initParameterList(false);
             }
           })
           .catch((error) => {
@@ -342,6 +352,7 @@ export default {
               alert(
                 "対象年度の光合成推定パラメータセットのデフォルトに設定されました。"
               );
+              this.initParameterList(false);
             }
           })
           .catch((error) => {

@@ -176,6 +176,8 @@ public class ParameterSetDomain
 	protected Long add(ParamSetDTO dto, Integer modelId)
 		{
 		Ph2ParamsetCatalogEntity target = new Ph2ParamsetCatalogEntity();
+		// * 追加した時点ではデフォルト設定はfalseとする
+		dto.setDefaultFlg(false);
 		this.setCatalogData(target, modelId, dto);
 		target.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		Long id = this.ph2ParamsetCatalogMapper.insert(target);

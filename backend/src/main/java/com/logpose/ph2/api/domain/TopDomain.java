@@ -11,6 +11,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorsEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2SensorsMapper;
@@ -28,6 +29,8 @@ public class TopDomain
 	private Ph2SensorsMapper ph2SensorsMapper;
 	@Autowired
 	private TopDomainMapper topDomainMapper;
+	@Autowired
+	private DeviceDayAlgorithm deviceDayAlgorithm;
 
 	// ===============================================
 	// パブリック関数
@@ -100,6 +103,16 @@ public class TopDomain
 	// --------------------------------------------------
 	public RawDataList getRawData(Date startDate, Date endDate, Long deviceId)
 		{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(startDate);
+		deviceDayAlgorithm.setTimeZero(cal);
+		startDate = cal.getTime();
+		
+		cal.setTime(endDate);
+		deviceDayAlgorithm.setTimeZero(cal);
+		cal.add(Calendar.DATE, 1);
+		endDate = cal.getTime();
+		
 		RawDataList results = new RawDataList();
 // * センサー情報をコンテンツID順に取得する。
 		Ph2SensorsEntityExample exm = new Ph2SensorsEntityExample();

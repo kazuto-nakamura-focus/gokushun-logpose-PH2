@@ -52,8 +52,9 @@ public class BaseDataGenerator
 		for (SensorDataDTO sensor : records)
 			{
 			final int channel = sensor.getChannel() - 1; // * チャネル番号のずれ解消
+			long contentId = sensor.getSensorContentId().longValue();
 			// * 温度の場合
-			if (1 == sensor.getSensorContentId())
+			if (1 == contentId)
 				{
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
@@ -67,7 +68,7 @@ public class BaseDataGenerator
 						value);
 				}
 			// * 湿度
-			else if (2 == sensor.getSensorContentId())
+			else if (2 == contentId)
 				{
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
@@ -79,7 +80,7 @@ public class BaseDataGenerator
 						value);
 				}
 			// * 日射
-			else if (3 == sensor.getSensorContentId())
+			else if (3 == contentId)
 				{
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
@@ -95,7 +96,7 @@ public class BaseDataGenerator
 				cache.addInsolationData(id, value, sensor.getSensorId());
 				}
 			// * 樹液流
-			else if (4 == sensor.getSensorContentId())
+			else if (4 == contentId)
 				{
 				// * 電圧取得
 				double x1 = dataList.getVoltages().get(channel);
@@ -113,7 +114,7 @@ public class BaseDataGenerator
 						value);
 				}
 			// * デンドロ
-			else if (5 == sensor.getSensorContentId())
+			else if (5 == contentId)
 				{
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
@@ -125,7 +126,7 @@ public class BaseDataGenerator
 						value);
 				}
 			// * 葉面濡れ
-			else if (6 == sensor.getSensorContentId())
+			else if (6 == contentId)
 				{
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
@@ -137,7 +138,7 @@ public class BaseDataGenerator
 						value);
 				}
 			// * 土壌水分
-			else if (7 == sensor.getSensorContentId())
+			else if (7 == contentId)
 				{
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
@@ -149,7 +150,7 @@ public class BaseDataGenerator
 						value);
 				}
 			// * 土壌温度
-			else if (8 == sensor.getSensorContentId())
+			else if (8 == contentId)
 				{
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);

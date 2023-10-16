@@ -79,7 +79,7 @@
 	WHERE
 		ph2_dashboard.casted_at  <![CDATA[>=]]>  #{startDate}
 	and
-		ph2_dashboard.casted_at  <![CDATA[<=]]>  #{endDate}
+		ph2_dashboard.casted_at  <![CDATA[<]]>  #{endDate}
 	and
 		ph2_dashboard.device_id = #{deviceId}
 	order by 

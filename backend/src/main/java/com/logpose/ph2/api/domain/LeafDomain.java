@@ -92,7 +92,7 @@ public class LeafDomain
 		List<Ph2ParamsetCatalogEntity> params = parameterSetDomain.getParamSetCatalogsByYear(
 				2, deviceId, year);
 		// * 該当するパラメータセットが存在する場合
-		if ((0 < params.size()) && (year == params.get(0).getYear()))
+		if ((0 < params.size()) && (year.intValue() == params.get(0).getYear().intValue()))
 			{
 			return this.getDetail(params.get(0).getId());
 			}
@@ -468,7 +468,18 @@ public class LeafDomain
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
+		// * パラメータセットの詳細を取得する
+		LeafParamSetDTO paramInfo = this.getDetail(paramId);
+		// * 同じ年度・デバイスの場合
+		if((paramInfo.getDeviceId().longValue() != deviceId.longValue())
+				||(paramInfo.getYear().shortValue() != year.shortValue()) )
+			{
+			paramInfo.setDeviceId(deviceId);
+			paramInfo.setYear(year);
+			paramId = this.addParamSet(null, paramInfo);
+			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.LEAF, deviceId, year, paramId);
+		//  年度の最初の日を取得
 		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
 		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}
