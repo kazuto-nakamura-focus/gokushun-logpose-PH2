@@ -96,7 +96,7 @@ export class SensorChart {
     //* Y軸タイトル
     this.data.chartOptions.yaxis.title.text = ytitle;
     //* アノテーション
-    let annotations = []
+  /*  let annotations = []
     if ((source.annotations != null) && (source.annotations.length > 0)) {
       for (const item of source.annotations) {
         let annotation = {
@@ -116,7 +116,7 @@ export class SensorChart {
       if (annotations.length > 0) {
         this.data.chartOptions.annotations.yaxis = annotations;
       }
-    }
+    }*/
     this.data.chartOptions.yaxis.max = source.YEnd;
     this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;

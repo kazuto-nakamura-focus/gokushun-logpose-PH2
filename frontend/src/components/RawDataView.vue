@@ -260,6 +260,7 @@ export default {
       arrayDatas.push(arrayHeaders);
       this.masterRawData.map((item) => {
         const data = [
+          item.col0,
           item.col1,
           item.col2,
           item.col3,
