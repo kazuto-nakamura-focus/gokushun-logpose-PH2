@@ -503,7 +503,7 @@ public class GrowthDomain
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
-		parameterSetDomain.setDefautParamSet(paramId);
+		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
 		this.updateModelTable(deviceId, year, null);
 		}
 

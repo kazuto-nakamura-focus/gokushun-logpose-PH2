@@ -467,7 +467,7 @@ public class LeafDomain
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
-		parameterSetDomain.setDefautParamSet(paramId);
+		parameterSetDomain.setDefautParamSet(ModelMaster.LEAF, deviceId, year, paramId);
 		this.updateModelTable(deviceId, year, null);
 		}
 	}

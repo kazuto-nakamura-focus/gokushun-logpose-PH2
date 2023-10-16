@@ -114,8 +114,12 @@ export default {
       )
         .then((response) => {
           this.defaultId = response.data.data;
-          this.$refs.refParameterSet.initialize(this.defaultId);
-          this.$refs.refHistory.initialize(this.defaultId);
+          this.$nextTick(
+            function() {
+            this.$refs.refParameterSet.initialize(this.defaultId, this.selectedInfo.menu);
+            this.$refs.refHistory.initialize(this.defaultId);
+            }
+          );
         })
         .catch((error) => {
           console.log(error);

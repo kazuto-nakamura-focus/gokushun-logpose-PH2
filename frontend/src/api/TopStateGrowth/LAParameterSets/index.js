@@ -60,6 +60,14 @@ const useLeafParamSetRemove = (paramSetId) => {
   return axios.delete("/leaf/paramSet", config);
 };
 
+///葉面積・葉枚数パラメータセットデフォルト設定
+const useLeafParamSetDefault = (data) => {
+  const config = {
+    params: {},
+  };
+  return axios.put("/leaf/paramSet/default", data, config);
+};
+
 export {
   useLeafParamSetList,
   useLeafParamDefaultId,
@@ -68,4 +76,5 @@ export {
   useLeafParamSetUpdate,
   useLeafParamSetAdd,
   useLeafParamSetRemove,
+  useLeafParamSetDefault,
 };

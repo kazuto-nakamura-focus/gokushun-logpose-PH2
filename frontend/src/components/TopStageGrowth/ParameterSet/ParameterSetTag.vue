@@ -2,14 +2,30 @@
   <v-container>
     <div>
       <div class="text-subtitle-1">パラメータセット名</div>
-      <v-select
-        v-model="paramId"
-        :items="parameterSetList"
-        item-text="parameterName"
-        item-value="id"
-        class="select_size ml-1"
-        @change="getItem"
-      ></v-select>
+      <v-row>
+        <v-col cols="6">
+          <v-select
+            width="100%"
+            v-model="paramId"
+            :items="parameterSetList"
+            item-text="parameterName"
+            item-value="id"
+            class="select_size ml-1"
+            @change="getItem"
+            expand
+          ></v-select>
+        </v-col>
+        <v-col cols="6">
+          <v-btn
+            color="primary"
+            class="ma-2 white--text"
+            elevation="2"
+            @click="setDefault"
+            >デフォルトパラメータに設定</v-btn
+          >
+        </v-col>
+      </v-row>
+
       <!--<v-subheader class="ma-0 pa-0" v-show="!isEditMode">{{
         title
       }}</v-subheader>-->
@@ -53,7 +69,7 @@
           single-line
           full-width
           filled
-          :readonly = "!isEditMode"
+          :readonly="!isEditMode"
         ></v-text-field>
         <div class="text-subtitle-1">編集者</div>
         <v-text-field
@@ -62,7 +78,7 @@
           single-line
           full-width
           filled
-          :readonly = "!isEditMode"
+          :readonly="!isEditMode"
         ></v-text-field>
       </div>
 
@@ -154,10 +170,10 @@ import ParameterSetNameDialog from "@/components/parts/ParameterSetName";
 import geParameterSets from "./models/GEParameterSets.vue";
 import laParameterSets from "./models/LAParameterSet.vue";
 import peParameterSets from "./models/PEParameterSets.vue";
-import {
-  useParamSetList,
-  useParamSetDelete,
-} from "@/api/ParameterSetAPI.js";
+import { useParamSetList, useParamSetDelete } from "@/api/ParameterSetAPI.js";
+import { useGrowthParamSetDefault } from "@/api/TopStateGrowth/GEParameterSets/index.js";
+import { useLeafParamSetDefault } from "@/api/TopStateGrowth/LAParameterSets/index.js";
+import { usePhotosynthesishParamSetDefault } from "@/api/TopStateGrowth/PEParameterSets/index.js";
 
 export default {
   props: {
@@ -195,22 +211,24 @@ export default {
 
       isShowParameterSetName: false,
       isDisabledDeleteBtn: false,
+
+      selectedTarget: null,
     };
   },
   methods: {
     //*----------------------------
     // 各パネルの初期化
     //*----------------------------
-    initialize(paramId) {
+    initialize(paramId, selectedTarget) {
       this.paramId = paramId;
-
+      this.selectedTarget = selectedTarget;
+      this.parameterSetList.length = 0;
       //* パラメータセットリストの取得
       useParamSetList(this.modelId)
         .then((response) => {
           console.log(response);
           const paramSetList = response["data"].data;
-          this.parameterSetList.length = 0;
-          for(const item of paramSetList){
+          for (const item of paramSetList) {
             this.parameterSetList.push(item);
           }
           this.$nextTick(
@@ -222,8 +240,6 @@ export default {
         .catch((error) => {
           console.log(error);
         });
-
-
     },
     //*----------------------------
     // 編集モードの初期化
@@ -233,22 +249,87 @@ export default {
       // 編集モードの場合
       if (this.isEditMode) {
         if (null == this.afterParameterSetData) {
-          this.afterParameterSetData = Object.assign({},this.beforeParameterSetData);
+          this.afterParameterSetData = Object.assign(
+            {},
+            this.beforeParameterSetData
+          );
         }
       }
     },
     //*----------------------------
     // 子コンポーネントからの詳細データの取得
     //*----------------------------
-    updateData(data){
+    updateData(data) {
       this.beforeParameterSetData = data;
-      this.afterParameterSetData = Object.assign({},this.beforeParameterSetData);
+      this.afterParameterSetData = Object.assign(
+        {},
+        this.beforeParameterSetData
+      );
     },
     //*----------------------------
     // 子コンポーネントからの追加実施
     //*----------------------------
-    addData(id){
-     this.initialize(id);
+    addData(id) {
+      this.initialize(id);
+    },
+    //*----------------------------
+    // パラメータのデフォルト設定を行う
+    //*----------------------------
+    setDefault() {
+      // 引数の設定
+      const dto = {
+        deviceId: this.selectedTarget.selectedDevice.id,
+        year: this.selectedTarget.selectedYear.id,
+        paramId: this.paramId,
+      };
+      // APIをモデルタイプに合わせてコールする。
+      if (1 == this.selectedTarget.selectedModel.id) {
+        useGrowthParamSetDefault(dto)
+          .then((response) => {
+            if (response["data"].status != 0) {
+              alert("生育推定パラメータセットのデフォルト設定に失敗しました。");
+            } else {
+              alert(
+                "対象年度の生育推定パラメータセットのデフォルトに設定されました。"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else if (2 == this.selectedTarget.selectedModel.id) {
+        useLeafParamSetDefault(dto)
+          .then((response) => {
+            if (response["data"].status != 0) {
+              alert(
+                "葉面積推定パラメータセットのデフォルト設定に失敗しました。"
+              );
+            } else {
+              alert(
+                "対象年度の葉面積推定パラメータセットのデフォルトに設定されました。"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else if (3 == this.selectedTarget.selectedModel.id) {
+        usePhotosynthesishParamSetDefault(dto)
+          .then((response) => {
+            if (response["data"].status != 0) {
+              alert(
+                "光合成推定パラメータセットのデフォルト設定に失敗しました。"
+              );
+            } else {
+              alert(
+                "対象年度の光合成推定パラメータセットのデフォルトに設定されました。"
+              );
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     },
     //*----------------------------
     // パラメータの選択の変更

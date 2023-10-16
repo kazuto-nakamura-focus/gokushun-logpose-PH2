@@ -83,14 +83,25 @@ public class ParameterSetDomain
 	// --------------------------------------------------
 	/**
 	 * 基準パラメータセットの設定
-	 *
-	 * @param Integer
-	 *            paramSetId
+	 * @param paramId 
+	 * @param year 
+	 * @param Integer paramSetId
 	 */
 	// --------------------------------------------------
-	public void setDefautParamSet(Long paramSetId)
+	public void setDefautParamSet(Integer modelId, Long deviceId, Short year, Long paramId)
 		{
-		Ph2ParamsetCatalogEntity entity = this.ph2ParamsetCatalogMapper.selectByPrimaryKey(paramSetId);
+		// * 引数のターゲットに対して、デフォルトフラグを初期化する
+		Ph2ParamsetCatalogEntityExample exm = new Ph2ParamsetCatalogEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId)
+			.andYearEqualTo(year)
+			.andModelIdEqualTo(modelId);
+		Ph2ParamsetCatalogEntity entity = new Ph2ParamsetCatalogEntity();
+		entity.setDefaultFlag(false);
+		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		this.ph2ParamsetCatalogMapper.updateByExampleSelective(entity, exm);
+		
+		// * 引数のパラメータIDに対してデフォルト設定する
+	    entity = this.ph2ParamsetCatalogMapper.selectByPrimaryKey(paramId);
 		entity.setDefaultFlag(true);
 		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		this.ph2ParamsetCatalogMapper.updateByPrimaryKey(entity);
