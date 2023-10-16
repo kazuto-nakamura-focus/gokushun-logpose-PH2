@@ -245,7 +245,7 @@ var createFieldObject = function (soruce, mapHandler) {
     location: soruce.location,
     latitude: parseFloat(mapHandler.latitude),
     longitude: parseFloat(mapHandler.longitude),
-    contructor: soruce.constructor,
+    contructor: soruce.contructor,
     registeredDate: nowDate,
   };
   return data;
