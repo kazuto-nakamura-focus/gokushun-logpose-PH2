@@ -43,7 +43,7 @@ public class S4ModelDataApplyrService
 					if (deviceDay.getHasReal())
 						{
 						this.modelDataDomain.doService(deviceDay.getDeviceId(), deviceDay.getYear(),
-								startDay);
+								deviceDay.getDate());
 						}
 					}
 				tmp.clear();
@@ -56,7 +56,7 @@ public class S4ModelDataApplyrService
 			if (deviceDay.getHasReal())
 				{
 				this.modelDataDomain.doService(deviceDay.getDeviceId(), deviceDay.getYear(),
-						startDay);
+						deviceDay.getDate());
 				}
 			}
 		LOG.info("モデルデータの作成が終了しました。", startDay);

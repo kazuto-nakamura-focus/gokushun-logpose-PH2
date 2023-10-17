@@ -69,6 +69,15 @@ const useGrowthParamSetRemove = (paramSetId) => {
   return axios.delete("/growth/paramSet", config);
 };
 
+//生育推定パラメータセットデフォルト設定
+const useGrowthParamSetDefault = (data) => {
+  const config = {
+    params: {},
+  };
+  return axios.put("/growth/paramSet/default", data, config);
+};
+
+
 export {
   useGrowthParamSetList,
   useGrowthParamDefaultId,
@@ -78,4 +87,5 @@ export {
   useGrowthParamSetAdd,
   useGrowthParamSetRemove,
   useGrowthParamSetHistory,
+  useGrowthParamSetDefault,
 };

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.dto.HistoryDTO;
-import com.logpose.ph2.api.dto.ParamSetDTO;
+import com.logpose.ph2.api.dto.ParamSetExtendDTO;
 import com.logpose.ph2.api.service.ParamSetService;
 
 /**
@@ -36,7 +36,7 @@ public class ParamSetServiceImpl implements  ParamSetService
 	// --------------------------------------------------
 	@Override
 	@Transactional(readOnly = true)
-	public List<ParamSetDTO> getParamSetList(Integer modelId)
+	public List<ParamSetExtendDTO> getParamSetList(Integer modelId)
 		{
 		return this.parameterSetlDomain.getParamSetList(modelId);
 		}

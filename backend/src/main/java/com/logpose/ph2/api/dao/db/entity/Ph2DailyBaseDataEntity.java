@@ -1,7 +1,5 @@
 package com.logpose.ph2.api.dao.db.entity;
 
-import java.util.Date;
-
 public class Ph2DailyBaseDataEntity {
 
 	/**

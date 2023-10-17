@@ -53,6 +53,8 @@ public class S3DailyBaseDataGeneratorService
 				{
 				this.addTmData(deviceDay, tmRecords);
 				this.setIsolationData(deviceDay, tmRecords);
+				deviceDay.setHasReal(true);
+				this.ph2DeviceDayMapper.updateByPrimaryKey(deviceDay);
 				}
 			}
 		LOG.info("日ベースのデータ作成終了");
@@ -94,8 +96,6 @@ public class S3DailyBaseDataGeneratorService
 			else if (temperature > max)
 				max = temperature;
 			}
-		device.setHasReal(true);
-		this.ph2DeviceDayMapper.updateByPrimaryKey(device);
 		// * 日別基礎データテーブルに追加
 		Ph2DailyBaseDataEntityExample exm = new Ph2DailyBaseDataEntityExample();
 		exm.createCriteria().andDayIdEqualTo(device.getId());

@@ -15,9 +15,9 @@ const useSum = (contentId) => {
   return axios.get("/sum", config); // List<FieldData>
 };
 // モデル選択情報取得
-const useModels = () => {
+const useModels = (isModel) => {
   const config = {
-    params: {},
+    params: {isModel},
   };
   return axios.get("/models", config); // List<FieldData>
 };

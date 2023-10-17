@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DailyDataAlgorythm;
 import com.logpose.ph2.api.configration.DefaultPsParameters;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsFieldEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsWeibullEntity;
@@ -49,15 +50,16 @@ public class PhotoSynthesisDomain
 
 	@Autowired
 	private Ph2ParamsetPsWeibullMapper ph2ParamsetPsWeibullMapper;
-	
+
 	@Autowired
 	private GrowthDomainMapper growthDomainMapper;
-	
+
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
-	
+
 	@Autowired
 	private DeviceDayDomain deviceDayDomain;
+
 	// --------------------------------------------------
 	/**
 	 * パラメータセットをデフォルトフラグがあるもので、近い年から取得する。
@@ -76,7 +78,7 @@ public class PhotoSynthesisDomain
 		List<Ph2ParamsetCatalogEntity> params = parameterSetDomain.getParamSetCatalogsByYear(
 				3, deviceId, year);
 		// * 該当するパラメータセットが存在する場合
-		if ((0 < params.size()) && (year == params.get(0).getYear()))
+		if ((0 < params.size()) && (year.intValue() == params.get(0).getYear().intValue()))
 			{
 			return this.getDetail(params.get(0).getId());
 			}
@@ -126,15 +128,18 @@ public class PhotoSynthesisDomain
 			Long deviceId, Short year, Date startDate)
 			throws ParseException
 		{
-		// * 実測値
-		List<Ph2RealPsAmountEntity> real = this.getRealPsAmountEntity(deviceId,
-				year, startDate);
 		Float realF = null;
 		Float realG = null;
-		if (real.size() > 0)
+		// * 実測値
+		if (null != startDate)
 			{
-			realF = real.get(0).getValueF();
-			realG = real.get(0).getValueG();
+			List<Ph2RealPsAmountEntity> real = this.getRealPsAmountEntity(deviceId,
+					year, startDate);
+			if (real.size() > 0)
+				{
+				realF = real.get(0).getValueF();
+				realG = real.get(0).getValueG();
+				}
 			}
 		// * パラメータ
 		PhotosynthesisParamSetDTO param = this.getParmaters(deviceId, year);
@@ -145,6 +150,7 @@ public class PhotoSynthesisDomain
 		return new PsGraphDataModel(realF, realG,
 				param, ph2ModelDataMapper, realDayData);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * デバイスのモデルテーブルを更新する
@@ -163,9 +169,10 @@ public class PhotoSynthesisDomain
 			// * デバイスID、統計開始日から年度を取得。
 			year = this.deviceDayDomain.getYear(deviceId, startDate);
 			}
-		PsGraphDataModel model= this.getModelGraphData(deviceId, year, startDate);
+		PsGraphDataModel model = this.getModelGraphData(deviceId, year, startDate);
 		this.deviceDayDomain.updateModelData(deviceId, year, model);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 光合成量モデルグラフデータ取得
@@ -181,7 +188,7 @@ public class PhotoSynthesisDomain
 			throws ParseException
 		{
 		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
-		
+
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectModelDataByType(deviceId, year);
 		List<Double> values = new ArrayList<>();
@@ -304,7 +311,7 @@ public class PhotoSynthesisDomain
 		{
 		if (null == id)
 			{
-			 id = parameterSetDomain.add(dto, ModelMaster.PHOTO);
+			id = parameterSetDomain.add(dto, ModelMaster.PHOTO);
 			}
 		Ph2ParamsetPsFieldEntity field = new Ph2ParamsetPsFieldEntity();
 		field.setParamsetId(id);
@@ -322,9 +329,10 @@ public class PhotoSynthesisDomain
 		weibull.setValueB(dto.getWeibullB());
 		weibull.setValueL(dto.getWeibullL());
 		this.ph2ParamsetPsWeibullMapper.insert(weibull);
-		
+
 		return id;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * デフォルト値の設定
@@ -336,7 +344,18 @@ public class PhotoSynthesisDomain
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
-		parameterSetDomain.setDefautParamSet(paramId);
-		this.updateModelTable(deviceId, year, null);
+		// * パラメータセットの詳細を取得する
+		PhotosynthesisParamSetDTO paramInfo = this.getDetail(paramId);
+		// * 同じ年度・デバイスの場合
+		if((paramInfo.getDeviceId().longValue() != deviceId.longValue())
+				||(paramInfo.getYear().shortValue() != year.shortValue()) )
+			{
+			paramInfo.setDeviceId(deviceId);
+			paramInfo.setYear(year);
+			paramId = this.addParamSet(null, paramInfo);
+			}
+		parameterSetDomain.setDefautParamSet(ModelMaster.PHOTO, deviceId, year, paramId);
+		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
+		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}
 	}

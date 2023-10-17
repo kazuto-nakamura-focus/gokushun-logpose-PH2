@@ -168,7 +168,6 @@ public class PhotosynthesisController
 	// --------------------------------------------------
 	@GetMapping("/paramSet/detail")
 	public ResponseDTO detail(HttpServletRequest httpReq,
-			HttpServletResponse res,
 			@RequestParam("paramSetId") Long paramSetId)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
