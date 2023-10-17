@@ -203,10 +203,7 @@ public class Formula
 		double td1 = x2 - x3;
 		double tu1 = x2 - x1;
 		double tf1 = x1 - x3;
-		if (0 == tr1)
-			{
-			return null;
-			}
+
 		double qu1 = kst * Math.pow((sm / 2), 2) * Math.PI * tu1 / dxu;
 		double qd1 = kst * Math.pow((sm / 2), 2) * Math.PI * td1 / dxd;
 		double qin = Math.pow(5, 2) / rs;
@@ -215,10 +212,6 @@ public class Formula
 		if ((ch1 != 0) && (qu1 != 0) && (qd1 != 0) && tr1 != 0)
 			{
 			k1 = (qin - (qu1 + qd1)) / tr1;
-			}
-		else
-			{
-			return null;
 			}
 		int time = castedAt.get(Calendar.HOUR_OF_DAY);
 		double mink1 = k1;
@@ -244,7 +237,7 @@ public class Formula
 			{
 			return (qin - (qu1 + qd1) - qr1) / 4.18 / tf1 * 3600;
 			}
-		return null;
+		return (double) 0;
 		}
 
 	// --------------------------------------------------

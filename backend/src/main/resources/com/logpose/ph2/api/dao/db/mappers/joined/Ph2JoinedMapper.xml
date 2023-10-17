@@ -20,7 +20,7 @@
 	</resultMap>	
 	
 	 <select id="getSensorData" resultMap="SensorDataDTO">
-	 	SELECT
+SELECT
 	 		distinct
 	 		sn.device_id as deviceId,
 	 		sn.id as sensorId,
@@ -36,14 +36,15 @@
 			sm.code as code
 		FROM
 			ph2_sensors sn
-		JOIN
+	  	JOIN
 			ph2_sensor_sizes ss on sn.sensor_size_id=ss.id
-		JOIN
+		left JOIN
 			ph2_sensor_models sm on sn.sensor_model_id=sm.id
 		JOIN
 			ph2_sensor_contents sc on sn.sensor_content_id = sc.id
 		WHERE
 			sn.device_id = #{deviceId}
+		ORDER BY sn.sensor_content_id ASC
 	 </select>
 
 	

@@ -106,12 +106,20 @@ public class BaseDataGenerator
 				// * 計算実行
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(dataList.getCastedAt());
-				double value = Formula.toSapFlow(x1, x2, x3, x4, sensor,
+				Double value = Formula.toSapFlow(x1, x2, x3, x4, sensor,
 						calendar);
-				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
-						dataList.getCastedAt(),
-						value);
+				if (value != null)
+					{
+					// * ダッシュボード登録
+					cache.addDashboardData(deviceId, sensor.getSensorId(),
+							sensor.getSensorContentId(),
+							dataList.getCastedAt(),
+							value);
+					}
+				else
+					{
+					System.out.println("Sap Error" +sensor.getSensorId() +"+"+ dataList.getCastedAt() );
+					}
 				}
 			// * デンドロ
 			else if (5 == contentId)

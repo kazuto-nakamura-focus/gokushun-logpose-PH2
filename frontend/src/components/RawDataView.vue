@@ -207,22 +207,25 @@ export default {
           var rawData = response.data.data;
           //* ヘッダーの生成
           const header = rawData.headers;
+          let i = 0;
           this.masterRawDataHeader.push({
             text: "日時",
-            value: "col" + 0,
+            value: "col" + (i++),
             align: "center",
             sortable: false,
           });
+
           for (const id of header) {
             const item = {
               text: this.headerMap[id],
-              value: "col" + id,
+              value: "col" + (i++),
               align: "center",
               sortable: false,
             };
             this.masterRawDataHeader.push(item);
           }
           console.log(this.masterRawDataHeader);
+          console.log(rawData.data);
           for (const items of rawData.data) {
             let value = {};
             let i = 0;
