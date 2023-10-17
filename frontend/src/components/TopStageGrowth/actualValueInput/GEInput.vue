@@ -144,7 +144,7 @@ export default {
         headerName: "No.",
         suppressSizeToFit: true,
         resizable: true,
-        width: 80,
+        width: 40,
       },
       {
         field: "stageName",

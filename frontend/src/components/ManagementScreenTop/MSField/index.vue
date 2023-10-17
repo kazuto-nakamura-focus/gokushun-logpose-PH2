@@ -125,7 +125,7 @@ import { useFieldInfoRemove } from "@/api/ManagementScreenTop/MSField";
 import MSEdit from "./MSEdit.vue";
 import moment from "moment";
 import mSEditDeviceWrapper from "@/components/ManagementScreenTop/MSDevice/MSEditDevice/MSEditDeviceWrapper.vue";
-import { commonEnvConfig } from "@/config/envConfig";
+import { mapLoaderOptions, mapOptions } from "./mapConfig";
 
 const HEADERS = [
   { text: "圃場名", value: "name", sortable: true },
@@ -146,48 +146,26 @@ export default {
       useFieldInfoData: null,
       useFieldInfoDataList: [],
       selectedDevice: { id: null },
+
+      mapLoader: null,
+      map: null,
     };
   },
 
   mounted() {
-    console.log("mounted");
-    new Loader({
-      apiKey: commonEnvConfig.googleMapApiKey,
-      version: "frozen",
-      libraries: ["places", "drawing", "geometry", "visualization"],
-      language: "ja",
-    })
+    //マップ描画の初期設定
+    this.mapLoader = new Loader(mapLoaderOptions);
+    this.mapLoader
       .load()
       .then((google) => {
         this.google = google;
         // 地図の初期化
         this.map = new google.maps.Map(document.getElementById("map"), {
           // 初期表示設定
-          zoom: 17,
-          center: { lat: 35.692195, lng: 139.759854 }, // ここに取得した緯度経度代入
-          fullscreenControl: false,
-          mapTypeControl: false,
-          streetViewControl: true,
-          streetViewControlOptions: {
-            position: google.maps.ControlPosition.LEFT_BOTTOM,
-          },
-          zoomControl: true,
-          zoomControlOptions: {
-            position: google.maps.ControlPosition.LEFT_BOTTOM,
-          },
-          scaleControl: true,
-
-          clickableIcons: true,
-          draggable: true,
-          disableDoubleClickZoom: true,
-          scrollwheel: true,
+          ...mapOptions,
+          //フォーカスを充てる座標指定
+          center: { lat: 35.692195, lng: 139.759854 }, // マルティスープ本社
         });
-
-        // ↓
-        // こちらにレスポンスとして受け取ったgoogleやthis.mapを使用すれば、
-       this.map.addListener("click", this.handleMapClick);
-        // 通常通りvueでもJavaScriptAPIを利用できます。
-        // ↑
       })
       .catch((e) => {
         console.error(e);
@@ -211,43 +189,18 @@ export default {
   },
 
   updated() {
-    new Loader({
-      apiKey: commonEnvConfig.googleMapApiKey,
-      version: "frozen",
-      libraries: ["places", "drawing", "geometry", "visualization"],
-      language: "ja",
-    })
+    //画面の再描画
+    this.mapLoader
       .load()
       .then((google) => {
         this.google = google;
         // 地図の初期化
         this.map = new google.maps.Map(document.getElementById("map"), {
           // 初期表示設定
-          zoom: 17,
-          center: { lat: 35.692195, lng: 139.759854 },
-          fullscreenControl: false,
-          mapTypeControl: false,
-          streetViewControl: true,
-          streetViewControlOptions: {
-            position: google.maps.ControlPosition.LEFT_BOTTOM,
-          },
-          zoomControl: true,
-          zoomControlOptions: {
-            position: google.maps.ControlPosition.LEFT_BOTTOM,
-          },
-          scaleControl: true,
-
-          clickableIcons: true,
-          draggable: true,
-          disableDoubleClickZoom: true,
-          scrollwheel: true,
+          ...mapOptions,
+          //フォーカスを充てる座標指定
+          center: { lat: 35.692195, lng: 139.759854 }, // マルティスープ本社
         });
-
-        // ↓
-        // こちらにレスポンスとして受け取ったgoogleやthis.mapを使用すれば、
-        this.map.addListener("click", this.handleMapClick);
-        // 通常通りvueでもJavaScriptAPIを利用できます。
-        // ↑
       })
       .catch((e) => {
         console.error(e);
@@ -262,20 +215,6 @@ export default {
   methods: {
     handleDeviceDetailInfo: function (data) {
       this.selectedDevice.id = data.id;
-    },
-    handleMapClick(event) {
-      if (this.marker) {
-        this.marker.setMap(null)
-      }
-      const latLng = event.latLng
-      const latitude = latLng.lat()
-      const longitude = latLng.lng()
-      this.marker = new this.google.maps.Marker({
-        position: { lat: latitude, lng: longitude },
-        map: this.map
-      })
-      this.getAddressFromLatLng({ lat: latitude, lng: longitude })
-      this.inputValue = latitude + "," + longitude
     },
 
     clickRow: function (item) {
@@ -301,14 +240,14 @@ export default {
     add: function () {
       this.updateData = null;
       this.useFieldInfoData = {
-        id : null,
-        name:"",
-        location:"",
-        latitude:"",
-        longitude:"",
-        contructor:"",
-        registeredDate:moment().format("YYYY-MM-DD"),
-        deviceList:[]
+        id: null,
+        name: "",
+        location: "",
+        latitude: "",
+        longitude: "",
+        contructor: "",
+        registeredDate: moment().format("YYYY-MM-DD"),
+        deviceList: [],
       };
       this.display = "fieldEdit";
     },
