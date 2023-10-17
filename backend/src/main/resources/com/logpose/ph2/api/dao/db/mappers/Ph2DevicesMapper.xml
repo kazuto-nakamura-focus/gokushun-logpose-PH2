@@ -151,7 +151,7 @@
     values (nextval('ph2_devices_id2_seq'), #{fieldId,jdbcType=BIGINT}, #{name,jdbcType=VARCHAR}, 
       #{location,jdbcType=VARCHAR}, #{placedOn,jdbcType=DATE}, #{client,jdbcType=VARCHAR}, 
       #{sigfoxDeviceId,jdbcType=VARCHAR}, #{createdAt,jdbcType=TIMESTAMP}, #{updatedAt,jdbcType=TIMESTAMP}, 
-      #{baseDate,jdbcType=DATE}, #{brand,jdbcType=VARCHAR})
+      #{baseDate,jdbcType=DATE}, #{brand,jdbcType=VARCHAR}, #{tz,jdbcType=VARCHAR})
       RETURNING id;
 </select>
   <insert id="insertSelective" parameterType="com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity">
