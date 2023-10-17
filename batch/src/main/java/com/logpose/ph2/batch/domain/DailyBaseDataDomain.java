@@ -17,7 +17,7 @@ import com.logpose.ph2.batch.dto.BaseDataDTO;
 import com.logpose.ph2.batch.formula.Formula;
 
 @Component
-public class DailyBaseDataDomain extends DeviceDayDomain
+public class DailyBaseDataDomain
 	{
 	// ===============================================
 	// クラスメンバー

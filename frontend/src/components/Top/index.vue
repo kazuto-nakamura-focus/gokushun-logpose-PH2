@@ -84,7 +84,7 @@ import { Carousel, Slide } from "vue-carousel";
 import { useFields } from "@/api/Top";
 
 // import unselected from "@/components/parts/menu.vue";
-import SpecificDataAggregation from "@/components/parts/specificDataAggregation.vue";
+import SpecificDataAggregation from "./SpecificDataAggregation.vue";
 
 export default {
   data() {

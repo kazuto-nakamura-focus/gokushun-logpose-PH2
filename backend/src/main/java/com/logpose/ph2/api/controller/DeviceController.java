@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
@@ -24,7 +25,7 @@ import com.logpose.ph2.api.service.DeviceService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@CrossOrigin(origins = { "http://localhost:8080" }, methods = { RequestMethod.GET,
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET,
 		RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE }, allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/device")
@@ -167,6 +168,30 @@ public class DeviceController
 		try
 			{
 			this.deviceService.updateInfo(dto);
+			as_dto.setSuccess(null);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+	
+	// --------------------------------------------------
+	/**
+	 * センサーデータのロード
+	 *
+	 * @param dto DataLoadDTO
+	 * @return ResponseDTO (null)
+	 */
+	// --------------------------------------------------
+	@PostMapping("/sensorData")
+	public ResponseDTO post(HttpServletRequest httpReq, @RequestBody @Validated DataLoadDTO dto)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			this.deviceService.load(dto);
 			as_dto.setSuccess(null);
 			}
 		catch (Exception e)

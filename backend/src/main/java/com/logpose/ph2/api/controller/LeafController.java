@@ -29,7 +29,7 @@ import com.logpose.ph2.api.service.LeafService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @CrossOrigin(
-		origins = { "http://localhost:8080" },
+		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
 		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
 		allowCredentials = "true")
 @RestController
@@ -60,7 +60,7 @@ public class LeafController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.leafService.updateDateModel(dto.getDeviceId(),
+			this.leafService.updateDateModel(dto.getDeviceId(), dto.getYear(),
 					dto.getDate());
 			as_dto.setSuccess(null);
 			}

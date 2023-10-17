@@ -29,13 +29,14 @@ public class TopDomain
 	// --------------------------------------------------
 	public List<DataSummaryDTO> getFieldData()
 		{
+		// * デバイスリストの取得
+		List<DataSummaryDTO> devices = this.topDomainMapper
+				.selectFieldDeviceList();
 		// * 取得する日付
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, -3);
 		Date date = cal.getTime();
-		// * モデルデータが存在するデバイス
-		List<DataSummaryDTO> devices = this.topDomainMapper
-				.selectFieldDeviceList();
+
 		List<DataSummaryDTO> result = new ArrayList<>();
 		for (DataSummaryDTO item : devices)
 			{

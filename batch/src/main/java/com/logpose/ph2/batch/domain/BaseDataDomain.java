@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.batch.dao.db.entity.Ph2RelBaseDataEntityExample;
 import com.logpose.ph2.batch.dao.db.mappers.Ph2RelBaseDataMapper;
 
+
 /**
  * BaseDataテーブルのドメイン
  */

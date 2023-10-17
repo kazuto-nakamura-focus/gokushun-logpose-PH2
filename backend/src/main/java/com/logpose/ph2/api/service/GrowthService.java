@@ -30,7 +30,7 @@ public interface GrowthService
 	 * @param date 対象日付
 	 */
 	// --------------------------------------------------
-	public void updateDateModel(Long deviceId, Date date) throws ParseException;
+	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException;
 	// --------------------------------------------------
 	/**
 	 * パラメータ指定による生育推定モデルデータの作成
