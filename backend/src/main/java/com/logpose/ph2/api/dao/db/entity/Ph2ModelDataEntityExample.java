@@ -1,8 +1,6 @@
 package com.logpose.ph2.api.dao.db.entity;
 
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
 import java.util.List;
 
 public class Ph2ModelDataEntityExample {

@@ -288,9 +288,9 @@ export default {
           resizable: true,
           width: 100,
 
-          editable: (params) => params.data.displayName == "樹液流",
+          editable: (params) => (params.data.displayName == "樹液流")||(params.data.displayName==null),
           cellStyle: (params) => {
-            if (params.data.displayName != "樹液流") {
+            if ((params.data.displayName != null )&&(params.data.displayName != "樹液流")) {
               return { backgroundColor: "#aaa" };
             }
             //  return null;
@@ -303,9 +303,9 @@ export default {
           headerName: "茎径(mm)",
           resizable: true,
           width: 100,
-          editable: (params) => params.data.displayName == "樹液流",
+          editable: (params) => (params.data.displayName == "樹液流")||(params.data.displayName==null),
           cellStyle: (params) => {
-            if (params.data.displayName != "樹液流") {
+            if ((params.data.displayName != null )&&(params.data.displayName != "樹液流")) {
               return { backgroundColor: "#aaa" };
             }
             //  return null;
@@ -446,16 +446,18 @@ export default {
       }
     },
 
-    dataLoad: function () {
+    dataLoad: async function () {
      const data = {
         deviceId: this.deviceInfoData.id,
+        isAll:true,
+        startDate:null
       };
-      useLoadData(data)
+      await useLoadData(data)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];
           if (status === 0) {
-            alert("センサーデータのロードを開始しました。（５～１０分)");
+            alert("センサーデータのロードが完了しました。");
             this.onEnd(true);
           } else {
             throw new Error(message);

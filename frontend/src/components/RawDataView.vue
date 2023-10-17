@@ -110,13 +110,6 @@
 <script>
 import moment from "moment";
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
-//import masterRawDataHeader from "@/assets/test/masterRawDataListHeader.json";
-//import masterRawData from "@/assets/test/masterRawDataList.json";
-// import masterSensorList from "@/assets/test/masterSensorList.json";
-// import mockChartData from "@/assets/test/mockChartData";
-// import mockChartData from "@/assets/test/mockGraphData";
-
-// import LineGraph from "@/components/parts/LineGraph";
 import { MountController } from "@/lib/mountController.js";
 import { useRawData } from "@/api/Top";
 
@@ -147,75 +140,17 @@ export default {
 
       menu1: false,
       menu2: false,
-
-      masterRawDataHeader: [
-        {
-          text: "日時",
-          value: "col1",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "樹液流1(g/h)",
-          value: "col2",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "樹液流2(g/h)",
-          value: "col3",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "デンドロ(μm)",
-          value: "col4",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "葉面濡れ(raw counts)",
-          value: "col5",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "土壌水分(pF)",
-          value: "col6",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "土壌温度(℃)",
-          value: "col7",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "温度(℃)",
-          value: "col8",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "湿度(％RH)",
-          value: "col9",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "日射(W/㎡)",
-          value: "col10",
-          align: "center",
-          sortable: false,
-        },
-        {
-          text: "日射(μmol/㎡s)",
-          value: "col11",
-          align: "center",
-          sortable: false,
-        },
-      ],
+      masterRawDataHeader: [],
+      headerMap: {
+        1: "温度(℃)",
+        2: "湿度(％RH)",
+        3: "日射(W/㎡)",
+        4: "樹液流(g/h)",
+        5: "デンドロ(μm)",
+        6: "葉面濡れ(raw counts)",
+        7: "土壌水分(pF)",
+        8: "土壌温度(℃)",
+      },
       masterRawData: [],
 
       // 選択データリスト
@@ -231,9 +166,7 @@ export default {
 
       PRIVATE: {
         getValue(item) {
-          return null == item
-            ? "-"
-            :  Math.floor(item * 100) / 100
+          return "-" == item ? "-" : Math.floor(item * 100) / 100;
         },
       },
     };
@@ -263,6 +196,8 @@ export default {
   methods: {
     setListData: function () {
       this.masterRawData.length = 0;
+      this.masterRawDataHeader.length = 0;
+
       useRawData(
         this.selectedItems.selectedDevice.id,
         this.startDate,
@@ -270,21 +205,40 @@ export default {
       )
         .then((response) => {
           var rawData = response.data.data;
-          for (const item of rawData) {
-            let i = 0;
-            let value = {
-              col1: item[i++],
-              col8: this.PRIVATE.getValue(item[i++]),
-              col9: this.PRIVATE.getValue(item[i++]),
-              col10: this.PRIVATE.getValue(item[i++]),
-              col2: this.PRIVATE.getValue(item[i++]),
-              col4: this.PRIVATE.getValue(item[i++]),
-              col5: this.PRIVATE.getValue(item[i++]),
-              col6: this.PRIVATE.getValue(item[i++]),
-              col7: this.PRIVATE.getValue(item[i++]),
-              col3: this.PRIVATE.getValue(item[i++]),
-              col11: this.PRIVATE.getValue(item[i++]),
+          //* ヘッダーの生成
+          const header = rawData.headers;
+          let i = 0;
+          this.masterRawDataHeader.push({
+            text: "日時",
+            value: "col" + (i++),
+            align: "center",
+            sortable: false,
+          });
+
+          for (const id of header) {
+            const item = {
+              text: this.headerMap[id],
+              value: "col" + (i++),
+              align: "center",
+              sortable: false,
             };
+            this.masterRawDataHeader.push(item);
+          }
+          console.log(this.masterRawDataHeader);
+          console.log(rawData.data);
+          for (const items of rawData.data) {
+            let value = {};
+            let i = 0;
+            for (const item of items){
+              let itemValue =item;
+              if(i != 0 ){
+                itemValue = this.PRIVATE.getValue(itemValue);
+              }
+              value["col" + i] = new Object;
+              value["col" + i] = itemValue;
+              i++;
+            }
+            console.log(value);
             this.masterRawData.push(value);
           }
         })
@@ -309,6 +263,7 @@ export default {
       arrayDatas.push(arrayHeaders);
       this.masterRawData.map((item) => {
         const data = [
+          item.col0,
           item.col1,
           item.col2,
           item.col3,

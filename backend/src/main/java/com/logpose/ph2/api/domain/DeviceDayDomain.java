@@ -111,7 +111,7 @@ public class DeviceDayDomain
 		{
 		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year)
-				.andLapseDayEqualTo((short) 0);
+				.andLapseDayEqualTo((short) 1);
 		return this.ph2DeviceDayMapper.selectByExample(exm).get(0);
 		}
 

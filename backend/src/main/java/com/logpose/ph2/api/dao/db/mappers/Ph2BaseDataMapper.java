@@ -52,4 +52,6 @@ public interface Ph2BaseDataMapper {
 	 * @mbg.generated  Sat Jul 15 16:35:56 JST 2023
 	 */
 	int updateByExample(@Param("row") Ph2BaseDataEntity row, @Param("example") Ph2BaseDataEntityExample example);
+
+	int multiRowInsert(@Param("targets") List<Ph2BaseDataEntity> targets);
 }

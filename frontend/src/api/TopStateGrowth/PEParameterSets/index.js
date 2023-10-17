@@ -62,6 +62,14 @@ const usePhotosynthesisParamSetRemove = (paramSetId) => {
   return axios.delete("/photosynthesis/paramSet", config);
 };
 
+//光合成推定パラメータセットデフォルト設定
+const usePhotosynthesishParamSetDefault = (data) => {
+  const config = {
+    params: {},
+  };
+  return axios.put("/photosynthesis/paramSet/default", data, config);
+};
+
 export {
   usePhotosynthesisParamSetList,
   usePhotosynthesisDefaultId,
@@ -70,4 +78,5 @@ export {
   usePhotosynthesisParamSetUpdate,
   usePhotosynthesisParamSetAdd,
   usePhotosynthesisParamSetRemove,
+  usePhotosynthesishParamSetDefault,
 };

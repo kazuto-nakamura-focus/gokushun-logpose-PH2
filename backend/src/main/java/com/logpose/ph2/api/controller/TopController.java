@@ -16,6 +16,7 @@ import com.logpose.ph2.api.dto.DataSummaryDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.SelectionDTO;
 import com.logpose.ph2.api.dto.element.FieldData;
+import com.logpose.ph2.api.dto.rawData.RawDataList;
 import com.logpose.ph2.api.service.TopService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,7 +71,7 @@ public class TopController
 	 */
 	// --------------------------------------------------
 	@GetMapping("/sum")
-	public ResponseDTO sum(HttpServletRequest httpReq,HttpServletResponse res,
+	public ResponseDTO sum(HttpServletRequest httpReq, HttpServletResponse res,
 			@RequestParam("contentId") Long contentId)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
@@ -87,33 +88,38 @@ public class TopController
 
 		return as_dto;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 生データ取得
-	 *
-	 * @return ResponseDTO(SelectionDTO)
+	 * 
+	 * @param httpReq
+	 * @param startDate
+	 * @param endDate
+	 * @param deviceId
+	 * @return List<String[]>
 	 */
 	// --------------------------------------------------
 	@GetMapping("/rawData")
 	public ResponseDTO getRawData(HttpServletRequest httpReq,
-			HttpServletResponse res,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
 			@RequestParam("deviceId") Long deviceId)
-	{
-	ResponseDTO as_dto = new ResponseDTO();
-	try
 		{
-		List<String[]> result = this.topSerivce.getRawData(startDate, endDate, deviceId);
-		as_dto.setSuccess(result);
-		}
-	catch (Exception e)
-		{
-		as_dto.setError(e);
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			RawDataList result = this.topSerivce.getRawData(startDate, endDate, deviceId);
+			as_dto.setSuccess(result);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+
+		return as_dto;
 		}
 
-	return as_dto;
-	}
 	// --------------------------------------------------
 	/**
 	 * モデル選択情報取得
@@ -122,12 +128,12 @@ public class TopController
 	 */
 	// --------------------------------------------------
 	@GetMapping("/models")
-	public ResponseDTO getModels(HttpServletRequest httpReq,HttpServletResponse res)
+	public ResponseDTO getModels(HttpServletRequest httpReq, @RequestParam("isModel") boolean isModel)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			SelectionDTO result = this.topSerivce.getModels();
+			SelectionDTO result = this.topSerivce.getModels(isModel);
 			as_dto.setSuccess(result);
 			}
 		catch (Exception e)

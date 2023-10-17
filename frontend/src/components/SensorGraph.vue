@@ -79,19 +79,22 @@
                     </v-date-picker>
                   </v-menu>
                 </v-col>
-                <v-col cols="1">
-                  <div>
-                    <v-select
-                      v-model="selectedHour"
-                      :items="hoursMenu"
-                      item-text="name"
-                      item-value="hour"
-                      width="60"
-                      dense
-                      @change="handleChangeDate()"
-                      return-object
-                    ></v-select>
-                  </div>
+                <v-col cols="3">
+                  <v-row>
+                    <v-col cols="4"> 基準時刻 </v-col>
+                    <v-col>
+                      <v-select
+                        v-model="selectedHour"
+                        :items="hoursMenu"
+                        item-text="name"
+                        item-value="hour"
+                        width="60"
+                        dense
+                        @change="handleChangeDate()"
+                        return-object
+                      ></v-select>
+                    </v-col>
+                  </v-row>
                 </v-col>
               </v-row>
             </v-container>
@@ -115,15 +118,15 @@ import { useSensoreList /*, useSensoreData*/ } from "@/api/SensorDataAPI.js";
 //* --------------------------------------------------
 // 時間メニューの設定
 //* --------------------------------------------------
-var setHoursMenu = function(hoursMenu) {
-  for(let i=1;i<13;i++){
+var setHoursMenu = function (hoursMenu) {
+  for (let i = 1; i < 13; i++) {
     const item = {
-      hour:i,
-      name : i + "時"
-    }
+      hour: i,
+      name: i + "時",
+    };
     hoursMenu.push(item);
   }
-}
+};
 
 export default {
   data() {
@@ -252,7 +255,7 @@ export default {
         this.selectedHour.hour
       );
     },
-    
+
     unset() {
       this.sensorList.length = 0;
       this.CanShowSublist = false;

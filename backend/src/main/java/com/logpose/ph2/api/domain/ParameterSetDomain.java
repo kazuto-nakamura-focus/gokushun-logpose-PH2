@@ -17,6 +17,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetHistoryMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2ParamSetJoinMapper;
 import com.logpose.ph2.api.dto.HistoryDTO;
 import com.logpose.ph2.api.dto.ParamSetDTO;
+import com.logpose.ph2.api.dto.ParamSetExtendDTO;
 
 /**
  * パラメータセットサービス
@@ -46,9 +47,9 @@ public class ParameterSetDomain
 	 * @return List<ParamSetDTO>
 	 */
 	// --------------------------------------------------
-	public List<ParamSetDTO> getParamSetList(Integer modelId)
+	public List<ParamSetExtendDTO> getParamSetList(Integer modelId)
 		{
-		return this.ph2ParamSetJoinMapper.listParamerSet(modelId);
+		return this.ph2ParamSetJoinMapper.listSimpleParamerSet(modelId);
 		}
 	// --------------------------------------------------
 	/**
@@ -83,14 +84,25 @@ public class ParameterSetDomain
 	// --------------------------------------------------
 	/**
 	 * 基準パラメータセットの設定
-	 *
-	 * @param Integer
-	 *            paramSetId
+	 * @param paramId 
+	 * @param year 
+	 * @param Integer paramSetId
 	 */
 	// --------------------------------------------------
-	public void setDefautParamSet(Long paramSetId)
+	public void setDefautParamSet(Integer modelId, Long deviceId, Short year, Long paramId)
 		{
-		Ph2ParamsetCatalogEntity entity = this.ph2ParamsetCatalogMapper.selectByPrimaryKey(paramSetId);
+		// * 引数のターゲットに対して、デフォルトフラグを初期化する
+		Ph2ParamsetCatalogEntityExample exm = new Ph2ParamsetCatalogEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId)
+			.andYearEqualTo(year)
+			.andModelIdEqualTo(modelId);
+		Ph2ParamsetCatalogEntity entity = new Ph2ParamsetCatalogEntity();
+		entity.setDefaultFlag(false);
+		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		this.ph2ParamsetCatalogMapper.updateByExampleSelective(entity, exm);
+		
+		// * 引数のパラメータIDに対してデフォルト設定する
+	    entity = this.ph2ParamsetCatalogMapper.selectByPrimaryKey(paramId);
 		entity.setDefaultFlag(true);
 		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		this.ph2ParamsetCatalogMapper.updateByPrimaryKey(entity);
@@ -164,6 +176,8 @@ public class ParameterSetDomain
 	protected Long add(ParamSetDTO dto, Integer modelId)
 		{
 		Ph2ParamsetCatalogEntity target = new Ph2ParamsetCatalogEntity();
+		// * 追加した時点ではデフォルト設定はfalseとする
+		dto.setDefaultFlg(false);
 		this.setCatalogData(target, modelId, dto);
 		target.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		Long id = this.ph2ParamsetCatalogMapper.insert(target);

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.dto.HistoryDTO;
-import com.logpose.ph2.api.dto.ParamSetDTO;
+import com.logpose.ph2.api.dto.ParamSetExtendDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.service.ParamSetService;
 
@@ -53,7 +53,7 @@ public class ParamSetController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<ParamSetDTO> as_result = this.paramSetService
+			List<ParamSetExtendDTO> as_result = this.paramSetService
 					.getParamSetList(modelId);
 			as_dto.setSuccess(as_result);
 			}
