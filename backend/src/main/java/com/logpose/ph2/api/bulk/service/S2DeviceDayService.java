@@ -117,8 +117,10 @@ public class S2DeviceDayService
 			index++;
 			}
 		cacher.flush();
+		exm = new Ph2DeviceDayEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(device.getId())
-		.andDateGreaterThanOrEqualTo(startDate).andDateLessThan(endDate); 
+		.andDateGreaterThanOrEqualTo(startDate).andDateLessThan(endDate);
+		exm.setOrderByClause("date  asc");
 		return this.ph2DeviceDayMapper.selectByExample(exm);
 		}
 	}
