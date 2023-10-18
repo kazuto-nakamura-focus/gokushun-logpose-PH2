@@ -140,6 +140,7 @@
         </v-card-actions>
       </template>
     </v-container>
+    <wait-dialog  ref="wait" />
   </v-app>
 </template>
 
@@ -153,6 +154,7 @@ import {
 import { AgGridVue } from "ag-grid-vue";
 import moment from "moment-timezone";
 import "moment/locale/ja";
+import WaitDialog from '@/components/dialog/WaitDialog.vue';
 
 function RemoveCellRenderer() {
   let eGui = document.createElement("div");
@@ -354,6 +356,7 @@ export default {
 
   components: {
     AgGridVue,
+    WaitDialog
   },
 
   mounted() {
@@ -446,18 +449,20 @@ export default {
       }
     },
 
-    dataLoad: async function () {
+    dataLoad: function () {
      const data = {
         deviceId: this.deviceInfoData.id,
         isAll:true,
         startDate:null
       };
-      await useLoadData(data)
+      this.$refs.wait.start("センサーデータをアップデート中です。");
+     useLoadData(data)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];
           if (status === 0) {
             alert("センサーデータのロードが完了しました。");
+            this.$refs.wait.finish();
             this.onEnd(true);
           } else {
             throw new Error(message);
@@ -465,6 +470,8 @@ export default {
         })
         .catch((error) => {
           //失敗時
+          alert("センサーデータのロードが失敗しました。");
+          this.$refs.wait.finish();
           console.log(error);
         });
     },
