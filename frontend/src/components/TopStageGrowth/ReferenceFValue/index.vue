@@ -216,16 +216,9 @@ export default {
       changeData.map((data, i) => {
         const elStageData = data.stageStart + "-" + data.stageEnd
         let dataType = {
+          ...data,
           "order": i + 1,
-          "stageName": data.stageName,
           "elStage": elStageData,
-          "intervalF": data.intervalF,
-          "accumulatedF": data.accumulatedF,
-          "deviceId": data.deviceId,
-          "createdAt": data.createdAt,
-          "updatedAt": data.updatedAt,
-          "targetDate": data.targetDate,
-          "year": data.year,
         }
         dataTypeArr.push(dataType)
       })
@@ -241,6 +234,7 @@ export default {
         if (data.targetDate)
           targetDateSet = data.targetDate
         let dataType = {
+          "id": data.id,
           "stageName": data.stageName,
           "stageStart": parseInt(elStageData[0]),
           "stageEnd": parseInt(elStageData[1]),
@@ -265,6 +259,7 @@ export default {
           console.log("getUseGrowthFAll", results.data)
           const GrowthRowData = this.changeGrowthForm(results.data)
           this.rowData = GrowthRowData
+        
         })
         .catch((error) => {
           //失敗時
@@ -285,6 +280,7 @@ export default {
         .then((response) => {
           //成功時
           const results = response["data"];
+
           console.log(results);
         })
         .catch((error) => {

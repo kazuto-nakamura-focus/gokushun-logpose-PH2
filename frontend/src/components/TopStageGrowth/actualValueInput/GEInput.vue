@@ -33,11 +33,9 @@
         </div>
       </div>
 
-      <!-- 実績値入力画面 -->
-
+      <!-- 実績値の日付入力画面 -->
       <v-dialog v-model="pickerStatus" width="400" height="400">
         <v-date-picker v-model="picker"></v-date-picker>
-
         <v-btn @click="achievementValueDataGet">保存</v-btn>
       </v-dialog>
     </v-container>
@@ -139,6 +137,12 @@ export default {
       }
     };
     this.columnDefs = [
+      {
+        field: "id",
+        suppressSizeToFit: true,
+        width: 80,
+        hide:true,
+      },
       {
         field: "order",
         headerName: "No.",
@@ -263,7 +267,6 @@ export default {
         .then((response) => {
           const results = response["data"];
           if (results.status == 1) {
-            alert(results.message);
             this.fValueInterval = 0;
           } else {
             this.fValueInterval = results.data.value;

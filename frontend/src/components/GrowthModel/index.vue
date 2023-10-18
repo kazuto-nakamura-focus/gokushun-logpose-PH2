@@ -226,13 +226,15 @@ export default {
         }
       }
       this.dates = dates;
-      var graphTitile = "(" + this.dates[0] + "～" + this.dates[1] + ")";
-      this.$refs.gr.updateGraph(
-        key,
-        this.selectedMenu.title,
-        graphTitile,
-        dataList
-      );
+      if(this.dates.length > 2){
+        var graphTitile = "(" + this.dates[0] + "～" + this.dates[1] + ")";
+        this.$refs.gr.updateGraph(
+          key,
+          this.selectedMenu.title,
+          graphTitile,
+          dataList
+        );
+      }
     },
 
     //************************************
