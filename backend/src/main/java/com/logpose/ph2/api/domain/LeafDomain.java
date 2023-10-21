@@ -435,6 +435,8 @@ public class LeafDomain
 		{
 		if (null == id)
 			{
+			// * 追加時、ここではデフォルトフラグはfalseとする。
+			dto.setDefaultFlg(false);
 			id = parameterSetDomain.add(dto, ModelMaster.LEAF);
 			}
 		Ph2ParamsetLeafAreaEntity area = new Ph2ParamsetLeafAreaEntity();

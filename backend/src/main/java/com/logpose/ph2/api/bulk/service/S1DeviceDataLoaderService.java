@@ -77,6 +77,7 @@ public class S1DeviceDataLoaderService
 // * メッセージからデータを取得する
 		List<SensorDataDTO> records = null;
 		Long id = this.ph2RelBaseDataMapper.selectMaxId();
+		if(null == id) id = Long.valueOf(1);
 		MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
 				ph2BaseDataMapper, dashboardMapper, ph2InsolationDataMapper);
 		try (Cursor<MessagesEnyity> messageCorsor = this.messagesMapper

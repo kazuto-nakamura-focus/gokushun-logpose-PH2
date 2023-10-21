@@ -311,6 +311,8 @@ public class PhotoSynthesisDomain
 		{
 		if (null == id)
 			{
+			// * 追加時、ここではデフォルトフラグはfalseとする。
+			dto.setDefaultFlg(false);
 			id = parameterSetDomain.add(dto, ModelMaster.PHOTO);
 			}
 		Ph2ParamsetPsFieldEntity field = new Ph2ParamsetPsFieldEntity();

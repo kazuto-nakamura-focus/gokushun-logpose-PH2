@@ -558,6 +558,8 @@ public class GrowthDomain
 		// * パラメータセットカタログに登録する
 		if (null == parentId)
 			{
+			// * 追加時、ここではデフォルトフラグはfalseとする。
+			dto.setDefaultFlg(false);
 			parentId = parameterSetDomain.add(dto, ModelMaster.GROWTH);
 			}
 		// * テーブル:成長予測パラメータセット(ph2_paramset_growth)に新しいパラメータセットレコードを追加する。
