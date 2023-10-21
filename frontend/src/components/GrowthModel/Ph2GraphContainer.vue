@@ -3,24 +3,12 @@
     <v-container>
       <Ph2GraphArea ref="chr" />
     </v-container>
-
-    <div class="modal-mask" v-if="isLoading">
-      <div style="align: center">描画中です。</div>
-      <div class="loading">
-        <vue-loading
-          type="spin"
-          color="#ff0"
-          :size="{ width: '50px', height: '50px' }"
-        ></vue-loading>
-      </div>
-    </div>
   </v-app>
 </template>
   
   <script>
 import { GrowthChart } from "@/lib/graph/ApexCharts/GrowthChart.js";
-import Ph2GraphArea from "./Ph2GraphArea.vue";
-import { VueLoading } from "vue-loading-template";
+import Ph2GraphArea from "../graph/Ph2GraphArea.vue";
 
 import {
   useModelData,
@@ -33,7 +21,6 @@ export default {
     return {
       selectedItem: {},
       modelId: 0,
-      isLoading: false, // ローダー
       //* ============================================
       //* 選択されたターゲットとグラフの関係
       //* ============================================
@@ -62,14 +49,12 @@ export default {
   },
   components: {
     Ph2GraphArea,
-    VueLoading,
   },
   methods: {
     //* --------------------------------------------
     //* グラフデータ生成
     //* --------------------------------------------
     setGraphData: function (selectedItems) {
-      this.isLoading = true;
       this.$nextTick(
         function () {
           this.setData(selectedItems);

@@ -94,6 +94,7 @@ export default {
 
     initializeSingle(titlePath, options, data) {
       this.titlePath = titlePath;
+      this.chart.series[0].data.length = 0;
       for (const item of data) {
         this.chart.series[0].data.push(item);
       }
