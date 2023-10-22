@@ -1,30 +1,51 @@
 <template>
-  <v-card>
-    <!-- 表示ボタン -->
-    <div>
-      <div @click="handleClose()">
-        <v-card class="ma-1" elevation-3>
-          <!-- グラフに属するデバイスの階層表示 -->
-          {{ titlePath }}
-          <!-- 閉じるボタン -->
-          <v-icon>mdi-close</v-icon>
-        </v-card>
-      </div>
-      <!-- グラフ表示 -->
-      <apexchart
-        type="area"
-        width="100%"
-        height="400"
-        ref="chart"
-        :options="chart.options"
-        :series="chart.series"
-      ></apexchart>
-    </div>
+  <v-card elevation-6>
+    <v-container>
+      <v-row>
+        <v-col align="left">
+          <div
+            style="
+              padding: 5px;
+              display: flex;
+              border: 1px solid rgb(204, 204, 204);
+              border-radius: 5px;
+              box-shadow: rgb(185, 184, 184) 5px 5px 5px;
+              width: fit-content;
+            "
+          >
+            <div style="font-size: 10pt">
+              <b>{{ titlePath }}</b>
+            </div>
+            <div style="font-size: 10pt">
+              &nbsp;<small
+                ><i>{{ time }}</i></small
+              >
+            </div>
+          </div>
+        </v-col>
+        <v-col align="right">
+          <div @click="handleClose()">
+            <v-icon>mdi-close</v-icon>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+    <!-- グラフ表示 -->
+    <apexchart
+      type="area"
+      width="100%"
+      height="400"
+      ref="chart"
+      :options="chart.options"
+      :series="chart.series"
+    ></apexchart>
   </v-card>
 </template>
     
 <script>
 import VueApexCharts from "vue-apexcharts";
+import "@mdi/font/css/materialdesignicons.css";
+import moment from "moment";
 
 export default {
   props: {
@@ -41,6 +62,7 @@ export default {
     return {
       arguments: this.$props.target,
       titlePath: "",
+      time: "",
       chart: { options: {}, series: [] },
     };
   },
@@ -48,12 +70,13 @@ export default {
   // グラフの表示を行う下位関数をコールする
   //* ============================================
   mounted() {
-    this.$emit("run");
-      if (this.arguments.isMultiple) {
-        this.initialize();
-      } else {
-        this.initializeSingle();
-      }
+    this.titlePath = this.arguments.title;
+    this.time = moment().format("YYYY-MM-DD h:mm:ss");
+    if (this.arguments.isMultiple) {
+      this.initialize();
+    } else {
+      this.initializeSingle();
+    }
   },
   methods: {
     //* ============================================
@@ -71,7 +94,6 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
-      this.titlePath = this.arguments.title;
       const realGraph = this.prepareChart("実績");
       const predictGraph = this.prepareChart("推定");
 
@@ -104,7 +126,6 @@ export default {
     // 単一グラフを作成する
     //* ============================================
     initializeSingle() {
-      this.titlePath = this.arguments.titlePath;
       const graph = this.prepareChart(this.arguments.name);
       for (const item of this.arguments.data) {
         graph.data.push(item);
@@ -121,6 +142,12 @@ export default {
       this.chart.options = this.arguments.options;
       this.$refs.chart.updateOptions(this.chart.options, false, true, false);
       this.$refs.chart.refresh();
+    },
+    //* ============================================
+    // 閉じる実行
+    //* ============================================
+    handleClose: function () {
+      this.$emit("delete", this.arguments.id);
     },
   },
 };

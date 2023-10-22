@@ -5,9 +5,10 @@
         v-for="item in graphList"
         :key="item.id"
         :target="item"
+        @delete="deleteItem"
       />
     </div>
-    <wait-dialog ref="wait" @run="addGraphImpl" />
+    <wait-dialog ref="wait" />
   </div>
 </template>
 <script>
@@ -27,8 +28,9 @@ export default {
   //* ============================================
   data() {
     return {
+      id: 0,
       graphList: [], // グラフデータリスト
-      item:{},
+      item: {},
     };
   },
   methods: {
@@ -37,20 +39,26 @@ export default {
     //* ============================================
     addGraph: function (titlePath, chartOptions, chartData, isMultiple) {
       this.item = {
-          id: this.graphList.length, // ID
-          title: titlePath, // グラフタイトル
-          options: chartOptions, // グラフオプション
-          data: chartData, // グラフデータ
-          isMultiple: isMultiple, // 単一グラフか複数グラフか
-        };
-       this.$refs.wait.start("描画を開始します。");
-       new Promise(this.addGraphImpl());
+        id: this.id++, // ID
+        title: titlePath, // グラフタイトル
+        options: chartOptions, // グラフオプション
+        data: chartData, // グラフデータ
+        isMultiple: isMultiple, // 単一グラフか複数グラフか
+      };
+      this.$refs.wait.start("描画を開始します。");
+      this.graphList.push(this.item);
+      this.$refs.wait.finish();
     },
-    addGraphImpl : function(){
-        // * リストに追加することでグラフ表示
-        this.graphList.push(this.item);
-        this.$refs.wait.finish();
-      }
+    //* ============================================
+    // グラフアイテムの削除
+    //* ============================================
+    deleteItem: function (id) {
+      this.graphList.forEach((item, index) => {
+        if (item.id == id) {
+          this.graphList.splice(index, 1);
+        }
+      });
+    },
   },
 };
 </script>

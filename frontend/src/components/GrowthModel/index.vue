@@ -29,10 +29,10 @@
       </div>
       <ph2GraphContainer
         ref="gfa"
-        v-if="bodyStatus && selectedMenu.selectedModel.id != 4"
+        v-show="bodyStatus && selectedMenu.selectedModel.id != 4"
       ></ph2GraphContainer>
 
-      <div v-if="bodyStatus && selectedMenu.selectedModel.id == 4">
+      <div v-show="bodyStatus && selectedMenu.selectedModel.id == 4">
         <FVActualValueInput
           ref="refFVActualValueInput"
         />
