@@ -1,5 +1,5 @@
 //import { concat } from "core-js/core/array";
-import moment from "moment";
+//import moment from "moment";
 export class SensorChart {
   constructor() {
     this.data = {
@@ -65,11 +65,11 @@ export class SensorChart {
             text: '',
             offsetY: 10,
           },
-          labels: {
+        /*  labels: {
             formatter: function (val) {
               return moment(val).format("MM/DD");
-            },
-          },
+            }
+          },*/
         },
         tooltip: {
           shared: false,

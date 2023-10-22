@@ -9,14 +9,13 @@ const useSensoreList = (deviceId) => {
     return axios.get("/sensor/list", config);
 };
 //  センサーデータの取得
-const useSensoreData = (sensorId, startDate, endDate, type, hour) => {
+const useSensoreData = (sensorId, startDate, endDate, interval) => {
     const config = {
         params: {
             sensorId,
             startDate,
             endDate,
-            type,
-            hour
+            interval
         },
     }
     return axios.get("/sensor/graph", config);

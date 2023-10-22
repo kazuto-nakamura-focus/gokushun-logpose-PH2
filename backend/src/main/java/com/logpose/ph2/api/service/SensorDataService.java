@@ -32,11 +32,12 @@ public interface SensorDataService
 	 * 	
 	 * @param sensorId - センサーID
 	 * @param startDate - 取得期間の開始日
-	 * @param type 
 	 * @paraｍ endDate - 取得期間の終了日
-	 * @return GraphDataDTO
+	 * @param interval - 取得間隔(分)
+	 * @return SenseorDataDTO
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public SenseorDataDTO getSensorGraphData(Long sensorId, Date startDate, Date endDate, Short type, short hour) throws ParseException;
+	SenseorDataDTO getSensorGraphDataByInterval(Long sensorId, Date startDate, Date endDate, Long interval)
+			throws ParseException;
 	}

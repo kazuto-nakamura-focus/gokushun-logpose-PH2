@@ -88,7 +88,8 @@ export default {
               titlePaths,
               gc.data.chartOptions,
               results,
-              true
+              true,
+              null
             );
           })
           .catch((error) => {
@@ -115,7 +116,8 @@ export default {
               titlePaths,
               gc.data.chartOptions,
               response["data"].data[0],
-              true
+              true,
+              null
             );
             // グラフの表示オプションを設定
             gc = new GrowthChart();
@@ -130,7 +132,8 @@ export default {
               titlePaths,
               gc.data.chartOptions,
               response["data"].data[1],
-              true
+              true,
+              null
             );
           })
           .catch((error) => {
@@ -155,7 +158,8 @@ export default {
               titlePaths,
               gc.data.chartOptions,
               results,
-              true
+              true,
+              null
             );
             console.log(results);
           })

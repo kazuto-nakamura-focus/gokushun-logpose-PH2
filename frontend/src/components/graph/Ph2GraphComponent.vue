@@ -13,7 +13,7 @@
               width: fit-content;
             "
           >
-            <div style="font-size: 10pt">
+            <div style="font-size: 10pt;">
               <b>{{ titlePath }}</b>
             </div>
             <div style="font-size: 10pt">

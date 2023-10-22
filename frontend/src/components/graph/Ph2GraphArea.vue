@@ -37,13 +37,14 @@ export default {
     //* ============================================
     // グラフ追加処理
     //* ============================================
-    addGraph: function (titlePath, chartOptions, chartData, isMultiple) {
+    addGraph: function (titlePath, chartOptions, chartData, isMultiple, name) {
       this.item = {
         id: this.id++, // ID
         title: titlePath, // グラフタイトル
         options: chartOptions, // グラフオプション
         data: chartData, // グラフデータ
         isMultiple: isMultiple, // 単一グラフか複数グラフか
+        name : name // グラフ線の名前
       };
       this.$refs.wait.start("描画を開始します。");
       this.graphList.push(this.item);
