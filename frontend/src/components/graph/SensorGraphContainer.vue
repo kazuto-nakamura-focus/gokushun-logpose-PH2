@@ -19,7 +19,7 @@
   
   <script>
 import { SensorChart } from "@/lib/graph/ApexCharts/SensorChart.js";
-import Ph2GraphArea from "@/components/GrowthModel/Ph2GraphArea.vue";
+import Ph2GraphArea from "./Ph2GraphArea.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
 
@@ -41,29 +41,6 @@ export default {
         { text: "日射(μmol/㎡s)" },
         { text: "樹液流2(g/h)"},
       ],
-      //* ============================================
-      //* 選択されたターゲットとグラフの関係
-      //* ============================================
-      DISPLAYED: {
-        map: new Map(), // 表示済みMAP
-        //* --------------------------------------------
-        //* 作成されたグラフの登録
-        //* --------------------------------------------
-        add(selectedItems) {
-          let key =
-            selectedItems.selectedModel.id +
-            "+" +
-            selectedItems.selectedField.id +
-            "+" +
-            selectedItems.selectedDevice.id +
-            "+" +
-            selectedItems.selectedYear.id;
-          this.map.set(key, {
-            items: selectedItems,
-            node: null,
-          });
-        },
-      },
     };
   },
   components: {
@@ -74,31 +51,32 @@ export default {
     //* --------------------------------------------
     //* グラフデータ生成
     //* --------------------------------------------
-    setGraphData: function (titlePaths, contentId, sensorId, startDate, endDate, type, hour) {
+    setGraphData: function (titlePaths, contentId, sensorId, startDate, endDate, interval, name, title) {
       this.isLoading = true;
       this.$nextTick(
         function () {
-          this.setSonsorData(titlePaths, contentId, sensorId, startDate, endDate, type, hour);
+          this.setSonsorData(titlePaths, contentId, sensorId, startDate, endDate, interval, name, title);
         }.bind(this)
       );
     },
-    setSonsorData(titlePaths, contentId, sensorId, startDate, endDate, type, hour) {
-      // センサーのグラフデータを取得する
-      useSensoreData(sensorId, startDate, endDate, type, hour)
+    setSonsorData(titlePaths, contentId, sensorId, startDate, endDate, interval, name, title) {
+      useSensoreData(sensorId, startDate, endDate, interval)
         .then((response) => {
           // 成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
             // グラフの表示オプションを設定
             let gc = new SensorChart();
-            gc.setOptions(titlePaths, this.yTitle[contentId-1].text, data);
+            gc.setOptions(title, this.yTitle[contentId-1].text, data);
+            console.log(data.category);
             // グラフ表示を行う
             gc.setLoadingParent(this);
             this.$refs.chr.addGraph(
               titlePaths,
               gc.data.chartOptions,
               data.values,
-              false
+              false,
+              name
             );
           } else {
             throw new Error(message);
