@@ -11,8 +11,8 @@
           </v-col>
         </v-row>
 
-        <v-row justify="center">
-          <v-col cols="3">
+        <v-row>
+          <v-col cols="2">
             <div>デバイス名</div>
 
             <v-text-field
@@ -89,7 +89,7 @@
             ></v-select>
           </v-col>
 
-          <v-col cols="6">
+          <v-col cols="10">
             <div>センサー</div>
 
             <div style="height: 325px">
@@ -100,8 +100,10 @@
                   :columnDefs="columnDefs"
                   @grid-ready="onGridReady"
                   :rowData="rowData"
+                  :gridOptions="gridOptions"
                   sizeColumn
                   @cell-clicked="onCellClicked"
+                  @cell-value-changed="onColumnValueChanged"
                 >
                 </AgGridVue>
               </div>
@@ -140,7 +142,7 @@
         </v-card-actions>
       </template>
     </v-container>
-    <wait-dialog  ref="wait" />
+    <wait-dialog ref="wait" />
   </v-app>
 </template>
 
@@ -154,7 +156,7 @@ import {
 import { AgGridVue } from "ag-grid-vue";
 import moment from "moment-timezone";
 import "moment/locale/ja";
-import WaitDialog from '@/components/dialog/WaitDialog.vue';
+import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 function RemoveCellRenderer() {
   let eGui = document.createElement("div");
@@ -195,6 +197,22 @@ export default {
       timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
       columnDefs: [
+        {
+          field: "displayId",
+          headerName: "表示名",
+          singleClickEdit: true,
+          resizable: true,
+          editable: true,
+          width: 125,
+          cellEditor: "agSelectCellEditor",
+          cellEditorParams: {
+            values: this.extractKeys(
+              this.$options.propsData.useDeviceMasters.sensorContents
+            ),
+          },
+          refData: this.useDeviceMasters.sensorContents,
+          valueListGap: 0,
+        },
         {
           field: "name",
           singleClickEdit: true,
@@ -249,23 +267,6 @@ export default {
             valueListGap: 0,
           },
         },
-
-        {
-          field: "displayId",
-          headerName: "表示名",
-          singleClickEdit: true,
-          resizable: true,
-          editable: true,
-          width: 125,
-          cellEditor: "agSelectCellEditor",
-          cellEditorParams: {
-            values: this.extractKeys(
-              this.$options.propsData.useDeviceMasters.sensorContents
-            ),
-          },
-          refData: this.useDeviceMasters.sensorContents,
-          valueListGap: 0,
-        },
         {
           field: "sizeId",
           singleClickEdit: true,
@@ -290,9 +291,12 @@ export default {
           resizable: true,
           width: 100,
 
-          editable: (params) => (params.data.displayName == "樹液流")||(params.data.displayName==null),
+          editable: (params) =>
+            params.data.displayId == 4 || params.data.displayId == null,
           cellStyle: (params) => {
-            if ((params.data.displayName != null )&&(params.data.displayName != "樹液流")) {
+            if (
+              !(params.data.displayId == null || params.data.displayId == 4)
+            ) {
               return { backgroundColor: "#aaa" };
             }
             //  return null;
@@ -305,9 +309,12 @@ export default {
           headerName: "茎径(mm)",
           resizable: true,
           width: 100,
-          editable: (params) => (params.data.displayName == "樹液流")||(params.data.displayName==null),
+          editable: (params) =>
+            params.data.displayId == 4 || params.data.displayId == null,
           cellStyle: (params) => {
-            if ((params.data.displayName != null )&&(params.data.displayName != "樹液流")) {
+            if (
+              !(params.data.displayId == null || params.data.displayId == 4)
+            ) {
               return { backgroundColor: "#aaa" };
             }
             //  return null;
@@ -331,6 +338,10 @@ export default {
         },
       ],
       rowData: [],
+      gridOptions: {
+        // 列の定義
+        columnDefs:this.columnDefs,
+      },
       selections: null,
       skelton: {
         id: null,
@@ -356,7 +367,7 @@ export default {
 
   components: {
     AgGridVue,
-    WaitDialog
+    WaitDialog,
   },
 
   mounted() {
@@ -386,7 +397,21 @@ export default {
     setField(item) {
       this.deviceInfoData.fieldId = item.id;
     },
-
+    //* ============================================
+    // セルの値が変化した場合
+    //* ============================================
+    onColumnValueChanged: function (param) {
+      console.log(param);
+      /*console.log(this.gridOptions.columnDefs[5].cellStyle);
+      //* 樹液流の場合
+      if("4" != param.data.displayId) {
+        this.gridOptions.columnDefs[5].cellStyle();
+      }*/
+      /*param.data.kst.editable = (4 == param.data.displayId);
+      param.data.kst.cellStyle = (4 == param.data.displayI) ? null: "#aaa";
+      param.data.stemDiameter.editable = 4 == param.data.displayId;
+      param.data.stemDiameter.cellStyle = (4 == param.data.displayI) ? null: "#aaa"*/
+    },
     update: function () {
       const message =
         this.mode == "update"
@@ -450,13 +475,13 @@ export default {
     },
 
     dataLoad: function () {
-     const data = {
+      const data = {
         deviceId: this.deviceInfoData.id,
-        isAll:true,
-        startDate:null
+        isAll: true,
+        startDate: null,
       };
       this.$refs.wait.start("センサーデータをアップデート中です。");
-     useLoadData(data)
+      useLoadData(data)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];
