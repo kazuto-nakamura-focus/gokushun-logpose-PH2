@@ -199,7 +199,7 @@ export default {
       columnDefs: [
         {
           field: "displayId",
-          headerName: "表示名",
+          headerName: "センサータイプ",
           singleClickEdit: true,
           resizable: true,
           editable: true,
@@ -212,14 +212,6 @@ export default {
           },
           refData: this.useDeviceMasters.sensorContents,
           valueListGap: 0,
-        },
-        {
-          field: "name",
-          singleClickEdit: true,
-          headerName: "センサ―名",
-          editable: true,
-          resizable: true,
-          width: 100,
         },
         {
           field: "modelId",
@@ -268,12 +260,20 @@ export default {
           },
         },
         {
+          field: "name",
+          singleClickEdit: true,
+          headerName: "センサ―名",
+          editable: true,
+          resizable: true,
+          width: 100,
+        },
+        {
           field: "sizeId",
           singleClickEdit: true,
           headerName: "サイズ",
           resizable: true,
           editable: true,
-          width: 125,
+          width: 100,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
             values: this.extractKeys(
@@ -289,8 +289,8 @@ export default {
           colId: "kst",
           headerName: "Kst",
           resizable: true,
-          width: 100,
-
+          width: 80,
+          cellClass: "originalClass",
           editable: (params) =>
             params.data.displayId == 4 || params.data.displayId == null,
           cellStyle: (params) => {
@@ -308,7 +308,7 @@ export default {
           colId: "stemDiameter",
           headerName: "茎径(mm)",
           resizable: true,
-          width: 100,
+          width: 80,
           editable: (params) =>
             params.data.displayId == 4 || params.data.displayId == null,
           cellStyle: (params) => {
@@ -340,7 +340,7 @@ export default {
       rowData: [],
       gridOptions: {
         // 列の定義
-        columnDefs:this.columnDefs,
+        columnDefs: this.columnDefs,
       },
       selections: null,
       skelton: {
@@ -401,12 +401,15 @@ export default {
     // セルの値が変化した場合
     //* ============================================
     onColumnValueChanged: function (param) {
-      console.log(param);
-      /*console.log(this.gridOptions.columnDefs[5].cellStyle);
       //* 樹液流の場合
-      if("4" != param.data.displayId) {
-        this.gridOptions.columnDefs[5].cellStyle();
-      }*/
+      if ("4" != param.data.displayId) {
+        this.agflag = false;
+        this.agflag = true;
+        console.log("***");
+        console.log(this.gridOptions.columnDefs[5]);
+        this.gridOptions.columnDefs[5].cellStyle =  {'background-color': '#aaa'};
+        this.gridOptions.api.refreshCells();
+      }
       /*param.data.kst.editable = (4 == param.data.displayId);
       param.data.kst.cellStyle = (4 == param.data.displayI) ? null: "#aaa";
       param.data.stemDiameter.editable = 4 == param.data.displayId;
@@ -559,3 +562,10 @@ export default {
   },
 };
 </script>
+<style scoped>
+.originalClass {
+}
+.unactivateClass {
+  background-color: "#aaa";
+}
+</style>
