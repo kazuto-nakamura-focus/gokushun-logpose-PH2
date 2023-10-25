@@ -483,7 +483,7 @@ export default {
         isAll: true,
         startDate: null,
       };
-      this.$refs.wait.start("センサーデータをアップデート中です。");
+      this.$refs.wait.start("センサーデータをアップデート中です。", true);
       useLoadData(data)
         .then((response) => {
           //成功時

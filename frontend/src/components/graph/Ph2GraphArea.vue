@@ -44,9 +44,13 @@ export default {
         options: chartOptions, // グラフオプション
         data: chartData, // グラフデータ
         isMultiple: isMultiple, // 単一グラフか複数グラフか
-        name : name // グラフ線の名前
+        name: name, // グラフ線の名前
       };
-      this.$refs.wait.start("描画を開始します。");
+      this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
+      setTimeout(() => this.displayGraph(), 100);
+    },
+
+    displayGraph() {
       this.graphList.push(this.item);
       this.$refs.wait.finish();
     },
