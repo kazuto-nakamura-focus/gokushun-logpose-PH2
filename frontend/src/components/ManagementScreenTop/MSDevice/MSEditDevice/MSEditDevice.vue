@@ -292,10 +292,10 @@ export default {
           width: 80,
           cellClass: "originalClass",
           editable: (params) =>
-            params.data.displayId == 4 || params.data.displayId == null,
+            params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
             if (
-              !(params.data.displayId == null || params.data.displayId == 4)
+              !(params.data.displayId == null || params.data.displayId == "4")
             ) {
               return { backgroundColor: "#aaa" };
             }
@@ -310,10 +310,10 @@ export default {
           resizable: true,
           width: 80,
           editable: (params) =>
-            params.data.displayId == 4 || params.data.displayId == null,
+            params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
             if (
-              !(params.data.displayId == null || params.data.displayId == 4)
+              !(params.data.displayId == null || params.data.displayId == "4")
             ) {
               return { backgroundColor: "#aaa" };
             }
@@ -403,8 +403,6 @@ export default {
     onColumnValueChanged: function (param) {
       //* 樹液流の場合
       if ("4" != param.data.displayId) {
-        this.agflag = false;
-        this.agflag = true;
         console.log("***");
         console.log(this.gridOptions.columnDefs[5]);
         this.gridOptions.columnDefs[5].cellStyle =  {'background-color': '#aaa'};

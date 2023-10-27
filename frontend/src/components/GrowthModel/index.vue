@@ -32,10 +32,11 @@
         v-show="bodyStatus && selectedMenu.selectedModel.id != 4"
       ></ph2GraphContainer>
 
-      <div v-show="bodyStatus && selectedMenu.selectedModel.id == 4">
-        <FVActualValueInput
-          ref="refFVActualValueInput"
-        />
+      <div
+        v-if="isFVDisplayed"
+        v-show="bodyStatus && selectedMenu.selectedModel.id == 4"
+      >
+        <FVActualValueInput ref="refFVActualValueInput" />
       </div>
     </v-container>
 
@@ -126,6 +127,10 @@ export default {
       parameterSetController: new DialogController(),
       //複数選択確認
       selectedFieldOnly: false,
+      // グラフ表示エリアのフラグ
+      isgraphDisplayed: false,
+      // 着果負担エリアの初期化フラグ
+      isFVDisplayed: false,
     };
   },
   mounted() {
@@ -146,13 +151,20 @@ export default {
           this.editButtons.push(...editButtons);
           if (this.selectedMenu.selectedModel.id != 4) {
             this.$nextTick(function () {
-            // * グラフの表示
-            this.$refs.gfa.setGraphData(this.selectedMenu);
+              // * グラフの表示
+              if (!this.isgraphDisplayed) {
+                this.isgraphDisplayed = true;
+                this.$refs.gfa.setGraphData(this.selectedMenu);
+              }
             });
           } else {
-            this.$nextTick(function () {
-              this.$refs.refFVActualValueInput.initialize(this.selectedMenu);
-            });
+            // 着果負担エリアがまだ未生成の場合
+            if (!this.isFVDisplayed) {
+              this.isFVDisplayed = true;
+              this.$nextTick(function () {
+                this.$refs.refFVActualValueInput.initialize(this.selectedMenu);
+              });
+            }
           }
         }
       }.bind(this)
