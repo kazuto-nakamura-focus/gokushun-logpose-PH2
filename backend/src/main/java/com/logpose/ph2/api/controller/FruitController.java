@@ -1,6 +1,9 @@
 package com.logpose.ph2.api.controller;
 
+import java.util.Date;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntity;
 import com.logpose.ph2.api.dto.FruitValuesByDevice;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
@@ -19,10 +23,10 @@ import com.logpose.ph2.api.service.FruitsService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@CrossOrigin(
-		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
-		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
-		allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000",
+		"https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET,
+				RequestMethod.POST, RequestMethod.PUT,
+				RequestMethod.DELETE }, allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/fruit")
 public class FruitController
@@ -36,6 +40,35 @@ public class FruitController
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
+	// --------------------------------------------------
+	/**
+	 * 着果実績値取得
+	 *
+	 * @param deviceId
+	 * @param eventId
+	 * @return Ph2RealFruitsDataEntity
+	 */
+	// --------------------------------------------------
+	@GetMapping("/value")
+	public ResponseDTO getValue(HttpServletRequest httpReq,
+			@RequestParam("deviceId") Long deviceId,
+			@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
+			@RequestParam("eventId") Short eventId)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			Ph2RealFruitsDataEntity as_result = this.fruitService.getRealFruitsData(deviceId,
+					date, eventId);
+			as_dto.setSuccess(as_result);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+
 	/// --------------------------------------------------
 	/**
 	 * 各圃場着果量着果負担詳細取得

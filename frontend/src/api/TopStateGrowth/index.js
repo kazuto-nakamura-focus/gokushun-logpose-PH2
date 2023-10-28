@@ -115,6 +115,17 @@ const usePhotosynthesisGraphReal = (deviceId, year, paramSetId) => {
   return axios.get("/photosynthesis/graph/real", config);
 };
 
+//着果量着果負担値取得
+const useFruitValue = (deviceId, date, eventId) => {
+  const config = {
+    params: {
+      deviceId,
+      date,
+      eventId
+    },
+  };
+  return axios.get("/fruit/value", config);
+};
 //圃場着果量着果負担詳細取得
 const useFruitValues = (deviceId) => {
   const config = {
@@ -160,6 +171,7 @@ export {
   useLeafGraphCountReal,
   usePhotosynthesisGraphByParamSet,
   usePhotosynthesisGraphReal,
+  useFruitValue,
   useFruitValues,
   useFruitValueSproutTreatment,
   useFruitValueELStage,

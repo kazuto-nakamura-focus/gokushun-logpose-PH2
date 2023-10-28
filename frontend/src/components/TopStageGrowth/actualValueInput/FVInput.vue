@@ -197,13 +197,14 @@
 
 <script>
 import {
+  useFruitValue,
   useFruitValues,
   useFruitValueSproutTreatment,
   useFruitValueELStage,
   useFruitValueBagging,
 } from "@/api/TopStateGrowth/index";
 import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
-
+import moment from "moment";
 // const fruitValuesDTOData = {
 //   burden: 0.5,	//* 着果負担
 //   amount: 0.8, //* 積算推定樹冠光合成量あたりの着果量（g/mol
@@ -220,9 +221,8 @@ export default {
 
   data() {
     return {
-      fieldId: null, // 選ばれた圃場ID
-      devicesId: this.$store.getters.selectedDevice.id, // 選ばれたデバイスID
-      year: this.$store.getters.selectedYear.id, //年度
+      devicesId: null, // 選ばれたデバイスID
+      year: null, //年度
 
       fruitValues: {
         burden: null, //* 着果負担
@@ -231,19 +231,19 @@ export default {
       },
       //着生後芽かき処理時
       fruitValueSproutTreatment: {
-        date: null, //実測日
+        date: moment().format("YYYY-MM-DD"), //実測日
         weight: null, //平均房重
         count: null, //実測着果数
       },
       //E-L 27～31の生育ステージ時
       fruitValueELStage: {
-        date: null, //実測日
+        date: moment().format("YYYY-MM-DD"), //実測日
         weight: null, //平均房重
         count: null, //実測着果数
       },
       //袋かけ時
       fruitValueBagging: {
-        date: null, //実測日
+        date: moment().format("YYYY-MM-DD"), //実測日
         weight: null, //平均房重
         count: null, //実測着果数
       },
@@ -262,22 +262,45 @@ export default {
   },
   methods: {
     initialize: function (menu) {
-      this.$nextTick(
-        function () {
-          this.$refs.date1.initialize(menu.selectedYear);
-          this.$refs.date2.initialize(menu.selectedYear);
-          this.$refs.date3.initialize(menu.selectedYear);
-        }
-      );
+      this.devicesId = menu.selectedDevice.id;
+      this.year = menu.selectedYear.id;
+      this.$nextTick(function () {
+        this.$refs.date1.initialize(menu.selectedYear);
+        this.handleSproutDate(null);
+        this.$refs.date2.initialize(menu.selectedYear);
+        this.handleElDate(null);
+        this.$refs.date3.initialize(menu.selectedYear);
+        this.handleBaggageDate(null);
+      });
+    },
+    getFruitValue(eventId, field) {
+      useFruitValue(this.devicesId, field.date, eventId)
+        .then((response) => {
+          //成功時
+          const { status, message, data } = response["data"];
+          if (status === 0) {
+            field.weight = null == data ? "未設定" : data.average;
+            field.count = null == data ? "未設定" : data.count;
+          } else {
+            throw new Error(message);
+          }
+        })
+        .catch((error) => {
+          alert("詳細取得ができませんでした。");
+          console.log(error);
+        });
     },
     handleSproutDate(date) {
-      this.fruitValueSproutTreatment.date = date;
+      if (null != date) this.fruitValueSproutTreatment.date = date;
+      this.getFruitValue(1, this.fruitValueSproutTreatment);
     },
     handleElDate(date) {
-      this.fruitValueELStage.date = date;
+      if (null != date) this.fruitValueELStage.date = date;
+      this.getFruitValue(2, this.fruitValueELStage);
     },
     handleBaggageDate(date) {
-      this.fruitValueBagging.date = date;
+      if (null != date) this.fruitValueBagging.date = date;
+      this.getFruitValue(3, this.fruitValueBagging);
     },
     getUseFruitValues() {
       //圃場着果量着果負担詳細取得
@@ -286,9 +309,11 @@ export default {
           //成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            this.fruitValues.burden = (null==data.burden)?"未設定":data.burden;
-            this.fruitValues.amount = (null==data.amount)?"未設定":data.amount;
-            this.fruitValues.count = (null==data.count)?"未設定":data.count;
+            this.fruitValues.burden =
+              null == data.burden ? "未設定" : data.burden;
+            this.fruitValues.amount =
+              null == data.amount ? "未設定" : data.amount;
+            this.fruitValues.count = null == data.count ? "未設定" : data.count;
           } else {
             alert("詳細取得ができませんでした。");
             throw new Error(message);
