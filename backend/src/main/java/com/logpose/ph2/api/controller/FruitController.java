@@ -52,7 +52,7 @@ public class FruitController
 	@GetMapping("/value")
 	public ResponseDTO getValue(HttpServletRequest httpReq,
 			@RequestParam("deviceId") Long deviceId,
-			@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
+			@RequestParam("targetDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date,
 			@RequestParam("eventId") Short eventId)
 		{
 		ResponseDTO as_dto = new ResponseDTO();

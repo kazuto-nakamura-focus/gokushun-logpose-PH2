@@ -35,7 +35,7 @@ import com.logpose.ph2.api.master.ModelMaster;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
 @Component
-public class LeafDomain
+public class LeafDomain extends GraphDomain
 	{
 	// ===============================================
 	// クラスメンバー
@@ -265,8 +265,10 @@ public class LeafDomain
 
 		areaModel.setYStart(minArea);
 		areaModel.setYEnd(maxArea);
+		super.setComment(deviceId, year, areaModel);
 		countModel.setYStart(minCount);
 		countModel.setYEnd(maxCount);
+		super.setComment(deviceId, year, countModel);
 		// * 値の設定
 		List<RealModelGraphDataDTO> resultData = new ArrayList<>();
 		resultData.add(areaModel);

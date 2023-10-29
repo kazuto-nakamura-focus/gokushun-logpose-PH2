@@ -127,8 +127,6 @@ export default {
       parameterSetController: new DialogController(),
       //複数選択確認
       selectedFieldOnly: false,
-      // グラフ表示エリアのフラグ
-      isgraphDisplayed: false,
       // 着果負担エリアの初期化フラグ
       isFVDisplayed: false,
     };
@@ -150,13 +148,15 @@ export default {
           this.editButtons.splice(0);
           this.editButtons.push(...editButtons);
           if (this.selectedMenu.selectedModel.id != 4) {
-            this.$nextTick(function () {
-              // * グラフの表示
-              if (!this.isgraphDisplayed) {
-                this.isgraphDisplayed = true;
-                this.$refs.gfa.setGraphData(this.selectedMenu);
-              }
-            });
+            // 着果負担エリアが表示中だった場合
+            if (this.isFVDisplayed) {
+              this.isFVDisplayed = false;
+            } else {
+              this.$nextTick(function () {
+                // * グラフの表示
+                  this.$refs.gfa.setGraphData(this.selectedMenu);
+              });
+            }
           } else {
             // 着果負担エリアがまだ未生成の場合
             if (!this.isFVDisplayed) {

@@ -116,11 +116,11 @@ const usePhotosynthesisGraphReal = (deviceId, year, paramSetId) => {
 };
 
 //着果量着果負担値取得
-const useFruitValue = (deviceId, date, eventId) => {
+const useFruitValue = (deviceId, targetDate, eventId) => {
   const config = {
     params: {
       deviceId,
-      date,
+      targetDate,
       eventId
     },
   };

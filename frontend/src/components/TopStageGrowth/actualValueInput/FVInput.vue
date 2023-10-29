@@ -266,11 +266,8 @@ export default {
       this.year = menu.selectedYear.id;
       this.$nextTick(function () {
         this.$refs.date1.initialize(menu.selectedYear);
-        this.handleSproutDate(null);
         this.$refs.date2.initialize(menu.selectedYear);
-        this.handleElDate(null);
         this.$refs.date3.initialize(menu.selectedYear);
-        this.handleBaggageDate(null);
       });
     },
     getFruitValue(eventId, field) {

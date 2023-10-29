@@ -29,6 +29,11 @@
           </div>
         </v-col>
       </v-row>
+      <v-row>
+        <v-col align="left">
+          <b><small>{{comment}}</small></b>
+        </v-col>
+      </v-row>
     </v-container>
     <!-- グラフ表示 -->
     <apexchart
@@ -63,6 +68,7 @@ export default {
       arguments: this.$props.target,
       titlePath: "",
       time: "",
+      comment:"",
       chart: { options: {}, series: [] },
     };
   },
@@ -96,6 +102,7 @@ export default {
     initialize() {
       const realGraph = this.prepareChart("実績");
       const predictGraph = this.prepareChart("推定");
+      this.comment = this.arguments.data.comment;
 
       for (const item of this.arguments.data.values) {
         predictGraph.data.push(null);

@@ -22,4 +22,6 @@ public class RealModelGraphDataDTO extends GraphDataDTO
 	private List<AnnotationDTO> annotations;
 	// * カテゴリー
 	private List<String> category = new ArrayList<>();
+	// * コメント
+	private String comment;
 	}
