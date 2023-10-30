@@ -15,32 +15,32 @@
 		<result column="parameterName" property="parameterName"></result>
 		<result column="defaultFlg" property="defaultFlg"></result>
 	</resultMap>
-	
-	 <select id="listParamerSet" resultMap="ParamSetDTO">
-	 	SELECT
-	 		distinct
-	 		p.id as id,
-	 		p.device_id as deviceId,
-	 		p.year as year,
-	 		p.name as parameterName,
-	 		p.default_flag as defaultFlg,
-	 		h.updated_at as date,
-			u.id as userId,
-			u.username as name,
-			h.comment as comment
+
+	<select id="listParamerSet" resultMap="ParamSetDTO">
+		SELECT
+		distinct
+		p.id as id,
+		p.device_id as deviceId,
+		p.year as year,
+		p.name as parameterName,
+		p.default_flag as defaultFlg,
+		h.updated_at as date,
+		u.id as userId,
+		u.username as name,
+		h.comment as comment
 		FROM
-			ph2_paramset_catalog p
+		ph2_paramset_catalog p
 		JOIN
-			ph2_paramset_history h on p.id=h.paramset_id
+		ph2_paramset_history h on p.id=h.paramset_id
 		JOIN
-			ph2_users u on h.user_id = u.id
+		ph2_users u on h.user_id = u.id
 		WHERE
-			p.model_id = #{modelId}
+		p.model_id = #{modelId}
 		AND
-			h.latest = true
+		h.latest = true
 		ORDER BY parameterName DESC
-	 </select>
-	 
+	</select>
+
 	<resultMap id="ParamSetExtendDTO"
 		type="com.logpose.ph2.api.dto.ParamSetExtendDTO">
 		<result column="id" property="id"></result>
@@ -50,25 +50,26 @@
 		<result column="deviceId" property="deviceId"></result>
 		<result column="deviceName" property="deviceName"></result>
 	</resultMap>
-	 <select id="listSimpleParamerSet" resultMap="ParamSetExtendDTO">
-	 	SELECT
-	 		distinct
-	 		p.id as id,
-	 		d.id as deviceId,
-	 		p.year as year,
-	 		p.name as parameterName,
-	 		p.default_flag as defaultFlg,
-	 		d.name as deviceName,
-	 		p.updated_at
+	<select id="listSimpleParamerSet" resultMap="ParamSetExtendDTO">
+		SELECT
+		distinct
+		p.id as id,
+		d.id as deviceId,
+		p.year as year,
+		p.name as parameterName,
+		p.default_flag as defaultFlg,
+		d.name as deviceName,
+		p.updated_at
 		FROM
-			ph2_paramset_catalog p
+		ph2_paramset_catalog p
 		JOIN
-			ph2_devices d on p.device_id = d.id
+		ph2_devices d on p.device_id = d.id
 		WHERE
-			p.model_id = #{modelId}
-		ORDER BY d.id,  p.year, p.updated_at DESC, p.default_flag DESC
-	 </select>
-	
+		p.model_id = #{modelId}
+		ORDER BY d.id, p.year, p.updated_at DESC, p.default_flag
+		DESC
+	</select>
+
 	<resultMap id="HistoryDTO"
 		type="com.logpose.ph2.api.dto.HistoryDTO">
 		<result column="date" property="date"></result>
@@ -79,32 +80,49 @@
 
 	<select id="selectHistory" resultMap="HistoryDTO">
 		SELECT
-			h.updated_at as date,
-			u.id as userId,
-			u.username as name,
-			h.comment as comment
+		h.updated_at as date,
+		u.id as userId,
+		u.username as name,
+		h.comment as comment
 		FROM
-			ph2_paramset_history h
+		ph2_paramset_history h
 		JOIN
-			ph2_users u on h.user_id = u.id
+		ph2_users u on h.user_id = u.id
 		WHERE
-			h.paramset_id = #{paramsetId}
+		h.paramset_id = #{paramsetId}
 		ORDER BY date DESC
 	</select>
-	
+
 	<select id="selectLatestHistory" resultMap="HistoryDTO">
 		SELECT
-			h.updated_at as date,
-			u.id as userId,
-			u.username as name,
-			h.comment as comment
+		h.updated_at as date,
+		u.id as userId,
+		u.username as name,
+		h.comment as comment
 		FROM
-			ph2_paramset_history h
+		ph2_paramset_history h
 		JOIN
-			ph2_users u on h.user_id = u.id
+		ph2_users u on h.user_id = u.id
 		WHERE
-			h.paramset_id = #{paramsetId}
+		h.paramset_id = #{paramsetId}
 		AND
-			h.latest = true
+		h.latest = true
+	</select>
+
+	<select id="selectLatestComment" resultType="java.lang.String">
+		SELECT 
+			history.comment
+		FROM
+			ph2_paramset_catalog catalog
+		JOIN
+			ph2_paramset_history history on catalog.id = history.paramset_id
+		WHERE
+			catalog.device_id = #{deviceId}
+		AND
+			catalog.year = #{year}
+		AND
+			catalog.default_flag = true
+		AND
+			history.latest = true
 	</select>
 </mapper>

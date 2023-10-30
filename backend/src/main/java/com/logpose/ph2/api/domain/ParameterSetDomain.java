@@ -177,7 +177,6 @@ public class ParameterSetDomain
 		{
 		Ph2ParamsetCatalogEntity target = new Ph2ParamsetCatalogEntity();
 		// * 追加した時点ではデフォルト設定はfalseとする
-		dto.setDefaultFlg(false);
 		this.setCatalogData(target, modelId, dto);
 		target.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		Long id = this.ph2ParamsetCatalogMapper.insert(target);
@@ -219,7 +218,7 @@ public class ParameterSetDomain
 		{
 		ParamSetDTO dto = new ParamSetDTO();
 		dto.setDate(new Date());
-		dto.setComment("This parameters was automatically created by this system.");
+		dto.setComment("パラメータはシステムによるデフォルトの初期設定を使用しています。");
 		dto.setUserId((long) 1);
 		dto.setName("system");
 		dto.setDeviceId(deviceId);

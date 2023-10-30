@@ -48,14 +48,14 @@ public class SensorDataServiceImpl implements SensorDataService
 	 * @param sensorId - センサーID
 	 * @param startDate - 取得期間の開始日
 	 * @paraｍ endDate - 取得期間の終了日
-	 * @param type - dailyかhoursか
-	 * @return GraphDataDTO
+	 * @param interval - 取得間隔(分)
+	 * @return SenseorDataDTO
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
-	public SenseorDataDTO getSensorGraphData(Long sensorId, Date startDate, Date endDate, Short type, short hour) throws ParseException
+	public SenseorDataDTO getSensorGraphDataByInterval(Long sensorId, Date startDate, Date endDate, Long interval) throws ParseException
 		{
-		return this.sensorDomain.getSensorGraphData(sensorId, startDate, endDate, type, hour);
+		return this.sensorDomain.getSensorGraphDataByInterval(sensorId, startDate, endDate, interval);
 		}
 	}

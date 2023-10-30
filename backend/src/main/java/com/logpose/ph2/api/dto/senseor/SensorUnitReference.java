@@ -21,7 +21,7 @@ public class SensorUnitReference extends Label //* センサーDとセンサー�
 	private Long sizeId;
 	private Integer size;
 	// * KST(樹液流)
-	private Integer kst;
+	private Double kst;
 	//* 茎径
 	private Double stemDiameter;
 	}

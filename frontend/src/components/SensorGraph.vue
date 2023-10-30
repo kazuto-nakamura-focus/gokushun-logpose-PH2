@@ -81,16 +81,16 @@
                 </v-col>
                 <v-col cols="3">
                   <v-row>
-                    <v-col cols="4"> 基準時刻 </v-col>
+                    <v-col cols="4"> インターバル </v-col>
                     <v-col>
                       <v-select
-                        v-model="selectedHour"
-                        :items="hoursMenu"
+                        v-model="interval"
+                        :items="intervalMenu"
                         item-text="name"
-                        item-value="hour"
+                        item-value="interval"
                         width="60"
                         dense
-                        @change="handleChangeDate()"
+                        @change="handleChangeInterval"
                         return-object
                       ></v-select>
                     </v-col>
@@ -115,19 +115,6 @@ import sensorGraphContainer from "@/components/graph/SensorGraphContainer.vue";
 import { MountController } from "@/lib/mountController.js";
 import { useSensoreList /*, useSensoreData*/ } from "@/api/SensorDataAPI.js";
 
-//* --------------------------------------------------
-// 時間メニューの設定
-//* --------------------------------------------------
-var setHoursMenu = function (hoursMenu) {
-  for (let i = 1; i < 13; i++) {
-    const item = {
-      hour: i,
-      name: i + "時",
-    };
-    hoursMenu.push(item);
-  }
-};
-
 export default {
   data() {
     return {
@@ -135,9 +122,16 @@ export default {
       sharedMenu: new MountController(),
       selectedItems: null,
       selectedSensor: null,
-      selectedHour: null,
 
-      hoursMenu: [],
+      // インターバルメニュー
+      intervalMenu: [
+        { interval: 10, name: "10分" },
+        { interval: 60, name: "1時間" },
+        { interval: 120, name: "2時間" },
+      ],
+      // インターバル
+      interval: null, // 初期値
+
       menuTitle: "センサー",
       sensorList: [],
       CanShowSublist: false,
@@ -153,10 +147,7 @@ export default {
     sensorGraphContainer,
   },
   mounted() {
-    //* 時間メニューの設定
-    setHoursMenu(this.hoursMenu);
-    this.selectedHour = this.hoursMenu[11];
-
+    this.interval = this.intervalMenu[2];
     this.sharedMenu.setUp(
       this.$refs.targetMenu,
       function (menu) {
@@ -220,12 +211,26 @@ export default {
     // 日付変更時
     //* -------------------------------------------
     handleChangeDate: function () {
+      const std = moment(this.startDate, "YYYY-MM-DD");
+      const end = moment(this.endDate, "YYYY-MM-DD");
+      const elapsedDate = end.diff(std, "days");
+      // * ３日以内
+      if (elapsedDate <= 3) {
+        this.interval = this.intervalMenu[0];
+      } else {
+        var monthsDiff = end.diff(std, "months", true);
+        if (monthsDiff < 1) {
+          this.interval = this.intervalMenu[1];
+        } else {
+          this.interval = this.intervalMenu[2];
+        }
+      }
       this.setGraph();
     },
     //* -------------------------------------------
-    // 時間変更時
+    // インターバル変更時
     //* -------------------------------------------
-    changeHour: function () {
+    handleChangeInterval: function () {
       this.setGraph();
     },
 
@@ -233,26 +238,22 @@ export default {
     // グラフデータの処理
     //* -------------------------------------------
     setGraph() {
-      const dateText = "(" + this.startDate + "～" + this.endDate + ")";
+      const dateText =
+        this.selectedSensor.name + ":" + this.startDate + "～" + this.endDate;
       const title =
         this.selectedItems.selectedField.name +
         ">" +
-        this.selectedItems.selectedDevice.name +
-        ">" +
-        this.selectedSensor.name +
-        dateText;
-      const std = moment(this.startDate, "YYYY-MM-DD");
-      const end = moment(this.endDate, "YYYY-MM-DD");
-      const elapsedDate = end.diff(std, "days");
-      const type = elapsedDate > 6 ? 0 : 1;
+        this.selectedItems.selectedDevice.name;
+
       this.$refs.gfa.setGraphData(
         title,
         this.selectedSensor.contentId,
         this.selectedSensor.id,
         this.startDate,
         this.endDate,
-        type,
-        this.selectedHour.hour
+        this.interval.interval,
+        this.selectedSensor.name,
+        dateText
       );
     },
 

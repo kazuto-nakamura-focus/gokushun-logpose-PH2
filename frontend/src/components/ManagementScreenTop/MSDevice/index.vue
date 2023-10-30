@@ -83,6 +83,7 @@
         :onEnd="fromDevice"
       />
       <confirmDailog :shared="sharedConfirm" ref="confirm" />
+      <wait-dialog  ref="wait" />
     </v-container>
   </v-app>
 </template>
@@ -96,6 +97,7 @@ import {
 import MSEditDeviceWrapper from "./MSEditDevice/MSEditDeviceWrapper.vue";
 import confirmDailog from "@/components/dialog/confirmDialog.vue";
 import { DialogController } from "@/lib/mountController.js";
+import WaitDialog from '@/components/dialog/WaitDialog.vue';
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true },
@@ -136,9 +138,8 @@ export default {
   components: {
     MSEditDeviceWrapper,
     confirmDailog,
+    WaitDialog
   },
-
-  created: function () {},
 
   methods: {
     clickRow: function (item) {
@@ -146,14 +147,14 @@ export default {
       this.display = "deviceEdit";
     },
     // ======================================================
-    // ボタン選択時
+    // ロードボタン選択時
     // ======================================================
     load: function () {
       this.sharedConfirm.setUp(
         this.$refs.confirm,
         function (confirm) {
           confirm.initialize(
-            "全てのセンサーデータが変更されますが、よろしいですか？処理時間は１時間ほどかかります。",
+            "全てのセンサーデータが変更されますが、よろしいですか？処理時間は10分ほどかかります。",
             "はい",
             "いいえ"
           );
@@ -171,19 +172,23 @@ export default {
         isAll: true,
         startDate: null,
       };
+      this.$refs.wait.start("全てのセンサーデータをアップデート中です。", true);
       useLoadData(data)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];
           if (status === 0) {
-            alert("センサーデータのロードが完了しました。");
+            alert("全てのセンサーデータのロードが完了しました。");
+            this.$refs.wait.finish();
             this.onEnd(true);
           } else {
+            alert("全てのセンサーデータのロードに失敗しました。");
             throw new Error(message);
           }
         })
         .catch((error) => {
           //失敗時
+          this.$refs.wait.finish();
           console.log(error);
         });
     },

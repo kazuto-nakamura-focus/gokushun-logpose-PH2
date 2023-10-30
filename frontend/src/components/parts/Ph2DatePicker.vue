@@ -8,7 +8,6 @@
       transition="scale-transition"
       offset-y
       filled
-      width="200"
       min-width="auto"
       dense
       style="margin: 0; padding: 0"
@@ -21,6 +20,7 @@
           v-on="on"
           outlined
           filled
+          clearable
           dense
         ></v-text-field>
       </template>
@@ -31,6 +31,7 @@
         :max="maxDate"
         @input="menu = false"
         @change="handleChangeDate"
+        locale="jp-ja"
       ></v-date-picker>
     </v-menu>
   </div>
@@ -44,7 +45,7 @@ export default {
       date: moment().format("YYYY-MM-DD"),
       minDate:null,
       maxDate: null,
-      menu: true,
+      menu: false,
       id:null,
     };
   },

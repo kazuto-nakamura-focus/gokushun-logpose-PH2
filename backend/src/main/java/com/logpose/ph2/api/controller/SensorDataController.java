@@ -76,14 +76,13 @@ public class SensorDataController
 			@RequestParam("sensorId") Long sensorId,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
-			@RequestParam("type") Short type,
-			@RequestParam("hour") Short hour)
+			@RequestParam("interval") Long interval)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
 			SenseorDataDTO as_result =
-					this.sensorDataService.getSensorGraphData(sensorId, startDate, endDate, type, hour);
+					this.sensorDataService.getSensorGraphDataByInterval(sensorId, startDate, endDate,interval);
 			as_dto.setSuccess(as_result);
 			}
 		catch (Exception e)

@@ -19,4 +19,6 @@ public interface Ph2ParamSetJoinMapper
     List<HistoryDTO> selectHistory(@Param("paramsetId") Long paramsetId);
     
     HistoryDTO selectLatestHistory(@Param("paramsetId") Long paramsetId);
+    
+    List<String> selectLatestComment(@Param("deviceId") Long deviceId, @Param("year") Short year);
 	}

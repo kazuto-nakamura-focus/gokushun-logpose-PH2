@@ -1,7 +1,9 @@
 package com.logpose.ph2.api.service;
 
 import java.text.ParseException;
+import java.util.Date;
 
+import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntity;
 import com.logpose.ph2.api.dto.FruitValuesByDevice;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
 
@@ -38,4 +40,15 @@ public interface FruitsService
 	 */
 	// --------------------------------------------------
 	public void setFruitValues(FruitValuesByDevice dto) throws ParseException;
+	// --------------------------------------------------
+	/**
+	 * 着果実績値取得
+	 *
+	 * @param deviceId
+	 * @param date
+	 * @param eventId
+	 * @return Ph2RealFruitsDataEntity
+	 */
+	// --------------------------------------------------
+	Ph2RealFruitsDataEntity getRealFruitsData(Long deviceId, Date date, short eventId);
 	}

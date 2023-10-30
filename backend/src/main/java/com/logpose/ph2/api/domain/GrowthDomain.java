@@ -35,7 +35,7 @@ import com.logpose.ph2.api.master.ModelMaster;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
 @Component
-public class GrowthDomain
+public class GrowthDomain extends GraphDomain
 	{
 	// ===============================================
 	// クラスメンバー
@@ -336,6 +336,8 @@ public class GrowthDomain
 		List<AnnotationDTO> annotations = this.growthDomainMapper
 				.selectFValues(deviceId, year);
 		resultData.setAnnotations(annotations);
+		// * コメント
+		super.setComment(deviceId, year, resultData);
 		// * グラフデータの返却
 		return resultData;
 		}
@@ -558,6 +560,8 @@ public class GrowthDomain
 		// * パラメータセットカタログに登録する
 		if (null == parentId)
 			{
+			// * 追加時、ここではデフォルトフラグはfalseとする。
+			dto.setDefaultFlg(false);
 			parentId = parameterSetDomain.add(dto, ModelMaster.GROWTH);
 			}
 		// * テーブル:成長予測パラメータセット(ph2_paramset_growth)に新しいパラメータセットレコードを追加する。

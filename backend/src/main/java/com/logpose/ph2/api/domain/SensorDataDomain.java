@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.domain;
 
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
@@ -146,5 +148,69 @@ public class SensorDataDomain
 		dto.setYEnd(max);
 		return dto;
 		}
-
+	// --------------------------------------------------
+	/**
+	 * ある期間内のセンサーのデータを返す。
+	 * 	
+	 * @param sensorId - センサーID
+	 * @param startDate - 取得期間の開始日
+	 * @paraｍ endDate - 取得期間の終了日
+	 * @return GraphDataDTO
+	 * @throws ParseException 
+	 */
+	// --------------------------------------------------
+	public SenseorDataDTO getSensorGraphDataByInterval(
+			Long sensorId, Date startDate, Date endDate, long minutes)
+			throws ParseException
+		{
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
+		SenseorDataDTO results = new SenseorDataDTO();// * 返却用データ
+		double min = Double.MAX_VALUE;//* 最小値
+		double max = Double.MIN_VALUE;//*最大値
+// * 開始時刻の調整
+		Calendar startTime = Calendar.getInstance();
+		startTime.setTime(startDate);
+		new DeviceDayAlgorithm().setTimeZero(startTime);
+// * 終了時刻の調整
+		Calendar endTime = Calendar.getInstance();
+		endTime.setTime(endDate);
+		endTime.add(Calendar.DATE, 1);
+		new DeviceDayAlgorithm().setTimeZero(endTime);
+// * 対象となるデータを取得する
+		Ph2DashBoardEntityExample exm = new Ph2DashBoardEntityExample();
+		exm.createCriteria().andSensorIdEqualTo(sensorId)
+				.andCastedAtGreaterThanOrEqualTo(startTime.getTime())
+				.andCastedAtLessThan(endTime.getTime());
+		List<Ph2DashBoardEntity> records = this.ph2DashBoardMapper.selectByExample(exm);
+// * インターバルは分単位なので、millisecondsに変換する
+		long interval = 60000 * minutes;
+		long prevtime = 0;// * 前の時刻
+		for (Ph2DashBoardEntity entity : records)
+			{
+// * 対象データの取得時刻を得る
+			long data_time = entity.getCastedAt().getTime();
+// * 前の時刻に対してインターバルを超えた場合
+			if( (data_time - prevtime) >= interval )
+				{
+// * TODO 値の取得
+				double value = Double.valueOf(entity.getValue());
+// * 値の代入
+				results.getValues().add(value);
+// * 最大値・最小値
+				if (min > value) min = value;
+				if (max < value) max = value;
+// * カテゴリーの設定
+				StringBuilder sb = new StringBuilder(dateFormat.format(entity.getCastedAt()));
+				sb.replace(10,11, "0");
+				results.getCategory().add(sb.toString());
+// * 次のインターバルの設定
+				prevtime = data_time;
+				}
+			}
+		results.setXStart(DateTimeUtility.getStringFromDate(startDate));
+		results.setXEnd(DateTimeUtility.getStringFromDate(endDate));
+		results.setYStart(min);
+		results.setYEnd(max);
+		return results;
+		}
 	}

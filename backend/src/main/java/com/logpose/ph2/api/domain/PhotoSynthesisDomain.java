@@ -30,7 +30,7 @@ import com.logpose.ph2.api.master.ModelMaster;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
 @Component
-public class PhotoSynthesisDomain
+public class PhotoSynthesisDomain extends GraphDomain
 	{
 	// ===============================================
 	// クラスメンバー
@@ -212,7 +212,8 @@ public class PhotoSynthesisDomain
 		areaModel.setXEnd(DateTimeUtility.getStringFromDate(last.getDate()));
 		areaModel.setYStart(entites.get(0).getCulmitiveCnopyPs());
 		areaModel.setYEnd(entites.get(entites.size() - 1).getCulmitiveCnopyPs());
-
+		// * コメント
+		super.setComment(deviceId, year, areaModel);
 		return areaModel;
 		}
 
@@ -311,6 +312,8 @@ public class PhotoSynthesisDomain
 		{
 		if (null == id)
 			{
+			// * 追加時、ここではデフォルトフラグはfalseとする。
+			dto.setDefaultFlg(false);
 			id = parameterSetDomain.add(dto, ModelMaster.PHOTO);
 			}
 		Ph2ParamsetPsFieldEntity field = new Ph2ParamsetPsFieldEntity();

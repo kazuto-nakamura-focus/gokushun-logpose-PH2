@@ -106,8 +106,16 @@ public class BaseDataGenerator
 				// * 計算実行
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(dataList.getCastedAt());
-				Double value = Formula.toSapFlow(x1, x2, x3, x4, sensor,
-						calendar);
+				Double value =Double.valueOf(0);
+				try
+					{
+					value = Formula.toSapFlow(x1, x2, x3, x4, sensor,
+							calendar);
+					}
+				catch (NullPointerException e)
+					{
+					// valueは０のままなので、下で警告表示
+					}
 				if (value != null)
 					{
 					// * ダッシュボード登録
@@ -118,7 +126,8 @@ public class BaseDataGenerator
 					}
 				else
 					{
-					System.out.println("Sap Error" +sensor.getSensorId() +"+"+ dataList.getCastedAt() );
+					System.out.println(
+							"Sap Error" + sensor.getSensorId() + "+" + dataList.getCastedAt());
 					}
 				}
 			// * デンドロ
@@ -139,7 +148,8 @@ public class BaseDataGenerator
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
 				// * 計算実行
-				double value = Formula.toResitence(x);
+				// double value = Formula.toResitence(x);
+				double value = x;
 				// * ダッシュボード登録
 				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),

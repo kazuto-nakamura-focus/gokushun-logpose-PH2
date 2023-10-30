@@ -86,6 +86,7 @@ public class S2DeviceDayService
 		Date endDate = end_date_cal.getTime();
 		int index = 1;
 		Long maxId = this.ph2DeviceDayMapper.selectMaxId();
+		if(null == maxId) maxId = Long.valueOf(1);
 		DeviceDayCacher cacher = new DeviceDayCacher(maxId, ph2DeviceDayMapper, ph2ModelDataMapper);
 		for (; star_date_cal.getTimeInMillis() < end_date_cal.getTimeInMillis(); star_date_cal.add(Calendar.DATE,
 				1))
@@ -116,8 +117,10 @@ public class S2DeviceDayService
 			index++;
 			}
 		cacher.flush();
+		exm = new Ph2DeviceDayEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(device.getId())
-		.andDateGreaterThanOrEqualTo(startDate).andDateLessThan(endDate); 
+		.andDateGreaterThanOrEqualTo(startDate).andDateLessThan(endDate);
+		exm.setOrderByClause("date  asc");
 		return this.ph2DeviceDayMapper.selectByExample(exm);
 		}
 	}

@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.service.impl;
 
 import java.text.ParseException;
+import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,21 @@ public class FruitsServiceImpl implements FruitsService
 	// ===============================================
 	// パブリック関数(検索系)
 	// ===============================================
+	// --------------------------------------------------
+	/**
+	 * 着果実績値取得
+	 *
+	 * @param deviceId
+	 * @param date
+	 * @param eventId
+	 * @return Ph2RealFruitsDataEntity
+	 */
+	// --------------------------------------------------
+	@Override
+	public Ph2RealFruitsDataEntity getRealFruitsData(Long deviceId, Date date, short eventId)
+		{
+		return this.fruitDomain.getRealFruitsData(deviceId, date, eventId);
+		}
 	// --------------------------------------------------
 	/**
 	 * 圃場着果量着果負担詳細取得処理
