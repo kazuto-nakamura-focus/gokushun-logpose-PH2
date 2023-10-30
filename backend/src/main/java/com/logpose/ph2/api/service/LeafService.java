@@ -26,6 +26,7 @@ public interface LeafService
 	 * 葉面積・葉枚数モデルデータ作成(バッチよりコール)
 	 *
 	 * @param deviceId デバイスID
+	 * @pram year 対象年度
 	 * @param date 対象日付
 	 */
 	// --------------------------------------------------

@@ -24,7 +24,7 @@
             </div>
           </v-container>
           <div class="GS_ButtonArea">
-            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="save()">キャンセル</v-btn>
+            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">キャンセル</v-btn>
           </div>
         </v-card>
       </v-dialog>
@@ -131,7 +131,7 @@ export default {
     close: function () {
       //データ初期化
       // this.rowData = [...this.rowDataOrigin]
-      this.gridApi.refreshCells({ force: true });
+      if(this.gridApi) this.gridApi.refreshCells({ force: true });
       this.isDialog = false;
       this.shared.onConclude();
     },
@@ -194,6 +194,7 @@ export default {
           this.originGrowthFAllData = results.data
           const GrowthRowData = this.changeGrowthForm(results.data)
           this.rowData = GrowthRowData
+          console.log(GrowthRowData);
         })
         .catch((error) => {
           //失敗時
@@ -220,25 +221,32 @@ export default {
       //aggridデータ
       const rowDatas = sendData
       let num = 0;
-      rowDatas.map((data, i) => {
-        num = num + Number(data.intervalF)
-        this.rowData[i].accumulatedF = num
-      })
-      num = 0
-      this.gridApi.refreshCells({ force: true });
+      
+      for(var i = 0; i < rowDatas.length; i++){
+        const item = rowDatas[i];
+        num = num + Number(item.intervalF)
+        item.accumulatedF = num
+      }
+
       const GrowthRowData = this.saveGrowthForm(rowDatas)
+        console.log(sendData);
       //変更F値変更API
       const data = {
         deviceId: this.deviceId,
         year: this.year,
         list: GrowthRowData,
       }
+
+      console.log(data);
+      
       //生育推定実績値更新
       useGrowthFDataUpdate(data)
         .then((response) => {
           //成功時
           const results = response["data"];
           console.log(results);
+          this.gridApi.refreshCells({ force: true });
+          this.isDialogEdit = false;
         })
         .catch((error) => {
           //失敗時
@@ -247,25 +255,27 @@ export default {
     },
     //変更データ保存
     achievementValueDataSave(data) {
-      this.rowData.map((item, i) => {
+      const rowData = this.rowData;
+      for(var i = 0; i < rowData.length; i++) {
+        const item = rowData[i];
         if (item.order === data.order) {
-          this.rowData[i].intervalF = data.intervalF
-          this.rowData[i].accumulatedF = data.accumulatedF
-          this.rowData[i].targetDate = data.targetDate
-          return
+          item.intervalF = data.intervalF
+          item.accumulatedF = data.accumulatedF
+          item.targetDate = data.targetDate
+          break;
         }
-      });
-      const sendData = this.rowData
-      this.gridApi.refreshCells({ force: true });
+      }
+
+      const sendData = this.rowData;
+
       //F値間隔再設定
-      this.makeAccumulation(sendData)
-      this.isDialogEdit = !this.isDialogEdit
+      this.makeAccumulation(sendData);
     },
     //実績値入力画面キャンセル
     cancel() {
       //データ初期化()
       this.getUseGrowthFAll()
-      this.isDialogEdit = !this.isDialogEdit
+      this.isDialogEdit = false;
     },
     valueFormatter(params) {
       if (params.value) {
@@ -289,23 +299,20 @@ export default {
       changeData.map((data, i) => {
         const elStageData = data.stageStart + "-" + data.stageEnd
         let dataType = {
+          ...data,
           "order": i + 1,
-          "stageName": data.stageName,
           "elStage": elStageData,
-          "intervalF": data.intervalF,
-          "accumulatedF": data.accumulatedF,
-          "targetDate": data.targetDate,
         }
         dataTypeArr.push(dataType)
       })
       return dataTypeArr
     },
     //データ保存形式に変更
-    saveGrowthForm: function (data) {
-      let changeData = data
+    saveGrowthForm: function (baseData) {
+      let changeData = baseData
       let dataTypeArr = []
+      
       changeData.map((data) => {
-
         let elStageData = data.elStage.split('-');
         let targetDateSet = 0
 
@@ -313,6 +320,7 @@ export default {
           targetDateSet = data.targetDate
 
         let dataType = {
+          "id": data.id,
           "stageName": data.stageName,
           "stageStart": elStageData[0],
           "stageEnd": elStageData[1],
