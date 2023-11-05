@@ -12,7 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
-import com.logpose.ph2.api.domain.PhotoSynthesisDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PhotoGraphDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
@@ -30,6 +31,9 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	// ===============================================
 	@Autowired
 	private PhotoSynthesisDomain photoSynthesisDomain;
+	
+	@Autowired
+	private PhotoGraphDomain graphDomain;
 
 	// --------------------------------------------------
 	/**
@@ -47,7 +51,7 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	@Transactional(rollbackFor = Exception.class)
 	public RealModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException
 		{
-		return this.photoSynthesisDomain.getModelGraph(deviceId, year);
+		return this.graphDomain.getModelGraph(deviceId, year);
 		}
 	// --------------------------------------------------
 	/**

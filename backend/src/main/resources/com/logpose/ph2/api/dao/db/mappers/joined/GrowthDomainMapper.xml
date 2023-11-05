@@ -12,6 +12,7 @@
 		<result column="average" property="average"></result>
 		<result column="cdd" property="cdd"></result>
 		<result column="par" property="par"></result>
+		<result column="sun_time" property="sunTime"></result>
 		<result column="isReal" property="isReal"></result>
 	</resultMap>
 
@@ -21,7 +22,8 @@
 		dd.id as dayId,
 		dd.lapse_day as lapse_day,
 		dd.date as date,
-		db.tm = tm,
+		db.tm as tm,
+		db.sun_time as sunTime,
 		db.average as average,
 		db.cdd as cdd,
 		db.par as par,

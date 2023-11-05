@@ -18,7 +18,6 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
 import com.logpose.ph2.api.dto.BaseDataDTO;
-import com.logpose.ph2.api.formula.Formula;
 
 @Service
 public class S3DailyBaseDataGeneratorService
@@ -46,9 +45,11 @@ public class S3DailyBaseDataGeneratorService
 		LOG.info("日ベースのデータ作成開始");
 		for (Ph2DeviceDayEntity deviceDay : deviceDays)
 			{
+// * その日の１０分単位のデータで気温と光合成有効放射束密度を取得する
 			List<BaseDataDTO> tmRecords = this.ph2JoinedModelMapper.getBaseData(
 					deviceDay.getDeviceId(), deviceDay.getDate(),
 					this.deviceDayAlgorithm.getNextDayZeroHour(deviceDay.getDate()));
+// * その日のデータが存在する場合
 			if (tmRecords.size() > 0)
 				{
 				this.addTmData(deviceDay, tmRecords);
@@ -125,50 +126,53 @@ public class S3DailyBaseDataGeneratorService
 
 	public void setIsolationData(Ph2DeviceDayEntity device, List<BaseDataDTO> tmRecords)
 		{
-		List<BaseDataDTO> records = new ArrayList<>();
+// * PAR値（光合成有効放射束密度ベース）のみのリスト作成する
+// * --- BEGIN ---
+		List<BaseDataDTO> par_records = new ArrayList<>();
 		for (BaseDataDTO data : tmRecords)
 			{
-			if (null != data.getInsolation())
-				{
-				records.add(data);
-				}
+			if (null != data.getInsolation()) par_records.add(data);
 			}
-		if (0 == records.size())
-			return;
+		if (0 == par_records.size()) return;
+// * --- END ---
 
-		long prevTime = 0;
-		double prevValue = records.get(0).getInsolation();
-		prevValue = Formula.toPAR(prevValue);
-		double sum = 0;
-		for (BaseDataDTO data : records)
+		double sum = 0;   // その日のPAR合計値
+		long sun_time = 0;   // 日射時間
+		Double prev_value = null;   // 直前のPAR値
+		Date prev_time = null;   // 直前の時間
+		for (BaseDataDTO data : par_records)
 			{
-			if (null == data.getInsolation())
-				continue;
+// * 光合成有効放射束密度の取得
 			double value = data.getInsolation();
-			value = Formula.toPAR(value);
-			// * 取得時刻
-			long dataTime = data.getCastedAt().getTime();
-			// * 時間差
-			// * 1分の誤差を追加して１０分で割る
-			dataTime += 60000;
-			long diff = (prevTime != 0) ? (dataTime - prevTime) / 600000 : 1;
-			sum += value;
-			if (diff > 1)
+// * 初期値の場合はその設定をする
+			if (null == prev_value)
 				{
-				double halfTemp = (prevValue + value) / 2;
-				for (int i = 0; i < diff - 1; i++)
-					{
-					sum += halfTemp;
-					}
+				prev_value = value;
+				prev_time = data.getCastedAt();
+				continue;
 				}
-			prevValue = value;
-			prevTime = dataTime;
+// * 前の値が０の場合、前の値に対するデータの追加は行わない
+			if (0 != prev_value.doubleValue())
+				{
+// * valueが取得された時間との差(秒)
+				long diff_time = (data.getCastedAt().getTime() - prev_time.getTime()) / 1000;
+// * valueが０の場合のPARの時間差
+				if ((0 == value) && (diff_time > 600)) diff_time = 600;
+// * PARの算出
+				double par = prev_value * diff_time;
+				sum += par;
+// * 日射時間の算出
+				sun_time += diff_time;
+				}
+			prev_value = value;
+			prev_time = data.getCastedAt();
 			}
-
+// * DBにPARと日射時間を設定する
 		Ph2DailyBaseDataEntityExample exm = new Ph2DailyBaseDataEntityExample();
 		exm.createCriteria().andDayIdEqualTo(device.getId());
 		Ph2DailyBaseDataEntity entity = this.ph2DailyBaseDataMapper.selectByExample(exm).get(0);
 		entity.setPar(sum);
+		entity.setSunTime(sun_time);
 		this.ph2DailyBaseDataMapper.updateByExample(entity, exm);
 		}
 	}

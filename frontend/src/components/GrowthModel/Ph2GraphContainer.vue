@@ -111,6 +111,7 @@ export default {
               "葉面積",
               response["data"].data[0]
             );
+            console.log(response["data"].data[1]);
             // グラフ表示を行う
             this.$refs.chr.addGraph(
               titlePaths,

@@ -307,6 +307,7 @@ public class GrowthDomain extends GraphDomain
 				.selectModelDataByType(deviceId, year);
 		List<Double> values = new ArrayList<>();
 		List<Double> predictValues = new ArrayList<>();
+// * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
 		for (ModelDataEntity entity : entites)
@@ -316,8 +317,7 @@ public class GrowthDomain extends GraphDomain
 			else
 				predictValues.add(entity.getfValue());
 			// * 取得日
-			Date castDay = entity.getDate();
-			category.add(sdf.format(castDay));
+			category.add(sdf.format(entity.getDate()));
 			}
 		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
 		// * 最小値・最大値の設定

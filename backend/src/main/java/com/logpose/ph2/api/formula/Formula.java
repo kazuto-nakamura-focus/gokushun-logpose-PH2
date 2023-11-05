@@ -45,13 +45,16 @@ public class Formula
 		// $waibull = ($waibull_a / $waibull_b * (($dab /
 		// $waibull_b)**($waibull_a - 1)) * (exp(-1*($dab /
 		// $waibull_b)**$waibull_a ) * $waibull_c));
-		// waibull = WA / WB * ((x /WB)**(WA - 1)) * (exp(-1*(x /WB)**WA ) * WL);
-		/*	return WA / WB * (Math.pow((x / WB), (WA - 1)))
-		* (Math.exp(Math.pow(-1 * (x / WB), WA))) * WL;*/
-		double tmp = Math.pow(-1 * (x / WB), WA)*10000;
-		tmp = Math.exp(tmp)*WL;
-		tmp = tmp/10000;
-		return WA / WB * (Math.pow((x / WB), (WA - 1)))*tmp;
+		// waibull = WA / WB * ((x /WB)**(WA - 1)) * (exp(-1*(x /WB)**WA ) *
+		// WL);
+		/*
+		 * return WA / WB * (Math.pow((x / WB), (WA - 1)))
+		 * (Math.exp(Math.pow(-1 * (x / WB), WA))) * WL;
+		 */
+		double tmp = Math.pow(-1 * (x / WB), WA) * 10000;
+		tmp = Math.exp(tmp) * WL;
+		tmp = tmp / 10000;
+		return WA / WB * (Math.pow((x / WB), (WA - 1))) * tmp;
 		}
 
 	// --------------------------------------------------
@@ -75,23 +78,21 @@ public class Formula
 	// --------------------------------------------------
 	/**
 	 * 樹冠葉面積モデル式
-	 * @param days 萌芽日数
 	 * @param count 実測新梢数
 	 * @param params 葉面積モデルパラメータ
-	 * @param dayData 日にちデータ
-	 * @return 葉枚数
+	 * @param cdd cdd値
+	 * @parm wible ワイブル値
+	 * @return 葉面積
 	 */
 	// --------------------------------------------------
-	public static double toLeafArea(long days,
-			long count, LeafParamSetDTO params, DailyBaseDataDTO dayData)
+	public static double toLeafArea(
+			long count, LeafParamSetDTO params, double cdd, double wible)
 		{
 		double a = params.getAreaA();
 		double b = params.getAreaB();
 		double c = params.getAreaC();
-		double cdd = dayData.getCdd();
-		// LAｃ＝a/(1+exp(4c((b-CDD)/a)))*実測新梢数*ワイブル分布
-		return a / (1 + Math.exp(4 * c * ((b - cdd) / a))) * count
-				* Formula.getWible(days);
+		// LAｃ＝a/(1+exp(4c((b-CDD)/a)))*実測新梢数*ワイブル値
+		return a / (1 + Math.exp(4 * c * ((b - cdd) / a))) * count * wible;
 		}
 
 	// --------------------------------------------------
@@ -102,18 +103,24 @@ public class Formula
 	 * @param prev 前の値
 	 * @param leafArea 樹冠葉面積
 	 * @param PAR PAR値
+	 * @param sunLight 日照時間(秒)
+	 * @param shootCount 新梢数
 	 * @return 推定積算樹冠光合成量
 	 */
 	// --------------------------------------------------
 	public static double toPsAmount(
 			double f, double g,
-			double prev, double leafArea, double PAR)
+			double prev, double leafArea, 
+			double PAR, long sunLight, int shootCount)
 		{
-		// Σ(f*exp(g*PAR)*PAR/2.02*600*樹冠葉面積/1000)*44/1000
+		// Σ(f*exp(g*PAR/600/日照時間(h)*6)*PAR/600/日照時間(h)*6/2.02*樹冠葉面積/新梢数*60/1000)*新梢数*44/1000
+		double shortPar = PAR/600/(sunLight/3600)*6;
+		// Σ(f*exp(g*shortPar)*shortPar/2.02*樹冠葉面積/新梢数*60/1000)*新梢数*44/1000
 		return prev +
-				(f * (Math.exp(g * PAR)) * PAR / 2.02 * 600 * leafArea / 1000)
-						* 44 / 1000;
+				(f * Math.exp(g * shortPar) * shortPar / 2.02 * leafArea / shootCount * 60 / 1000) * 
+				shootCount * 44 / 1000;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 抵抗値を算出する

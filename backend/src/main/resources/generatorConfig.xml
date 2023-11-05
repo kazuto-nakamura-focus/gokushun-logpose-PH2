@@ -44,10 +44,11 @@
 			</table> <table tableName="ph2_base_data" domainObjectName="Ph2BaseDataEntity" 
 			mapperName="Ph2BaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> <table tableName="ph2_daily_base_data" domainObjectName="Ph2DailyBaseDataEntity" 
+			</table>-->
+			 <table tableName="ph2_daily_base_data" domainObjectName="Ph2DailyBaseDataEntity" 
 			mapperName="Ph2DailyBaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> -->
+			</table>
 		<!--<table tableName="ph2_insolation_data" domainObjectName="Ph2InsolationDataEntity" 
 			mapperName="Ph2InsolationDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
@@ -60,26 +61,26 @@
 			</table> <table tableName="ph2_model_data" domainObjectName="Ph2ModelDataEntity" 
 			mapperName="Ph2ModelDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> -->
+			</table> 
 
 		<table tableName="messages" domainObjectName="MessagesEnyity"
 			mapperName="MessagesMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
-		<!-- <table tableName="ph2_users" domainObjectName="Ph2UsersEntity" mapperName="Ph2UsersMapper" 
+		<table tableName="ph2_users" domainObjectName="Ph2UsersEntity" mapperName="Ph2UsersMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_brand_master" 
 			domainObjectName="Ph2BrandMasterEntity" mapperName="Ph2BrandMasterMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
-			enableDeleteByPrimaryKey="true" modelType="flat"> </table> -->
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> 
 		<table tableName="ph2_devices"
 			domainObjectName="Ph2DevicesEnyity" mapperName="Ph2DevicesMapper"
 			enableInsert="true" enableSelectByPrimaryKey="true"
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
 			modelType="flat">
 		</table>
-		<!-- <table tableName="ph2_sensor_contents" domainObjectName="Ph2SensorContentsEntity" 
+		<table tableName="ph2_sensor_contents" domainObjectName="Ph2SensorContentsEntity" 
 			mapperName="Ph2SensorContentsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> <table tableName="ph2_sensor_models" domainObjectName="Ph2SensorModelsEntity" 
@@ -157,9 +158,18 @@
 			</table> <table tableName="ph2_temperature" domainObjectName="Ph2TemperatureEntity" 
 			mapperName="Ph2TemperatureMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> <table tableName="ph2_system_status" domainObjectName="Ph2SystemStatusEntity" 
-			mapperName="Ph2SystemStatusMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
-			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> -->
+			</table> <table tableName="ph2_system_status"
+			domainObjectName="Ph2SystemStatusEntity"
+			mapperName="Ph2SystemStatusMapper" enableInsert="true"
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" modelType="flat">
+		</table>-->
+		<!-- <table tableName="ph2_wible_master"
+			domainObjectName="Ph2WibleMasterEntity"
+			mapperName="Ph2WibleMasterMapper" enableInsert="true"
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" modelType="flat">
+		</table> -->
+		
 	</context>
 </generatorConfiguration>
