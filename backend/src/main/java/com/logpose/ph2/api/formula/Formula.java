@@ -75,23 +75,21 @@ public class Formula
 	// --------------------------------------------------
 	/**
 	 * 樹冠葉面積モデル式
-	 * @param days 萌芽日数
 	 * @param count 実測新梢数
 	 * @param params 葉面積モデルパラメータ
-	 * @param dayData 日にちデータ
-	 * @return 葉枚数
+	 * @param cdd cdd値
+	 * @parm wible ワイブル値
+	 * @return 葉面積
 	 */
 	// --------------------------------------------------
-	public static double toLeafArea(long days,
-			long count, LeafParamSetDTO params, DailyBaseDataDTO dayData)
+	public static double toLeafArea(
+			long count, LeafParamSetDTO params, double cdd, double wible)
 		{
 		double a = params.getAreaA();
 		double b = params.getAreaB();
 		double c = params.getAreaC();
-		double cdd = dayData.getCdd();
-		// LAｃ＝a/(1+exp(4c((b-CDD)/a)))*実測新梢数*ワイブル分布
-		return a / (1 + Math.exp(4 * c * ((b - cdd) / a))) * count
-				* Formula.getWible(days);
+		// LAｃ＝a/(1+exp(4c((b-CDD)/a)))*実測新梢数*ワイブル値
+		return a / (1 + Math.exp(4 * c * ((b - cdd) / a))) * count * wible;
 		}
 
 	// --------------------------------------------------

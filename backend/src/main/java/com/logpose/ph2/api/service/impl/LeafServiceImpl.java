@@ -15,7 +15,8 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntityExample;
-import com.logpose.ph2.api.domain.LeafDomain;
+import com.logpose.ph2.api.domain.leaf.LeafDomain;
+import com.logpose.ph2.api.domain.leaf.LeafGraphDomain;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
 import com.logpose.ph2.api.dto.LeafvaluesDTO;
@@ -35,6 +36,8 @@ public class LeafServiceImpl implements LeafService
 	// ===============================================
 	@Autowired
 	private LeafDomain leafDomain;
+	@Autowired
+	private LeafGraphDomain graphDomain;
 
 	// ===============================================
 	// パブリック関数
@@ -70,7 +73,7 @@ public class LeafServiceImpl implements LeafService
 	public List<RealModelGraphDataDTO> getLeaflGraphData(Long deviceId,
 			short year) throws ParseException
 		{
-		return this.leafDomain.getModelGraph(deviceId, year);
+		return this.graphDomain.getModelGraph(deviceId, year);
 		}
 
 	// --------------------------------------------------

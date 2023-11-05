@@ -130,7 +130,7 @@ public class ParameterSetDomain
 	 * @return Ph2ParamsetCatalogEntity
 	 */
 	// --------------------------------------------------
-	protected void fetchDetail(Long paramSetId, ParamSetDTO dto)
+	public void fetchDetail(Long paramSetId, ParamSetDTO dto)
 		{
 		Ph2ParamsetCatalogEntity catalog = this.ph2ParamsetCatalogMapper.selectByPrimaryKey(paramSetId);
 		HistoryDTO latest = this.ph2ParamSetJoinMapper.selectLatestHistory(paramSetId);
@@ -154,7 +154,7 @@ public class ParameterSetDomain
 	 * @param Integer 使用されるモデルID
 	 */
 	// --------------------------------------------------
-	protected boolean update(ParamSetDTO dto, Integer modelId)
+	public boolean update(ParamSetDTO dto, Integer modelId)
 		{
 		Ph2ParamsetCatalogEntity target = this.ph2ParamsetCatalogMapper.selectByPrimaryKey(dto.getId());
 		this.setCatalogData(target, modelId, dto);
@@ -173,7 +173,7 @@ public class ParameterSetDomain
 	 * @param Integer 使用されるモデルID
 	 */
 	// --------------------------------------------------
-	protected Long add(ParamSetDTO dto, Integer modelId)
+	public Long add(ParamSetDTO dto, Integer modelId)
 		{
 		Ph2ParamsetCatalogEntity target = new Ph2ParamsetCatalogEntity();
 		// * 追加した時点ではデフォルト設定はfalseとする
@@ -196,7 +196,7 @@ public class ParameterSetDomain
 	 * @return パラメータセット・カタログのリスト
 	 */
 	// --------------------------------------------------
-	protected List<Ph2ParamsetCatalogEntity> getParamSetCatalogsByYear(
+	public List<Ph2ParamsetCatalogEntity> getParamSetCatalogsByYear(
 			Integer modelId, Long deviceId, short year)
 		{
 		return this.ph2ParamsetCatalogMapper.selectByNearestYear(modelId, deviceId, year);
@@ -214,7 +214,7 @@ public class ParameterSetDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	protected Long addCatalogData(Integer modelId, Long deviceId, short year)
+	public Long addCatalogData(Integer modelId, Long deviceId, short year)
 		{
 		ParamSetDTO dto = new ParamSetDTO();
 		dto.setDate(new Date());

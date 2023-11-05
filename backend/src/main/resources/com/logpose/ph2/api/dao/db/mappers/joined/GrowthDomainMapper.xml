@@ -21,7 +21,7 @@
 		dd.id as dayId,
 		dd.lapse_day as lapse_day,
 		dd.date as date,
-		db.tm = tm,
+		db.tm as tm,
 		db.average as average,
 		db.cdd as cdd,
 		db.par as par,

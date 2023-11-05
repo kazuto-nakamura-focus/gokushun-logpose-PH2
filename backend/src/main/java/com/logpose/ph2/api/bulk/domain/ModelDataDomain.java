@@ -7,8 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.domain.GrowthDomain;
-import com.logpose.ph2.api.domain.LeafDomain;
-import com.logpose.ph2.api.domain.PhotoSynthesisDomain;
+import com.logpose.ph2.api.domain.leaf.LeafDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 
 @Component
 public class ModelDataDomain
