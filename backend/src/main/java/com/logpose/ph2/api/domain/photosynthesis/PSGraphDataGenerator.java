@@ -35,15 +35,20 @@ public class PSGraphDataGenerator
 // * 該当日の実測データを取得する。
 			Ph2RealPsAmountEntity entity = parameters.getRealParamMap().get(data.getDate());
 // * 存在する場合は実測値にパラメータを入れ替える
-			f_value = entity.getValueF();
-			g_value = entity.getValueG();
-// 	* 葉面積推定の値を得る
+			if (null != entity)
+				{
+				if (null != entity.getValueF()) f_value = entity.getValueF();
+				if (null != entity.getValueG()) g_value = entity.getValueG();
+				}
+// * 葉面積推定の値を得る
 			Ph2ModelDataEntityExample exm = new Ph2ModelDataEntityExample();
 			exm.createCriteria().andDayIdEqualTo(data.getDayId());
-			Ph2ModelDataEntity model = parameters.getPh2ModelDataMapper().selectByExample(exm).get(0);
+			Ph2ModelDataEntity model = parameters.getPh2ModelDataMapper().selectByExample(exm)
+					.get(0);
 			double value = Formula.toPsAmount(f_value, g_value, prev,
-					model.getCrownLeafArea(), data.getPar());
+					model.getCrownLeafArea(), data.getPar()) + prev;
 			exporter.add(data.getDayId(), value);
+			prev = value;
 			}
 		}
 	}

@@ -46,9 +46,11 @@ public class S3DailyBaseDataGeneratorService
 		LOG.info("日ベースのデータ作成開始");
 		for (Ph2DeviceDayEntity deviceDay : deviceDays)
 			{
+// * その日の１０分単位のデータで気温と光合成有効放射束密度を取得する
 			List<BaseDataDTO> tmRecords = this.ph2JoinedModelMapper.getBaseData(
 					deviceDay.getDeviceId(), deviceDay.getDate(),
 					this.deviceDayAlgorithm.getNextDayZeroHour(deviceDay.getDate()));
+// * その日のデータが存在する場合
 			if (tmRecords.size() > 0)
 				{
 				this.addTmData(deviceDay, tmRecords);
@@ -142,8 +144,6 @@ public class S3DailyBaseDataGeneratorService
 		double sum = 0;
 		for (BaseDataDTO data : records)
 			{
-			if (null == data.getInsolation())
-				continue;
 			double value = data.getInsolation();
 			value = Formula.toPAR(value);
 			// * 取得時刻
