@@ -12,6 +12,8 @@ import lombok.Data;
 @Data
 public class PSModelDataParameters
 	{
+// * 新梢数
+	private int shootCount;
 // * 光合成パラメータ実績マップ
 	private Map<Date, Ph2RealPsAmountEntity> realParamMap;
 // * 光合成推定パラメータセット

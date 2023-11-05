@@ -4,13 +4,14 @@ import java.text.ParseException;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.domain.GrowthDomain;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 
-@Component
+@Service
 public class ModelDataDomain
 	{
 	@Autowired
@@ -20,11 +21,11 @@ public class ModelDataDomain
 	@Autowired
 	private PhotoSynthesisDomain photoSynthesisDomain;
 
+	@Transactional(rollbackFor = Exception.class)
 	public void doService(long deviceId, short year, Date startDate) throws ParseException
 		{
 		this.growthDomain.updateModelTable(deviceId, year, startDate);
 		this.leafDomain.updateModelTable(deviceId, year, startDate);
 		this.photoSynthesisDomain.updateModelTable(deviceId, year, startDate);
 		}
-
 	}

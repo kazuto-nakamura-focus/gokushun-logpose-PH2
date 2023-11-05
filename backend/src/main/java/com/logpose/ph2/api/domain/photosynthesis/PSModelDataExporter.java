@@ -12,7 +12,6 @@ public class PSModelDataExporter
 	// クラスメンバー
 	// ===============================================
 	private Ph2ModelDataMapper ph2ModelDataMapper;
-	private double lastValue = 0;
 	// ===============================================
 	// コンストラクタ
 	// ===============================================
@@ -46,8 +45,7 @@ public class PSModelDataExporter
 // * モデルデータを更新する
 		Ph2ModelDataEntity entity = list.get(0);
 // * 推定積算樹冠光合成量データの更新
-		lastValue += entity.getCulmitiveCnopyPs();
-		entity.setCrownLeafArea(lastValue);
+		entity.setCulmitiveCnopyPs(value);
 // * モデルデータの更新
 		this.ph2ModelDataMapper.updateByExample(entity, exm);
 		}

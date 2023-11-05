@@ -10,15 +10,19 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.configration.DefaultLeafCountParameters;
 import com.logpose.ph2.api.configration.DefaultPsParameters;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsFieldEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsWeibullEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsFieldMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsWeibullMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsCountMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealPsAmountMapper;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
@@ -35,6 +39,9 @@ public class PSModelDataParameterAggregator
 	
 	@Autowired
 	private DefaultPsParameters defaultPsParameters;
+	
+	@Autowired
+	private DefaultLeafCountParameters defaultLeafParameters;
 
 	@Autowired
 	private Ph2ParamsetPsFieldMapper ph2ParamsetPsFieldMapper;
@@ -47,6 +54,9 @@ public class PSModelDataParameterAggregator
 	
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
+	
+	@Autowired
+	private Ph2RealLeafShootsCountMapper ph2RealLeafShootsCountMapper;
 
 	// ===============================================
 	// 公開メソッド
@@ -67,6 +77,20 @@ public class PSModelDataParameterAggregator
 		parameters.setRealParamMap(map);
 // * モデルマッパーの設定
 		parameters.setPh2ModelDataMapper(ph2ModelDataMapper);
+// * 新梢数
+		Ph2RealLeafShootsCountEntityExample exm = new Ph2RealLeafShootsCountEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId)
+				.andYearEqualTo(year);
+		List<Ph2RealLeafShootsCountEntity> result = this.ph2RealLeafShootsCountMapper
+				.selectByExample(exm);
+		if(result.size()>0)
+			{
+			parameters.setShootCount(result.get(0).getCount());
+			}
+		else
+			{
+			parameters.setShootCount(this.defaultLeafParameters.getCount());
+			}
 		}
 
 	// --------------------------------------------------

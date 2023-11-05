@@ -38,7 +38,7 @@ public class LeafModelDataExporter
 	 * @param count 葉枚数
 	 */
 	// --------------------------------------------------
-	public void add(Long dayId, Double area, Double count)
+	public void add(Long dayId, double area, double count)
 		{
 // * デバイス日付IDに対応するモデルデータを取得する
 		Ph2ModelDataEntityExample exm = new Ph2ModelDataEntityExample();

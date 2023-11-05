@@ -46,7 +46,8 @@ public class PSGraphDataGenerator
 			Ph2ModelDataEntity model = parameters.getPh2ModelDataMapper().selectByExample(exm)
 					.get(0);
 			double value = Formula.toPsAmount(f_value, g_value, prev,
-					model.getCrownLeafArea(), data.getPar()) + prev;
+					model.getCrownLeafArea(), data.getPar(), data.getSunTime(),
+					parameters.getShootCount());
 			exporter.add(data.getDayId(), value);
 			prev = value;
 			}
