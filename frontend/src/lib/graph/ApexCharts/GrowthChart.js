@@ -121,12 +121,6 @@ export class GrowthChart {
         this.data.chartOptions.annotations.yaxis = annotations;
       }
     }
-    var categories = this.data.chartOptions.xaxis.categories;
-    var startDate = source.xstart;
-    for (let i = 0; i < source.values.length; i++) {
-      categories.push(startDate);
-      startDate = moment(startDate).add(1, 'day');
-    }
     this.data.chartOptions.yaxis.max = source.YEnd;
     this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;

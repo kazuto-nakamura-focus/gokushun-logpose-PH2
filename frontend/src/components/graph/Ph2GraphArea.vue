@@ -47,7 +47,7 @@ export default {
         name: name, // グラフ線の名前
       };
       this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
-      setTimeout(() => this.displayGraph(), 100);
+      setTimeout(() => this.displayGraph(), 10);
     },
 
     displayGraph() {
