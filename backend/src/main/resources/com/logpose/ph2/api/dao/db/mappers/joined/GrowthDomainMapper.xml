@@ -23,7 +23,7 @@
 		dd.lapse_day as lapse_day,
 		dd.date as date,
 		db.tm as tm,
-		db.sun_time as sunTime,
+		db.sun_time as sun_time,
 		db.average as average,
 		db.cdd as cdd,
 		db.par as par,
