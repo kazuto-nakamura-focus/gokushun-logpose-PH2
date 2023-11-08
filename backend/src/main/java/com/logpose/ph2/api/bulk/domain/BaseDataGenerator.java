@@ -124,11 +124,6 @@ public class BaseDataGenerator
 							dataList.getCastedAt(),
 							value);
 					}
-				else
-					{
-					System.out.println(
-							"Sap Error" + sensor.getSensorId() + "+" + dataList.getCastedAt());
-					}
 				}
 			// * デンドロ
 			else if (5 == contentId)

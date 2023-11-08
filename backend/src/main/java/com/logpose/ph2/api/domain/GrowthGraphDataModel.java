@@ -116,7 +116,7 @@ public class GrowthGraphDataModel
 			// * 平均気温
 			DailyBaseDataDTO temperature = list.get(index);
 			// * F値算出
-			double fValue = Formula.toFValue(temperature.getAverage(), dValue,
+			double fValue = Formula.toFValue(temperature.getTm(), dValue,
 					eValue);
 			// * 積算F値
 			lastValue = lastValue + fValue;
