@@ -86,7 +86,7 @@ public class TopDomain
 	// --------------------------------------------------
 	public List<ModelTargetDTO> getModelTargets(boolean isModel)
 		{
-		if(isModel)
+		if (isModel)
 			{
 			return this.topDomainMapper.selectModelTargets();
 			}
@@ -107,12 +107,12 @@ public class TopDomain
 		cal.setTime(startDate);
 		deviceDayAlgorithm.setTimeZero(cal);
 		startDate = cal.getTime();
-		
+
 		cal.setTime(endDate);
 		deviceDayAlgorithm.setTimeZero(cal);
 		cal.add(Calendar.DATE, 1);
 		endDate = cal.getTime();
-		
+
 		RawDataList results = new RawDataList();
 // * センサー情報をコンテンツID順に取得する。
 		Ph2SensorsEntityExample exm = new Ph2SensorsEntityExample();

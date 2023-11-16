@@ -44,9 +44,23 @@
 			</table> <table tableName="ph2_base_data" domainObjectName="Ph2BaseDataEntity" 
 			mapperName="Ph2BaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table>
+			 <table tableName="ph2_daily_base_data"
+				domainObjectName="Ph2DailyBaseDataEntity" 
+				mapperName="Ph2DailyBaseDataMapper" 
+				enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>-->
-			 <table tableName="ph2_daily_base_data" domainObjectName="Ph2DailyBaseDataEntity" 
-			mapperName="Ph2DailyBaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			<table tableName="ph2_dashboard_display"
+				domainObjectName="Ph2DashBoardDisplayEntity" 
+				mapperName="Ph2DashBoardDisplayMapper" 
+				enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table>
+			<table tableName="ph2_dashboard_sensors"
+				domainObjectName="Ph2DashBoardSensorsEntity" 
+				mapperName="Ph2DashBoardSensorsMapper" 
+				enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
 		<!--<table tableName="ph2_insolation_data" domainObjectName="Ph2InsolationDataEntity" 
