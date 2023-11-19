@@ -66,6 +66,15 @@ public class DashboardDomain
 		List<DashBoardDevicesDTO> devices = this.dashboardDomainMapper.selectDisplayData();
 		for (final DashBoardDevicesDTO item : devices)
 			{
+		// * デバイスデータにIsDislayが未設定ならば設定する。
+			if(null == item.getIsDisplay())
+				{
+				Ph2DashBoardDisplayEntity entity = new Ph2DashBoardDisplayEntity();
+				entity.setDeviceId(item.getDeviceId());
+				entity.setIsDisplay(true);
+				this.ph2DashBoardDisplayMapper.insert(entity);
+				item.setIsDisplay(true);
+				}
 			DashboardTarget as_value = map.get(item.getFieldId());
 			as_value.getDevices().add(item);
 			}
@@ -91,12 +100,9 @@ public class DashboardDomain
 	// --------------------------------------------------
 	public void updateDisplay(Ph2DashBoardDisplayEntity dto)
 		{
-		Ph2DashBoardDisplayEntity dashboardDisplay = new Ph2DashBoardDisplayEntity();
-		dashboardDisplay.setDeviceId(dto.getDeviceId());
-		dashboardDisplay.setIsDisplay(dto.getIsDisplay());
-		if(0 == this.ph2DashBoardDisplayMapper.updateByPrimaryKey(dashboardDisplay) )
+		if(0 == this.ph2DashBoardDisplayMapper.updateByPrimaryKey(dto) )
 			{
-			this.ph2DashBoardDisplayMapper.insert(dashboardDisplay);
+			this.ph2DashBoardDisplayMapper.insert(dto);
 			}
 		}
 	
