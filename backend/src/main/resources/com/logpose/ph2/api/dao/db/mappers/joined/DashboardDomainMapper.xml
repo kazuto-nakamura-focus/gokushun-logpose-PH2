@@ -23,7 +23,7 @@
 	</select>
 	
 	<resultMap id="DashBoardSensorsDTO"
-		type="com.logpose.ph2.api.dto.DashBoardSensorsDTO">
+		type="com.logpose.ph2.api.dto.dashboard.DashBoardSensorsDTO">
 		<result column="device_id" property="deviceId"></result>
 		<result column="sensor_id" property="sensorId"></result>
 		<result column="sensor_name" property="sensorName"></result>
@@ -32,11 +32,11 @@
 		<result column="display_no" property="displayNo"></result>
 	</resultMap>
 
-	<select id="selectSensorSettings" resultMap="DailyBaseDataDTO">
+	<select id="selectSensorSettings" resultMap="DashBoardSensorsDTO">
 		SELECT
 			sn.device_id as device_id,
 			sn.id as sensor_id,
-			sn.name as sensorName,
+			sn.name as sensor_name,
 			sc.id as dataId,
 			sc.name as dataName,
 			ds.display_no as display_no

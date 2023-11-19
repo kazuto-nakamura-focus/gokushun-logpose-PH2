@@ -53,7 +53,7 @@ public class DashboardController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			DashboardTarget as_result = this.dashboardService.getFieldData();
+			List<DashboardTarget> as_result = this.dashboardService.getFieldData();
 			as_dto.setSuccess(as_result);
 			}
 		catch (Exception e)

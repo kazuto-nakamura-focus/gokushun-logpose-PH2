@@ -1,10 +1,14 @@
 package com.logpose.ph2.api.dao.db.mappers;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardDisplayEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardDisplayEntityExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardDisplayEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardDisplayEntityExample;
+
+@Mapper
 public interface Ph2DashBoardDisplayMapper {
 
   /**

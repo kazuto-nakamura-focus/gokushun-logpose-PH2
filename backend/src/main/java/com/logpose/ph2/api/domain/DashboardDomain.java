@@ -1,6 +1,9 @@
 package com.logpose.ph2.api.domain;
 
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,9 +19,9 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.DashboardDomainMapper;
 import com.logpose.ph2.api.dto.dashboard.DashBoardDevicesDTO;
 import com.logpose.ph2.api.dto.dashboard.DashBoardSensorsDTO;
+import com.logpose.ph2.api.dto.dashboard.DashboardDisplayOrder;
 import com.logpose.ph2.api.dto.dashboard.DashboardSet;
 import com.logpose.ph2.api.dto.dashboard.DashboardTarget;
-import com.logpose.ph2.api.dto.element.Label;
 
 @Component
 public class DashboardDomain
@@ -43,23 +46,30 @@ public class DashboardDomain
 	 * 設定対象となるデバイスリストを取得する
 	 */
 	// --------------------------------------------------
-	public DashboardTarget getFieldData()
+	public List<DashboardTarget> getFieldData()
 		{
-		DashboardTarget result = new DashboardTarget();
+		List<DashboardTarget> result = new ArrayList<>();
 		// * 圃場リストの取得
 		Ph2FieldsEntityExample exm = new Ph2FieldsEntityExample();
 		List<Ph2FieldsEntity> fields = this.ph2FieldsMapper.selectByExample(exm);
+		
+		Map<Long, DashboardTarget> map = new LinkedHashMap<>();
 		// * 圃場データの設定
 		for (final Ph2FieldsEntity item : fields)
 			{
-			Label as_field = new Label();
-			as_field.setId(item.getId());
-			as_field.setName(item.getName());
-			result.getFields().add(as_field);
+			DashboardTarget as_value = new DashboardTarget();
+			as_value.setId(item.getId());
+			as_value.setName(item.getName());
+			map.put(item.getId(), as_value);
 			}
 		// * デバイスデータの設定
 		List<DashBoardDevicesDTO> devices = this.dashboardDomainMapper.selectDisplayData();
-		result.setDevices(devices);
+		for (final DashBoardDevicesDTO item : devices)
+			{
+			DashboardTarget as_value = map.get(item.getFieldId());
+			as_value.getDevices().add(item);
+			}
+		map.forEach((key, value) -> result.add(value));
 		return result;
 		}
 
@@ -84,7 +94,10 @@ public class DashboardDomain
 		Ph2DashBoardDisplayEntity dashboardDisplay = new Ph2DashBoardDisplayEntity();
 		dashboardDisplay.setDeviceId(dto.getDeviceId());
 		dashboardDisplay.setIsDisplay(dto.getIsDisplay());
-		this.ph2DashBoardDisplayMapper.updateByPrimaryKey(dashboardDisplay);
+		if(0 == this.ph2DashBoardDisplayMapper.updateByPrimaryKey(dashboardDisplay) )
+			{
+			this.ph2DashBoardDisplayMapper.insert(dashboardDisplay);
+			}
 		}
 	
 	// --------------------------------------------------
@@ -99,10 +112,10 @@ public class DashboardDomain
 		exm.createCriteria().andDeviceIdEqualTo(dto.getDeviceId());
 		this.ph2DashBoardSensorsMapper.deleteByExample(exm);
 		
-		for(final DashBoardSensorsDTO item : dto.getDevices())
+		for(final DashboardDisplayOrder item : dto.getSensors())
 			{
 			Ph2DashBoardSensorsEntity entity = new Ph2DashBoardSensorsEntity();
-			entity.setDeviceId(item.getDeviceId());
+			entity.setDeviceId(dto.getDeviceId());
 			entity.setDisplayNo(item.getDisplayNo());
 			entity.setSensorId(item.getSensorId());
 			this.ph2DashBoardSensorsMapper.insert(entity);

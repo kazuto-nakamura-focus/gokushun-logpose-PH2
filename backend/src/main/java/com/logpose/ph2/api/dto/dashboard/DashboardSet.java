@@ -8,5 +8,5 @@ import lombok.Data;
 public class DashboardSet
 	{
 	private Long deviceId;
-	private List<DashBoardSensorsDTO> devices;
+	private List<DashboardDisplayOrder> sensors;
 	}

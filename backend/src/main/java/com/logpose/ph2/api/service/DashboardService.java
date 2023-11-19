@@ -21,7 +21,7 @@ public interface DashboardService
 	 * 設定対象となるデバイスリストを取得する
 	 */
 	// -------------------------------------------------
-	public DashboardTarget getFieldData();
+	public List<DashboardTarget> getFieldData();
 	
 	// --------------------------------------------------
 	/**

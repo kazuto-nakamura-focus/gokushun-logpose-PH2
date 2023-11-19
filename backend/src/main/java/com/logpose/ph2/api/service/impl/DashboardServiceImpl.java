@@ -33,7 +33,7 @@ public class DashboardServiceImpl implements DashboardService
 	 */
 	// -------------------------------------------------
 	@Override
-	public DashboardTarget getFieldData()
+	public List<DashboardTarget> getFieldData()
 		{
 		return this.dashboardDomain.getFieldData();
 		}
