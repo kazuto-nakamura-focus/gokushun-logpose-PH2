@@ -46,8 +46,10 @@
                               {{ komoku.name }}
                               <br />
                               {{ komoku.value }}
-                              <br/>
-                              <i><small>{{ komoku.date }}</small></i>
+                              <br />
+                              <i
+                                ><small>{{ komoku.date }}</small></i
+                              >
                             </a>
                           </div>
                         </div>
@@ -70,6 +72,7 @@
         </div>
       </div>
     </v-container>
+    <wait-dialog ref="wait" />
   </v-app>
 </template>
 
@@ -82,6 +85,7 @@ import { MountController } from "@/lib/mountController.js";
 //参照 https://github.com/SSENSE/vue-carousel#development
 import { Carousel, Slide } from "vue-carousel";
 import { useFields } from "@/api/Top";
+import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 // import unselected from "@/components/parts/menu.vue";
 import SpecificDataAggregation from "./SpecificDataAggregation.vue";
@@ -105,28 +109,33 @@ export default {
     Carousel,
     Slide,
     SpecificDataAggregation,
+    WaitDialog,
+
     // unselected,
   },
 
-  created: function () {
-    console.log(this.displayOrder);
+  mounted: function () {
+    this.$refs.wait.start("データ取得中です。しばらくお待ちください。", true);
+    //console.log(this.displayOrder);
     useFields()
       .then((response) => {
         //成功時
         const results = response["data"];
         this.sourceData = this.TopDataParser.parse(results.data);
-        console.log("created", this.sourceData);
+        //console.log("created", this.sourceData);
         for (const item of this.sourceData) {
           item.visible = new Object();
           item.visible = true;
           this.displayData.push(item);
         }
-        console.log(this.sourceData);
+        //console.log(this.sourceData);
         this.$store.dispatch("changeSourceData", this.sourceData);
+        this.$refs.wait.finish();
       })
       .catch((error) => {
         //失敗時
         console.log(error);
+        this.$refs.wait.finish();
       });
   },
 
