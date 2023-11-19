@@ -4,19 +4,19 @@
       <v-col cols="6">
         <sensor-menu ref="menu1"></sensor-menu>
 
-        <sensor-menu ref="menu2"></sensor-menu>
-
         <sensor-menu ref="menu3"></sensor-menu>
 
-        <sensor-menu ref="menu4"></sensor-menu>
+        <sensor-menu ref="menu5"></sensor-menu>
+
+        <sensor-menu ref="menu7"></sensor-menu>
       </v-col>
 
       <v-col cols="6">
-        <sensor-menu ref="menu5"></sensor-menu>
+        <sensor-menu ref="menu2"></sensor-menu>
+
+        <sensor-menu ref="menu4"></sensor-menu>
 
         <sensor-menu ref="menu6"></sensor-menu>
-
-        <sensor-menu ref="menu7"></sensor-menu>
 
         <sensor-menu ref="menu8"></sensor-menu>
       </v-col>
