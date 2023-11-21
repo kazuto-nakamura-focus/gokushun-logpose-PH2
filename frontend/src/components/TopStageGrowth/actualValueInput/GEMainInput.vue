@@ -3,8 +3,8 @@
 <template>
   <v-app>
     <v-container>
-      <v-dialog v-model="isDialog" width="700" height="700">
-        <v-card>
+      <v-dialog v-model="isDialog" width="800" height="700" overflow="hidden" >
+        <v-card v-card style="overflow: hidden;">
           <v-card-title>実績値入力</v-card-title>
           <!-- タイトル部分 -->
           <input-header ref="titleHeader" />
@@ -70,7 +70,22 @@ export default {
         { field: "elStage", headerName: "E-L Stage間隔", resizable: true, width: 115, },
         { field: "intervalF", headerName: "F値間隔", resizable: true, width: 115, },
         { field: "accumulatedF", headerName: "累積F値", resizable: true, width: 115, },
-        { field: "targetDate", headerName: "実績", resizable: true, valueFormatter: this.valueFormatter, width: 125, }, //cc
+        {
+          field: "targetDate", headerName: "実績", suppressSizeToFit: true,
+          cellStyle: { 
+            textAlign: "center", 
+            verticalAlign: "middle",
+            lineHeight: "30px" // セルの高さに応じて調整
+          },
+          cellRenderer: params => {
+            console.log(params);
+            if (params.value) {
+              return params.value;
+            } else {
+              return '<button class="v-btn v-btn--has-bg theme--light elevation-3 v-size--small primary">実績値入力</button>';
+            }
+          },
+        }, //cc
       ],
       //選択した圃場名指定
       fieldName: null,

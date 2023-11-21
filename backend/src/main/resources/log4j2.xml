@@ -19,8 +19,8 @@
         <Root level="info">
             <AppenderRef ref="consoleAppender"/>
         </Root>
-		<!--<Logger name="com.logpose.ph2.api.dao.db.mappers" level="trace">
-        
+		<!--<Logger name="com.logpose.ph2.api.dao.db.mappers" level="trace"> -->
+        <!--<Logger name="com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper" level="trace">
             <AppenderRef ref="consoleAppender"/>
         </Logger>  -->
     </Loggers>

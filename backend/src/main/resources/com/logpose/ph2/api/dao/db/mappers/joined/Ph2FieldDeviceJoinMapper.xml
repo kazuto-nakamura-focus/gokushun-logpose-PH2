@@ -14,15 +14,11 @@
 		SELECT
 		d.id as id,
 		d.name as name,
-		b.name as brand
+		d.brand as brand
 		FROM
-		ph2_rel_field_device rel
+		ph2_fields f
 		JOIN
-		ph2_fields f on rel.field_id = f.id
-		JOIN
-		ph2_brand_master b on rel.brand_id = b.id
-		JOIN
-		ph2_devices d on rel.device_id = d.id
+		ph2_devices d on f.id = d.field_id
 		WHERE
 		f.id =  #{fieldId}
 		ORDER BY name DESC

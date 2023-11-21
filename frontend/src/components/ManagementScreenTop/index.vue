@@ -22,7 +22,7 @@
   </v-app>
 </template>
 <script>
-import MSDashboard from "./MSDashboard";
+import MSDashboard from "./MSDashboard/DashboardSetting.vue";
 import MSField from "./MSField";
 import MSDevice from "./MSDevice";
 const TEST_TABS = [
@@ -55,7 +55,7 @@ export default {
     MSField,
     MSDevice,
   },
-  mounted() { },
+  mounted() {},
   methods: {},
 };
 </script>

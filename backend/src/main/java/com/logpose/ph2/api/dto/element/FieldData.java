@@ -14,5 +14,7 @@ public class FieldData extends Label
 	//* 受信日時
 	private Date castedAt;
 	// * センサーID
-	private String sensorName;
+//	private String sensorName;
+	// * 表示順
+	private Short displayNo;
 	}

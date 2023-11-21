@@ -20,6 +20,11 @@
 	FROM
 		ph2_fields
 	JOIN ph2_devices ON ph2_fields.id = ph2_devices.field_id
+	LEFT JOIN ph2_dashboard_display ON ph2_devices.id =ph2_dashboard_display.device_id
+	WHERE
+		ph2_dashboard_display.is_display = true
+		OR
+		ph2_dashboard_display.is_display is NULL
 	ORDER BY
 		field, device
 	</select>
@@ -30,7 +35,7 @@
 		<result column="name" property="name"></result>
 		<result column="value" property="value"></result>
 		<result column="casted_at" property="castedAt"></result>
-		<result column="sensorName" property="sensorName"></result>
+		<result column="display_no" property="displayNo"></result>
 	</resultMap>
 	
 	<select id="selectFieldDataList" resultMap="FieldDTO">
@@ -38,11 +43,14 @@
 		ph2_dashboard.content_id as id,
 		ph2_dashboard.value as value,
 		ph2_dashboard.casted_at as casted_at,
-		ph2_sensor_contents.name as name
+		ph2_sensors.name as name,
+		ph2_dashboard_sensors.display_no as display_no
 	FROM
 		ph2_dashboard
+	LEFT JOIN
+		ph2_dashboard_sensors ON ph2_dashboard.sensor_id = ph2_dashboard_sensors.sensor_id
 	JOIN
-  		ph2_sensor_contents on ph2_dashboard.content_id = ph2_sensor_contents."id"
+  		ph2_sensors on ph2_dashboard.sensor_id = ph2_sensors."id"
 	WHERE
 		ph2_dashboard.casted_at in(
 			select
@@ -57,7 +65,7 @@
 	and
 		ph2_dashboard.device_id = #{deviceId}
 	ORDER BY 
-		ph2_dashboard.content_id
+		ph2_dashboard_sensors.display_no, ph2_dashboard.content_id
 	</select>
 	
 	<resultMap id="RawData" type="com.logpose.ph2.api.dto.rawData.RawData">

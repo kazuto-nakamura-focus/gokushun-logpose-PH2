@@ -38,7 +38,7 @@ export default {
     // グラフ追加処理
     //* ============================================
     addGraph: function (titlePath, chartOptions, chartData, isMultiple, name) {
-      this.item = {
+    let item = {
         id: this.id++, // ID
         title: titlePath, // グラフタイトル
         options: chartOptions, // グラフオプション
@@ -47,11 +47,11 @@ export default {
         name: name, // グラフ線の名前
       };
       this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
-      setTimeout(() => this.displayGraph(), 100);
+      setTimeout(() => this.displayGraph(item), 10);
     },
 
-    displayGraph() {
-      this.graphList.push(this.item);
+    displayGraph(item) {
+      this.graphList.push(item);
       this.$refs.wait.finish();
     },
     //* ============================================
