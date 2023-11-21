@@ -39,7 +39,7 @@
             <v-row>
               <v-col>
                 <v-sheet
-                  id="map"
+                  id="deviceListMap"
                   class="pa-0"
                   :light="true"
                   style="width: 100%; height: 300px"
@@ -160,7 +160,7 @@ export default {
       .then((google) => {
         this.google = google;
         // 地図の初期化
-        this.map = new google.maps.Map(document.getElementById("map"), {
+        this.map = new google.maps.Map(document.getElementById("deviceListMap"), {
           // 初期表示設定
           ...mapOptions,
           //フォーカスを充てる座標指定
@@ -195,7 +195,7 @@ export default {
       .then((google) => {
         this.google = google;
         // 地図の初期化
-        this.map = new google.maps.Map(document.getElementById("map"), {
+        this.map = new google.maps.Map(document.getElementById("deviceListMap"), {
           // 初期表示設定
           ...mapOptions,
           //フォーカスを充てる座標指定
