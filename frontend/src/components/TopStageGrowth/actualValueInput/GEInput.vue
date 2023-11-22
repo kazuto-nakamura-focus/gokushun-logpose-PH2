@@ -11,7 +11,7 @@
       <v-card-text>
         現在の累積F値<br />
 
-        <p class="font-weight-bold">{{ fValueInterval }}</p>
+        <p class="font-weight-bold">{{ this.accumulatedF }}</p>
       </v-card-text>
 
       {{ selectedData.intervalF }}
@@ -74,7 +74,8 @@ export default {
   props: {
     selectedData: Array,
     isDialogEdit: Boolean,
-    selectedItems:Object
+    selectedItems: Object,
+    inputArg: Object,
   },
   components: {
     AgGridVue,
@@ -98,6 +99,8 @@ export default {
       deviceId: this.$store.getters.selectedDevice.id,
       year: this.$store.getters.selectedYear.id,
       date: moment().format("YYYY-MM-DD"),
+      accumulatedF: 0,
+
       fValueInterval: 0,
       elStageIntervalFormatterStatus: false,
       originSelectData: [...this.selectedData],
@@ -141,7 +144,7 @@ export default {
         field: "id",
         suppressSizeToFit: true,
         width: 80,
-        hide:true,
+        hide: true,
       },
       {
         field: "order",
@@ -199,7 +202,7 @@ export default {
   methods: {
     init: function () {
       this.$nextTick(
-       function () {
+        function () {
           this.$refs.titleHeader.initialize(this.selectedItems);
         }.bind(this)
       );
@@ -266,11 +269,11 @@ export default {
       await useGrowthFData(date, this.deviceId)
         .then((response) => {
           const results = response["data"];
-          if (results.status == 1) {
-            this.fValueInterval = 0;
-          } else {
-            this.fValueInterval = results.data.value;
-          }
+          let value = Math.round(results.data.value * 100) / 100;
+          // * 累積F値
+          this.accumulatedF = value;
+          // * インターバル
+          this.fValueInterval = value - this.inputArg.prevFValue;
         })
         .catch((error) => {
           //失敗時
