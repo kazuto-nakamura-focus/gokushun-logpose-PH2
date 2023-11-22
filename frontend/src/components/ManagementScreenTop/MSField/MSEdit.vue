@@ -33,7 +33,7 @@
           <v-col cols="6">
             <!-- google map -->
             <v-sheet
-              id="map"
+              id="deviceDetailMap"
               v-bind:class="{
                 'v-sheet--readonly': !isEditMode,
                 'pa-0': isEditMode,
@@ -210,13 +210,26 @@ const HEADERS = [
   { text: "品種名", value: "brand", sortable: true },
 ];
 
+
+const checkLatitude = (value) => {
+  if(null == value || null == value || "" == value || "" == value) return false;
+  if(value > 90 || value < -90) return false;
+  return true;
+}
+
+const checkLongitude = (value) => {
+  if(null == value || null == value || "" == value || "" == value) return false;
+  if(value > 180 || value < -180) return false;
+  return true;
+}
+
 class MapHandler {
   constructor() {
-    this.longitude = 0;
-    this.latitude = 0;
+    this.longitude = 139.772537;
+    this.latitude = 35.688083080447036;
   }
   setData(data, thisArgs, callBack) {
-    if (null == data.longitude || null == data.latitude) {
+    if (!checkLatitude(data.latitude) || !checkLongitude(data.longitude)) {
       useMapLocation(data.location)
         .then((response) => {
           const responseData = response["data"];
@@ -228,8 +241,9 @@ class MapHandler {
             data.location = responseData[0]["properties"]["title"];
             this.longitude = data.longitude;
             this.latitude = data.latitude;
-            callBack.apply(thisArgs);
           }
+          //データ有無関係なく、マップ初期化を行う。
+          callBack.apply(thisArgs);
         })
         .catch((error) => {
           //失敗時
@@ -357,9 +371,8 @@ export default {
       this.mapLoader.load()
         .then((google) => {
           if(this.google == null) this.google = google;
-
           // 地図の初期化
-          this.map = new google.maps.Map(document.getElementById("map"), {
+          this.map = new this.google.maps.Map(document.getElementById("deviceDetailMap"), {
             // 初期表示設定
             ...mapOptions,
             //フォーカスを充てる座標を指定
@@ -596,6 +609,7 @@ export default {
             const mapHandler = this.mapHandler;
             mapHandler["latitude"] = latitude;
             mapHandler["longitude"] = longitude;
+            console.log(mapHandler);
 
             if(this.marker){
               this.marker.setMap(null); 
@@ -615,7 +629,7 @@ export default {
           console.log(error);
         });
 
-    }
+    },
   },
 };
 </script>
