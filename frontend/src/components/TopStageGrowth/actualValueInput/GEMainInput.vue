@@ -12,7 +12,7 @@
           <v-container>
             <v-card-text>
               現在の累積F値<br />
-              <p class="font-weight-bold">{{ accumulatedFvalue }}</p>
+              <p class="font-weight-bold">{{ inputArg.accumulatedFvalue }}</p>
             </v-card-text>
             <div style="height: 250px">
               <div style="height: 250px; box-sizing: border-box">
@@ -50,7 +50,7 @@
         :selectedData="selectedData"
         :isDialogEdit="isDialogEdit"
         :selectedItems="selectedItems"
-        :inputArg="intputArg"
+        :inputArg="inputArg"
         @achievementValueDataSave="achievementValueDataSave"
         @cancel="cancel"
       />
@@ -150,8 +150,9 @@ export default {
       originGrowthFAllData: null,
       selectedItems: {},
       // 入力画面の引数
-      intputArg: {
+      inputArg: {
         prevFValue: 0,
+        accumulatedFvalue: 0,
       },
       gridOptions: null,
       gridApi: null,
@@ -244,7 +245,7 @@ export default {
           params.node.rowIndex > 0
             ? this.rowData[params.node.rowIndex - 1].accumulatedF
             : 0;
-        this.intputArg.prevFValue = value;
+        this.inputArg.prevFValue = value;
         //入力ダイアログ展開
         this.isDialogEdit = !this.isDialogEdit;
         this.pickerStatus = true;
@@ -278,8 +279,14 @@ export default {
           //成功時
           const results = response["data"];
           results.data
-            ? (this.accumulatedFvalue = results.data.value)
-            : (this.accumulatedFvalue = 0);
+            ? (this.inputArg.accumulatedFvalue = results.data.value)
+            : (this.inputArg.accumulatedFvalue = 0);
+          this.$nextTick(
+            function () {
+              this.$refs.geInput.todayAccumulatedF =
+                this.inputArg.accumulatedFvalue;
+            }.bind(this)
+          );
         })
         .catch((error) => {
           //失敗時

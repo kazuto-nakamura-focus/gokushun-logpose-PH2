@@ -181,6 +181,8 @@ public class SensorDataDomain
 		exm.createCriteria().andSensorIdEqualTo(sensorId)
 				.andCastedAtGreaterThanOrEqualTo(startTime.getTime())
 				.andCastedAtLessThan(endTime.getTime());
+		exm.setOrderByClause("casted_at");
+		
 		List<Ph2DashBoardEntity> records = this.ph2DashBoardMapper.selectByExample(exm);
 // * インターバルは分単位なので、millisecondsに変換する
 		long interval = 60000 * minutes;

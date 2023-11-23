@@ -11,7 +11,7 @@
       <v-card-text>
         現在の累積F値<br />
 
-        <p class="font-weight-bold">{{ this.accumulatedF }}</p>
+        <p class="font-weight-bold">{{ todayAccumulatedF }}</p>
       </v-card-text>
 
       {{ selectedData.intervalF }}
@@ -100,6 +100,8 @@ export default {
       year: this.$store.getters.selectedYear.id,
       date: moment().format("YYYY-MM-DD"),
       accumulatedF: 0,
+
+      todayAccumulatedF: 0,
 
       fValueInterval: 0,
       elStageIntervalFormatterStatus: false,
