@@ -34,6 +34,7 @@ export class GrowthChart {
         markers: {
           size: 0,
         },
+        colors: ['#C80046', '#5A00A0'],
         stroke: {
           width: [3, 3],
           curve: 'straight',
@@ -121,6 +122,20 @@ export class GrowthChart {
         this.data.chartOptions.annotations.yaxis = annotations;
       }
     }
+    this.data.chartOptions.annotations.xaxis = [
+      {
+        x: moment().format("MM/DD"),
+        borderColor: '#FF0000',
+        label: {
+          show: true,
+          text: 'TODAY',
+          orientation: 'horizontal',
+          style: {
+            color: '#FF0000',
+          },
+        },
+      },
+    ],
     this.data.chartOptions.yaxis.max = source.YEnd;
     this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;
