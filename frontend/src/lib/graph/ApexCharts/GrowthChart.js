@@ -1,5 +1,75 @@
 //import { concat } from "core-js/core/array";
 import moment from "moment";
+const yaxisAnnotations = {
+  "萌芽期":{
+    borderColor: '#70ad47',
+    borderWidth: 2,
+    strokeDashArray: 0,
+    label: {
+      borderColor: '#70ad47',
+      position: "left",
+      textAnchor: "start",
+      style: {
+        color: '#000000',
+      },
+    }
+  },
+  "開花日":{
+    borderColor: '#ff0066',
+    borderWidth: 2,
+    strokeDashArray: 0,
+    label: {
+      borderColor: '#ff0066',
+      position: "left",
+      textAnchor: "start",
+      style: {
+        color: '#000000',
+      },
+    }
+  },
+  "べレーゾン":{
+    borderColor: '#4472c4',
+    borderWidth: 2,
+    strokeDashArray: 0,
+    label: {
+      borderColor: '#4472c4',
+      position: "left",
+      textAnchor: "start",
+      style: {
+        color: '#000000',
+      },
+    }
+  },
+  "収穫日":{
+    borderColor: '#ed7d31',
+    borderWidth: 2,
+    strokeDashArray: 0,
+    label: {
+      borderColor: '#ed7d31',
+      position: "left",
+      textAnchor: "start",
+      style: {
+        color: '#000000',
+      },
+    }
+  }
+}
+
+const todayXaxisAnnotation = {
+  x: moment().format("MM/DD"),
+  borderColor: '#FF0000',
+  strokeDashArray: 0,
+  label: {
+    borderColor: '#FF0000',
+    show: true,
+    text: 'TODAY',
+    orientation: 'horizontal',
+    style: {
+      color: '#FF0000',
+    },
+  },
+}
+
 export class GrowthChart {
   constructor() {
     this.data = {
@@ -34,7 +104,6 @@ export class GrowthChart {
         markers: {
           size: 0,
         },
-        colors: ['#C80046', '#5A00A0'],
         stroke: {
           width: [3, 3],
           curve: 'straight',
@@ -104,38 +173,21 @@ export class GrowthChart {
     let annotations = []
     if ((source.annotations != null) && (source.annotations.length > 0)) {
       for (const item of source.annotations) {
-        let annotation = {
-          y: item.value,
-          label: {
-            borderColor: '#00E396',
-            position: "left",
-            textAnchor: "start",
-            style: {
-              color: '#00B428',
-            },
-            text: item.name
-          }
-        };
+        const value = item?.value;
+        const name = item?.name;
+        let annotation = yaxisAnnotations[`${name}`];
+        
+        if(annotation === undefined) continue;
+        annotation['y'] = value;
+        annotation['label']['text'] = name;
+
         annotations.push(annotation);
       }
       if (annotations.length > 0) {
         this.data.chartOptions.annotations.yaxis = annotations;
       }
     }
-    this.data.chartOptions.annotations.xaxis = [
-      {
-        x: moment().format("MM/DD"),
-        borderColor: '#FF0000',
-        label: {
-          show: true,
-          text: 'TODAY',
-          orientation: 'horizontal',
-          style: {
-            color: '#FF0000',
-          },
-        },
-      },
-    ],
+    this.data.chartOptions.annotations.xaxis = [todayXaxisAnnotation],
     this.data.chartOptions.yaxis.max = source.YEnd;
     this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;
