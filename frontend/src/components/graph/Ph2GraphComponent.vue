@@ -2,7 +2,14 @@
   <v-card elevation-6>
     <v-container>
       <v-row>
-        <v-col align="left">
+        <v-col align="right">
+          <div>
+            <v-icon @click="handleClose()">mdi-close</v-icon>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col align="left" style="display:flex">
           <div
             style="
               padding: 5px;
@@ -22,10 +29,22 @@
               >
             </div>
           </div>
-        </v-col>
-        <v-col align="right">
-          <div @click="handleClose()">
-            <v-icon>mdi-close</v-icon>
+
+          <div
+            v-if="annotationLabel"
+            style="
+              margin-left: 10px;
+              padding: 5px;
+              display: flex;
+              border: 1px solid rgb(204, 204, 204);
+              border-radius: 5px;
+              box-shadow: rgb(185, 184, 184) 5px 5px 5px;
+              width: fit-content;
+            "
+          >
+            <div style="font-size: 10pt;">
+              <b>{{ annotationLabel }}</b>
+            </div>
           </div>
         </v-col>
       </v-row>
@@ -70,6 +89,8 @@ export default {
       time: "",
       comment:"",
       chart: { options: {}, series: [] },
+      estimationLabels:["萌芽推定日", "開花推定日", "ベレーゾン推定日", "収穫推定日"],
+      annotationLabel: null,
     };
   },
   //* ============================================
@@ -104,15 +125,67 @@ export default {
       const predictGraph = this.prepareChart("推定");
       this.comment = this.arguments.data.comment;
 
-      for (const item of this.arguments.data.values) {
+      //「実績」値の一覧
+      const values = this.arguments.data?.values;
+
+      //「推定」値の一覧
+      const predictValues = this.arguments.data?.predictValues;
+      
+      //X軸値の一覧
+      const categories = this.arguments.data?.category;
+
+      //生育名毎の閾値
+      const annotations = this.arguments.data?.annotations;
+      //生育名の値を順番に比較するためのインデックス
+      let annotationIndex = 0;    
+
+      //「実績」・「推定」をま
+      let itemIndex = 0;
+
+      for (const item of values) {
         predictGraph.data.push(null);
         realGraph.data.push(item);
+        
+        //生育名の閾値が近い日付を抽出するための処理：「実績」一覧から抽出
+        if(categories !== undefined && annotations !== undefined && annotationIndex < annotations.length){
+          const annotation = annotations[annotationIndex];
+          if(annotation !== undefined && annotation["category"] === undefined){
+            if(annotation["value"] <= item){
+              annotation["estimationLabel"] = this.estimationLabels[annotationIndex];
+              annotation["category"] = categories[itemIndex];
+              annotationIndex++;
+            }
+          }
+        }
+        
+        itemIndex++;
       }
-
-      for (const item of this.arguments.data.predictValues) {
+      
+      for (const item of predictValues) {
         realGraph.data.push(null);
         predictGraph.data.push(item);
+        
+        //生育名の閾値が近い日付を抽出するための処理：「推定」一覧から抽出
+        if(categories !== undefined && annotations !== undefined && annotationIndex < annotations.length){
+          const annotation = annotations[annotationIndex];
+          if(annotation !== undefined && annotation["category"] === undefined){
+            if(annotation["value"] <= item){
+              annotation["estimationLabel"] = this.estimationLabels[annotationIndex];
+              annotation["category"] = categories[itemIndex];
+              annotationIndex++;
+            }
+          }
+        }
+        itemIndex++;
       }
+
+      const tempLabels = [];
+      annotations.forEach(annotation => {
+        if(annotation["category"] !== undefined)
+          tempLabels.push(`${annotation["estimationLabel"]}:${annotation["category"]}`);
+      });
+      if(tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
+      
       this.$refs.chart.updateSeries(
         [
           {

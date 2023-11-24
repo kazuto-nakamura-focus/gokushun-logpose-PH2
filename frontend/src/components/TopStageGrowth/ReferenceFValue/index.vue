@@ -256,7 +256,6 @@ export default {
         .then((response) => {
           //成功時
           const results = response["data"];
-          console.log("getUseGrowthFAll", results.data)
           const GrowthRowData = this.changeGrowthForm(results.data)
           this.rowData = GrowthRowData
         
