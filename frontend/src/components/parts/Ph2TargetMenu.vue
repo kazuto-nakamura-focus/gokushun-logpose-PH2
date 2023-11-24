@@ -151,7 +151,6 @@ export default {
         .then((response) => {
           //成功時
           const results = response["data"].data;
-          console.log(results);
           var models = results.models;
           //* モデルコンポーネントの作成
           for (const item of models) {
