@@ -68,8 +68,8 @@ public class GrowthGraphDataModel
 			List<Ph2RealGrowthFStageEntity> fStageInfoList,
 			short sproutStage)
 		{
-		startDate = list.get(0).getDate();
-		endDate = list.get(list.size()-1).getDate();
+		startDate = list.get(0).getDate();  // 年度の初日
+		endDate = list.get(list.size()-1).getDate();  // 年度の最後
 		short startDay = 0;
 		for(Ph2RealGrowthFStageEntity fstageInfo : fStageInfoList)
 			{
@@ -81,6 +81,7 @@ public class GrowthGraphDataModel
 				dValue = param.getBeforeD();
 				eValue = param.getBeforeE();
 				}
+			// * 萌芽後の場合
 			else
 				{
 				dValue = param.getAfterD();

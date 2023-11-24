@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DailyDataAlgorythm;
+import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.configration.DefaultFtageValues;
 import com.logpose.ph2.api.configration.DefaultGrowthParameters;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
@@ -416,9 +418,11 @@ public class GrowthDomain extends GraphDomain
 	// --------------------------------------------------
 	public ValueDateDTO getRealFData(Long deviceId, Date date)
 		{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		new DeviceDayAlgorithm().setTimeZero(cal);
 		// * モデルテーブルから該当する日付にもっとも近い過去の実績値を取得する
-		ValueDateDTO value = this.ph2ModelDataMapper.selectRealFValueByDate(deviceId,
-				date, true);
+		ValueDateDTO value = this.ph2ModelDataMapper.selectFValueByDate(deviceId, cal.getTime());
 		if (null == value)
 			{
 			try

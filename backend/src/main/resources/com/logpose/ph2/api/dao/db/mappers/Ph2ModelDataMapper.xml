@@ -321,6 +321,19 @@
 		<result column="value" property="value"></result>
 		<result column="date" property="date"></result>
 	</resultMap>
+	 <select id="selectFValueByDate" resultMap="ValueDateDTO">
+    SELECT
+        md.f_value as value,
+        dd.date as date
+    FROM
+        ph2_device_day dd
+    JOIN
+        ph2_model_data md ON dd.id = md.day_id
+    WHERE
+        dd.device_id = #{deviceId}
+   	AND
+        dd.date = #{date}
+  </select>
     <select id="selectRealFValueByDate" resultMap="ValueDateDTO">
     SELECT
         md.f_value as value,

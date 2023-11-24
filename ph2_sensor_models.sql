@@ -6,3 +6,4 @@ INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUE
 INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (6, 'PHYTOS-31', '0001-01-01 06:39:22.022005', '0001-01-01 06:39:22.022005');
 INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (7, 'WATERMARK-200SS', '0001-01-01 06:39:22.027234', '0001-01-01 06:39:22.027234');
 INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (34, 'SODIAL', '0001-01-01 07:57:53.90287', '0001-01-01 07:57:53.90287');
+INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (35, 'SM-150T', '2023-11-24 10:00:00.00000', '2023-11-24 10:00:00.00000');

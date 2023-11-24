@@ -174,6 +174,42 @@ public class BaseDataGenerator
 						dataList.getCastedAt(),
 						value);
 				}
+			// * 土壌温度
+			else if (8 == contentId)
+				{
+				// * 電圧取得
+				double x = dataList.getVoltages().get(channel);
+				// * 計算実行
+				double value = Formula.toTemperature(x);
+				// * ダッシュボード登録
+				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+						dataList.getCastedAt(),
+						value);
+				}
+			// * オーガニック土壌体積含水率算出
+			else if (9 == contentId)
+				{
+				// * 電圧取得
+				double x = dataList.getVoltages().get(channel);
+				// * 計算実行
+				double value = Formula.toVMCOrgaic(x);
+				// * ダッシュボード登録
+				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+						dataList.getCastedAt(),
+						value);
+				}
+			// * ミネラル土壌体積含水率算出
+			else if (10 == contentId)
+				{
+				// * 電圧取得
+				double x = dataList.getVoltages().get(channel);
+				// * 計算実行
+				double value = Formula.toVMCMineral(x);
+				// * ダッシュボード登録
+				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+						dataList.getCastedAt(),
+						value);
+				}
 			}
 		return dataList.getCastedAt();
 		}
