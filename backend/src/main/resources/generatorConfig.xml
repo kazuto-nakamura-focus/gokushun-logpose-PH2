@@ -50,7 +50,7 @@
 				mapperName="Ph2DailyBaseDataMapper" 
 				enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table>-->
+			</table>
 			<table tableName="ph2_dashboard_display"
 				domainObjectName="Ph2DashBoardDisplayEntity" 
 				mapperName="Ph2DashBoardDisplayMapper" 
@@ -63,7 +63,7 @@
 				enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
-		<!--<table tableName="ph2_insolation_data" domainObjectName="Ph2InsolationDataEntity" 
+			<table tableName="ph2_insolation_data" domainObjectName="Ph2InsolationDataEntity" 
 			mapperName="Ph2InsolationDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> <table tableName="ph2_voltage_data" domainObjectName="Ph2VoltageDataEntity" 
@@ -145,10 +145,11 @@
 			</table> <table tableName="ph2_real_ps_amount" domainObjectName="Ph2RealPsAmountEntity" 
 			mapperName="Ph2RealPsAmountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> <table tableName="ph2_real_growth_f_stage" domainObjectName="Ph2RealGrowthFStageEntity" 
+			</table> -->
+			<table tableName="ph2_real_growth_f_stage" domainObjectName="Ph2RealGrowthFStageEntity" 
 			mapperName="Ph2RealGrowthFStageMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> -->
+			</table> 
 		<!-- <table tableName="ph2_fdata" domainObjectName="Ph2FDataEntity" mapperName="Ph2FDataMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_dashboards_rel" 
@@ -166,7 +167,8 @@
 			modelType="flat"> </table> <table tableName="ph2_real_fruits_bearing" domainObjectName="Ph2RealFruitsBearingEntity" 
 			mapperName="Ph2RealFruitsBearingMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> <table tableName="ph2_real_growth_f_date" domainObjectName="Ph2RealGrowthFDateEntity" 
+			</table> 
+			<table tableName="ph2_real_growth_f_date" domainObjectName="Ph2RealGrowthFDateEntity" 
 			mapperName="Ph2RealGrowthFDateMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> <table tableName="ph2_temperature" domainObjectName="Ph2TemperatureEntity" 

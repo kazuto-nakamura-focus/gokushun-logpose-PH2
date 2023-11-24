@@ -182,11 +182,23 @@ export default {
         width: 120,
       },
       {
-        field: "targetDate",
+        field: "actualDate",
         headerName: "実績",
         resizable: true,
         valueFormatter: valueFormatter,
-        width: 120,
+        cellRenderer: (params) => {
+          if (params.value) {
+            // return params.value + '<v-icon small class="mr-2">mdi-pencil</v-icon>';
+            // return '<v-icon small class="mr-2">mdi-pencil</v-icon>';
+            return (
+              params.value +
+              '<i data-v-539683ac="" aria-hidden="true" class="v-icon notranslate mdi mdi-pencil theme--light" style="font-size: 36px;"></i>'
+            );
+          } else {
+            return '<button class="v-btn v-btn--has-bg theme--light elevation-3 v-size--small primary">実績値入力</button>';
+          }
+        },
+        width: 160,
       }, //cc
     ];
     this.defaultColDef = {
@@ -212,10 +224,10 @@ export default {
       this.rowData = this.selectedData;
       this.saveIntervalF = setData.intervalF;
       this.saveAccumulatedF = setData.accumulatedF;
-      if (setData.targetDate) {
+      if (setData.actualDate) {
         //F値取得API
-        this.getUseGrowthFData(setData.targetDate);
-        this.picker = setData.targetDate;
+        this.getUseGrowthFData(setData.actualDate);
+        this.picker = setData.actualDate;
       } else {
         this.getUseGrowthFData(this.date);
       }
@@ -224,7 +236,7 @@ export default {
     onCellClicked(params) {
       this.gridApi = params.api;
       this.gridColumnApi = params.columnApi;
-      if (params.column.colId === "targetDate") {
+      if (params.column.colId === "actualDate") {
         this.pickerStatus = true;
         this.dataChangeStatus = params.node.data.order;
         // this.achievementValueDataSaveData.order = this.dataChangeStatus
@@ -246,7 +258,7 @@ export default {
     async changeAchievement(callback) {
       //選択日の実績値取得
       await callback(this.picker, this.deviceId);
-      this.rowData[0].targetDate = this.picker;
+      this.rowData[0].actualDate = this.picker;
       this.rowData[0].accumulatedF =
         this.saveAccumulatedF - (this.saveIntervalF - this.fValueInterval);
       await this.gridApi.refreshCells({ force: true });

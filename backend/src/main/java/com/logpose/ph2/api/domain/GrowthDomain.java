@@ -58,8 +58,10 @@ public class GrowthDomain extends GraphDomain
 	private Ph2RealGrowthFStageMapper ph2RealGrowthFStageMapper;
 	@Autowired
 	private Ph2ParamsetGrowthMapper ph2ParamsetGrowthMapper;
-	/*@Autowired
-	private Ph2FDataMapper ph2FDataMapper;*/
+	/*
+	 * @Autowired
+	 * private Ph2FDataMapper ph2FDataMapper;
+	 */
 	@Autowired
 	private DeviceDayDomain deviceDayDomain;
 
@@ -404,7 +406,16 @@ public class GrowthDomain extends GraphDomain
 		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year);
 		exm.setOrderByClause("stage_start asc");
-		return this.ph2RealGrowthFStageMapper.selectByExample(exm);
+		List<Ph2RealGrowthFStageEntity> result = this.ph2RealGrowthFStageMapper
+				.selectByExample(exm);
+		for (final Ph2RealGrowthFStageEntity item : result)
+			{
+			if (item.getActualDate().getTime()< 0)
+				{
+				item.setActualDate(null);
+				}
+			}
+		return result;
 		}
 
 	// --------------------------------------------------
@@ -428,7 +439,7 @@ public class GrowthDomain extends GraphDomain
 			try
 				{
 				String errorDate = DateTimeUtility.getStringFromDate(date);
-				throw new RuntimeException("指定された日付("+ errorDate+")に該当する実績データはまだありません。");
+				throw new RuntimeException("指定された日付(" + errorDate + ")に該当する実績データはまだありません。");
 				}
 			catch (ParseException e)
 				{
@@ -460,6 +471,7 @@ public class GrowthDomain extends GraphDomain
 				entity.setStageStart(item.getStageStart());
 				entity.setStageEnd(item.getStageEnd());
 				entity.setStageName(item.getStageName());
+				entity.setActualDate(item.getActualDate());
 				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 				this.ph2RealGrowthFStageMapper.updateByPrimaryKey(entity);
 				}
@@ -511,15 +523,15 @@ public class GrowthDomain extends GraphDomain
 		// * パラメータセットの詳細を取得する
 		GrowthParamSetDTO paramInfo = this.getDetail(paramId);
 		// * 同じ年度・デバイスの場合
-		if((paramInfo.getDeviceId().longValue() != deviceId.longValue())
-				||(paramInfo.getYear().shortValue() != year.shortValue()) )
+		if ((paramInfo.getDeviceId().longValue() != deviceId.longValue())
+				|| (paramInfo.getYear().shortValue() != year.shortValue()))
 			{
 			paramInfo.setDeviceId(deviceId);
 			paramInfo.setYear(year);
 			paramId = this.addParamSet(null, paramInfo);
 			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
-		//  年度の最初の日を取得
+		// 年度の最初の日を取得
 		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
 		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}

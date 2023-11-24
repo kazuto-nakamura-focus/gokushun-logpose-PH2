@@ -118,7 +118,7 @@ export default {
           width: 115,
         },
         {
-          field: "targetDate",
+          field: "actualDate",
           headerName: "実績",
           suppressSizeToFit: true,
           cellStyle: {
@@ -129,12 +129,17 @@ export default {
           cellRenderer: (params) => {
             console.log(params);
             if (params.value) {
-              return params.value;
+              // return params.value + '<v-icon small class="mr-2">mdi-pencil</v-icon>';
+              // return '<v-icon small class="mr-2">mdi-pencil</v-icon>';
+              return (
+                params.value +
+                '<i data-v-539683ac="" aria-hidden="true" class="v-icon notranslate mdi mdi-pencil theme--light" style="font-size: 36px;"></i>'
+              );
             } else {
               return '<button class="v-btn v-btn--has-bg theme--light elevation-3 v-size--small primary">実績値入力</button>';
             }
           },
-        }, //cc
+        },
       ],
       //選択した圃場名指定
       fieldName: null,
@@ -194,7 +199,6 @@ export default {
       //年度
       this.year = this.$store.getters.selectedYear.id;
       this.getUseGrowthFAll();
-      this.getUseGrowthFData(this.date, this.deviceId);
     },
     close: function () {
       //データ初期化
@@ -213,21 +217,21 @@ export default {
       this.gridApi = params.api;
       this.gridColumnApi = params.columnApi;
 
-      if (params.column.colId === "targetDate") {
+      if (params.column.colId === "actualDate") {
         // 未定義の場合はNULLに設定
-        if (params.node.data.targetDate === undefined) {
-          params.node.data.targetDate = null;
+        if (params.node.data.actualDate === undefined) {
+          params.node.data.actualDate = null;
         }
         const editOrder = params.node.data.order;
         // 対象となる
-        const editTargetDate = params.node.data.targetDate;
+        const editTargetDate = params.node.data.actualDate;
 
         //初期今日の日付データ設定（初期実績値がnullの場合：今日日付をdefault値に保存）
         if (!editTargetDate) {
           const today = this.date;
           this.rowData.map((item, i) => {
             if (item.order === editOrder) {
-              this.rowData[i].targetDate = today;
+              this.rowData[i].actualDate = today;
               //gridApi refresh
               // this.gridApi.refreshCells({
               //   force: true,
@@ -266,6 +270,7 @@ export default {
           const GrowthRowData = this.changeGrowthForm(results.data);
           this.rowData = GrowthRowData;
           console.log(GrowthRowData);
+          this.getUseGrowthFData(this.date, this.deviceId);
         })
         .catch((error) => {
           //失敗時
@@ -338,7 +343,7 @@ export default {
         if (item.order === data.order) {
           item.intervalF = data.intervalF;
           item.accumulatedF = data.accumulatedF;
-          item.targetDate = data.targetDate;
+          item.actualDate = data.actualDate;
           break;
         }
       }
@@ -375,6 +380,8 @@ export default {
       let dataTypeArr = [];
       changeData.map((data, i) => {
         const elStageData = data.stageStart + "-" + data.stageEnd;
+        if (null != data.actualDate)
+          data.actualDate = data.actualDate.substring(0, 9);
         let dataType = {
           ...data,
           order: i + 1,
@@ -393,7 +400,7 @@ export default {
         let elStageData = data.elStage.split("-");
         let targetDateSet = 0;
 
-        if (data.targetDate) targetDateSet = data.targetDate;
+        if (data.actualDate) targetDateSet = data.actualDate;
 
         let dataType = {
           id: data.id,
@@ -405,7 +412,7 @@ export default {
           deviceId: parseInt(this.deviceId),
           createdAt: null,
           updatedAt: null,
-          targetDate: targetDateSet,
+          actualDate: targetDateSet,
           year: parseInt(this.year),
         };
         dataTypeArr.push(dataType);
