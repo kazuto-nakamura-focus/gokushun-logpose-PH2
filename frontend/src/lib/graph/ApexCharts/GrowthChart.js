@@ -62,7 +62,7 @@ const todayXaxisAnnotation = {
   label: {
     borderColor: '#FF0000',
     show: true,
-    text: 'TODAY',
+    text: `TODAY（${moment().format("MM/DD")}）`,
     orientation: 'horizontal',
     style: {
       color: '#FF0000',
@@ -187,6 +187,10 @@ export class GrowthChart {
         this.data.chartOptions.annotations.yaxis = annotations;
       }
     }
+    const strToday = moment().format("MM/DD");
+    todayXaxisAnnotation["x"] = strToday;
+    todayXaxisAnnotation["label"]["text"] = `TODAY（${strToday}）`;
+
     this.data.chartOptions.annotations.xaxis = [todayXaxisAnnotation],
     this.data.chartOptions.yaxis.max = source.YEnd;
     this.data.chartOptions.yaxis.min = source.YStart;

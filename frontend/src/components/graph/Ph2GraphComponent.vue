@@ -89,6 +89,7 @@ export default {
       time: "",
       comment:"",
       chart: { options: {}, series: [] },
+      estimationLabels:["萌芽推定日", "開花推定日", "ベレーゾン推定日", "収穫推定日"],
       annotationLabel: null,
     };
   },
@@ -150,6 +151,7 @@ export default {
           const annotation = annotations[annotationIndex];
           if(annotation !== undefined && annotation["category"] === undefined){
             if(annotation["value"] <= item){
+              annotation["estimationLabel"] = this.estimationLabels[annotationIndex];
               annotation["category"] = categories[itemIndex];
               annotationIndex++;
             }
@@ -168,6 +170,7 @@ export default {
           const annotation = annotations[annotationIndex];
           if(annotation !== undefined && annotation["category"] === undefined){
             if(annotation["value"] <= item){
+              annotation["estimationLabel"] = this.estimationLabels[annotationIndex];
               annotation["category"] = categories[itemIndex];
               annotationIndex++;
             }
@@ -179,7 +182,7 @@ export default {
       const tempLabels = [];
       annotations.forEach(annotation => {
         if(annotation["category"] !== undefined)
-          tempLabels.push(`${annotation["name"]}:${annotation["category"]}`);
+          tempLabels.push(`${annotation["estimationLabel"]}:${annotation["category"]}`);
       });
       if(tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
       
