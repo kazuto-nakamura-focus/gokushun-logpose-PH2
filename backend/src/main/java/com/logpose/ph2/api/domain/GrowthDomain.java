@@ -410,9 +410,12 @@ public class GrowthDomain extends GraphDomain
 				.selectByExample(exm);
 		for (final Ph2RealGrowthFStageEntity item : result)
 			{
-			if (item.getActualDate().getTime()< 0)
+			if (null != item.getActualDate())
 				{
-				item.setActualDate(null);
+				if (item.getActualDate().getTime() < 0)
+					{
+					item.setActualDate(null);
+					}
 				}
 			}
 		return result;
