@@ -12,6 +12,9 @@
 		<result column="realArea" property="realArea"></result>
 		<result column="culmitiveCnopyPs" property="culmitiveCnopyPs"></result>
 		<result column="crownLeafArea" property="crownLeafArea"></result>
+		<result column="target_date" property="crownLeafArea"></result>
+		<result column="realDate" property="realDate"></result>
+		<result column="dailyDate" property="dailyDate"></result>
 	</resultMap>
 
 	<select id="getModelData" resultMap="ModelDTO">
@@ -23,8 +26,8 @@
 		rfc.COUNT AS leafCount,
 		md.culmitive_cnopy_ps AS culmitiveCnopyPs,
 		md.crown_leaf_area AS crownLeafArea,
-		rf.target_date,
-		dd.DATE
+		rf.target_date as realDate,
+		dd.DATE as dailyDate
 		FROM
 		ph2_device_day dd
 		JOIN ph2_daily_base_data db ON dd.ID = db.day_id

@@ -163,13 +163,22 @@
           </v-row>
         </v-col>
       </v-row>
+      <!-- デバイスタイトル -->
+      <v-row>
+        <v-col cols="3">
+          <v-subheader></v-subheader>
+        </v-col>
+        <v-col v-for="title in titles" cols="2" :key="title">
+          <v-subheader>{{ title }} </v-subheader>
+        </v-col>
+      </v-row>
       <v-divider class="divider_top" />
       <v-row>
         <v-col cols="3">
           <v-subheader>着果負担 </v-subheader>
         </v-col>
-        <v-col cols="2">
-          <v-subheader>{{ fruitValues.burden }} </v-subheader>
+        <v-col v-for="burden in burdens" cols="2" :key="burden">
+          <v-subheader>{{ burden }} </v-subheader>
         </v-col>
       </v-row>
       <v-divider class="divider_center" />
@@ -177,8 +186,8 @@
         <v-col cols="3">
           <v-subheader>積算推定樹冠光合成量あたりの着果量 </v-subheader>
         </v-col>
-        <v-col cols="2">
-          <v-subheader>{{ fruitValues.amount }} </v-subheader>
+        <v-col v-for="amount in amounts" cols="2" :key="amount">
+          <v-subheader>{{ amount }} </v-subheader>
         </v-col>
       </v-row>
       <v-divider class="divider_center" />
@@ -186,8 +195,8 @@
         <v-col cols="3">
           <v-subheader>実測着果数/樹冠葉面積 </v-subheader>
         </v-col>
-        <v-col cols="2">
-          <v-subheader>{{ fruitValues.count }} </v-subheader>
+        <v-col v-for="count in counts" cols="2" :key="count">
+          <v-subheader>{{ count }} </v-subheader>
         </v-col>
       </v-row>
       <v-divider class="divider_bottom" />
@@ -223,6 +232,11 @@ export default {
     return {
       devicesId: null, // 選ばれたデバイスID
       year: null, //年度
+      deviceName: null,
+      titles: [],
+      burdens: [],
+      amounts: [],
+      counts: [],
 
       fruitValues: {
         burden: null, //* 着果負担
@@ -262,6 +276,7 @@ export default {
     initialize: function (menu) {
       this.devicesId = menu.selectedDevice.id;
       this.year = menu.selectedYear.id;
+      this.deviceName = menu.selectedDevice.name;
       this.getUseFruitValues();
       this.$nextTick(function () {
         this.$refs.date1.initialize(menu.selectedYear);
@@ -305,11 +320,53 @@ export default {
           //成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            this.fruitValues.burden =
-              null == data.burden ? "未設定" : data.burden;
-            this.fruitValues.amount =
-              null == data.amount ? "未設定" : data.amount;
-            this.fruitValues.count = null == data.count ? "未設定" : data.count;
+            let shortBurden = Math.round(data.burden * 100) / 100;
+            let shortAmount = Math.round(data.amount * 100) / 100;
+            let shortCount = Math.round(data.count * 100) / 100;
+            let burdernString;
+            let amountString;
+            let countString;
+            if (this.titles.length == 0) {
+              burdernString = String(shortBurden);
+              amountString = String(shortAmount);
+              countString = String(shortCount);
+            } else {
+              let diff = shortBurden - this.burdens[0];
+              burdernString =
+                diff > 0
+                  ? String(shortBurden) + "(+" + String(diff) + ")"
+                  : String(shortBurden) + "(" + String(diff) + ")";
+              diff = shortAmount - this.amounts[0];
+              amountString =
+                diff > 0
+                  ? String(shortAmount) + "(+" + String(diff) + ")"
+                  : String(shortAmount) + "(" + String(diff) + ")";
+              diff = shortCount - this.counts[0];
+              countString =
+                diff > 0
+                  ? String(shortCount) + "(+" + String(diff) + ")"
+                  : String(shortCount) + "(" + String(diff) + ")";
+            }
+
+            let inclueded = false;
+            let index = 0;
+            for (const title of this.titles) {
+              if (title == this.deviceName) {
+                inclueded = true;
+                break;
+              }
+              index++;
+            }
+            if (!inclueded) {
+              this.titles.push(this.deviceName);
+              this.burdens.push(burdernString);
+              this.amounts.push(amountString);
+              this.counts.push(countString);
+            } else {
+              this.burdens.splice(index, 1, burdernString);
+              this.amounts.splice(index, 1, amountString);
+              this.counts.splice(index, 1, countString);
+            }
           } else {
             alert("詳細取得ができませんでした。");
             throw new Error(message);
