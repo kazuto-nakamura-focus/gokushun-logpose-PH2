@@ -127,10 +127,11 @@ const useFruitValue = (deviceId, targetDate, eventId) => {
   return axios.get("/fruit/value", config);
 };
 //圃場着果量着果負担詳細取得
-const useFruitValues = (deviceId) => {
+const useFruitValues = (deviceId, year) => {
   const config = {
     params: {
       deviceId,
+      year
     },
   };
   return axios.get("/fruit/values", config);

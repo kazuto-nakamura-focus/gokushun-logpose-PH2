@@ -50,16 +50,16 @@ public class FruitsServiceImpl implements FruitsService
 	 * 圃場着果量着果負担詳細取得処理
 	 *
 	 * @param deviceId-デバイスID
-	 * @param date-取得するデータの日付（今日なら前の日）
+	 * @param year - 年度
 	 * @return 着果実績値
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
 	@Override
 	@Transactional(readOnly = true)
-	public FruitValuesDTO getFruitValues(Long deviceId)
+	public FruitValuesDTO getFruitValues(Long deviceId, Short year)
 		{
-		return this.fruitDomain.getFruitData(deviceId);
+		return this.fruitDomain.getFruitData(deviceId, year);
 		}
 
 	// ===============================================

@@ -20,12 +20,13 @@ public interface FruitsService
 	/**
 	 * 圃場着果量着果負担詳細取得処理
 	 *
-	 * @param deviceId-デバイスID
+	 * @param deviceId - デバイスID
+	 * @param year - 対象年度
 	 * @return 着果実績値
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public FruitValuesDTO getFruitValues(Long deviceId);
+	public FruitValuesDTO getFruitValues(Long deviceId, Short year);
 
 	// ===============================================
 	// パブリック関数(更新系)

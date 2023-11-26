@@ -12,34 +12,33 @@
 		<result column="realArea" property="realArea"></result>
 		<result column="culmitiveCnopyPs" property="culmitiveCnopyPs"></result>
 		<result column="crownLeafArea" property="crownLeafArea"></result>
-	</resultMap>	
-	
-	 <select id="getModelData" resultMap="ModelDTO">
-	 	SELECT
-	 		rf.average as fruitsAverage,
-	 		rf.count as fruitsCount,
-	 		db.tm as tm,
-	 		rfa.count as leafArea, <!-- 新梢辺り葉枚数  -->
-	 		rfc.count as leafCount,  <!-- 新梢数  -->
-			md.culmitive_cnopy_ps as culmitiveCnopyPs,
-			md.crown_leaf_area as crownLeafArea
-		FROM
-			ph2_real_fruits_data rf
-	   	JOIN
-	   		ph2_device_day dd on rf.device_id=dd.device_id
-	   	JOIN
-	   		ph2_daily_base_data db on dd.id=db.day_id
-		JOIN
-			ph2_model_data md on dd.id=md.day_id
-		JOIN
-			ph2_real_leaf_shoots_area rfa on rf.device_id=rfa.device_id
-		JOIN
-			ph2_real_leaf_shoots_count rfc on rf.device_id=rfc.device_id
-		WHERE
-			rf.device_id = #{deviceId}
-		AND
-			dd.date =#{targetDate}
-	 </select>
+	</resultMap>
 
-	
+	<select id="getModelData" resultMap="ModelDTO">
+		SELECT
+		rf.average AS fruitsAverage,
+		rf.COUNT AS fruitsCount,
+		db.tm AS tm,
+		rfa.COUNT AS leafArea,
+		rfc.COUNT AS leafCount,
+		md.culmitive_cnopy_ps AS culmitiveCnopyPs,
+		md.crown_leaf_area AS crownLeafArea,
+		rf.target_date,
+		dd.DATE
+		FROM
+		ph2_device_day dd
+		JOIN ph2_daily_base_data db ON dd.ID = db.day_id
+		JOIN ph2_model_data md ON dd.ID = md.day_id
+		LEFT JOIN ph2_real_fruits_data rf ON dd.device_id = rf.device_id
+		LEFT JOIN ph2_real_leaf_shoots_area rfa ON dd.device_id = rfa.device_id
+		LEFT JOIN ph2_real_leaf_shoots_count rfc ON dd.device_id =
+		rfc.device_id
+		WHERE
+		dd.device_id = #{deviceId}
+		AND
+		dd.DATE <![CDATA[<=]]> #{targetDate}
+		ORDER BY dd.DATE DESC, rf.target_date DESC
+	</select>
+
+
 </mapper>

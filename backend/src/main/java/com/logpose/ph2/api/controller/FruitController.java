@@ -79,12 +79,14 @@ public class FruitController
 	 */
 	/// --------------------------------------------------
 	@GetMapping("/values")
-	public ResponseDTO detail(HttpServletRequest httpReq, @RequestParam("deviceId") Long deviceId)
+	public ResponseDTO detail(HttpServletRequest httpReq, 
+			@RequestParam("deviceId") Long deviceId,
+			@RequestParam("year") Short year)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			FruitValuesDTO as_result = this.fruitService.getFruitValues(deviceId);
+			FruitValuesDTO as_result = this.fruitService.getFruitValues(deviceId, year);
 			as_dto.setSuccess(as_result);
 			}
 		catch (Exception e)

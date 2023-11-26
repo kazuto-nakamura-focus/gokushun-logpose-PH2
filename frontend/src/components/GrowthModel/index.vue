@@ -154,17 +154,17 @@ export default {
             } else {
               this.$nextTick(function () {
                 // * グラフの表示
-                  this.$refs.gfa.setGraphData(this.selectedMenu);
+                this.$refs.gfa.setGraphData(this.selectedMenu);
               });
             }
           } else {
             // 着果負担エリアがまだ未生成の場合
             if (!this.isFVDisplayed) {
               this.isFVDisplayed = true;
-              this.$nextTick(function () {
-                this.$refs.refFVActualValueInput.initialize(this.selectedMenu);
-              });
             }
+            this.$nextTick(function () {
+              this.$refs.refFVActualValueInput.initialize(this.selectedMenu);
+            });
           }
         }
       }.bind(this)
@@ -238,7 +238,7 @@ export default {
         }
       }
       this.dates = dates;
-      if(this.dates.length > 2){
+      if (this.dates.length > 2) {
         var graphTitile = "(" + this.dates[0] + "～" + this.dates[1] + ")";
         this.$refs.gr.updateGraph(
           key,

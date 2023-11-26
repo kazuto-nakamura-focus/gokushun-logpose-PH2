@@ -257,13 +257,12 @@ export default {
   components: {
     Ph2DatePicker,
   },
-  mounted() {
-    this.getUseFruitValues();
-  },
+  mounted() {},
   methods: {
     initialize: function (menu) {
       this.devicesId = menu.selectedDevice.id;
       this.year = menu.selectedYear.id;
+      this.getUseFruitValues();
       this.$nextTick(function () {
         this.$refs.date1.initialize(menu.selectedYear);
         this.$refs.date2.initialize(menu.selectedYear);
@@ -301,7 +300,7 @@ export default {
     },
     getUseFruitValues() {
       //圃場着果量着果負担詳細取得
-      useFruitValues(this.devicesId)
+      useFruitValues(this.devicesId, this.year)
         .then((response) => {
           //成功時
           const { status, message, data } = response["data"];

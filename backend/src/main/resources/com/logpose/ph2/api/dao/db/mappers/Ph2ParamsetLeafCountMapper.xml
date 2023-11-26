@@ -284,17 +284,19 @@
     where paramset_id = #{paramsetId,jdbcType=BIGINT}
   </update>
   
-    <select id="selectByDefautFlag" parameterType="java.lang.Long" resultMap="BaseResultMap">
+    <select id="selectByDefautFlag" resultMap="BaseResultMap">
     SELECT 
     	lc.paramset_id, lc.value_c, lc.value_d, lc.created_at, lc.updated_at
     FROM
     	ph2_paramset_leaf_count lc
     JOIN
-    	ph2_paramset_catalog pc ON lc.device_id=pc.device_id
+    	ph2_paramset_catalog pc ON lc.paramset_id=pc.id
     WHERE 
-    	lc.device_id = #{deviceId}
+    	pc.device_id = #{deviceId}
     AND
     	pc.default_flag = true
+    AND 
+    	pc.year = #{year}
   </select>
   
 </mapper>

@@ -157,7 +157,7 @@ public class GrowthDomain extends GraphDomain
 				entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 				long id = this.ph2RealGrowthFStageMapper.insert(entity);
-				entity.setId(id);
+				entity.setId(id);// TODO 必要か？
 				records.add(entity);
 				}
 			return records;

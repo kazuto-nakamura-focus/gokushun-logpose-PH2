@@ -79,5 +79,5 @@ public interface Ph2ParamsetLeafCountMapper {
 	 */
 	int updateByPrimaryKey(Ph2ParamsetLeafCountEntity row);
 
-	List<Ph2ParamsetLeafCountEntity> selectByDefautFlag(@Param("deviceId") Long deviceId);
+	List<Ph2ParamsetLeafCountEntity> selectByDefautFlag(@Param("deviceId") Long deviceId, @Param("year") Short year);
 }
