@@ -53,7 +53,7 @@ public class DeviceDayDomain
 	 * @param data 値のリスト
 	 * @return 統計終了日
 	 ------------------------------------------------------ */
-	public short updateModelData(short lapseDay, Long deviceId, short refyear, short targetyear, 
+	public short updateModelData(short lapseDay, Long deviceId, short refyear, short targetyear,
 			List<Double> data)
 		{
 		for (Double value : data)
@@ -65,6 +65,10 @@ public class DeviceDayDomain
 					.andYearEqualTo(refyear).andLapseDayEqualTo(lapseDay);
 			List<Ph2DeviceDayEntity> days = this.ph2DeviceDayMapper
 					.selectByExample(ddexm);
+			if (days.size() == 0)
+				{
+				break;
+				}
 			Ph2DeviceDayEntity ddentity = days.get(0);
 			// * ---END---
 			// 該当データがない場合は終了
