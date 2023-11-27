@@ -8,8 +8,10 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.dao.db.entity.joined.AnnotationDTO;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.utility.DateTimeUtility;
@@ -22,6 +24,8 @@ public class PhotoGraphDomain extends GraphDomain
 	// ===============================================
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
+	@Autowired
+	private GrowthDomainMapper growthDomainMapper;
 
 	// --------------------------------------------------
 	/**
@@ -69,6 +73,10 @@ public class PhotoGraphDomain extends GraphDomain
 		areaModel.setYEnd(entites.get(entites.size() - 1).getCulmitiveCnopyPs());
 // * コメント
 		super.setComment(deviceId, year, areaModel);
+		
+		List<AnnotationDTO> annotations = this.growthDomainMapper
+				.selectFValues(deviceId, year);
+		areaModel.setAnnotations(annotations);
 // * 光合成推定グラフの日付カテゴリの設定
 		areaModel.setCategory(category);
 		return areaModel;
