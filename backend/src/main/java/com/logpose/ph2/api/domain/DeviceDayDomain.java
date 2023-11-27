@@ -53,16 +53,16 @@ public class DeviceDayDomain
 	 * @param data 値のリスト
 	 * @return 統計終了日
 	 ------------------------------------------------------ */
-	public short updateModelData(short lapseDay, Long deviceId, short year,
+	public short updateModelData(short lapseDay, Long deviceId, short refyear, short targetyear, 
 			List<Double> data)
 		{
 		for (Double value : data)
 			{
-// * デバイスの日付ごとのデータからその年の年度の経過日のデータを取得する
+// * デバイスの日付ごとのデータからその年の年度の経過日の参照データを取得する
 // * --- START ---
 			Ph2DeviceDayEntityExample ddexm = new Ph2DeviceDayEntityExample();
 			ddexm.createCriteria().andDeviceIdEqualTo(deviceId)
-					.andYearEqualTo(year).andLapseDayEqualTo(lapseDay);
+					.andYearEqualTo(refyear).andLapseDayEqualTo(lapseDay);
 			List<Ph2DeviceDayEntity> days = this.ph2DeviceDayMapper
 					.selectByExample(ddexm);
 			Ph2DeviceDayEntity ddentity = days.get(0);
@@ -70,15 +70,30 @@ public class DeviceDayDomain
 			// 該当データがない場合は終了
 			if (days.size() == 0)
 				break;
-// * デバイス日付IDに対応するモデルデータを取得する
+// * デバイス日付IDに対応する参照モデルデータを取得する
 			Ph2ModelDataEntityExample exm = new Ph2ModelDataEntityExample();
 			exm.createCriteria().andDayIdEqualTo(ddentity.getId());
-			List<Ph2ModelDataEntity> list = this.ph2ModelDataMapper.selectByExample(exm);
+			List<Ph2ModelDataEntity> srclist = this.ph2ModelDataMapper.selectByExample(exm);
+// * 年度が違う場合、更新するモデルデータを取得する
+			List<Ph2ModelDataEntity> dstlist = srclist;
+			if (refyear != targetyear)
+				{
+				ddexm = new Ph2DeviceDayEntityExample();
+				ddexm.createCriteria().andDeviceIdEqualTo(deviceId)
+						.andYearEqualTo(targetyear).andLapseDayEqualTo(lapseDay);
+				days = this.ph2DeviceDayMapper
+						.selectByExample(ddexm);
+				ddentity = days.get(0);
+				// * デバイス日付IDに対応する参照モデルデータを取得する
+				exm = new Ph2ModelDataEntityExample();
+				exm.createCriteria().andDayIdEqualTo(ddentity.getId());
+				dstlist = this.ph2ModelDataMapper.selectByExample(exm);
+				}
 			Ph2ModelDataEntity entity;
 // * 既にモデルデータが存在する場合は値を更新する。
-			if (list.size() > 0)
+			if (dstlist.size() > 0)
 				{
-				entity = list.get(0);
+				entity = dstlist.get(0);
 				entity.setfValue(value);
 				this.ph2ModelDataMapper.updateByExample(entity, exm);
 				}

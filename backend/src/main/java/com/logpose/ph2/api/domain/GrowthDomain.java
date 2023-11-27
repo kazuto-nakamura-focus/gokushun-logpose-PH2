@@ -221,8 +221,8 @@ public class GrowthDomain extends GraphDomain
 		// *モデルデータテーブルに生育推定モデルデータを設定する
 		short startDay = 1;
 		startDay = this.deviceDayDomain.updateModelData(startDay, deviceId,
-				year, data.getValues());
-		this.deviceDayDomain.updateModelData(startDay, deviceId, year,
+				year, year, data.getValues());
+		this.deviceDayDomain.updateModelData(startDay, deviceId, (short)(year-1), year,
 				data.getPredictValues());
 		}
 
