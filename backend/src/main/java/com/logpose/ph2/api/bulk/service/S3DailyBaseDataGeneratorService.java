@@ -18,6 +18,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
 import com.logpose.ph2.api.dto.BaseDataDTO;
+import com.logpose.ph2.api.dto.SingleDoubleValueDTO;
 
 @Service
 public class S3DailyBaseDataGeneratorService
@@ -43,6 +44,8 @@ public class S3DailyBaseDataGeneratorService
 	public void doService(List<Ph2DeviceDayEntity> deviceDays, Date startDate)
 		{
 		LOG.info("日ベースのデータ作成開始");
+		SingleDoubleValueDTO prevCdd = new SingleDoubleValueDTO();
+		prevCdd.setValue((double) 0);
 		for (Ph2DeviceDayEntity deviceDay : deviceDays)
 			{
 // * その日の１０分単位のデータで気温と光合成有効放射束密度を取得する
@@ -52,7 +55,7 @@ public class S3DailyBaseDataGeneratorService
 // * その日のデータが存在する場合
 			if (tmRecords.size() > 0)
 				{
-				this.addTmData(deviceDay, tmRecords);
+				this.addTmData(deviceDay, tmRecords, prevCdd);
 				this.setIsolationData(deviceDay, tmRecords);
 				deviceDay.setHasReal(true);
 				this.ph2DeviceDayMapper.updateByPrimaryKey(deviceDay);
@@ -61,7 +64,7 @@ public class S3DailyBaseDataGeneratorService
 		LOG.info("日ベースのデータ作成終了");
 		}
 
-	private void addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList)
+	private void addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList, SingleDoubleValueDTO prevCdd)
 		{
 		float min = tempList.get(0).getTemperature();
 		float max = min;
@@ -113,7 +116,9 @@ public class S3DailyBaseDataGeneratorService
 		entity.setDayId(device.getId());
 		entity.setAverage(sum / count);
 		entity.setTm((min + max) / 2 - 10);
-		entity.setCdd((min + max) / 2 - 9.18);
+		double cdd  = prevCdd.getValue() + ( (min + max) / 2 - 9.18);
+		prevCdd.setValue(cdd);
+		entity.setCdd(cdd);
 		if (entities.size() > 0)
 			{
 			this.ph2DailyBaseDataMapper.updateByExample(entity, exm);

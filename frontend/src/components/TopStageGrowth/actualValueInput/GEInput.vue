@@ -260,8 +260,7 @@ export default {
       //選択日の実績値取得
       await callback(this.picker, this.deviceId);
       this.rowData[0].actualDate = this.picker;
-      this.rowData[0].accumulatedF =
-        this.saveAccumulatedF - (this.saveIntervalF - this.fValueInterval);
+      this.rowData[0].accumulatedF = this.accumulatedF;
       await this.gridApi.refreshCells({ force: true });
       this.rowData[0].intervalF = this.fValueInterval;
       this.achievementValueDataSaveData = this.rowData[0];
