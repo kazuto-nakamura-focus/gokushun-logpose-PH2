@@ -277,12 +277,64 @@ export default {
       this.devicesId = menu.selectedDevice.id;
       this.year = menu.selectedYear.id;
       this.deviceName = menu.selectedDevice.name;
-      this.getUseFruitValues();
+      this.getBaseUseFruitValues();
       this.$nextTick(function () {
         this.$refs.date1.initialize(menu.selectedYear);
         this.$refs.date2.initialize(menu.selectedYear);
         this.$refs.date3.initialize(menu.selectedYear);
       });
+    },
+    //* ============================================
+    // 着果量・着果負担整形
+    //* ============================================
+    formatFuitsValues(deviceName, data) {
+      let shortBurden = Math.round(data.burden * 100) / 100;
+      let shortAmount = Math.round(data.amount * 100) / 100;
+      let shortCount = Math.round(data.count * 100) / 100;
+      let burdernString;
+      let amountString;
+      let countString;
+      if (this.titles.length == 0) {
+        burdernString = String(shortBurden);
+        amountString = String(shortAmount);
+        countString = String(shortCount);
+      } else {
+        let diff = shortBurden - this.burdens[0];
+        burdernString =
+          diff > 0
+            ? String(shortBurden) + "(+" + String(diff) + ")"
+            : String(shortBurden) + "(" + String(diff) + ")";
+        diff = shortAmount - this.amounts[0];
+        amountString =
+          diff > 0
+            ? String(shortAmount) + "(+" + String(diff) + ")"
+            : String(shortAmount) + "(" + String(diff) + ")";
+        diff = shortCount - this.counts[0];
+        countString =
+          diff > 0
+            ? String(shortCount) + "(+" + String(diff) + ")"
+            : String(shortCount) + "(" + String(diff) + ")";
+      }
+
+      let inclueded = false;
+      let index = 0;
+      for (const title of this.titles) {
+        if (title == deviceName) {
+          inclueded = true;
+          break;
+        }
+        index++;
+      }
+      if (!inclueded) {
+        this.titles.push(deviceName);
+        this.burdens.push(burdernString);
+        this.amounts.push(amountString);
+        this.counts.push(countString);
+      } else {
+        this.burdens.splice(index, 1, burdernString);
+        this.amounts.splice(index, 1, amountString);
+        this.counts.splice(index, 1, countString);
+      }
     },
     getFruitValue(eventId, field) {
       useFruitValue(this.devicesId, field.date, eventId)
@@ -313,6 +365,27 @@ export default {
       if (null != date) this.fruitValueBagging.date = date;
       this.getFruitValue(3, this.fruitValueBagging);
     },
+    getBaseUseFruitValues() {
+      //圃場着果量着果負担詳細取得
+      useFruitValues(53, this.year)
+        .then((response) => {
+          //成功時
+          const { status, message, data } = response["data"];
+          if (status === 0) {
+            this.formatFuitsValues("葡萄専心イチノセ", data);
+            this.getUseFruitValues();
+          } else {
+            alert("詳細取得ができませんでした。");
+            throw new Error(message);
+          }
+          console.log(this.devicesId);
+          console.log(this.year);
+        })
+        .catch((error) => {
+          //失敗時
+          console.log(error);
+        });
+    },
     getUseFruitValues() {
       //圃場着果量着果負担詳細取得
       useFruitValues(this.devicesId, this.year)
@@ -320,53 +393,7 @@ export default {
           //成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            let shortBurden = Math.round(data.burden * 100) / 100;
-            let shortAmount = Math.round(data.amount * 100) / 100;
-            let shortCount = Math.round(data.count * 100) / 100;
-            let burdernString;
-            let amountString;
-            let countString;
-            if (this.titles.length == 0) {
-              burdernString = String(shortBurden);
-              amountString = String(shortAmount);
-              countString = String(shortCount);
-            } else {
-              let diff = shortBurden - this.burdens[0];
-              burdernString =
-                diff > 0
-                  ? String(shortBurden) + "(+" + String(diff) + ")"
-                  : String(shortBurden) + "(" + String(diff) + ")";
-              diff = shortAmount - this.amounts[0];
-              amountString =
-                diff > 0
-                  ? String(shortAmount) + "(+" + String(diff) + ")"
-                  : String(shortAmount) + "(" + String(diff) + ")";
-              diff = shortCount - this.counts[0];
-              countString =
-                diff > 0
-                  ? String(shortCount) + "(+" + String(diff) + ")"
-                  : String(shortCount) + "(" + String(diff) + ")";
-            }
-
-            let inclueded = false;
-            let index = 0;
-            for (const title of this.titles) {
-              if (title == this.deviceName) {
-                inclueded = true;
-                break;
-              }
-              index++;
-            }
-            if (!inclueded) {
-              this.titles.push(this.deviceName);
-              this.burdens.push(burdernString);
-              this.amounts.push(amountString);
-              this.counts.push(countString);
-            } else {
-              this.burdens.splice(index, 1, burdernString);
-              this.amounts.splice(index, 1, amountString);
-              this.counts.splice(index, 1, countString);
-            }
+            this.formatFuitsValues(this.deviceName, data);
           } else {
             alert("詳細取得ができませんでした。");
             throw new Error(message);

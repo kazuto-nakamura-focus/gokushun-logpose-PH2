@@ -118,6 +118,7 @@ export default {
     //F値変更カレンダー
     const elStageIntervalFormatter = (params) => {
       if (this.elStageIntervalFormatterStatus) {
+        this.fValueInterval = Math.round(this.fValueInterval * 100) / 100;
         return `${params.value} -> ${this.fValueInterval}`;
       } else {
         return params.value;

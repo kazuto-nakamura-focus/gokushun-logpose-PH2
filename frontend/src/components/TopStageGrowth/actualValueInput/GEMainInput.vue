@@ -266,6 +266,7 @@ export default {
         .then((response) => {
           //成功時
           const results = response["data"];
+          moment.locale("ja");
           this.originGrowthFAllData = results.data;
           const GrowthRowData = this.changeGrowthForm(results.data);
           this.rowData = GrowthRowData;
@@ -380,8 +381,13 @@ export default {
       let dataTypeArr = [];
       changeData.map((data, i) => {
         const elStageData = data.stageStart + "-" + data.stageEnd;
-        if (null != data.actualDate)
-          data.actualDate = data.actualDate.substring(0, 9);
+        if (null != data.actualDate) {
+          let tmp = data.actualDate.substring(0, 10) + " 00:00:00";
+          let day = moment(tmp).add(1, "d");
+
+          data.actualDate = day.format("YYYY-MM-DD");
+        }
+
         let dataType = {
           ...data,
           order: i + 1,
