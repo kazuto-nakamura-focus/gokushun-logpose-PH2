@@ -1,5 +1,7 @@
 package com.logpose.ph2.api.domain;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2ParamSetJoinMapper;
@@ -26,7 +28,14 @@ public class GraphDomain
 	// --------------------------------------------------
 	public void setComment(Long device, Short year, RealModelGraphDataDTO dto)
 		{
-		String comment = this.ph2ParamSetJoinMapper.selectLatestComment(device, year).get(0);
-		dto.setComment(comment);
+		List<String> comments = this.ph2ParamSetJoinMapper.selectLatestComment(device, year);
+		if (comments.size() == 0)
+			{
+			dto.setComment("");
+			}
+		else
+			{
+			dto.setComment(comments.get(0));
+			}
 		}
 	}
