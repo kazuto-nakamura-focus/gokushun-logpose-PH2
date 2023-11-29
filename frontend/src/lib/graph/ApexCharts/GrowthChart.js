@@ -185,7 +185,11 @@ export class GrowthChart {
       }
       if (annotations.length > 0) {
         this.data.chartOptions.annotations.yaxis = annotations;
+      } else {
+        this.data.chartOptions.annotations.yaxis = [];
       }
+    } else {
+      this.data.chartOptions.annotations.yaxis = [];
     }
     const strToday = moment().format("MM/DD");
     todayXaxisAnnotation["x"] = strToday;

@@ -102,6 +102,16 @@ export default {
           selectedItems.selectedYear.id
         )
           .then((response) => {
+            const results = response["data"];
+            const status = results["status"];
+            const responseData = results["data"];
+
+            //生育ステージ以外の生育モデルは、Annotations削除
+            if(status === 0){
+              responseData.forEach((element) => {
+                element["annotations"] = null;
+              });
+            }
             //成功時
             // グラフの表示オプションを設定
             let gc = new GrowthChart();
@@ -148,7 +158,13 @@ export default {
         )
           .then((response) => {
             //成功時
-            const results = response["data"].data;
+            const responseData = response["data"];
+            const status = responseData["status"];
+            const results = responseData["data"];
+
+            if(status === 0){
+              results["annotations"] = null;
+            }
 
             // グラフの表示オプションを設定
             let gc = new GrowthChart();
@@ -162,7 +178,6 @@ export default {
               true,
               null
             );
-            console.log(results);
           })
           .catch((error) => {
             //失敗時
