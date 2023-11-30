@@ -147,7 +147,7 @@ export default {
         realGraph.data.push(item);
         
         //生育名の閾値が近い日付を抽出するための処理：「実績」一覧から抽出
-        if(categories !== undefined && annotations !== undefined && annotationIndex < annotations.length){
+        if(categories !== undefined && categories !== null && annotations !== undefined && annotations !== null && annotationIndex < annotations.length){
           const annotation = annotations[annotationIndex];
           if(annotation !== undefined && annotation["category"] === undefined){
             if(annotation["value"] <= item){
@@ -166,7 +166,7 @@ export default {
         predictGraph.data.push(item);
         
         //生育名の閾値が近い日付を抽出するための処理：「推定」一覧から抽出
-        if(categories !== undefined && annotations !== undefined && annotationIndex < annotations.length){
+        if(categories !== undefined && categories !== null && annotations !== undefined && annotations !== null && annotationIndex < annotations.length){
           const annotation = annotations[annotationIndex];
           if(annotation !== undefined && annotation["category"] === undefined){
             if(annotation["value"] <= item){
@@ -180,11 +180,13 @@ export default {
       }
 
       const tempLabels = [];
-      annotations.forEach(annotation => {
-        if(annotation["category"] !== undefined)
-          tempLabels.push(`${annotation["estimationLabel"]}:${annotation["category"]}`);
-      });
-      if(tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
+      if(annotations !== undefined && annotations !== null){
+        annotations.forEach(annotation => {
+          if(annotation["category"] !== undefined)
+            tempLabels.push(`${annotation["estimationLabel"]}:${annotation["category"]}`);
+        });
+        if(tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
+      }
       
       this.$refs.chart.updateSeries(
         [
