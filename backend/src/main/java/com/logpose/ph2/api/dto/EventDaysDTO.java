@@ -8,8 +8,9 @@ import lombok.Data;
  * 生育推定イベントデータ取得
  */
 @Data
-public class EventDaysDTO
+public class EventDaysDTO 
 	{
-	private String eventName;
+	private String name;
 	private Date date;
+	private Double value;
 	}

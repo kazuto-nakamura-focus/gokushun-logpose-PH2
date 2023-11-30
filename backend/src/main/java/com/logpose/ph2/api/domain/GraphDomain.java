@@ -1,10 +1,17 @@
 package com.logpose.ph2.api.domain;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
+import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
+import com.logpose.ph2.api.dao.db.entity.joined.FDataEntity;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2ParamSetJoinMapper;
+import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 
 public class GraphDomain
@@ -14,10 +21,58 @@ public class GraphDomain
 	// ===============================================
 	@Autowired
 	private Ph2ParamSetJoinMapper ph2ParamSetJoinMapper;
-
+	@Autowired
+	private Ph2RealGrowthFStageMapper ph2RealGrowthFStageMapper;
+	@Autowired
+	private GrowthDomainMapper growthDomainMapper;
 	// ===============================================
 	// 公開関数群
 	// ===============================================
+	// --------------------------------------------------
+		/**
+		 * 生育推定イベントデータ取得
+		 *
+		 * @param deviceId-デバイスID
+		 * @param year-年度
+		 * @return EventDaysDTO
+		 */
+		// --------------------------------------------------
+		public List<EventDaysDTO> getEvent(Long deviceId, Short year)
+			{
+			List<EventDaysDTO> resultData = new ArrayList<>();
+	// * Fステージデータの取得
+	// * 検索条件の設定
+			Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
+			exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year);
+			exm.setOrderByClause("stage_start asc");
+	// * Fステージデータの取得
+			List<Ph2RealGrowthFStageEntity> fstages = this.ph2RealGrowthFStageMapper
+					.selectByExample(exm);
+	// *モデルテーブルからFデータの取得
+			List<FDataEntity> values = this.growthDomainMapper
+					.selectValueAndDays(deviceId, year);
+	// * Fステージデータの累積値に達しているモデルデータの日付を戻り値のオブジェクトに追加する
+			int index = 0;
+			for (Ph2RealGrowthFStageEntity item : fstages)
+				{
+				// * 累積F値
+				Double sigF = item.getAccumulatedF();
+				for (; index < values.size(); index++)
+					{
+					final FDataEntity value = values.get(index);
+					if (value.getValue() > sigF)
+						{
+						EventDaysDTO eventDay = new EventDaysDTO();
+						eventDay.setName(item.getStageName());
+						eventDay.setDate(value.getDate());
+						eventDay.setValue(value.getValue());
+						resultData.add(eventDay);
+						break;
+						}
+					}
+				}
+			return resultData;
+			}
 	// --------------------------------------------------
 	/**
 	 * グラフにコメントを付与する

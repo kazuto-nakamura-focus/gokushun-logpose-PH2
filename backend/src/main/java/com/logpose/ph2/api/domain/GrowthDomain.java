@@ -20,8 +20,6 @@ import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
-import com.logpose.ph2.api.dao.db.entity.joined.AnnotationDTO;
-import com.logpose.ph2.api.dao.db.entity.joined.FDataEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetGrowthMapper;
@@ -337,56 +335,11 @@ public class GrowthDomain extends GraphDomain
 		resultData.setPredictValues(predictValues);
 		resultData.setCategory(category);
 		// * アノテーションデータの生成
-		List<AnnotationDTO> annotations = this.growthDomainMapper
-				.selectFValues(deviceId, year);
+		List<EventDaysDTO> annotations = super.getEvent(deviceId, year);
 		resultData.setAnnotations(annotations);
 		// * コメント
 		super.setComment(deviceId, year, resultData);
 		// * グラフデータの返却
-		return resultData;
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 生育推定イベントデータ取得
-	 *
-	 * @param deviceId-デバイスID
-	 * @param year-年度
-	 * @return EventDaysDTO
-	 */
-	// --------------------------------------------------
-	public List<EventDaysDTO> getEvent(Long deviceId, Short year)
-		{
-		List<EventDaysDTO> resultData = new ArrayList<>();
-// * Fステージデータの取得
-// * 検索条件の設定
-		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year);
-		exm.setOrderByClause("stage_start asc");
-// * Fステージデータの取得
-		List<Ph2RealGrowthFStageEntity> fstages = this.ph2RealGrowthFStageMapper
-				.selectByExample(exm);
-// *モデルテーブルからFデータの取得
-		List<FDataEntity> values = this.growthDomainMapper
-				.selectValueAndDays(deviceId, year);
-// * Fステージデータの累積値に達しているモデルデータの日付を戻り値のオブジェクトに追加する
-		int index = 0;
-		for (Ph2RealGrowthFStageEntity item : fstages)
-			{
-			// * 累積F値
-			Double sigF = item.getAccumulatedF();
-			for (; index < values.size(); index++)
-				{
-				if (values.get(index).getValue() > sigF)
-					{
-					EventDaysDTO eventDay = new EventDaysDTO();
-					eventDay.setEventName(item.getStageName());
-					eventDay.setDate(values.get(index).getDate());
-					resultData.add(eventDay);
-					break;
-					}
-				}
-			}
 		return resultData;
 		}
 

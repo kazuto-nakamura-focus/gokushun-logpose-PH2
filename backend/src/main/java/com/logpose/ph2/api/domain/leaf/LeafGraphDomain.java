@@ -8,11 +8,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.dao.db.entity.joined.AnnotationDTO;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
+import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -104,10 +104,6 @@ public class LeafGraphDomain extends GraphDomain
 		super.setComment(deviceId, year, countModel);
 // * 葉枚数グラフの日付カテゴリの設定
 		countModel.setCategory(category);
-		List<AnnotationDTO> annotations = this.growthDomainMapper
-				.selectFValues(deviceId, year);
-		areaModel.setAnnotations(annotations);
-		countModel.setAnnotations(annotations);
 		// * 値の設定
 		List<RealModelGraphDataDTO> resultData = new ArrayList<>();
 		resultData.add(areaModel);

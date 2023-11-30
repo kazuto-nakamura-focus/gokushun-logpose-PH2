@@ -65,20 +65,4 @@
 		ORDER BY dd.lapse_day
 	</select>
 
-	<resultMap id="AnnotationDTO"
-		type="com.logpose.ph2.api.dao.db.entity.joined.AnnotationDTO">
-		<result column="name" property="name"></result>
-		<result column="value" property="value"></result>
-	</resultMap>
-	<select id="selectFValues" resultMap="AnnotationDTO">
-		select
-			stage_name as name,
-			accumulated_f as value
-		from 
-			ph2_real_growth_f_stage
-		where
-			device_id = #{deviceId}
-		and
-			year = #{year}
-	</select>
 </mapper>

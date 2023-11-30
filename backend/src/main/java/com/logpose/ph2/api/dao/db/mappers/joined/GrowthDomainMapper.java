@@ -7,7 +7,6 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.logpose.ph2.api.dao.db.entity.joined.FDataEntity;
-import com.logpose.ph2.api.dao.db.entity.joined.AnnotationDTO;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 
 @Mapper
@@ -19,5 +18,4 @@ public interface GrowthDomainMapper
 	
 	List<FDataEntity> selectValueAndDays(@Param("deviceId") Long deviceId, @Param("year") short year);
 
-	List<AnnotationDTO> selectFValues(@Param("deviceId") Long deviceId, @Param("year") short year);
 	}
