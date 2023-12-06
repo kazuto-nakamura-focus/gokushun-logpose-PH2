@@ -142,6 +142,7 @@
                           dense
                           hide-details="auto"
                           outlined
+                          suffix="㎠"
                           v-model.number="
                             leafAreaAreaData.leafAreaAValueAverage
                           "
