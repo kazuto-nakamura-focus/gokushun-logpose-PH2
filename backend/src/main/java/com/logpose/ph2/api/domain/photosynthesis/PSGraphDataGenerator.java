@@ -27,9 +27,12 @@ public class PSGraphDataGenerator
 			PSModelDataExporter exporter,
 			List<DailyBaseDataDTO> dailyData) throws ParseException
 		{
+// * f値の取得
 		Float f_value = parameters.getParams().getFieldF().floatValue();
+// * g値の取得
 		Float g_value = parameters.getParams().getFieldG().floatValue();
-		double prev = 0;
+// * 積算値
+		double accumulatedValue = 0;
 		for (DailyBaseDataDTO data : dailyData)
 			{
 // * 該当日の実測データを取得する。
@@ -40,16 +43,19 @@ public class PSGraphDataGenerator
 				if (null != entity.getValueF()) f_value = entity.getValueF();
 				if (null != entity.getValueG()) g_value = entity.getValueG();
 				}
-// * 葉面積推定の値を得る
+// * 該当日のモデルデータを取得
 			Ph2ModelDataEntityExample exm = new Ph2ModelDataEntityExample();
 			exm.createCriteria().andDayIdEqualTo(data.getDayId());
 			Ph2ModelDataEntity model = parameters.getPh2ModelDataMapper().selectByExample(exm)
 					.get(0);
-			double value = Formula.toPsAmount(f_value, g_value, prev,
+// * 葉面積推定の値を得る			
+			double value = Formula.toPsAmount(f_value, g_value, accumulatedValue,
 					model.getCrownLeafArea(), data.getPar(), data.getSunTime(),
 					parameters.getShootCount());
-			exporter.add(data.getDayId(), value);
-			prev = value;
+// * テーブルを更新
+			exporter.add(model, value);
+// * 積算値の更新
+			accumulatedValue = value;
 			}
 		}
 	}

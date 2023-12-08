@@ -208,9 +208,7 @@
 import {
   useFruitValue,
   useFruitValues,
-  useFruitValueSproutTreatment,
-  useFruitValueELStage,
-  useFruitValueBagging,
+  useFruitValueUpdate,
 } from "@/api/TopStateGrowth/index";
 import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
 import moment from "moment";
@@ -233,6 +231,8 @@ export default {
       devicesId: null, // 選ばれたデバイスID
       year: null, //年度
       deviceName: null,
+      baseDeviceId: 53,
+      ids: [],
       titles: [],
       burdens: [],
       amounts: [],
@@ -277,7 +277,21 @@ export default {
       this.devicesId = menu.selectedDevice.id;
       this.year = menu.selectedYear.id;
       this.deviceName = menu.selectedDevice.name;
-      this.getBaseUseFruitValues();
+      // * 基準デバイスの場合、リストを初期化
+      if (this.devicesId == this.baseDeviceId) {
+        this.ids.length = 0;
+        this.titles.length = 0;
+        this.burdens.length = 0;
+        this.amounts.length = 0;
+        this.counts.length = 0;
+      }
+      // * 基準デバイスデータが無い場合 *//
+      if (0 == this.ids.length) {
+        this.getBaseUseFruitValues();
+      } else {
+        this.getUseFruitValues();
+      }
+
       this.$nextTick(function () {
         this.$refs.date1.initialize(menu.selectedYear);
         this.$refs.date2.initialize(menu.selectedYear);
@@ -287,55 +301,67 @@ export default {
     //* ============================================
     // 着果量・着果負担整形
     //* ============================================
-    formatFuitsValues(deviceName, data) {
+    formatFuitsValues(deviceId, deviceName, data) {
       let shortBurden = Math.round(data.burden * 100) / 100;
+      if (shortBurden.isNaN) shortBurden = 0;
       let shortAmount = Math.round(data.amount * 100) / 100;
+      if (shortAmount.isNaN) shortAmount = 0;
       let shortCount = Math.round(data.count * 100) / 100;
+      if (shortCount.isNaN) shortCount = 0;
       let burdernString;
       let amountString;
       let countString;
-      if (this.titles.length == 0) {
+      // 基準デバイスの場合
+      if (this.devicesId == this.baseDeviceId) {
         burdernString = String(shortBurden);
         amountString = String(shortAmount);
         countString = String(shortCount);
       } else {
+        // 比較デバイスの場合
         let diff = shortBurden - this.burdens[0];
+        diff = Math.round(diff * 100) / 100;
         burdernString =
           diff > 0
             ? String(shortBurden) + "(+" + String(diff) + ")"
             : String(shortBurden) + "(" + String(diff) + ")";
         diff = shortAmount - this.amounts[0];
+        diff = Math.round(diff * 100) / 100;
         amountString =
           diff > 0
             ? String(shortAmount) + "(+" + String(diff) + ")"
             : String(shortAmount) + "(" + String(diff) + ")";
         diff = shortCount - this.counts[0];
+        diff = Math.round(diff * 100) / 100;
         countString =
           diff > 0
             ? String(shortCount) + "(+" + String(diff) + ")"
             : String(shortCount) + "(" + String(diff) + ")";
       }
-
+      // 既に表示されているものがあれば、その値と交換し、無ければ追加する
       let inclueded = false;
       let index = 0;
-      for (const title of this.titles) {
-        if (title == deviceName) {
+      for (const id of this.ids) {
+        if (id == deviceId) {
           inclueded = true;
           break;
         }
         index++;
       }
       if (!inclueded) {
+        this.ids.push(deviceId);
         this.titles.push(deviceName);
         this.burdens.push(burdernString);
         this.amounts.push(amountString);
         this.counts.push(countString);
-      } else {
+      } else if (index != 0) {
         this.burdens.splice(index, 1, burdernString);
         this.amounts.splice(index, 1, amountString);
         this.counts.splice(index, 1, countString);
       }
     },
+    //* ============================================
+    // 個々の着果負担値を取得し、フィールドに設定する
+    //* ============================================
     getFruitValue(eventId, field) {
       useFruitValue(this.devicesId, field.date, eventId)
         .then((response) => {
@@ -367,19 +393,21 @@ export default {
     },
     getBaseUseFruitValues() {
       //圃場着果量着果負担詳細取得
-      useFruitValues(53, this.year)
+      useFruitValues(this.baseDeviceId, this.year)
         .then((response) => {
           //成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            this.formatFuitsValues("葡萄専心イチノセ", data);
+            this.formatFuitsValues(
+              this.baseDeviceId,
+              "葡萄専心イチノセ2本(新)",
+              data
+            );
             this.getUseFruitValues();
           } else {
             alert("詳細取得ができませんでした。");
             throw new Error(message);
           }
-          console.log(this.devicesId);
-          console.log(this.year);
         })
         .catch((error) => {
           //失敗時
@@ -393,7 +421,7 @@ export default {
           //成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            this.formatFuitsValues(this.deviceName, data);
+            this.formatFuitsValues(this.devicesId, this.deviceName, data);
           } else {
             alert("詳細取得ができませんでした。");
             throw new Error(message);
@@ -410,60 +438,41 @@ export default {
       const data = {
         deviceId: parseInt(this.devicesId),
         year: this.year,
-        eventId: null,
+        eventId: 1,
         ...this.fruitValueSproutTreatment,
       };
-      console.log("saveUseFruitValueSproutTreatment", data);
       //着生後芽かき処理時実績値更新
-      useFruitValueSproutTreatment(data)
-        .then((response) => {
-          const { status, message } = response["data"];
-          if (status === 0) {
-            alert("登録が完了しました。");
-            this.getUseFruitValues();
-          } else {
-            alert("登録が失敗しました。");
-            throw new Error(message);
-          }
-        })
-        .catch((error) => {
-          //失敗時
-          console.log(error);
-        });
+      this.updateFruitValue(data);
     },
+
     saveUseFruitValueELStage: function () {
       const data = {
         deviceId: parseInt(this.devicesId),
         year: this.year,
-        eventId: null,
+        eventId: 2,
         ...this.fruitValueELStage,
       };
       ////E-L 27～31の生育ステージ時実績値更新処理
-      useFruitValueELStage(data)
-        .then((response) => {
-          const { status, message } = response["data"];
-          if (status === 0) {
-            alert("登録が完了しました。");
-            this.getUseFruitValues();
-          } else {
-            alert("登録が失敗しました。");
-            throw new Error(message);
-          }
-        })
-        .catch((error) => {
-          //失敗時
-          console.log(error);
-        });
+      this.updateFruitValue(data);
     },
+
     saveUseFruitValueBagging: function () {
       const data = {
         deviceId: parseInt(this.devicesId),
         year: this.year,
-        eventId: null,
+        eventId: 3,
         ...this.fruitValueBagging,
       };
+      this.updateFruitValue(data);
+    },
+    //圃場、年度変更し処理
+    updateTable() {
+      this.getUseFruitValues();
+    },
+
+    updateFruitValue(data) {
       //袋かけ時実績値更新処理
-      useFruitValueBagging(data)
+      useFruitValueUpdate(data)
         .then((response) => {
           const { status, message } = response["data"];
           if (status === 0) {
@@ -478,10 +487,6 @@ export default {
           //失敗時
           console.log(error);
         });
-    },
-    //圃場、年度変更し処理
-    updateTable() {
-      this.getUseFruitValues();
     },
   },
 };

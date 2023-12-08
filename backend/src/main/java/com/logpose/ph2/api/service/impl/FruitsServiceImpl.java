@@ -41,10 +41,12 @@ public class FruitsServiceImpl implements FruitsService
 	 */
 	// --------------------------------------------------
 	@Override
+	@Transactional(readOnly = true)
 	public Ph2RealFruitsDataEntity getRealFruitsData(Long deviceId, Date date, short eventId)
 		{
 		return this.fruitDomain.getRealFruitsData(deviceId, date, eventId);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 圃場着果量着果負担詳細取得処理
@@ -69,8 +71,7 @@ public class FruitsServiceImpl implements FruitsService
 	/**
 	 * 着果実績値更新
 	 *
-	 * @param dto
-	 *            FruitAmountDTO
+	 * @param dto FruitAmountDTO
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
@@ -85,7 +86,7 @@ public class FruitsServiceImpl implements FruitsService
 		entity.setEventId(dto.getEventId());
 		entity.setTargetDate(DateTimeUtility.getDateFromString(dto.getDate()));
 		entity.setYear(dto.getYear());
-		
+
 		this.fruitDomain.setFruitValue(entity);
 		}
 

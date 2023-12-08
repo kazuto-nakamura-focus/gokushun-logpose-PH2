@@ -116,7 +116,7 @@ public class Formula
 		// Σ(f*exp(g*PAR/600/日照時間(h)*6)*PAR/600/日照時間(h)*6/2.02*樹冠葉面積/新梢数*60/1000)*新梢数*44/1000
 		double shortPar = PAR/600/(sunLight/3600)*6;
 		// Σ(f*exp(g*shortPar)*shortPar/2.02*樹冠葉面積/新梢数*60/1000)*新梢数*44/1000
-		return prev +
+		return 
 				(f * Math.exp(g * shortPar) * shortPar / 81.4 * leafArea / shootCount * 60 / 1000) * 
 				shootCount * 44 / 1000;
 		}

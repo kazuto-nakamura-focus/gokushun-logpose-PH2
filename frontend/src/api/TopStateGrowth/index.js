@@ -137,29 +137,14 @@ const useFruitValues = (deviceId, year) => {
   return axios.get("/fruit/values", config);
 };
 
-//着生後芽かき処理時実績値更新
-const useFruitValueSproutTreatment = (data) => {
+//実績値更新
+const useFruitValueUpdate = (data) => {
   const config = {
     params: {},
   };
-  return axios.post("/fruit/value/sproutTreatment", data, config);
+  return axios.post("/fruit/value", data, config);
 };
 
-//E-L 27～31の生育ステージ時実績値更新処理
-const useFruitValueELStage = (data) => {
-  const config = {
-    params: {},
-  };
-  return axios.post("/fruit/value/ELStage", data, config);
-};
-
-//袋かけ時実績値更新処理
-const useFruitValueBagging = (data) => {
-  const config = {
-    params: {},
-  };
-  return axios.post("/fruit/value/bagging", data, config);
-};
 
 export {
   useModelData,
@@ -174,7 +159,5 @@ export {
   usePhotosynthesisGraphReal,
   useFruitValue,
   useFruitValues,
-  useFruitValueSproutTreatment,
-  useFruitValueELStage,
-  useFruitValueBagging,
+  useFruitValueUpdate,
 };

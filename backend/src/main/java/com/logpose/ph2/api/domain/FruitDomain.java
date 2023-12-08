@@ -111,9 +111,9 @@ public class FruitDomain
 		if ((source.getFruitsCount() != null) && (source.getCrownLeafArea() != null))
 			count = source.getFruitsCount() / source.getCrownLeafArea();
 
-		return_value.setAmount(amount);
-		return_value.setBurden(burden);
-		return_value.setCount(count);
+		return_value.setAmount(Double.isNaN(amount)?0:amount);
+		return_value.setBurden(Double.isNaN(burden)?0:burden);
+		return_value.setCount(Double.isNaN(count)?0:count);
 
 		return return_value;
 		}
@@ -127,6 +127,7 @@ public class FruitDomain
 	// --------------------------------------------------
 	public void setFruitValue(Ph2RealFruitsDataEntity entity)
 		{
+		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		// * 既存のイベントのものがあるか検索
 		// *
 		// 条件設定
@@ -144,20 +145,15 @@ public class FruitDomain
 		// *
 		if (records.size() > 0)
 			{
-			Ph2RealFruitsDataEntity target = records.get(0);
-			target.setCount(entity.getCount());
-			target.setAverage(entity.getAverage());
-			target.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-			this.ph2RealFruitsDataMapper.updateByExample(target, exm);
+			entity.setCreatedAt(records.get(0).getCreatedAt());
+			this.ph2RealFruitsDataMapper.updateByExample(entity, exm);
 			}
 		// *
 		// 新規の場合
 		// *
 		else
 			{
-			// * そのまま引数の値を設定する
 			entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-			entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 			this.ph2RealFruitsDataMapper.insert(entity);
 			}
 		}
