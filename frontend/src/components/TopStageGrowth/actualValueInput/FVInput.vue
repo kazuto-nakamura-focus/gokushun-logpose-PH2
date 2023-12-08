@@ -312,7 +312,7 @@ export default {
       let amountString;
       let countString;
       // 基準デバイスの場合
-      if (this.devicesId == this.baseDeviceId) {
+      if (deviceId == this.baseDeviceId) {
         burdernString = String(shortBurden);
         amountString = String(shortAmount);
         countString = String(shortCount);
@@ -320,18 +320,21 @@ export default {
         // 比較デバイスの場合
         let diff = shortBurden - this.burdens[0];
         diff = Math.round(diff * 100) / 100;
+        if (diff.isNaN) diff = 0;
         burdernString =
           diff > 0
             ? String(shortBurden) + "(+" + String(diff) + ")"
             : String(shortBurden) + "(" + String(diff) + ")";
         diff = shortAmount - this.amounts[0];
         diff = Math.round(diff * 100) / 100;
+        if (diff.isNaN) diff = 0;
         amountString =
           diff > 0
             ? String(shortAmount) + "(+" + String(diff) + ")"
             : String(shortAmount) + "(" + String(diff) + ")";
         diff = shortCount - this.counts[0];
         diff = Math.round(diff * 100) / 100;
+        if (diff.isNaN) diff = 0;
         countString =
           diff > 0
             ? String(shortCount) + "(+" + String(diff) + ")"
