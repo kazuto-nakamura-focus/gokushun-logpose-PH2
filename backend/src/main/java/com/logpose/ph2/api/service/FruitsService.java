@@ -35,8 +35,7 @@ public interface FruitsService
 	/**
 	 * 着果実績値更新
 	 *
-	 * @param dto
-	 *            FruitAmountDTO
+	 * @param dto FruitAmountDTO
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
