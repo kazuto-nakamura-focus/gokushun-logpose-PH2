@@ -87,7 +87,6 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 		new LeafModelDataGenerator(parameters, exporter, realDayData);
 		}
 
-
 	// --------------------------------------------------
 	/**
 	 *新梢辺り葉枚数・平均個葉面積検索処理
@@ -114,21 +113,20 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	// --------------------------------------------------
 	public void addShootCount(Ph2RealLeafShootsCountEntity entity)
 		{
+		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		
 		Ph2RealLeafShootsCountEntityExample exm = new Ph2RealLeafShootsCountEntityExample();
 		// * 既存の日付のものがあるか検索
-		List<Ph2RealLeafShootsCountEntity> records = this.searchShootCount(
-				entity.getDeviceId(), entity.getTargetDate(), exm);
+		List<Ph2RealLeafShootsCountEntity> records = this.ph2RealLeafShootsCountMapper.selectByDate(
+				entity.getDeviceId(), entity.getYear(), entity.getTargetDate());
 		if (records.size() > 0)
 			{
-			Ph2RealLeafShootsCountEntity target = records.get(0);
-			target.setCount(entity.getCount());
-			target.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-			this.ph2RealLeafShootsCountMapper.updateByExample(target, exm);
+			entity.setCreatedAt(records.get(0).getCreatedAt());
+			this.ph2RealLeafShootsCountMapper.updateByExample(entity, exm);
 			}
 		else
 			{
 			entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-			entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 			this.ph2RealLeafShootsCountMapper.insert(entity);
 			}
 		}
@@ -143,6 +141,8 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	// --------------------------------------------------
 	public void addAreaAndCount(Ph2RealLeafShootsAreaEntity entity)
 		{
+		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+
 		// * 既存の日付のものがあるか検索
 		Ph2RealLeafShootsAreaEntityExample exm = new Ph2RealLeafShootsAreaEntityExample();
 		exm.createCriteria().andTargetDateEqualTo(entity.getTargetDate())
@@ -151,17 +151,12 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 				.selectByExample(exm);
 		if (records.size() > 0)
 			{
-			Ph2RealLeafShootsAreaEntity target = records.get(0);
-			target.setCount(entity.getCount());
-			target.setAverageArea(entity.getAverageArea());
-			target.setRealArea(entity.getRealArea());
-			target.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-			this.ph2RealLeafShootsAreaMapper.updateByExample(target, exm);
+			entity.setCreatedAt(records.get(0).getCreatedAt());
+			this.ph2RealLeafShootsAreaMapper.updateByExample(entity, exm);
 			}
 		else
 			{
 			entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-			entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 			this.ph2RealLeafShootsAreaMapper.insert(entity);
 			}
 		}
@@ -221,20 +216,63 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 // * テーブルをデフォルトパラメータで更新
 		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}
+
 	// --------------------------------------------------
 	/**
-	 * 新梢数検索処理
+	 * 新梢数検索処理(日付指定無し)
 	 *
 	 * @param deviceId
-	 * @param date
+	 * @param year
 	 */
 	// --------------------------------------------------
-	public List<Ph2RealLeafShootsCountEntity> searchShootCount(Long deviceId,
-			Date date, Ph2RealLeafShootsCountEntityExample exm)
+	public Ph2RealLeafShootsCountEntity searchShootCount(
+			Long deviceId, Short year)
 		{
-		// * 既存の日付のものがあるか検索
-		exm.createCriteria().andTargetDateEqualTo(date)
-				.andDeviceIdEqualTo(deviceId);
-		return this.ph2RealLeafShootsCountMapper.selectByExample(exm);
+		List<Ph2RealLeafShootsCountEntity> entities = this.ph2RealLeafShootsCountMapper
+				.selectByDeviceId(deviceId, year);
+		return (entities.size() != 0) ? entities.get(0) : null;
+		}
+	// --------------------------------------------------
+	/**
+	 * 新梢数検索処理(日付指定あり)
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	public Ph2RealLeafShootsCountEntity searchShootCountByDate(
+			Long deviceId, Short year, Date date)
+		{
+		List<Ph2RealLeafShootsCountEntity> entities = this.ph2RealLeafShootsCountMapper
+				.selectByDate(deviceId, year, date);
+		return (entities.size() != 0) ? entities.get(0) : null;
+		}
+	// --------------------------------------------------
+	/**
+	 * 葉面積・葉枚数検索処理
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	public List<Ph2RealLeafShootsAreaEntity> searchShootArea(
+			Long deviceId, Short year)
+		{
+		return this.ph2RealLeafShootsAreaMapper.selectByDeviceId(deviceId, year);
+		}
+	// --------------------------------------------------
+	/**
+	 * 葉面積・葉枚数検索処理(日付指定あり)
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	public Ph2RealLeafShootsAreaEntity searchShootAreaByDate(
+			Long deviceId, Short year, Date date)
+		{
+		List<Ph2RealLeafShootsAreaEntity> entities = this.ph2RealLeafShootsAreaMapper
+				.selectByDate(deviceId, year, date);
+		return (entities.size() != 0) ? entities.get(0) : null;
 		}
 	}

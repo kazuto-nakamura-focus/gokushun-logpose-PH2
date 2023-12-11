@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2RelFieldDeviceMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceSetJoinMapper;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
@@ -30,8 +29,6 @@ public class DeviceDomain
 	private Ph2FieldDeviceSetJoinMapper ph2FieldDeviceSetJoinMapper;
 	@Autowired
 	private Ph2DevicesMapper  phDevicesMapper;
-	@Autowired
-	private Ph2RelFieldDeviceMapper  ph2RelFieldDeviceMapper;
 
 	// ###############################################
 	/**

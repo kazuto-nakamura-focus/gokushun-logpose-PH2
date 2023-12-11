@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.service.impl;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -11,10 +12,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.logpose.ph2.api.configration.DefaultLeafCountParameters;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntityExample;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.leaf.LeafGraphDomain;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
@@ -38,6 +38,8 @@ public class LeafServiceImpl implements LeafService
 	private LeafDomain leafDomain;
 	@Autowired
 	private LeafGraphDomain graphDomain;
+	@Autowired
+	private DefaultLeafCountParameters defaultLeafCountParameters;
 
 	// ===============================================
 	// パブリック関数
@@ -80,33 +82,47 @@ public class LeafServiceImpl implements LeafService
 	/**
 	 * 新梢数検索処理
 	 *
-	 * @param dto
-	 *            LeafShootDTO
+	 * @param Long deviceId
+	 * @param Short year
+	 * @param Date date
 	 * @throws ParseException
 	 * @return LeafShootDTO
 	 */
 	// --------------------------------------------------
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public LeafShootDTO getShootCount(Long deviceId, String dateSring)
+	@Transactional(readOnly = true)
+	public LeafShootDTO getShootCount(Long deviceId, Short year, Date date)
 			throws ParseException
 		{
+		Ph2RealLeafShootsCountEntity entity;
+// * 該当オブジェクトの検索
+		if (date != null)
+			{
+			entity = this.leafDomain.searchShootCountByDate(deviceId, year, date);
+			}
+		else
+			{
+			entity = this.leafDomain.searchShootCount(deviceId, year);
+			}
+		String dateName = null;
+		if (null == entity)
+			{
+			entity = new Ph2RealLeafShootsCountEntity();
+			}
+		else
+			{
+			dateName = DateTimeUtility.getStringFromDate(entity.getTargetDate());
+			}
+// * 返却オブジェクトの生成と返却
 		LeafShootDTO result = new LeafShootDTO();
 		result.setDeviceId(deviceId);
-
-		Date date = DateTimeUtility.getDateFromString(dateSring);
-		List<Ph2RealLeafShootsCountEntity> records = this.leafDomain
-				.searchShootCount(deviceId, date,
-						new Ph2RealLeafShootsCountEntityExample());
-		if (records.size() > 0)
+		result.setDate(dateName);
+		result.setCount(entity.getCount());
+		if (null == result.getCount())
 			{
-			Ph2RealLeafShootsCountEntity target = records.get(0);
-			result.setCount(target.getCount());
-			result.setDate(
-					DateTimeUtility.getStringFromDate(target.getTargetDate()));
-			result.setDeviceId(deviceId);
+			int defaultCount = this.defaultLeafCountParameters.getCount();
+			result.setCount(defaultCount);
 			}
-
 		return result;
 		}
 
@@ -139,33 +155,32 @@ public class LeafServiceImpl implements LeafService
 	 * 新梢辺り葉枚数・平均個葉面積検索処理
 	 *
 	 * @param deviceId
+	 * @param year
 	 * @param date
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public LeafvaluesDTO getAreaAndCount(Long deviceId, Date date)
+	public List<LeafvaluesDTO> getAreaAndCount(Long deviceId, Short year, Date date)
 			throws ParseException
 		{
-		LeafvaluesDTO result = new LeafvaluesDTO();
-		result.setDeviceId(deviceId);
-
-		List<Ph2RealLeafShootsAreaEntity> records = this.leafDomain
-				.searchShooArea(deviceId, date,
-						new Ph2RealLeafShootsAreaEntityExample());
-		if (records.size() > 0)
+		List<LeafvaluesDTO> results = new ArrayList<>();
+		List<Ph2RealLeafShootsAreaEntity> entities = this.leafDomain.searchShootArea(deviceId,
+				year);
+		for (final Ph2RealLeafShootsAreaEntity entity : entities)
 			{
-			Ph2RealLeafShootsAreaEntity target = records.get(0);
-			result.setCount(target.getCount());
-			result.setAverageArea(target.getAverageArea());
-			result.setTotalArea(target.getRealArea());
-			result.setDate(
-					DateTimeUtility.getStringFromDate(target.getTargetDate()));
+			LeafvaluesDTO result = new LeafvaluesDTO();
 			result.setDeviceId(deviceId);
+			result.setCount(entity.getCount());
+			result.setAverageArea(entity.getAverageArea());
+			result.setTotalArea(entity.getRealArea());
+			result.setYear(entity.getYear());
+			result.setDate(
+					DateTimeUtility.getStringFromDate(entity.getTargetDate()));
+			results.add(result);
 			}
-
-		return result;
+		return results;
 		}
 
 	// --------------------------------------------------
@@ -180,33 +195,20 @@ public class LeafServiceImpl implements LeafService
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public Double setAreaAndCount(LeafvaluesDTO dto) throws ParseException
+	public void setAreaAndCount(LeafvaluesDTO dto) throws ParseException
 		{
 		Date target_date = DateTimeUtility.getDateFromString(dto.getDate());
-		// * 新梢数の取得
-		Integer new_shoot_count = null;
-		List<Ph2RealLeafShootsCountEntity> records = this.leafDomain
-				.searchShootCount(dto.getDeviceId(), target_date,
-						new Ph2RealLeafShootsCountEntityExample());
-		if (records.size() > 0)
-			{
-			Ph2RealLeafShootsCountEntity entity = records.get(0);
-			new_shoot_count = entity.getCount();
-			}
-		// * 新梢辺り葉枚数・平均個葉面積登録処理
-		Ph2RealLeafShootsAreaEntity entity = new Ph2RealLeafShootsAreaEntity();
-		entity.setTargetDate(target_date);
-		entity.setAverageArea(dto.getAverageArea());
-		entity.setCount(dto.getCount());
-		entity.setDeviceId(dto.getDeviceId());
-		Double area = (new_shoot_count == null) ? null
-				: new_shoot_count.doubleValue()
-						* dto.getAverageArea().doubleValue()
-						* dto.getCount().doubleValue();
-		entity.setRealArea(area);
-		this.leafDomain.addAreaAndCount(entity);
 
-		return area;
+		Ph2RealLeafShootsAreaEntity entity = new Ph2RealLeafShootsAreaEntity();
+		entity.setDeviceId(dto.getDeviceId());
+		entity.setTargetDate(target_date);
+		entity.setCount(dto.getCount());
+		entity.setAverageArea(dto.getAverageArea());
+		entity.setRealArea(dto.getTotalArea());
+		entity.setYear(dto.getYear());
+
+		// * 新梢辺り葉枚数・平均個葉面積登録処理
+		this.leafDomain.addAreaAndCount(entity);
 		}
 
 	// --------------------------------------------------

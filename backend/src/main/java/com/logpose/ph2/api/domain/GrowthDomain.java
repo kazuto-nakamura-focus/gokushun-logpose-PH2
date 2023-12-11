@@ -24,7 +24,6 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetGrowthMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
-import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
@@ -42,8 +41,6 @@ public class GrowthDomain extends GraphDomain
 	// ===============================================
 	@Autowired
 	private ParameterSetDomain parameterSetDomain;
-	@Autowired
-	private GrowthDomainMapper growthDomainMapper;
 	@Autowired
 	private DefaultGrowthParameters parameters;
 	@Autowired

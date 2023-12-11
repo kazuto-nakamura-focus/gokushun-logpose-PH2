@@ -11,6 +11,8 @@ public class LeafvaluesDTO
 	{
 	//* デバイスID
 	private Long deviceId;
+	// * 対象年度
+	private Short year;
 	//* 実施日
 	private String date;
 	//* 新梢辺り葉枚数

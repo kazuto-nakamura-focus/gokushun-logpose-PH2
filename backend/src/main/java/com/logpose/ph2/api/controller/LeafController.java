@@ -104,21 +104,21 @@ public class LeafController
 	/**
 	 * 新梢数取得処理
 	 *
-	 * @param dto
-	 *            LeafShootDTO
+	 * @param deviceId
+	 * @param year
 	 * @return ResponseDTO (null)
 	 */
 	// --------------------------------------------------
 	@GetMapping("/value/shoot")
 	public ResponseDTO getShoot(HttpServletRequest httpReq,
 			@RequestParam("deviceId") Long deviceId,
-			@RequestParam("date") String date)
+			@RequestParam("year") Short year,
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			LeafShootDTO result = this.leafService.getShootCount(deviceId,
-					date);
+			LeafShootDTO result = this.leafService.getShootCount(deviceId, year, date);
 			as_dto.setSuccess(result);
 			}
 		catch (Exception e)
@@ -140,13 +140,13 @@ public class LeafController
 	@GetMapping("/value/areaAndCount")
 	public ResponseDTO getAreaAndCount(HttpServletRequest httpReq,
 			@RequestParam("deviceId") Long deviceId,
+			@RequestParam("year") Short year,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			LeafvaluesDTO result = this.leafService.getAreaAndCount(deviceId,
-					date);
+			List<LeafvaluesDTO> result = this.leafService.getAreaAndCount(deviceId, year, date);
 			as_dto.setSuccess(result);
 			}
 		catch (Exception e)
@@ -251,8 +251,8 @@ public class LeafController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			Double area = this.leafService.setAreaAndCount(dto);
-			as_dto.setSuccess(area);
+			this.leafService.setAreaAndCount(dto);
+			as_dto.setSuccess(null);
 			}
 		catch (Exception e)
 			{

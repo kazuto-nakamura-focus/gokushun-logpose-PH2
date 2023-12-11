@@ -1,10 +1,11 @@
 import axios from "@/lib/axiosHooks";
 
 //新梢数取得処理
-const useLeafValueShootDetail = (deviceId, date) => {
+const useLeafValueShootDetail = (deviceId, year, date) => {
   const config = {
     params: {
       deviceId,
+      year,
       date
     },
   };
@@ -12,10 +13,11 @@ const useLeafValueShootDetail = (deviceId, date) => {
   return axios.get("/leaf/value/shoot", config);
 };
 //新梢辺り葉枚数・平均個葉面積検索処理
-const useLeafValueAreaAndCountDetail = (deviceId, date) => {
+const useLeafValueAreaAndCountDetail = (deviceId, year, date) => {
   const config = {
     params: {
       deviceId,
+      year,
       date
     },
   };
@@ -41,9 +43,9 @@ const useLeafValueAreaAndCount = (data) => {
   return axios.post("/leaf/value/areaAndCount", data, config);
 };
 
-export { 
+export {
   useLeafValueShootDetail,
   useLeafValueAreaAndCountDetail,
-  useLeafValueShoot, 
-  useLeafValueAreaAndCount 
+  useLeafValueShoot,
+  useLeafValueAreaAndCount
 };

@@ -48,12 +48,13 @@ public interface LeafService
 	/**
 	 * 新梢数取得処理
 	 *
-	 * @param deviceId-データを表示するデバイスのID
-	 * @param dete-日付
+	 * @param deviceId デバイスID
+	 * @param year 対象年度
+	 * @param date 対象日付
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public LeafShootDTO getShootCount(Long deviceId, String date) throws ParseException;
+	public LeafShootDTO getShootCount(Long deviceId, Short year, Date date) throws ParseException;
 
 	// --------------------------------------------------
 	/**
@@ -61,10 +62,11 @@ public interface LeafService
 	 *
 	 * @param deviceId-データを表示するデバイスのID
 	 * @param date-実績の日付
+	 * 	@param date 対象日付
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public LeafvaluesDTO getAreaAndCount(Long deviceId, Date dateSring) throws ParseException;
+	public List<LeafvaluesDTO> getAreaAndCount(Long deviceId, Short year, Date date) throws ParseException;
 
 	// --------------------------------------------------
 	/**
@@ -92,18 +94,16 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public void addShoot(LeafShootDTO dto) throws ParseException;
-
 	// --------------------------------------------------
 	/**
 	 * 新梢辺り葉枚数・平均個葉面積登録処理
 	 *
-	 * @param dto
-	 *            LeafvaluesDTO
+	 * @param dto LeafvaluesDTO
 	 * @return ResponseDTO (null)
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public Double setAreaAndCount(LeafvaluesDTO dto) throws ParseException;
+	public void setAreaAndCount(LeafvaluesDTO dto) throws ParseException;
 	// --------------------------------------------------
 	/**
 	 * 基準パラメータセットの設定
@@ -134,5 +134,6 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public Long addParamSet(LeafParamSetDTO dto);
+
 
 	}

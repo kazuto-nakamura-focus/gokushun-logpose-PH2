@@ -43,10 +43,10 @@ export default {
   data() {
     return {
       date: moment().format("YYYY-MM-DD"),
-      minDate:null,
+      minDate: null,
       maxDate: null,
       menu: false,
-      id:null,
+      id: null,
     };
   },
 
@@ -65,7 +65,21 @@ export default {
       this.id = id;
       this.$emit("onChange", this.date, this.id);
     },
-    setDate(date){
+    initializeByDate: function (selectedYear, id, date) {
+      // 年度
+      const year = selectedYear.id;
+      // 開始日
+      this.minDate = year.toString() + "-" + selectedYear.startDate;
+      // 開始日からmoment
+      const momentData = moment(this.minDate);
+      this.minDate = momentData.format("YYYY-MM-DD");
+      // 最終日
+      this.maxDate = moment().format("YYYY-MM-DD");
+      // このコンポーネントのID
+      this.id = id;
+      this.date = date;
+    },
+    setDate(date) {
       this.date = date;
     },
     handleChangeDate() {
