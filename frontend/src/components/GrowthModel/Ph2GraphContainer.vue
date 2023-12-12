@@ -81,7 +81,7 @@ export default {
 
             // グラフの表示オプションを設定
             let gc = new GrowthChart();
-            gc.setOptions("生育ステージ推定モデル", "累積F値", results);
+            gc.setOptions("生育ステージ推定モデル", "日付", "累積F値", results);
             // グラフ表示を行う
             gc.setLoadingParent(this);
             this.$refs.chr.addGraph(
@@ -118,7 +118,8 @@ export default {
             gc.setLoadingParent(this);
             gc.setOptions(
               "葉面積推定モデル",
-              "葉面積",
+              "日付", 
+              "葉面積(㎡)",
               response["data"].data[0]
             );
             console.log(response["data"].data[1]);
@@ -135,7 +136,8 @@ export default {
             gc.setLoadingParent(this);
             gc.setOptions(
               "葉枚数推定モデル",
-              "葉枚数",
+              "日付", 
+              "葉枚数(枚)",
               response["data"].data[1]
             );
             // グラフ表示を行う
@@ -169,7 +171,7 @@ export default {
             // グラフの表示オプションを設定
             let gc = new GrowthChart();
             gc.setLoadingParent(this);
-            gc.setOptions("光合成推定モデル", "光合成量", results);
+            gc.setOptions("光合成推定モデル", "日付", "光合成量(kgCO2 vine^-1)", results);
             // グラフ表示を行う
             this.$refs.chr.addGraph(
               titlePaths,

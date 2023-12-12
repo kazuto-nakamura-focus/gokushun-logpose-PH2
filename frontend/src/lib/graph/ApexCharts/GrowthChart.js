@@ -138,7 +138,7 @@ export class GrowthChart {
           tickAmount: 12, // 365日の12分割
           title: {
             text: '',
-            offsetY: 10,
+            offsetY: -20,
           },
           labels: {
             formatter: function (val) {
@@ -164,9 +164,11 @@ export class GrowthChart {
     parent.isLoading = true;
     this.data.parent = parent;
   }
-  setOptions(title, ytitle, source) {
+  setOptions(title, xtitle, ytitle, source) {
     //* タイトル
     this.data.chartOptions.title.text = title;
+    //* X軸タイトル
+    this.data.chartOptions.xaxis.title.text = xtitle;
     //* Y軸タイトル
     this.data.chartOptions.yaxis.title.text = ytitle;
     //* アノテーション
