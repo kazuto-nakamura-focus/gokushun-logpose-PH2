@@ -41,6 +41,10 @@ export default {
         { text: "日射(μmol/㎡s)" },
         { text: "樹液流2(g/h)"},
       ],
+
+      xTitle: [
+        { text: "日時"},
+      ],
     };
   },
   components: {
@@ -67,7 +71,7 @@ export default {
           if (status === 0) {
             // グラフの表示オプションを設定
             let gc = new SensorChart();
-            gc.setOptions(title, this.yTitle[contentId-1].text, data);
+            gc.setOptions(title, this.xTitle[0].text, this.yTitle[contentId-1].text, data);
             console.log(data.category);
             // グラフ表示を行う
             gc.setLoadingParent(this);
