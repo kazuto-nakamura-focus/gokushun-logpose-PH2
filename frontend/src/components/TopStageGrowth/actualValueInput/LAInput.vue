@@ -504,7 +504,7 @@ export default {
       const aValueAverage =
         this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueAverage;
       this.leafAreaValueData.leafAreaAreaDataList[id].leafAreaAValueTotal =
-        aValue * aValueAverage;
+        this.leafAreaValueData.leafAreaNValue * aValue * aValueAverage;
     },
   },
 };
