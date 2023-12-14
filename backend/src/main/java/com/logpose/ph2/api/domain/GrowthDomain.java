@@ -183,11 +183,15 @@ public class GrowthDomain extends GraphDomain
 		List<DailyBaseDataDTO> realDayData = this.dailyDataAlgorythm
 				.getDailyBaseData(deviceId, year);
 		// * 計算処理を実行
-		GrowthGraphDataModel modelData = new GrowthGraphDataModel();
-		modelData.calculateFvalues(realDayData, param, fstageInfo,
-				this.fstageValues.getSprout());
-		// * グラフデータの生成
-		return modelData.toGraphData();
+		if (0 != realDayData.size())
+			{
+			GrowthGraphDataModel modelData = new GrowthGraphDataModel();
+			modelData.calculateFvalues(realDayData, param, fstageInfo,
+					this.fstageValues.getSprout());
+			// * グラフデータの生成
+			return modelData.toGraphData();
+			}
+		else return null;
 		}
 
 	// --------------------------------------------------
@@ -213,12 +217,15 @@ public class GrowthDomain extends GraphDomain
 		// * 生育推定モデルデータの取得
 		RealModelGraphDataDTO data = this.getModelGraphData(deviceId, year,
 				startDate, param);
-		// *モデルデータテーブルに生育推定モデルデータを設定する
-		short startDay = 1;
-		startDay = this.deviceDayDomain.updateModelData(startDay, deviceId,
-				year, year, data.getValues());
-		this.deviceDayDomain.updateModelData(startDay, deviceId, (short)(year-1), year,
-				data.getPredictValues());
+		if (null != data)
+			{
+			// *モデルデータテーブルに生育推定モデルデータを設定する
+			short startDay = 1;
+			startDay = this.deviceDayDomain.updateModelData(startDay, deviceId,
+					year, year, data.getValues());
+			this.deviceDayDomain.updateModelData(startDay, deviceId, (short) (year - 1), year,
+					data.getPredictValues());
+			}
 		}
 
 	// --------------------------------------------------
@@ -304,6 +311,10 @@ public class GrowthDomain extends GraphDomain
 		{
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectModelDataByType(deviceId, year);
+// * データが存在しない場合 nullを返す
+		if(0 == entites.size()) return null;
+		if(null == entites.get(0).getfValue()) return null;
+		
 		List<Double> values = new ArrayList<>();
 		List<Double> predictValues = new ArrayList<>();
 // * 日付カテゴリ
@@ -486,7 +497,11 @@ public class GrowthDomain extends GraphDomain
 		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
 		// 年度の最初の日を取得
 		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
-		this.updateModelTable(deviceId, year, deviceDay.getDate());
+		// デバイスがデータを持っている場合
+		if (null != deviceDay)
+			{
+			this.updateModelTable(deviceId, year, deviceDay.getDate());
+			}
 		}
 
 	// --------------------------------------------------

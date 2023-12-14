@@ -134,6 +134,13 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public Long addParamSet(LeafParamSetDTO dto);
+	/**
+	 * 基準パラメータセットの取得
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	public LeafParamSetDTO getDefault(Long deviceId, Short year);
 
 
 	}

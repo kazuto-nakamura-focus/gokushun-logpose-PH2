@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
@@ -164,5 +165,15 @@ public interface GrowthService
 	 */
 	// --------------------------------------------------
 	public Long addParamSet(GrowthParamSetDTO dto);
+	
+	// --------------------------------------------------
+	/**
+	 * 基準パラメータセットの取得
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	public Ph2ParamsetGrowthEntity getDefault(Long deviceId, Short year);
 
 	}

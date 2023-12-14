@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.domain.GrowthDomain;
 import com.logpose.ph2.api.dto.EventDaysDTO;
@@ -250,5 +251,19 @@ public class GrowthServiceImpl implements GrowthService
 	public Long addParamSet(GrowthParamSetDTO dto)
 		{
 		return this.growthDomain.addParamSet(null, dto);
+		}
+	// --------------------------------------------------
+	/**
+	 * 基準パラメータセットの取得
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	@Override
+	public Ph2ParamsetGrowthEntity getDefault(Long deviceId, Short year)
+		{
+// * デフォルトパラメータの取得
+		return this.growthDomain.getParmaters(deviceId, year);
 		}
 	}

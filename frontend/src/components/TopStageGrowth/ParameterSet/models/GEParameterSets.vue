@@ -124,14 +124,14 @@ import {
 
 export default {
   props: {
-    isEditMode:Boolean,
+    isEditMode: Boolean,
     beforeParameterSetData: Object,
-    afterParameterSetData:Object,
+    afterParameterSetData: Object,
   },
   data() {
     return {
-      beforeData:this.beforeParameterSetData,
-      afterData:this.afterParameterSetData
+      beforeData: this.beforeParameterSetData,
+      afterData: this.afterParameterSetData,
     };
   },
 
@@ -150,7 +150,7 @@ export default {
           } else {
             this.beforeData = results.data;
             this.afterData = Object.assign({}, this.beforeData);
-          this.$emit("updateData",results.data );
+            this.$emit("updateData", results.data);
           }
         })
         .catch((error) => {
@@ -174,11 +174,12 @@ export default {
           if (results.status != 0) {
             console.log(results.message);
             alert("生育推定パラメータセットの追加に失敗しました。");
-          }else{
+          } else {
             alert("生育推定パラメータセットを追加しました。");
-           this.$emit('addData',results.data );
+            this.$emit("addData", results.data);
           }
-        }).bind(this)
+        })
+        .bind(this)
         .catch((error) => {
           console.log(error);
         });
@@ -198,9 +199,9 @@ export default {
           if (results.status != 0) {
             console.log(results.message);
             alert("生育推定パラメータセットの更新に失敗しました。");
-          }else{
+          } else {
             alert("生育推定パラメータセットを更新しました。");
-            this.$emit('updateData',parentData );
+            this.$emit("updateData", parentData);
           }
         })
         .catch((error) => {

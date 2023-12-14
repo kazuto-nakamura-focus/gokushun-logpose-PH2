@@ -12,7 +12,6 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
-import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -44,14 +43,17 @@ public class LeafGraphDomain extends GraphDomain
 	public List<RealModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
+		List<ModelDataEntity> entites = this.ph2ModelDataMapper
+				.selectModelDataByType(deviceId, year);
+		// * データが存在しない場合 nullを返す
+		if (0 == entites.size()) return null;
+		if (null == entites.get(0).getfValue()) return null;
+
 		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
 		RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
 // * 日付カテゴリ
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
 		List<String> category = new ArrayList<>();
-
-		List<ModelDataEntity> entites = this.ph2ModelDataMapper
-				.selectModelDataByType(deviceId, year);
 
 		Double minArea = Double.MAX_VALUE;
 		Double maxArea = Double.MIN_VALUE;

@@ -269,4 +269,18 @@ public class LeafServiceImpl implements LeafService
 		{
 		this.leafDomain.setDefault(deviceId, year, paramId);
 		}
+	// --------------------------------------------------
+	/**
+	 * 基準パラメータセットの取得
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	@Override
+	public LeafParamSetDTO getDefault(Long deviceId, Short year)
+		{
+// * デフォルトパラメータの取得
+		return this.leafDomain.getParmaters(deviceId, year);
+		}
 	}

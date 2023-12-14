@@ -86,7 +86,7 @@ public class LeafModelDataParameterAggregator
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	private LeafParamSetDTO getParmaters(Long deviceId, Short year)
+	public LeafParamSetDTO getParmaters(Long deviceId, Short year)
 	// throws ParseException
 		{
 		// * 該当するパラメータセットのカタログを取得

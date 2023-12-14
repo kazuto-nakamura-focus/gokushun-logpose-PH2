@@ -94,5 +94,12 @@ public interface PhotosynthesisService
 	public Long addParamSet(PhotosynthesisParamSetDTO dto);
 	
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException;
+	/**
+	 * 基準パラメータセットの取得
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	PhotosynthesisParamSetDTO getDefault(Long deviceId, Short year);
 	
 	}

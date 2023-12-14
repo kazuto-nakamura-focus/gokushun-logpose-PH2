@@ -3,7 +3,7 @@ import axios from "@/lib/axiosHooks";
 //生育推定パラメータセットリスト取得
 const useGrowthParamSetList = (modelId) => {
   const config = {
-    params: {modelId},
+    params: { modelId },
   };
   return axios.get("/paramSet/list", config);
 };
@@ -11,7 +11,7 @@ const useGrowthParamSetList = (modelId) => {
 //生育推定
 const useGrowthParamDefaultId = (modelId, deviceId, year) => {
   const config = {
-    params: {modelId,deviceId,year},
+    params: { modelId, deviceId, year },
   };
   return axios.get("/paramSet/defaultId", config);
 };
@@ -68,6 +68,7 @@ const useGrowthParamSetRemove = (paramSetId) => {
   };
   return axios.delete("/growth/paramSet", config);
 };
+
 
 //生育推定パラメータセットデフォルト設定
 const useGrowthParamSetDefault = (data) => {

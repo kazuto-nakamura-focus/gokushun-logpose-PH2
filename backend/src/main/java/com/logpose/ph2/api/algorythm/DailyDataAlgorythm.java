@@ -23,6 +23,7 @@ public class DailyDataAlgorythm
 	private GrowthDomainMapper growthDomainMapper;
 	@Autowired
 	private Ph2DeviceDayMapper ph2DeviceDayMapper;
+
 	// ===============================================
 	// 公開関数
 	// ===============================================
@@ -37,7 +38,7 @@ public class DailyDataAlgorythm
 	// --------------------------------------------------
 	public List<DailyBaseDataDTO> getDailyBaseData(Long deviceId, Short year)
 		{
-// * DailyBaseDataの気温情報を取得
+// * DailyBaseDataの実気温情報を取得
 		List<DailyBaseDataDTO> dailyBaseData = this.growthDomainMapper
 				.selectDailyata(deviceId, year, null, true);
 // * 統計対象開始日からまだ存在していないDailyBaseDataの気温情報を一年前のものから取得
@@ -50,24 +51,25 @@ public class DailyDataAlgorythm
 			cal.add(Calendar.YEAR, -1);
 			cal.add(Calendar.DATE, 1);
 			startDate = cal.getTime();
-			}
 // ** データの取得
-		List<DailyBaseDataDTO> pastDayData = this.growthDomainMapper
-				.selectDailyata(deviceId, (short) (year - 1), startDate,
-						false);
+			List<DailyBaseDataDTO> pastDayData = this.growthDomainMapper
+					.selectDailyata(deviceId, (short) (year - 1), startDate,
+							false);
 // * 日付が連続している場合対象年度のデータとその昨年度のデータを合成
-		if (null != startDate)
-			{
-			if (pastDayData.get(0).getDate().getTime() == startDate.getTime())
+			if (null != startDate)
 				{
-				// * 日付を変更する
-				this.exchangeDay(deviceId, year, pastDayData);
-				dailyBaseData.addAll(pastDayData);
+				if (pastDayData.get(0).getDate().getTime() == startDate.getTime())
+					{
+					// * 日付を変更する
+					this.exchangeDay(deviceId, year, pastDayData);
+					dailyBaseData.addAll(pastDayData);
+					}
 				}
 			}
 // * データを返却
 		return dailyBaseData;
 		}
+
 	// ===============================================
 	// プライベート関数
 	// ===============================================

@@ -12,7 +12,6 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
-import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -41,12 +40,13 @@ public class PhotoGraphDomain extends GraphDomain
 	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
-		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
-
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectModelDataByType(deviceId, year);
-		List<Double> values = new ArrayList<>();
-		List<Double> predictValues = new ArrayList<>();
+		// * データが存在しない場合 nullを返す
+		if (0 == entites.size()) return null;
+		if (null == entites.get(0).getfValue()) return null;
+		
+		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");

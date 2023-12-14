@@ -38,11 +38,10 @@ export default {
             selectedItems.selectedDevice.id +
             "+" +
             selectedItems.selectedYear.id;
-            this.map.set(key,
-            {
-              items : selectedItems,
-              node : null
-            });
+          this.map.set(key, {
+            items: selectedItems,
+            node: null,
+          });
         },
       },
     };
@@ -68,7 +67,12 @@ export default {
         device: selectedItems.selectedDevice.name,
         year: selectedItems.selectedYear.id,
       };
-      const titlePaths = this.selectedItem.field +">" + this.selectedItem.device +">" + this.selectedItem.year;
+      const titlePaths =
+        this.selectedItem.field +
+        ">" +
+        this.selectedItem.device +
+        ">" +
+        this.selectedItem.year;
       this.modelId = this.selectedItem.modelId;
       if (this.modelId == 1) {
         useModelData(
@@ -78,6 +82,10 @@ export default {
           .then((response) => {
             // 成功時
             const results = response["data"].data;
+            if (results == null) {
+              alert("データがありません。");
+              return;
+            }
 
             // グラフの表示オプションを設定
             let gc = new GrowthChart();
@@ -105,9 +113,13 @@ export default {
             const results = response["data"];
             const status = results["status"];
             const responseData = results["data"];
+            if (results.data == null) {
+              alert("データがありません。");
+              return;
+            }
 
             //生育ステージ以外の生育モデルは、Annotations削除
-            if(status === 0){
+            if (status === 0) {
               responseData.forEach((element) => {
                 element["annotations"] = null;
               });
@@ -161,8 +173,11 @@ export default {
             const responseData = response["data"];
             const status = responseData["status"];
             const results = responseData["data"];
-
-            if(status === 0){
+            if (results.data == null) {
+              alert("データがありません。");
+              return;
+            }
+            if (status === 0) {
               results["annotations"] = null;
             }
 

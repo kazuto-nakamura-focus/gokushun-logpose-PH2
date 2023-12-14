@@ -239,7 +239,6 @@ public class PhotosynthesisController
 
 		return as_dto;
 		}
-
 	// --------------------------------------------------
 	/**
 	 * 基準パラメータセットの設定

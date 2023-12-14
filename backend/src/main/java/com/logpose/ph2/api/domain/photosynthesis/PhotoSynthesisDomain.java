@@ -40,22 +40,13 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 	@Autowired
 	private Ph2ParamsetPsWeibullMapper ph2ParamsetPsWeibullMapper;
 	@Autowired
-	private Ph2ModelDataMapper ph2ModelDataMapper;	
+	private Ph2ModelDataMapper ph2ModelDataMapper;
 	/*
-	@Autowired
-	ParameterSetDomain parameterSetDomain;
-	@Autowired
-	private DefaultPsParameters defaultPsParameters;
-
-
-
-
-
-
-
-
-
-*/
+	 * @Autowired
+	 * ParameterSetDomain parameterSetDomain;
+	 * @Autowired
+	 * private DefaultPsParameters defaultPsParameters;
+	 */
 
 	// --------------------------------------------------
 	/**
@@ -75,17 +66,21 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 			// * デバイスID、統計開始日から年度を取得。
 			year = this.deviceDayDomain.getYear(deviceId, startDate);
 			}
-// * データ生成のためのパラメータを作成する。
-		PSModelDataParameters parameters = new PSModelDataParameters();
-		super.setParameters(deviceId, year, parameters);
 // * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
 		List<DailyBaseDataDTO> realDayData = this.dailyDataAlgorythm
 				.getDailyBaseData(deviceId, year);
 // * データの出力先の設定をする
-		PSModelDataExporter exporter = new PSModelDataExporter(ph2ModelDataMapper);
-		new PSGraphDataGenerator(parameters, exporter, realDayData);
+		if (0 != realDayData.size())
+			{
+			// * データ生成のためのパラメータを作成する。
+			PSModelDataParameters parameters = new PSModelDataParameters();
+			super.setParameters(deviceId, year, parameters);
+			
+			PSModelDataExporter exporter = new PSModelDataExporter(ph2ModelDataMapper);
+			new PSGraphDataGenerator(parameters, exporter, realDayData);
+			}
 		}
-	
+
 	// --------------------------------------------------
 	/**
 	 * 光合成推定実績値取得

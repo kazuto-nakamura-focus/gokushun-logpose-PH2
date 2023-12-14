@@ -159,6 +159,19 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 		this.photoSynthesisDomain.setDefault(deviceId, year, paramId);
 		
 		}
-
+	// --------------------------------------------------
+	/**
+	 * 基準パラメータセットの取得
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	@Override
+	public PhotosynthesisParamSetDTO getDefault(Long deviceId, Short year)
+		{
+// * デフォルトパラメータの取得
+		return this.photoSynthesisDomain.getParmaters(deviceId, year);
+		}
 
 	}

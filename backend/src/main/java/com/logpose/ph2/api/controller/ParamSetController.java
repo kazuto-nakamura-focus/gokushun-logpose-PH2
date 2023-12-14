@@ -63,7 +63,15 @@ public class ParamSetController
 			}
 		return as_dto;
 		}
-
+	/// --------------------------------------------------
+	/**
+	 * デフォルトのパラメータIDを取得する
+	 *
+	 * @param modelID
+	 * @param year
+	 * @return ResponseDTO(FruitValuesDTO)
+	 */
+	/// --------------------------------------------------
 	@GetMapping("/defaultId")
 	public ResponseDTO getDefaultParam(HttpServletRequest httpReq,
 			HttpServletResponse res,

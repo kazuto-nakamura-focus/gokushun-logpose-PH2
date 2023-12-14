@@ -6,9 +6,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
+import com.logpose.ph2.api.domain.GrowthDomain;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
+import com.logpose.ph2.api.domain.leaf.LeafDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 import com.logpose.ph2.api.dto.HistoryDTO;
+import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.ParamSetExtendDTO;
+import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.master.ModelMaster;
 import com.logpose.ph2.api.service.ParamSetService;
 
 /**
@@ -16,13 +23,20 @@ import com.logpose.ph2.api.service.ParamSetService;
  *
  */
 @Service
-public class ParamSetServiceImpl implements  ParamSetService
+public class ParamSetServiceImpl implements ParamSetService
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
 	@Autowired
 	private ParameterSetDomain parameterSetlDomain;
+	@Autowired
+	private GrowthDomain growthDomain;
+	@Autowired
+	private LeafDomain leafDomain;
+	@Autowired
+	private PhotoSynthesisDomain photoSynthesisDomain;
+
 	// ===============================================
 	// パブリック関数
 	// ===============================================
@@ -40,6 +54,7 @@ public class ParamSetServiceImpl implements  ParamSetService
 		{
 		return this.parameterSetlDomain.getParamSetList(modelId);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * デフォルトパラメータIDの取得
@@ -50,11 +65,27 @@ public class ParamSetServiceImpl implements  ParamSetService
 	 */
 	// --------------------------------------------------
 	@Override
-	@Transactional(readOnly = true)
+	@Transactional(rollbackFor = Exception.class)
 	public Long getDefaultParam(Integer modelId, Long deviceId, Short year)
 		{
-		return this.parameterSetlDomain.getDefaultParam(modelId, deviceId, year);
+		if (ModelMaster.GROWTH == modelId)
+			{
+			Ph2ParamsetGrowthEntity entity = this.growthDomain.getParmaters(deviceId, year);
+			return entity.getParamsetId();
+			}
+		else if (ModelMaster.LEAF == modelId)
+			{
+			LeafParamSetDTO entity = this.leafDomain.getParmaters(deviceId, year);
+			return entity.getId();
+			}
+		else if(ModelMaster.PHOTO == modelId)
+			{
+			PhotosynthesisParamSetDTO entity = this.photoSynthesisDomain.getParmaters(deviceId, year);
+			return entity.getId();
+			}
+		return null;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * パラメータセット更新履歴取得
@@ -69,6 +100,7 @@ public class ParamSetServiceImpl implements  ParamSetService
 		{
 		return this.parameterSetlDomain.getHistory(paramSetId);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * パラメータセットの削除

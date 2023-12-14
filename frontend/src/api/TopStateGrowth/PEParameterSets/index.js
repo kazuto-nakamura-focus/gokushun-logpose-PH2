@@ -3,7 +3,7 @@ import axios from "@/lib/axiosHooks";
 //光合成推定パラメータセットリスト取得
 const usePhotosynthesisParamSetList = () => {
   const config = {
-    params: {modelId : 3},
+    params: { modelId: 3 },
   };
   return axios.get("/paramSet/list", config);
 };
@@ -11,7 +11,7 @@ const usePhotosynthesisParamSetList = () => {
 //光合成推定パラメータセットデフォルト
 const usePhotosynthesisDefaultId = (modelId, deviceId, year) => {
   const config = {
-    params: {modelId,deviceId,year},
+    params: { modelId, deviceId, year },
   };
   return axios.get("/paramSet/defaultId", config);
 };
@@ -37,8 +37,8 @@ const usePhotosynthesisParamSetHistory = (paramSetId) => {
 //光合成推定パラメータセット更新
 const usePhotosynthesisParamSetUpdate = (data) => {
   const config = {
- //   params: {},
-  withCredential:true,
+    //   params: {},
+    withCredential: true,
   };
   return axios.put("/photosynthesis/paramSet", data, config);
 };
@@ -47,7 +47,7 @@ const usePhotosynthesisParamSetUpdate = (data) => {
 const usePhotosynthesisParamSetAdd = (data) => {
   const config = {
     params: {},
-    withCredential:true,
+    withCredential: true,
   };
   return axios.post("/photosynthesis/paramSet", data, config);
 };

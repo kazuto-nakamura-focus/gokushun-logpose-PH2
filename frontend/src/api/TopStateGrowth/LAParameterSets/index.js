@@ -3,7 +3,7 @@ import axios from "@/lib/axiosHooks";
 //葉面積・葉枚数パラメータセットリスト取得
 const useLeafParamSetList = () => {
   const config = {
-    params: {modelId : 2},
+    params: { modelId: 2 },
   };
   return axios.get("paramSet/list", config);
 };
@@ -11,7 +11,7 @@ const useLeafParamSetList = () => {
 //葉面積・葉枚数パラメータセットデフォルト
 const useLeafParamDefaultId = (modelId, deviceId, year) => {
   const config = {
-    params: {modelId,deviceId,year},
+    params: { modelId, deviceId, year },
   };
   return axios.get("/paramSet/defaultId", config);
 };
@@ -59,7 +59,6 @@ const useLeafParamSetRemove = (paramSetId) => {
   };
   return axios.delete("/leaf/paramSet", config);
 };
-
 ///葉面積・葉枚数パラメータセットデフォルト設定
 const useLeafParamSetDefault = (data) => {
   const config = {

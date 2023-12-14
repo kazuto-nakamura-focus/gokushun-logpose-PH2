@@ -75,16 +75,21 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 			// * デバイスID、統計開始日から年度を取得。
 			year = this.deviceDayDomain.getYear(deviceId, startDate);
 			}
-// * データ生成のためのパラメータを作成する。
-		LeafModelDataParameters parameters = new LeafModelDataParameters();
-		super.setParameters(deviceId, year, parameters);
+
 // * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
 		List<DailyBaseDataDTO> realDayData = this.dailyDataAlgorythm
 				.getDailyBaseData(deviceId, year);
+// * 日ごとデータがある場合
+		if (0 != realDayData.size())
+			{
+// * データ生成のためのパラメータを作成する。
+			LeafModelDataParameters parameters = new LeafModelDataParameters();
+			super.setParameters(deviceId, year, parameters);
 // * データの出力先の設定をする
-		LeafModelDataExporter exporter = new LeafModelDataExporter(ph2ModelDataMapper);
+			LeafModelDataExporter exporter = new LeafModelDataExporter(ph2ModelDataMapper);
 // * データの生成を行う
-		new LeafModelDataGenerator(parameters, exporter, realDayData);
+			new LeafModelDataGenerator(parameters, exporter, realDayData);
+			}
 		}
 
 	// --------------------------------------------------
@@ -114,7 +119,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	public void addShootCount(Ph2RealLeafShootsCountEntity entity)
 		{
 		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		
+
 		Ph2RealLeafShootsCountEntityExample exm = new Ph2RealLeafShootsCountEntityExample();
 		// * 既存の日付のものがあるか検索
 		List<Ph2RealLeafShootsCountEntity> records = this.ph2RealLeafShootsCountMapper.selectByDate(
@@ -232,6 +237,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 				.selectByDeviceId(deviceId, year);
 		return (entities.size() != 0) ? entities.get(0) : null;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 新梢数検索処理(日付指定あり)
@@ -247,6 +253,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 				.selectByDate(deviceId, year, date);
 		return (entities.size() != 0) ? entities.get(0) : null;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 葉面積・葉枚数検索処理
@@ -260,6 +267,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 		{
 		return this.ph2RealLeafShootsAreaMapper.selectByDeviceId(deviceId, year);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 葉面積・葉枚数検索処理(日付指定あり)
