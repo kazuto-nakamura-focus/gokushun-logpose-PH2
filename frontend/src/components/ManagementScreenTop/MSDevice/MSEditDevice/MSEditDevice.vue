@@ -405,7 +405,9 @@ export default {
       if ("4" != param.data.displayId) {
         console.log("***");
         console.log(this.gridOptions.columnDefs[5]);
-        this.gridOptions.columnDefs[5].cellStyle =  {'background-color': '#aaa'};
+        this.gridOptions.columnDefs[5].cellStyle = {
+          "background-color": "#aaa",
+        };
         this.gridOptions.api.refreshCells();
       }
       /*param.data.kst.editable = (4 == param.data.displayId);
@@ -421,6 +423,18 @@ export default {
       const deviceId = this.mode == "update" ? this.deviceInfoData.id : null;
       if (confirm(message)) {
         console.log("updateRowData", this.rowData);
+        // センサー情報を追加する
+        let sensorItems = [];
+        // 画面のセンサー情報のリストを取り出す
+        for (const item of this.rowData) {
+          if (
+            null != item.displayId &&
+            null != item.name &&
+            null != item.channel
+          ) {
+            sensorItems.push(item);
+          }
+        }
         const data = {
           //デバイス情報
           id: deviceId,
@@ -431,7 +445,7 @@ export default {
           baseDateShort: this.deviceInfoData.baseDateShort,
           timeZone: this.deviceInfoData.timeZone,
           //センサー情報
-          sensorItems: this.rowData,
+          sensorItems: sensorItems,
         };
 
         console.log("update_data", data);

@@ -39,6 +39,7 @@ public class DeviceServiceImpl implements DeviceService
 	private SensorDomain sensorDomain;
 	@Autowired
 	private MasterDomain masterDomain;
+
 	// ===============================================
 	// 公開関数
 	// ===============================================
@@ -52,6 +53,7 @@ public class DeviceServiceImpl implements DeviceService
 		{
 		return this.masterDomain.getMasters();
 		}
+
 	// ###############################################
 	/**
 	 * デバイス一覧取得
@@ -93,17 +95,22 @@ public class DeviceServiceImpl implements DeviceService
 	// ###############################################
 
 	/** --------------------------------------------------
-	 * デバイスの追加
+	 * デバイスの追加を行う。
 	 *
 	 *@param dto DeviceUpdateDTO
-	 ------------------------------------------------------ 
-	 * @throws ParseException */
+	 *@throws ParseException */
+	// ------------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void addInfo(DeviceUpdateDTO dto) throws ParseException
 		{
+// * デバイスの追加
 		Long deviceId = this.deviceDomain.add(dto);
-		this.sensorDomain.add(deviceId, dto.getSensorItems());
+// * センサーの追加
+		if( 0 < dto.getSensorItems().size())
+			{
+			this.sensorDomain.add(deviceId, dto.getSensorItems());
+			}
 		}
 
 	/** --------------------------------------------------
@@ -139,6 +146,7 @@ public class DeviceServiceImpl implements DeviceService
 		result.setSensorItems(sensors);
 		return result;
 		}
+
 	@Override
 	public void load(DataLoadDTO dto) throws IOException
 		{
@@ -147,7 +155,7 @@ public class DeviceServiceImpl implements DeviceService
 		ProcessBuilder pb = new ProcessBuilder("java", "-jar",
 				String.valueOf(dto.getDeviceId()), "true", "-", p2.toUri().getPath());
 		Process p = pb.start();
-		
+
 		}
 
 	}
