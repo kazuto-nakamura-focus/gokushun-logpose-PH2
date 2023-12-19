@@ -13,7 +13,6 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
-import com.logpose.ph2.api.utility.DateTimeUtility;
 
 @Component
 public class PhotoGraphDomain extends GraphDomain
@@ -64,11 +63,11 @@ public class PhotoGraphDomain extends GraphDomain
 			category.add(sdf.format(entity.getDate()));
 			}
 // * 最小値・最大値の設定
-		ModelDataEntity first = entites.get(0);
-		ModelDataEntity last = entites.get(entites.size() - 1);
+		String first = category.get(0);
+		String last = category.get(category.size() - 1);
 		areaModel
-				.setXStart(DateTimeUtility.getStringFromDate(first.getDate()));
-		areaModel.setXEnd(DateTimeUtility.getStringFromDate(last.getDate()));
+				.setXStart(first);
+		areaModel.setXEnd(last);
 		areaModel.setYStart(entites.get(0).getCulmitiveCnopyPs());
 		areaModel.setYEnd(entites.get(entites.size() - 1).getCulmitiveCnopyPs());
 // * コメント

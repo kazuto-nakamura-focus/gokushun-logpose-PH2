@@ -331,11 +331,10 @@ public class GrowthDomain extends GraphDomain
 			}
 		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
 		// * 最小値・最大値の設定
-		ModelDataEntity first = entites.get(0);
-		ModelDataEntity last = entites.get(entites.size() - 1);
-		resultData
-				.setXStart(DateTimeUtility.getStringFromDate(first.getDate()));
-		resultData.setXEnd(DateTimeUtility.getStringFromDate(last.getDate()));
+		String first = category.get(0);
+		String last = category.get(category.size() - 1);
+		resultData.setXStart(first);
+		resultData.setXEnd(last);
 		resultData.setYStart(entites.get(0).getfValue());
 		resultData.setYEnd(entites.get(entites.size() - 1).getfValue());
 		// * 値の設定

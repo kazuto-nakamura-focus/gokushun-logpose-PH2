@@ -13,7 +13,6 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
-import com.logpose.ph2.api.utility.DateTimeUtility;
 
 @Component
 public class LeafGraphDomain extends GraphDomain
@@ -85,14 +84,11 @@ public class LeafGraphDomain extends GraphDomain
 			category.add(sdf.format(entity.getDate()));
 			}
 		// * 最小値・最大値の設定
-		ModelDataEntity first = entites.get(0);
-		ModelDataEntity last = entites.get(entites.size() - 1);
-		areaModel
-				.setXStart(DateTimeUtility.getStringFromDate(first.getDate()));
-		areaModel.setXEnd(DateTimeUtility.getStringFromDate(last.getDate()));
-		countModel.setXStart(areaModel.getXStart());
-		countModel.setXEnd(areaModel.getXEnd());
-
+		String first = category.get(0);
+		String last = category.get(category.size() - 1);
+		areaModel.setXStart(first);
+		areaModel.setXEnd(last);
+		
 		areaModel.setYStart(minArea);
 		areaModel.setYEnd(maxArea);
 // * 葉面積グラフのコメント設定
@@ -100,6 +96,8 @@ public class LeafGraphDomain extends GraphDomain
 // * 葉面積グラフの日付カテゴリの設定
 		areaModel.setCategory(category);
 
+		countModel.setXStart(areaModel.getXStart());
+		countModel.setXEnd(areaModel.getXEnd());
 		countModel.setYStart(minCount);
 		countModel.setYEnd(maxCount);
 // * 葉枚数グラフのコメント設定
