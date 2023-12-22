@@ -9,7 +9,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col align="left" style="display:flex">
+        <v-col align="left" style="display: flex">
           <div
             style="
               padding: 5px;
@@ -20,7 +20,7 @@
               width: fit-content;
             "
           >
-            <div style="font-size: 10pt;">
+            <div style="font-size: 10pt">
               <b>{{ titlePath }}</b>
             </div>
             <div style="font-size: 10pt">
@@ -42,7 +42,7 @@
               width: fit-content;
             "
           >
-            <div style="font-size: 10pt;">
+            <div style="font-size: 10pt">
               <b>{{ annotationLabel }}</b>
             </div>
           </div>
@@ -50,7 +50,9 @@
       </v-row>
       <v-row>
         <v-col align="left">
-          <b><small>{{comment}}</small></b>
+          <b
+            ><small>{{ comment }}</small></b
+          >
         </v-col>
       </v-row>
     </v-container>
@@ -87,9 +89,14 @@ export default {
       arguments: this.$props.target,
       titlePath: "",
       time: "",
-      comment:"",
+      comment: "",
       chart: { options: {}, series: [] },
-      estimationLabels:["萌芽推定日", "開花推定日", "ベレーゾン推定日", "収穫推定日"],
+      estimationLabels: [
+        "萌芽推定日",
+        "開花推定日",
+        "ベレーゾン推定日",
+        "収穫推定日",
+      ],
       annotationLabel: null,
     };
   },
@@ -122,7 +129,9 @@ export default {
     //* ============================================
     initialize() {
       const realGraph = this.prepareChart("実績");
+      const measuredGraph = this.prepareChart("実測値");
       const predictGraph = this.prepareChart("推定");
+
       this.comment = this.arguments.data.comment;
 
       //「実績」値の一覧
@@ -130,47 +139,73 @@ export default {
 
       //「推定」値の一覧
       const predictValues = this.arguments.data?.predictValues;
-      
+
+      // 「実測値」値の一覧
+      const meauredValues = this.arguments.data?.meauredValues;
+
       //X軸値の一覧
       const categories = this.arguments.data?.category;
 
       //生育名毎の閾値
       const annotations = this.arguments.data?.annotations;
       //生育名の値を順番に比較するためのインデックス
-      let annotationIndex = 0;    
+      let annotationIndex = 0;
 
       //「実績」・「推定」をま
       let itemIndex = 0;
 
+      // 実績グラフのデータ作成
       for (const item of values) {
         predictGraph.data.push(null);
         realGraph.data.push(item);
-        
+
         //生育名の閾値が近い日付を抽出するための処理：「実績」一覧から抽出
-        if(categories !== undefined && categories !== null && annotations !== undefined && annotations !== null && annotationIndex < annotations.length){
+        if (
+          categories !== undefined &&
+          categories !== null &&
+          annotations !== undefined &&
+          annotations !== null &&
+          annotationIndex < annotations.length
+        ) {
           const annotation = annotations[annotationIndex];
-          if(annotation !== undefined && annotation["category"] === undefined){
-            if(annotation["value"] <= item){
-              annotation["estimationLabel"] = this.estimationLabels[annotationIndex];
+          if (
+            annotation !== undefined &&
+            annotation["category"] === undefined
+          ) {
+            if (annotation["value"] <= item) {
+              annotation["estimationLabel"] =
+                this.estimationLabels[annotationIndex];
               annotation["category"] = categories[itemIndex];
               annotationIndex++;
             }
           }
         }
-        
         itemIndex++;
       }
-      
+      for (const item of meauredValues) {
+        measuredGraph.data.push(item);
+      }
+
       for (const item of predictValues) {
         realGraph.data.push(null);
         predictGraph.data.push(item);
-        
+
         //生育名の閾値が近い日付を抽出するための処理：「推定」一覧から抽出
-        if(categories !== undefined && categories !== null && annotations !== undefined && annotations !== null && annotationIndex < annotations.length){
+        if (
+          categories !== undefined &&
+          categories !== null &&
+          annotations !== undefined &&
+          annotations !== null &&
+          annotationIndex < annotations.length
+        ) {
           const annotation = annotations[annotationIndex];
-          if(annotation !== undefined && annotation["category"] === undefined){
-            if(annotation["value"] <= item){
-              annotation["estimationLabel"] = this.estimationLabels[annotationIndex];
+          if (
+            annotation !== undefined &&
+            annotation["category"] === undefined
+          ) {
+            if (annotation["value"] <= item) {
+              annotation["estimationLabel"] =
+                this.estimationLabels[annotationIndex];
               annotation["category"] = categories[itemIndex];
               annotationIndex++;
             }
@@ -180,14 +215,16 @@ export default {
       }
 
       const tempLabels = [];
-      if(annotations !== undefined && annotations !== null){
-        annotations.forEach(annotation => {
-          if(annotation["category"] !== undefined)
-            tempLabels.push(`${annotation["estimationLabel"]}:${annotation["category"]}`);
+      if (annotations !== undefined && annotations !== null) {
+        annotations.forEach((annotation) => {
+          if (annotation["category"] !== undefined)
+            tempLabels.push(
+              `${annotation["estimationLabel"]}:${annotation["category"]}`
+            );
         });
-        if(tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
+        if (tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
       }
-      
+
       this.$refs.chart.updateSeries(
         [
           {
@@ -195,6 +232,9 @@ export default {
           },
           {
             data: predictGraph.data,
+          },
+          {
+            data: measuredGraph.data,
           },
         ],
         false,

@@ -798,6 +798,78 @@ public class Ph2RealLeafShootsAreaEntityExample {
 			addCriterion("year not between", value1, value2, "year");
 			return (Criteria) this;
 			}
+
+		public Criteria andPsRealAmountIsNull()
+			{
+			addCriterion("ps_real_amount is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountIsNotNull()
+			{
+			addCriterion("ps_real_amount is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountEqualTo(Double value)
+			{
+			addCriterion("ps_real_amount =", value, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountNotEqualTo(Double value)
+			{
+			addCriterion("ps_real_amount <>", value, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountGreaterThan(Double value)
+			{
+			addCriterion("ps_real_amount >", value, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountGreaterThanOrEqualTo(Double value)
+			{
+			addCriterion("ps_real_amount >=", value, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountLessThan(Double value)
+			{
+			addCriterion("ps_real_amount <", value, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountLessThanOrEqualTo(Double value)
+			{
+			addCriterion("ps_real_amount <=", value, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountIn(List<Double> values)
+			{
+			addCriterion("ps_real_amount in", values, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountNotIn(List<Double> values)
+			{
+			addCriterion("ps_real_amount not in", values, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountBetween(Double value1, Double value2)
+			{
+			addCriterion("ps_real_amount between", value1, value2, "psRealAmount");
+			return (Criteria) this;
+			}
+
+		public Criteria andPsRealAmountNotBetween(Double value1, Double value2)
+			{
+			addCriterion("ps_real_amount not between", value1, value2, "psRealAmount");
+			return (Criteria) this;
+			}
 		}
 
 	/**

@@ -147,12 +147,12 @@
 			</table> <table tableName="ph2_real_ps_amount" domainObjectName="Ph2RealPsAmountEntity" 
 			mapperName="Ph2RealPsAmountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> -->
+			</table>
 			<table tableName="ph2_real_growth_f_stage" domainObjectName="Ph2RealGrowthFStageEntity" 
 			mapperName="Ph2RealGrowthFStageMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> 
-		<!-- <table tableName="ph2_fdata" domainObjectName="Ph2FDataEntity" mapperName="Ph2FDataMapper" 
+			<table tableName="ph2_fdata" domainObjectName="Ph2FDataEntity" mapperName="Ph2FDataMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_dashboards_rel" 
 			domainObjectName="Ph2DashboardsRelEntity" mapperName="Ph2DashboardsRelMapper" 

@@ -8,9 +8,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
+import com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 
@@ -22,8 +21,6 @@ public class LeafGraphDomain extends GraphDomain
 	// ===============================================
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
-	@Autowired
-	private GrowthDomainMapper growthDomainMapper;
 
 	// ===============================================
 	// 公開メソッド
@@ -42,8 +39,8 @@ public class LeafGraphDomain extends GraphDomain
 	public List<RealModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
-		List<ModelDataEntity> entites = this.ph2ModelDataMapper
-				.selectModelDataByType(deviceId, year);
+		List<LeafModelDataEntity> entites = this.ph2ModelDataMapper
+				.selectLeafModelDataByType(deviceId, year);
 		// * データが存在しない場合 nullを返す
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
@@ -58,8 +55,10 @@ public class LeafGraphDomain extends GraphDomain
 		Double maxArea = Double.MIN_VALUE;
 		Double minCount = Double.MAX_VALUE;
 		Double maxCount = Double.MIN_VALUE;
-		for (ModelDataEntity entity : entites)
+		for (LeafModelDataEntity entity : entites)
 			{
+// * 実測値の値代入
+			areaModel.getMeauredValues().add(entity.getRealArea());
 			if (entity.getIsReal())
 				{
 				areaModel.getValues().add(entity.getCrownLeafArea());
@@ -75,11 +74,21 @@ public class LeafGraphDomain extends GraphDomain
 				minArea = area;
 			if (maxArea < area)
 				maxArea = area;
+// * 実測値がある場合は葉面積グラフの最大値・最小値をその値も参照する
+			if(null != entity.getRealArea())
+				{
+				area = entity.getRealArea();
+				if (minArea > area)
+					minArea = area;
+				if (maxArea < area)
+					maxArea = area;
+				}
 			double count = (null == entity.getLeafCount()) ? 0 : entity.getLeafCount();
 			if (minCount > count)
 				minCount = count;
 			if (maxCount < count)
 				maxCount = count;
+
 // * 日付カテゴリの設定
 			category.add(sdf.format(entity.getDate()));
 			}
@@ -108,6 +117,7 @@ public class LeafGraphDomain extends GraphDomain
 		List<RealModelGraphDataDTO> resultData = new ArrayList<>();
 		resultData.add(areaModel);
 		resultData.add(countModel);
+		resultData.add(areaModel);
 		return resultData;
 		}
 	}
