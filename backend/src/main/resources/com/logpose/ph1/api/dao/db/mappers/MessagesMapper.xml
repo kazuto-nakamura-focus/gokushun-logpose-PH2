@@ -300,4 +300,24 @@
       updated_at = #{updatedAt,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+    
+  <select fetchSize="5000" id="selectByCastedAt" parameterType="java.util.Date" resultMap="BaseResultMap">
+	SELECT 
+    	id, device_id, seq, raw, 
+    	casted_at AT TIME ZONE 'UTC' AT TIME ZONE #{tz} as casted_at,
+    	created_at, updated_at
+    FROM
+    	 messages
+	WHERE
+  	<if test="castedAt != null">
+        	casted_at AT TIME ZONE 'UTC' AT TIME ZONE #{tz} &gt; #{castedAt,jdbcType=TIMESTAMP}
+        AND
+	</if>
+	    	device_id = #{deviceId}
+	    AND
+		   length(raw)=24
+	ORDER BY casted_at ASC
+
+  </select>
 </mapper>
