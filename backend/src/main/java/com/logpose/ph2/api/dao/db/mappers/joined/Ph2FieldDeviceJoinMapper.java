@@ -11,7 +11,7 @@ import com.logpose.ph2.api.dto.element.DeviceInfo;
 
 
 @Mapper
-public interface Ph2FieldDeviceSetJoinMapper
+public interface Ph2FieldDeviceJoinMapper
 	{
     List<DeviceInfo> selectDeviceInfoByField(@Param("fieldId") Long fieldId);
     
