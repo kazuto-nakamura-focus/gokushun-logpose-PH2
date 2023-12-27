@@ -4,25 +4,21 @@ import java.util.Objects;
 
 import javax.sql.DataSource;
 
-import org.apache.ibatis.scripting.defaults.RawLanguageDriver;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.jdbc.DataSourceProperties;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 
 import com.zaxxer.hikari.HikariDataSource;
 
-import lombok.RequiredArgsConstructor;
-
 @Configuration
-@MapperScan(
-	basePackages = "com.logpose.ph1.api.dao.db.mappers",
-	sqlSessionFactoryRef = "schema1SqlSessionFactory")
-@RequiredArgsConstructor
+@MapperScan(basePackages = "com.logpose.ph1.api.dao.db.mappers", sqlSessionFactoryRef = "schema1SqlSessionFactory")
 public class Ph1MybatisConfigraton
 	{
 	// ===============================================
@@ -31,59 +27,24 @@ public class Ph1MybatisConfigraton
 	private static final String SCHEMA1_DATA_SOURCE_NAME = "schema1DataSource";
 	private static final String SCHEMA1_DATA_SOURCE_PROPERTIES_NAME = "schema1DataSourceProperties";
 	private static final String SCHEMA1_SQL_SESSION_FACTORY_NAME = "schema1SqlSessionFactory";
-	private static final String DRIVER_CLASS_NAME = "com.mysql.cj.jdbc.Driver";
-	// ===============================================
-	// クラスメンバー
-	// ===============================================
-	private final DataSourceParameters dataSourceParameters;
+	private static final String SCHEMA1_TRANSACTION_NAME = "txManager1";
+
 	// ===============================================
 	// 公開関数
 	// ===============================================
 	// --------------------------------------------------
 	/**
-	 * schema1スキーマ用のDataSourcePropertiesを取得
-	 *
-	 * @return schema1スキーマ用のDataSourceProperties
+	 * SQL Serverのデータソースプロパティを生成する
+	 * @return SQL Serverのデータソースプロパティ
 	 */
 	// --------------------------------------------------
-	public DataSourceProperties getSchema1DataSourceProperties()
+	@Bean(name = { SCHEMA1_DATA_SOURCE_PROPERTIES_NAME })
+	@ConfigurationProperties(prefix = "spring.datasource.schema1")
+	public DataSourceProperties datasource1Properties()
 		{
-		return mapToDataSourceProperties(
-				dataSourceParameters.schema1().connectionProperties().username(),
-				dataSourceParameters.schema1().connectionProperties().password(),
-				dataSourceParameters.schema1().connectionProperties().jdbcUrl());
+		return new DataSourceProperties();
 		}
-	// --------------------------------------------------
-	/**
-	 * DataSourcePropertiesを取得
-	 *
-	 * @param url DatabaseのエンドポイントURL
-	 * @return DataSourceProperties
-	 */
-	// --------------------------------------------------
-	private DataSourceProperties mapToDataSourceProperties(String username, String password,
-			String url)
-		{
-		DataSourceProperties dataSourceProperties = new DataSourceProperties();
-		dataSourceProperties.setDriverClassName(DRIVER_CLASS_NAME);
-		dataSourceProperties.setUsername(username);
-		dataSourceProperties.setPassword(password);
-		dataSourceProperties.setUrl(url);
 
-		return dataSourceProperties;
-		}
-	// --------------------------------------------------
-	/**
-	 * schema1スキーマ用のDataSourceのプロパティを作成
-	 *
-	 * @return DataSourceのプロパティ
-	 */
-	@Bean(name = SCHEMA1_DATA_SOURCE_PROPERTIES_NAME)
-	@Primary
-	public DataSourceProperties schema1DataSourceProperties()
-		{
-		return getSchema1DataSourceProperties();
-		}
 	// --------------------------------------------------
 	/**
 	 * schema1スキーマ用のDataSourceを作成
@@ -91,16 +52,16 @@ public class Ph1MybatisConfigraton
 	 * @return DataSource
 	 */
 	// --------------------------------------------------
-	@Bean(name = SCHEMA1_DATA_SOURCE_NAME)
-	@Primary
+	@Bean(name = { SCHEMA1_DATA_SOURCE_NAME })
 	public DataSource schema1DataSource(
-			@Qualifier(SCHEMA1_DATA_SOURCE_PROPERTIES_NAME) DataSourceProperties dataSourceProperties)
+			@Qualifier(SCHEMA1_DATA_SOURCE_PROPERTIES_NAME) DataSourceProperties properties,
+			DefaultHikariParameter hikari)
 		{
-		final HikariDataSource hikariDataSource = dataSourceProperties.initializeDataSourceBuilder()
+		final HikariDataSource hikariDataSource = properties.initializeDataSourceBuilder()
 				.type(HikariDataSource.class).build();
-		return this.setPropertiesToHikariDataSource(hikariDataSource,
-				dataSourceParameters.schema1().hikariDataSourceProperties());
+		return this.setPropertiesToHikariDataSource(hikariDataSource, hikari);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * HikariDataSourceにプロパティをセットする　　②
@@ -112,18 +73,33 @@ public class Ph1MybatisConfigraton
 	// --------------------------------------------------
 	private HikariDataSource setPropertiesToHikariDataSource(
 			HikariDataSource hikariDataSource,
-			DataSourceParameters.Properties.HikariDataSourceProperties properties)
+			DefaultHikariParameter parameters)
 		{
-		hikariDataSource.setMaxLifetime(properties.maxLifetime());
-		hikariDataSource.setMaximumPoolSize(properties.maximumPoolSize());
+		hikariDataSource.setMaxLifetime(parameters.getMaxLifetime1());
+		hikariDataSource.setMaximumPoolSize(parameters.getMaximumPoolSize1());
 
-		if (Objects.nonNull(properties.minimumIdle()))
+		if (Objects.nonNull(parameters.getMinimumIdle1()))
 			{
-			hikariDataSource.setMinimumIdle(properties.minimumIdle());
+			hikariDataSource.setMinimumIdle(parameters.getMinimumIdle1());
 			}
 
 		return hikariDataSource;
 		}
+
+	// --------------------------------------------------
+	/**
+	 * SQL Serverのトランザクションマネージャを生成する
+	 * @param dataSourceSs SQL Serverのデータソース
+	 * @return SQL Serverのトランザクションマネージャ
+	 */
+	// --------------------------------------------------
+	@Bean(name = { SCHEMA1_TRANSACTION_NAME })
+	public PlatformTransactionManager txManagerSs(
+			@Qualifier(SCHEMA1_DATA_SOURCE_NAME) DataSource dataSource1)
+		{
+		return new DataSourceTransactionManager(dataSource1);
+		}
+
 	// --------------------------------------------------
 	/**
 	 * schema1スキーマ用のSQLセッションファクトリを作成
@@ -133,23 +109,12 @@ public class Ph1MybatisConfigraton
 	 */
 	// --------------------------------------------------
 	@Bean(name = SCHEMA1_SQL_SESSION_FACTORY_NAME)
-	@Primary
 	public SqlSessionFactory schema1SqlSessionFactory(
 			@Qualifier(SCHEMA1_DATA_SOURCE_NAME) DataSource dataSource) throws Exception
 		{
 		SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
 		sqlSessionFactoryBean.setDataSource(dataSource);
 
-		final SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBean.getObject();
-		if (Objects.isNull(sqlSessionFactory))
-			{
-			throw new NullPointerException();
-			}
-
-		sqlSessionFactory.getConfiguration().setCacheEnabled(false);
-		sqlSessionFactory.getConfiguration().setMapUnderscoreToCamelCase(true);
-		sqlSessionFactory.getConfiguration().setDefaultScriptingLanguage(RawLanguageDriver.class);
-
-		return sqlSessionFactory;
+		return sqlSessionFactoryBean.getObject();
 		}
 	}

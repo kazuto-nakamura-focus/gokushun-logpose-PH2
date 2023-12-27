@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
-import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceSetJoinMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
 import com.logpose.ph2.api.dto.device.DeviceUpdateDTO;
@@ -26,7 +26,7 @@ public class DeviceDomain
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private Ph2FieldDeviceSetJoinMapper ph2FieldDeviceSetJoinMapper;
+	private Ph2FieldDeviceJoinMapper ph2FieldDeviceJoinMapper;
 	@Autowired
 	private Ph2DevicesMapper  phDevicesMapper;
 
@@ -39,7 +39,7 @@ public class DeviceDomain
 	// ###############################################
 	public List<DeviceInfoDTO> getDeviceList()
 		{
-		return this.ph2FieldDeviceSetJoinMapper.selectDeviceList();
+		return this.ph2FieldDeviceJoinMapper.selectDeviceList();
 		}
 	// ###############################################
 	/**
@@ -50,7 +50,7 @@ public class DeviceDomain
 	// ###############################################
 	public DeviceDetailDTO getDetail(Long deviceId)
 		{
-		return this.ph2FieldDeviceSetJoinMapper.selectDeviceDetail(deviceId);
+		return this.ph2FieldDeviceJoinMapper.selectDeviceDetail(deviceId);
 		}
 	/** --------------------------------------------------
 	 * デバイスの追加

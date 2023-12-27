@@ -12,7 +12,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RelFieldDeviceEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelFieldDeviceMapper;
-import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceSetJoinMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper;
 import com.logpose.ph2.api.domain.DeviceDomain;
 import com.logpose.ph2.api.dto.FieldDetailDTO;
 import com.logpose.ph2.api.dto.FieldInfoDTO;
@@ -33,7 +33,7 @@ public class FIeldService
 	@Autowired
 	private Ph2FieldsMapper ph2FieldsMapper;
 	@Autowired
-	private Ph2FieldDeviceSetJoinMapper ph2FieldDeviceSetJoinMapper;
+	private Ph2FieldDeviceJoinMapper ph2FieldDeviceSetJoinMapper;
 	@Autowired
 	private DeviceDomain deviceDomain;
 	@Autowired
