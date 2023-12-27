@@ -49,6 +49,7 @@ public class FIeldService
 	 * @return List<FieldInfoDTO>
 	 */
 	// ###############################################
+	@SuppressWarnings("deprecation")
 	public List<FieldInfoDTO> list()
 		{
 		List<FieldInfoDTO> result = new ArrayList<>();
