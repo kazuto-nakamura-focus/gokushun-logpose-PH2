@@ -174,7 +174,8 @@ export default {
               };
               this.selectedMap.set(data.fieldId, field);
             }
-            let device = field.deviceMap[data.deviceId];
+            field = this.selectedMap.get(data.fieldId);
+            let device = field.deviceMap.get(data.deviceId);
             if (null == device) {
               device = {
                 id: data.deviceId,
@@ -184,12 +185,12 @@ export default {
               };
               field.deviceMap.set(data.deviceId, device);
             }
-            let year = device.yearMap[data.year];
+            let year = device.yearMap.get(data.year);
             if (null == year) {
               year = {
                 id: data.year,
                 name: data.year,
-                startDate:data.startDate,
+                startDate: data.startDate,
                 active: false,
               };
               device.yearMap.set(data.year, year);

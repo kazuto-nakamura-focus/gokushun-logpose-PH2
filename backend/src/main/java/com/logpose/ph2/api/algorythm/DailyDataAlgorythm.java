@@ -56,7 +56,7 @@ public class DailyDataAlgorythm
 					.selectDailyata(deviceId, (short) (year - 1), startDate,
 							false);
 // * 日付が連続している場合対象年度のデータとその昨年度のデータを合成
-			if (null != startDate)
+			if ((null != startDate)&&(pastDayData.size()>0))
 				{
 				if (pastDayData.get(0).getDate().getTime() == startDate.getTime())
 					{

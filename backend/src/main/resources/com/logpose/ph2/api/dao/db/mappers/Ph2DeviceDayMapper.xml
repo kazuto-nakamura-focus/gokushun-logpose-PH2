@@ -330,4 +330,15 @@
    	from
    		ph2_device_day
    </select>
+   
+   	<select id="selectMaxTrueDate" resultType="java.util.Date">
+   	select
+   		max(date)
+   	from
+   		ph2_device_day
+   	where
+   		device_id  = #{deviceId}
+   		and
+   		has_real = true;
+   </select>
 </mapper>

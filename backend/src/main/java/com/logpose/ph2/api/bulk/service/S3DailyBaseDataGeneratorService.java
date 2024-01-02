@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.bulk.service;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -11,9 +12,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
+import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.entity.Ph2DailyBaseDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DailyBaseDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample.Criteria;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
@@ -41,7 +45,8 @@ public class S3DailyBaseDataGeneratorService
 	// 公開関数群
 	// ===============================================
 	@Transactional(rollbackFor = Exception.class)
-	public void doService(List<Ph2DeviceDayEntity> deviceDays, Date startDate)
+	public List<Ph2DeviceDayEntity> doService(LoadCoordinator ldc,
+			List<Ph2DeviceDayEntity> deviceDays)
 		{
 		LOG.info("日ベースのデータ作成開始");
 		SingleDoubleValueDTO prevCdd = new SingleDoubleValueDTO();
@@ -62,9 +67,24 @@ public class S3DailyBaseDataGeneratorService
 				}
 			}
 		LOG.info("日ベースのデータ作成終了");
+// * 指定デバイスの実値を持つ最初の1日めのデータを取得する設定を行う。
+		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
+		Criteria criteria = exm.createCriteria().andDeviceIdEqualTo(ldc.getDeviceId())
+				.andLapseDayEqualTo((short) 1).andHasRealEqualTo(true);
+// * 日付の指定がある場合
+		if (null != ldc.getLastHadledDate())
+			{
+			Calendar cal = Calendar.getInstance();
+			cal.setTime(ldc.getLastHadledDate());
+			cal.add(Calendar.YEAR, -1);
+			criteria.andDateGreaterThan(cal.getTime());
+			}
+		exm.setOrderByClause("date  asc");
+		return this.ph2DeviceDayMapper.selectByExample(exm);
 		}
 
-	private void addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList, SingleDoubleValueDTO prevCdd)
+	private void addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList,
+			SingleDoubleValueDTO prevCdd)
 		{
 		float min = tempList.get(0).getTemperature();
 		float max = min;
@@ -116,7 +136,7 @@ public class S3DailyBaseDataGeneratorService
 		entity.setDayId(device.getId());
 		entity.setAverage(sum / count);
 		entity.setTm((min + max) / 2 - 10);
-		double cdd  = prevCdd.getValue() + ( (min + max) / 2 - 9.18);
+		double cdd = prevCdd.getValue() + ((min + max) / 2 - 9.18);
 		prevCdd.setValue(cdd);
 		entity.setCdd(cdd);
 		if (entities.size() > 0)

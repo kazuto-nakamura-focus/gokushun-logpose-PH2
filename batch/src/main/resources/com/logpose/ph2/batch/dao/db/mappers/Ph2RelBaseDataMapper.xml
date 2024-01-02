@@ -255,6 +255,15 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
+     <select id="selectLatest" resultType="java.util.Date">
+   	select
+   		max(casted_at)
+   	from
+   		ph2_rel_base_data
+   	where
+   		device_id = #{deviceId}
+   </select>
+   
    <select id="selectOldDate" resultType="java.util.Date">
    	select
    		min(casted_at)

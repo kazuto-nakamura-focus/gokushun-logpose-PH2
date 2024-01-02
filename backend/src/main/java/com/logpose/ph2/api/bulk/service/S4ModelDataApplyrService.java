@@ -2,7 +2,6 @@ package com.logpose.ph2.api.bulk.service;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -27,38 +26,23 @@ public class S4ModelDataApplyrService
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	public void doService(List<Ph2DeviceDayEntity> deviceDays, Date startDay) throws ParseException
+	// --------------------------------------------------
+	/**
+	 * 各モデルデータ生成のモジュールを呼び出す
+	 * @param deviceId 処理対象となるデバイスID
+	 * @param deviceDays 年度初日のデータで実測値があるもの
+	 * @throws ParseException
+	 */
+	// --------------------------------------------------
+	public void doService(Long deviceId, List<Ph2DeviceDayEntity> deviceDays) throws ParseException
 		{
-		LOG.info("モデルデータの作成を開始します。", startDay);
+		LOG.info("モデルデータの作成を開始します。", deviceId);
 		// * 年度の開始日まで移動
 		List<Ph2DeviceDayEntity> tmp = new ArrayList<>();
 		for (Ph2DeviceDayEntity entity : deviceDays)
 			{
-			if (entity.getLapseDay().shortValue() == 1)
-				{
-				// 既に３６５日以上用意されている
-				if (tmp.size() >= 365)
-					{
-					Ph2DeviceDayEntity deviceDay = tmp.get(0);
-					if (deviceDay.getHasReal())
-						{
-						this.modelDataDomain.doService(deviceDay.getDeviceId(), deviceDay.getYear(),
-								deviceDay.getDate());
-						}
-					}
-				tmp.clear();
-				}
-			tmp.add(entity);
+			this.modelDataDomain.doService(deviceId, entity.getYear(), entity.getDate());
 			}
-		if (tmp.size() >= 0)
-			{
-			Ph2DeviceDayEntity deviceDay = tmp.get(0);
-			if (deviceDay.getHasReal())
-				{
-				this.modelDataDomain.doService(deviceDay.getDeviceId(), deviceDay.getYear(),
-						deviceDay.getDate());
-				}
-			}
-		LOG.info("モデルデータの作成が終了しました。", startDay);
+		LOG.info("モデルデータの作成が終了しました。", deviceId);
 		}
 	}

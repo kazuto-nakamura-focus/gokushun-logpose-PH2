@@ -2,7 +2,6 @@ package com.logpose.ph2.api.controller;
 
 import java.io.IOException;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,16 +9,19 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.logpose.ph2.api.bulk.service.S0Initializer;
 import com.logpose.ph2.api.bulk.service.S1DeviceDataLoaderService;
 import com.logpose.ph2.api.bulk.service.S2DeviceDayService;
 import com.logpose.ph2.api.bulk.service.S3DailyBaseDataGeneratorService;
 import com.logpose.ph2.api.bulk.service.S4ModelDataApplyrService;
+import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
@@ -40,7 +42,8 @@ public class DeviceDataLoader
 	// クラスメンバー
 	// ===============================================
 	private static Logger LOG = LogManager.getLogger(DeviceDataLoader.class);
-
+	@Autowired
+	S0Initializer s0Initializer;
 	@Autowired
 	S1DeviceDataLoaderService s1deviceDataLoaderService;
 	@Autowired
@@ -61,9 +64,43 @@ public class DeviceDataLoader
 	 * @param date
 	 */
 	// --------------------------------------------------------
+	@GetMapping("/update")
+	public ResponseDTO masters(HttpServletRequest httpReq)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+// * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
+			List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
+			for (Ph2DevicesEnyity device : devices)
+				{
+// * コーディネーターを生成する
+				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device,
+						false,
+						null);
+// * コーディネーターを引数にデータロードを実行する
+				this.loadDevice(ldc);
+				}
+			as_dto.setSuccess(null);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+
+	// --------------------------------------------------------
+	/**
+	 * デバイスデータの生成を行う
+	 * @param deviceId
+	 * @param isAll
+	 * @param date
+	 */
+	// --------------------------------------------------------
 	@PostMapping("/load")
 	public ResponseDTO masters(HttpServletRequest httpReq,
-			@RequestBody @Validated DataLoadDTO  dto)
+			@RequestBody @Validated DataLoadDTO dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
@@ -71,15 +108,21 @@ public class DeviceDataLoader
 // * デバイスの指定が無い場合、全てのデバイスを対象とする
 			if (null == dto.getDeviceId())
 				{
-				List<Ph2DevicesEnyity> devices = this.s1deviceDataLoaderService.getDeviceAllInfo();
+				List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
 				for (Ph2DevicesEnyity device : devices)
 					{
-					this.loadDevice(device.getId(), dto.getIsAll(), dto.getStartDate());
+					LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device,
+							dto.getIsAll(),
+							dto.getStartDate());
+					this.loadDevice(ldc);
 					}
 				}
 			else
 				{
-				this.loadDevice(dto.getDeviceId(), dto.getIsAll(), dto.getStartDate());
+				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(dto.getDeviceId(),
+						dto.getIsAll(),
+						dto.getStartDate());
+				this.loadDevice(ldc);
 				}
 			as_dto.setSuccess(null);
 			}
@@ -93,36 +136,19 @@ public class DeviceDataLoader
 	// ===============================================
 	// 非公開関数群
 	// ===============================================
-	private void loadDevice(Long deviceId, boolean isAll, Date startDate) throws IOException, ParseException
+	private void loadDevice(LoadCoordinator ldc) throws IOException, ParseException
 		{
-		LOG.info("デバイスデータのローディングを開始します。:" + deviceId);
-// * 開始日の設定
-		if (!isAll)
-			{
-			if (startDate == null)
-				{
-				// * 日付の指定が無い場合は、未処理の日付を取得する。
-				startDate = this.s1deviceDataLoaderService.getLatest(deviceId);
-				}
-			}
+		if (!ldc.isLoadable()) return;
+		LOG.info("デバイスデータのローディングを開始します。:" + ldc.getDeviceId());
 
-		// * デバイス情報の取得
-		Ph2DevicesEnyity device = this.s1deviceDataLoaderService.getDeviceInfo(deviceId);
-		// * デバイス情報に開始日・タイムゾーン情報が無い場合終了
-		if ((null == device.getBaseDate()) || (null == device.getTz()))
+// * メッセージから基本情報の取得
+		s1deviceDataLoaderService.loadMessages(ldc);
+// * 日付をまたがった場合、以下の処理を行う
+		List<Ph2DeviceDayEntity> deviceDays = this.s2deviceDayService.initDeviceDay(ldc);
+		if (deviceDays.size() > 0)
 			{
-			return;
-			}
-
-		// * メッセージから基本情報の取得
-		startDate = s1deviceDataLoaderService.loadMessages(device, startDate);
-		// * 日付をまたがった場合、以下の処理を行う
-		if (null != startDate)
-			{
-			List<Ph2DeviceDayEntity> deviceDays = this.s2deviceDayService.initDeviceDay(device,
-					startDate);
-			this.s3dailyBaseDataGeneratorService.doService(deviceDays, startDate);
-			this.s4modelDataApplyrService.doService(deviceDays, startDate);
+			deviceDays =this.s3dailyBaseDataGeneratorService.doService(ldc, deviceDays);
+			this.s4modelDataApplyrService.doService(ldc.getDeviceId(), deviceDays);
 			}
 
 		LOG.info("デバイスデータのローディングが終了しました。");

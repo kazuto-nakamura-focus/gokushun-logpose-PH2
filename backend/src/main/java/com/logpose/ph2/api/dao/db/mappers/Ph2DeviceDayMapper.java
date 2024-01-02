@@ -84,4 +84,6 @@ public interface Ph2DeviceDayMapper {
 	int multiRowInsert(@Param("targets") List<Ph2DeviceDayEntity> targets);
 	
 	Long selectMaxId();
+	
+	Date selectMaxTrueDate(@Param("deviceId") Long deviceId);
 }

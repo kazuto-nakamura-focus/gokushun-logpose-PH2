@@ -82,7 +82,7 @@ public interface Ph2RelBaseDataMapper {
 
 	Date selectLatest(@Param("deviceId") Long deviceId);
 	
-	Date selectOldDate();
+	Date selectOldDate(@Param("deviceId") Long deviceId);
 	
 	Long selectMaxId();
 	

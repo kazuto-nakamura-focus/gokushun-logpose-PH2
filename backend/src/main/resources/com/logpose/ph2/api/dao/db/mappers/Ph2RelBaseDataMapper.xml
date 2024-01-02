@@ -260,8 +260,17 @@
    		min(casted_at)
    	from
    		ph2_rel_base_data
+	where
+   		device_id = #{deviceId}
    </select>
-
+     <select id="selectLatest" resultType="java.util.Date">
+   	select
+   		max(casted_at)
+   	from
+   		ph2_rel_base_data
+   	where
+   		device_id = #{deviceId}
+   </select>
    <select id="selectMaxId" resultType="java.lang.Long">
    	select
    		max(id)
