@@ -1,7 +1,5 @@
 package com.logpose.ph2.api.dto.element;
 
-import java.util.Date;
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,7 +10,7 @@ public class FieldData extends Label
 	//* 値
 	private String value;
 	//* 受信日時
-	private Date castedAt;
+	private String castedAt;
 	// * センサーID
 //	private String sensorName;
 	// * 表示順
