@@ -29,7 +29,7 @@ public class DataLoadService
 	// クラスメンバー
 	// ===============================================
 	private static Logger LOG = LogManager.getLogger(DataLoadService.class);
-	
+
 	@Autowired
 	S0Initializer s0Initializer;
 	@Autowired
@@ -62,15 +62,8 @@ public class DataLoadService
 			LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device,
 					false,
 					null);
-// * コーディネーターを引数にデータロードを実行する
-			if (!ldc.isLoadable())
-				{
-				LOG.warn("ローディングに必要な情報はありません。:" + ldc.getDeviceId());
-				}
-			else
-				{
-				LOG.warn("ローディング情報確認。:" + ldc.getDeviceId());
-				}
+			// * コーディネーターを引数にデータロードを実行する
+			this.loadDevice(ldc);
 			}
 		}
 
