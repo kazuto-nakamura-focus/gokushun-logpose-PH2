@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.logpose.ph2.api.controller.dto.DeviceDateDTO;
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
@@ -45,32 +44,6 @@ public class LeafController
 	// ===============================================
 	// パブリック関数（検索系)
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * 葉面積・葉枚数モデルデータ作成(バッチよりコール)
-	 *
-	 * @param DeviceDateDTO デバイスIDと日付
-	 * @return ResponseDTO(GraphDataDTO)
-	 */
-	// --------------------------------------------------
-	@PutMapping("/graph/updateModelData")
-	public ResponseDTO updateModelData(HttpServletRequest httpReq,
-			@RequestBody @Validated DeviceDateDTO dto)
-		{
-		ResponseDTO as_dto = new ResponseDTO();
-		try
-			{
-			this.leafService.updateDateModel(dto.getDeviceId(), dto.getYear(),
-					dto.getDate());
-			as_dto.setSuccess(null);
-			}
-		catch (Exception e)
-			{
-			as_dto.setError(e);
-			}
-		return as_dto;
-		}
-
 	// --------------------------------------------------
 	/**
 	 * 葉面積モデルグラフデータ取得
