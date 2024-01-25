@@ -16,7 +16,7 @@
             <div class="text-subtitle-1">新梢数</div>
 
             <v-subheader class="ma-0 mt-n3 pa-0">
-              (芽掻きのタイミングで実施)
+              (芽搔き直後に実施してください)
               センサーを装着している樹をサンプルとしてカウントしてください
             </v-subheader>
 

@@ -77,7 +77,7 @@
         <v-col cols="10">
           <v-row>
             <v-col cols="3">
-              <div class="ma-0 mt-n5 pa-0 pl-4">E-L 27～31の生育ステージ時</div>
+              <div class="ma-0 mt-n5 pa-0 pl-4">結実期</div>
             </v-col>
             <v-col cols="3">
               <div style="margin-top: -40px; padding: 0">

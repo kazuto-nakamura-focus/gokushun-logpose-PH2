@@ -1,10 +1,8 @@
 package com.logpose.ph2.api.service;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
 
-import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
 import com.logpose.ph2.api.dto.device.DeviceMastersDTO;
@@ -78,6 +76,5 @@ public interface DeviceService
 	 ------------------------------------------------------ */
 	public DeviceMastersDTO getMasters();
 
-	public void load(DataLoadDTO dto) throws IOException;
 
 	}

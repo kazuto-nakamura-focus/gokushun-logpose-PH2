@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.logpose.ph2.api.controller.dto.DeviceDateDTO;
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
@@ -42,35 +41,6 @@ public class PhotosynthesisController
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * 葉面積・葉枚数モデルデータ作成(バッチよりコール)
-	 *
-	 * @param DeviceDateDTO デバイスIDと日付
-	 * @return ResponseDTO(GraphDataDTO)
-	 */
-	// --------------------------------------------------
-	@PutMapping("/graph/updateModelData")
-	public ResponseDTO updateModelData(HttpServletRequest httpReq,
-			HttpServletResponse res,
-			@RequestBody @Validated DeviceDateDTO dto)
-		{
-		ResponseDTO as_dto = new ResponseDTO();
-		try
-			{
-			this.photosynthesisService.updateDateModel(dto.getDeviceId(),
-					dto.getYear(),
-					dto.getDate());
-			as_dto.setSuccess(null);
-			}
-		catch (Exception e)
-			{
-			as_dto.setError(e);
-			}
-
-		return as_dto;
-		}
-
 	// --------------------------------------------------
 	/**
 	 * 光合成推定グラフデータ取得

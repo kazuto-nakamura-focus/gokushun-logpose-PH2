@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.logpose.ph2.api.controller.dto.DeviceDateDTO;
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dto.EventDaysDTO;
@@ -48,34 +47,6 @@ public class GrowthController
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * 生育推定モデルデータの更新
-	 *  バッチ処理から呼ばれる。
-	 *
-	 * @param deviceId デバイス
-	 * @param year 年度
-	 * @return ResponseDTO(GraphDataDTO)
-	 */
-	// --------------------------------------------------
-	@PutMapping("/graph/updateModelData")
-	public ResponseDTO updateModelData(HttpServletRequest httpReq,
-			@RequestBody @Validated DeviceDateDTO dto)
-		{
-		ResponseDTO as_dto = new ResponseDTO();
-		try
-			{
-			this.growthService.updateDateModel(dto.getDeviceId(), dto.getYear(),
-					dto.getDate());
-			as_dto.setSuccess(null);
-			}
-		catch (Exception e)
-			{
-			as_dto.setError(e);
-			}
-		return as_dto;
-		}
-
 	// --------------------------------------------------
 	/**
 	 * 生育推定モデルグラフデータ取得

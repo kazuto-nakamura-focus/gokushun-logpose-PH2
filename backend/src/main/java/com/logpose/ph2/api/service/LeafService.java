@@ -108,7 +108,6 @@ public interface LeafService
 	/**
 	 * 基準パラメータセットの設定
 	 *
-	 * @param dto TargetParamDTO
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
