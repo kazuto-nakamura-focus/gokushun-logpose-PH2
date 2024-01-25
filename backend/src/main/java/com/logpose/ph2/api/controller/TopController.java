@@ -21,7 +21,11 @@ import com.logpose.ph2.api.service.TopService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
+/**
+ * トップ画面に提供されるAPI群
+ * @since 2024/01/03
+ * @version 1.0
+ */
 @CrossOrigin(
 		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
 		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
@@ -41,13 +45,13 @@ public class TopController
 	// ===============================================
 	// --------------------------------------------------
 	/**
-	 * 全圃場サマリーデータ取得
+	 * 全圃場サマリーデータ取得API
 	 *
-	 * @return ResponseDTO(DataSummaryDTO)
+	 * @return List<DataSummaryDTO>
 	 */
 	// --------------------------------------------------
 	@GetMapping("/fields")
-	public ResponseDTO fields(HttpServletRequest httpReq, HttpServletResponse res)
+	public ResponseDTO getFields(HttpServletRequest request, HttpServletResponse response)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
@@ -64,21 +68,20 @@ public class TopController
 
 	// --------------------------------------------------
 	/**
-	 * 検知データ圃場別取得
+	 * 検知データ圃場別取得API
 	 *
-	 * @param detectId 検知データID
-	 * @return ResponseDTO(FieldsByDataDTO)
+	 * @param contentId 検知するデータタイプのID
+	 * @return FieldsByDataDTO
 	 */
 	// --------------------------------------------------
 	@GetMapping("/sum")
-	public ResponseDTO sum(HttpServletRequest httpReq, HttpServletResponse res,
+	public ResponseDTO getSum(HttpServletRequest request, HttpServletResponse response,
 			@RequestParam("contentId") Long contentId)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<FieldData> as_result = this.topSerivce
-					.getSummaryByFields(contentId);
+			List<FieldData> as_result = this.topSerivce.getSummaryByFields(contentId);
 			as_dto.setSuccess(as_result);
 			}
 		catch (Exception e)
@@ -91,17 +94,16 @@ public class TopController
 
 	// --------------------------------------------------
 	/**
-	 * 生データ取得
+	 * 生データ取得API
 	 * 
-	 * @param httpReq
 	 * @param startDate
 	 * @param endDate
 	 * @param deviceId
-	 * @return List<String[]>
+	 * @return RawDataList
 	 */
 	// --------------------------------------------------
 	@GetMapping("/rawData")
-	public ResponseDTO getRawData(HttpServletRequest httpReq,
+	public ResponseDTO getRawData(HttpServletRequest request,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
 			@RequestParam("deviceId") Long deviceId)
@@ -122,13 +124,13 @@ public class TopController
 
 	// --------------------------------------------------
 	/**
-	 * モデル選択情報取得
+	 * モデル選択情報取得API
 	 *
 	 * @return ResponseDTO(SelectionDTO)
 	 */
 	// --------------------------------------------------
 	@GetMapping("/models")
-	public ResponseDTO getModels(HttpServletRequest httpReq, @RequestParam("isModel") boolean isModel)
+	public ResponseDTO getModels(HttpServletRequest request, @RequestParam("isModel") boolean isModel)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
@@ -140,7 +142,6 @@ public class TopController
 			{
 			as_dto.setError(e);
 			}
-
 		return as_dto;
 		}
 	}
