@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.logpose.ph2.api.dto.DataSummaryDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.SelectionDTO;
-import com.logpose.ph2.api.dto.element.FieldData;
 import com.logpose.ph2.api.dto.rawData.RawDataList;
+import com.logpose.ph2.api.dto.top.FieldDataWithSensor;
 import com.logpose.ph2.api.service.TopService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -71,7 +71,7 @@ public class TopController
 	 * 検知データ圃場別取得API
 	 *
 	 * @param contentId 検知するデータタイプのID
-	 * @return FieldsByDataDTO
+	 * @return List<FieldDataWithSensor>
 	 */
 	// --------------------------------------------------
 	@GetMapping("/sum")
@@ -81,14 +81,13 @@ public class TopController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<FieldData> as_result = this.topSerivce.getSummaryByFields(contentId);
+			List<FieldDataWithSensor> as_result = this.topSerivce.getSummaryByFields(contentId);
 			as_dto.setSuccess(as_result);
 			}
 		catch (Exception e)
 			{
 			as_dto.setError(e);
 			}
-
 		return as_dto;
 		}
 

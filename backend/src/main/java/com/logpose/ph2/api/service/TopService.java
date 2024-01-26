@@ -9,15 +9,14 @@ import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelMasterEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelMasterEntityExample;
-import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelMasterMapper;
 import com.logpose.ph2.api.domain.TopDomain;
 import com.logpose.ph2.api.dto.DataSummaryDTO;
 import com.logpose.ph2.api.dto.ModelTargetDTO;
 import com.logpose.ph2.api.dto.SelectionDTO;
-import com.logpose.ph2.api.dto.element.FieldData;
 import com.logpose.ph2.api.dto.element.Label;
 import com.logpose.ph2.api.dto.rawData.RawDataList;
+import com.logpose.ph2.api.dto.top.FieldDataWithSensor;
 
 /**
  * トップサービスや基本サービスの提供を行う
@@ -32,8 +31,6 @@ public class TopService
 	@Autowired
 	private Ph2ModelMasterMapper ph2ModelMasterMapper;
 	@Autowired
-	private Ph2FieldsMapper ph2FieldrMapper;
-	@Autowired
 	private TopDomain topDomain;
 
 	// ===============================================
@@ -43,7 +40,7 @@ public class TopService
 	/**
 	 * 全圃場サマリーデータ取得
 	 *
-	 * @return DataSummaryDTO
+	 * @return List<DataSummaryDTO>
 	 */
 	// --------------------------------------------------
 	public List<DataSummaryDTO> getFieldData()
@@ -51,15 +48,15 @@ public class TopService
 		return this.topDomain.getFieldData();
 		}
 
-	// ###############################################
+	// --------------------------------------------------
 	/**
 	 * 検知データ圃場別取得
 	 *
-	 * @param detectId 検知データID
-	 * @return FieldsByDataDTO
+	 * @param contentId 検知するデータタイプのID
+	 * @return List<FieldDataWithSensor>
 	 */
-	// ###############################################
-	public List<FieldData> getSummaryByFields(Long detectId)
+	// --------------------------------------------------
+	public List<FieldDataWithSensor> getSummaryByFields(Long detectId)
 		{
 		return this.topDomain.getDeviceDataList(detectId);
 		}

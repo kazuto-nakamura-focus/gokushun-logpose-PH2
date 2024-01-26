@@ -10,6 +10,7 @@ import com.logpose.ph2.api.dto.DataSummaryDTO;
 import com.logpose.ph2.api.dto.ModelTargetDTO;
 import com.logpose.ph2.api.dto.element.FieldData;
 import com.logpose.ph2.api.dto.rawData.RawData;
+import com.logpose.ph2.api.dto.top.FieldDataWithSensor;
 
 @Mapper
 public interface TopDomainMapper
@@ -19,7 +20,7 @@ public interface TopDomainMapper
 	List<FieldData> selectFieldDataList(@Param("deviceId") Long deviceId, @Param("date") Date date);
 	List<RawData> selectRawData(@Param("startDate") Date startDate, 
 				@Param("endDate") Date endDate,@Param("deviceId") Long deviceId);
-	List<FieldData> selectDeviceDataList(@Param("contentId") Long contentId, @Param("date") Date date);
+	List<FieldDataWithSensor> selectDeviceDataList(@Param("contentId") Long contentId, @Param("date") Date date);
 
 	List<ModelTargetDTO> selectModelTargets();
 	

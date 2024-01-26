@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
@@ -21,6 +22,7 @@ import com.logpose.ph2.api.dto.ModelTargetDTO;
 import com.logpose.ph2.api.dto.element.FieldData;
 import com.logpose.ph2.api.dto.rawData.RawData;
 import com.logpose.ph2.api.dto.rawData.RawDataList;
+import com.logpose.ph2.api.dto.top.FieldDataWithSensor;
 
 @Component
 public class TopDomain
@@ -42,16 +44,17 @@ public class TopDomain
 	 * @return List<DataSummaryDTO>
 	 */
 	// --------------------------------------------------
+	@Cacheable("getFieldData")
 	public List<DataSummaryDTO> getFieldData()
 		{
-		// * デバイスリストの取得
+// * デバイスリストの取得
 		List<DataSummaryDTO> devices = this.topDomainMapper
 				.selectFieldDeviceList();
-		// * 取得する日付
+// * 取得開始日付
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, -3);
 		Date date = cal.getTime();
-
+// * 各デバイス毎にセンサーデータを取得する
 		List<DataSummaryDTO> result = new ArrayList<>();
 		for (DataSummaryDTO item : devices)
 			{
@@ -68,16 +71,19 @@ public class TopDomain
 
 	// --------------------------------------------------
 	/**
-	 * トップ画面で項目に対してデバイスのデータのリストを取得する
+	 * 各デバイス毎の同一タイプのセンサーデータを取得する。
+	 * 
+	 * @param contentId 検知するデータタイプのID
+	 * @return List<FieldDataWithSensor>
 	 */
 	// --------------------------------------------------
-	public List<FieldData> getDeviceDataList(Long contentId)
+	public List<FieldDataWithSensor> getDeviceDataList(Long contentId)
 		{
-		// * 取得する日付
+// * 取得開始日付
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.MONTH, -1);
 		Date date = cal.getTime();
-		// * モデルデータが存在するデバイス
+// * 各デバイス毎の同一タイプのセンサーデータを取得する。
 		return this.topDomainMapper.selectDeviceDataList(contentId, date);
 		}
 

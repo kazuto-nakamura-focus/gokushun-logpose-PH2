@@ -98,13 +98,24 @@
 		ph2_dashboard.casted_at asc
 	</select>
 	
-    <select id="selectDeviceDataList" resultMap="FieldDTO">
+	<resultMap id="FieldDataWithSensor"
+		type="com.logpose.ph2.api.dto.top.FieldDataWithSensor">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="value" property="value"></result>
+		<result column="unit" property="unit"></result>
+		<result column="sensorName" property="sensorName"></result>
+		<result column="casted_at" property="castedAt"></result>
+		<result column="display_no" property="displayNo"></result>
+	</resultMap>
+    <select id="selectDeviceDataList" resultMap="FieldDataWithSensor">
 	SELECT
-		ph2_devices."id" AS ID,
+		ph2_devices."id" as id,
 		ph2_dashboard."value" as value,
-		ph2_dashboard.casted_at AS casted_at,
-		ph2_devices."name" AS NAME,
-		ph2_sensors.name as sensorName
+		ph2_dashboard.casted_at as casted_at,
+		ph2_devices."name" as name,
+		ph2_sensors.name as sensorName,
+		ph2_sensor_contents.unit as unit
 	FROM
 		ph2_dashboard
 	JOIN ph2_sensors on ph2_dashboard.sensor_id = ph2_sensors.id
@@ -126,6 +137,8 @@
 			and ph2_dashboard.casted_at = tmp.casted_at
 			and ph2_dashboard.content_id = tmp.content_id
 	JOIN ph2_fields on ph2_devices.field_id = ph2_fields.id
+	JOIN
+  		ph2_sensor_contents on ph2_sensors.sensor_content_id = ph2_sensor_contents.id
 	ORDER BY
 		ph2_fields."name" , ph2_devices."name", ph2_sensors."name"
 	</select>

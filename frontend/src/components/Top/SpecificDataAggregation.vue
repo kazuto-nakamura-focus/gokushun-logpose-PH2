@@ -27,7 +27,12 @@ export default {
       sortDesc: false,
       headers: [
         { text: "圃場", value: "name", sortable: true, width: "30%" },
-        { text: "センサー", value: "sensorName", sortable: true, width: "30%" },
+        {
+          text: "センサー名",
+          value: "sensorName",
+          sortable: true,
+          width: "30%",
+        },
         { text: "値", value: "value", sortable: true, width: "10%" },
         { text: "測定日", value: "date", sortable: true, width: "30%" },
       ],
@@ -47,13 +52,14 @@ export default {
           //成功時
           const results = response["data"];
           for (const item of results.data) {
-            var n = 2 ;	// 小数点第n位まで残す
-            item.value = Math.floor( item.value * Math.pow( 10, n ) ) / Math.pow( 10, n ) ;
+            var n = 2; // 小数点第n位まで残す
+            item.value =
+              Math.floor(item.value * Math.pow(10, n)) / Math.pow(10, n);
             var selected = {
               name: item.name,
-              sensorName:item.sensorName,
+              sensorName: item.sensorName,
               value: item.value,
-              date:item.castedAt.substring(0,19)
+              date: item.castedAt.substring(0, 19),
             };
             this.selectedDataList.push(selected);
           }
