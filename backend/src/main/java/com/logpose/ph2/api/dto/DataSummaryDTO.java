@@ -7,19 +7,19 @@ import com.logpose.ph2.api.dto.element.FieldData;
 import lombok.Data;
 
 /**
- * 全圃場サマリーデータ取得
+ * 全圃場サマリーデータDTO
  */
 @Data
 public class DataSummaryDTO
 	{
-	//* 圃場名ID
+//* 圃場名ID
 	private Long fieldId;
-	//* 圃場名
+//* 圃場名
 	private String field;
-	//* デバイスID
+//* デバイスID
 	private Long deviceId;
-	//* デバイス名
+//* デバイス名
 	private String device;
-	//* 各データリスト
+//* 各データリスト
 	private List<FieldData> dataList;
 	}
