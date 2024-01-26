@@ -24,6 +24,7 @@ export class TopDataParser {
           elem.value = Math.floor(elem.value * Math.pow(10, n)) / Math.pow(10, n);
           koumoku.value = elem.value;
           koumoku.variable = elem.id;
+          koumoku.unit = elem.unit;
           koumoku.date = elem.castedAt.substring(0, 19);
           item.items.push(koumoku);
         } else {

@@ -46,6 +46,7 @@
                               {{ komoku.name }}
                               <br />
                               {{ komoku.value }}
+                              <small>{{ komoku.unit }}</small>
                               <br />
                               <i
                                 ><small>{{ komoku.date }}</small></i
@@ -124,6 +125,7 @@ export default {
         this.sourceData = this.TopDataParser.parse(results.data);
         //console.log("created", this.sourceData);
         for (const item of this.sourceData) {
+          console.log(item);
           item.visible = new Object();
           item.visible = true;
           this.displayData.push(item);
