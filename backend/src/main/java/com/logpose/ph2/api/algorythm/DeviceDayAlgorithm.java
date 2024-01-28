@@ -53,6 +53,31 @@ public class DeviceDayAlgorithm
 		}
 	// --------------------------------------------------
 	/**
+	 *  日付を00:00:00 000に設定する
+	 * 
+	 * @param date 設定対象の日付
+	 */
+	// --------------------------------------------------
+	public Date getTimeZero(Calendar date)
+		{
+		this.setTimeZero(date);
+		return date.getTime();
+		}
+	// --------------------------------------------------
+	/**
+	 *  日付を00:00:00 000に設定する
+	 * 
+	 * @param date 設定対象の日付
+	 */
+	// --------------------------------------------------
+	public Date getTimeZero(Date date)
+		{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		return getTimeZero(cal);
+		}
+	// --------------------------------------------------
+	/**
 	 *  当日の最初
 	 */
 	// --------------------------------------------------

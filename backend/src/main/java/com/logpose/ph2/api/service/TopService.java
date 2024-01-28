@@ -60,7 +60,20 @@ public class TopService
 		{
 		return this.topDomain.getDeviceDataList(detectId);
 		}
-
+	// --------------------------------------------------
+	/**
+	 *  生データ取得API
+	 *
+	 * @param startDate 開始日
+	 * @param endDate 終了日
+	 * @param deviceId デバイスID
+	 * @return RawDataList
+	 */
+	// --------------------------------------------------
+	public RawDataList getRawData(Date startDate, Date endDate, Long deviceId)
+		{
+		return this.topDomain.getRawData(startDate, endDate, deviceId);
+		}
 	// ###############################################
 	/**
 	 * モデル選択情報取得
@@ -90,10 +103,5 @@ public class TopService
 		result.setTargets(targets);
 		
 		return result;
-		}
-
-	public RawDataList getRawData(Date startDate, Date endDate, Long deviceId)
-		{
-		return this.topDomain.getRawData(startDate, endDate, deviceId);
 		}
 	}

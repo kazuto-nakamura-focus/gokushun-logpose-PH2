@@ -95,9 +95,9 @@ public class TopController
 	/**
 	 * 生データ取得API
 	 * 
-	 * @param startDate
-	 * @param endDate
-	 * @param deviceId
+	 * @param startDate 開始日
+	 * @param endDate 終了日
+	 * @param deviceId デバイスID
 	 * @return RawDataList
 	 */
 	// --------------------------------------------------
@@ -123,9 +123,10 @@ public class TopController
 
 	// --------------------------------------------------
 	/**
-	 * モデル選択情報取得API
+	 * データ選択情報取得API
 	 *
-	 * @return ResponseDTO(SelectionDTO)
+	 * @param isModel モデルを対象としているなら、真
+	 * @return SelectionDTO
 	 */
 	// --------------------------------------------------
 	@GetMapping("/models")

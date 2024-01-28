@@ -24,6 +24,9 @@ import com.logpose.ph2.api.dto.rawData.RawData;
 import com.logpose.ph2.api.dto.rawData.RawDataList;
 import com.logpose.ph2.api.dto.top.FieldDataWithSensor;
 
+/**
+ * 主要な処理を行うドメイン
+ */
 @Component
 public class TopDomain
 	{
@@ -35,7 +38,7 @@ public class TopDomain
 	private DeviceDayAlgorithm deviceDayAlgorithm;
 
 	// ===============================================
-	// パブリック関数
+	// パブリック関数群
 	// ===============================================
 	// --------------------------------------------------
 	/**
@@ -107,27 +110,33 @@ public class TopDomain
 	// --------------------------------------------------
 	/**
 	 * 生データを取得する
+	 * 
+	 * @param startDate 開始日
+	 * @param endDate 終了日
+	 * @param deviceId デバイスID
 	 */
 	// --------------------------------------------------
 	public RawDataList getRawData(Date startDate, Date endDate, Long deviceId)
 		{
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(startDate);
-		deviceDayAlgorithm.setTimeZero(cal);
-		startDate = cal.getTime();
-
-		cal.setTime(endDate);
-		deviceDayAlgorithm.setTimeZero(cal);
-		cal.add(Calendar.DATE, 1);
-		endDate = cal.getTime();
-
+// * 戻り値の初期化
 		RawDataList results = new RawDataList();
+
+// * 開始日の時刻をゼロに設定する
+		startDate = deviceDayAlgorithm.getTimeZero(startDate);
+
+// * 終了日は1日追加して時刻をゼロに設定する。
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(endDate);
+		cal.add(Calendar.DATE, 1);
+		endDate = deviceDayAlgorithm.getTimeZero(cal);
+
 // * センサー情報をコンテンツID順に取得する。
 		Ph2SensorsEntityExample exm = new Ph2SensorsEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(deviceId);
 		exm.setOrderByClause("sensor_content_id asc");
 		List<Ph2SensorsEntity> sensors = this.ph2SensorsMapper.selectByExample(exm);
-// * MAPの生成
+
+// * コンテンツIDのMAPの生成
 		Map<Long, RawData> sensorMap = new LinkedHashMap<>();
 		for (Ph2SensorsEntity item : sensors)
 			{
@@ -136,22 +145,27 @@ public class TopDomain
 			}
 // * センサー情報を日時順に取得
 		List<RawData> records = this.topDomainMapper.selectRawData(startDate, endDate, deviceId);
+
+// * データが無い場合は空のデータを返却する
 		if (records.size() == 0)
 			return results;
+
+// * センサー情報に対して、時刻単位にデータを作成し、返却データに追加する
 		Date prevTime = records.get(0).getCastedAt();
 		List<RawData> tmp = new ArrayList<>();
 		for (RawData elem : records)
 			{
-			// 時刻が違うデータの場合
+// 時刻が違うデータの場合
 			if (prevTime.getTime() != elem.getCastedAt().getTime())
 				{
 				results.getData().add(createRowData(prevTime, tmp, sensorMap));
 				tmp.clear();
-				// * 次に取得するデータの時間グループ
+// * 次に取得するデータの時間グループ
 				prevTime = elem.getCastedAt();
 				}
 			tmp.add(elem);
 			}
+// * 最後の時間分のデータを作成し、返却データに追加する
 		if (tmp.size() > 0)
 			{
 			results.getData().add(createRowData(prevTime, tmp, sensorMap));
@@ -159,13 +173,25 @@ public class TopDomain
 		return results;
 		}
 
+	// ===============================================
+	// プライベート関数群
+	// ===============================================
+	// --------------------------------------------------
+	/**
+	 * 引数のtimeで取得されたデータをセンサー情報情報ごとに整理して、文字列リストにして返却する。
+	 * @param time
+	 * @param tmp
+	 * @param sensorMap
+	 * @return List<String>
+	 */
+	// --------------------------------------------------
 	private List<String> createRowData(Date time, List<RawData> tmp, Map<Long, RawData> sensorMap)
 		{
 		List<String> data = new ArrayList<>();
 // * 時刻
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss:SSS");
 		data.add(dateFormat.format(time));
-// * データのMAPへの埋め込み
+// * データのMAPへの埋め込み…①
 		for (RawData item : tmp)
 			{
 			sensorMap.put(item.getSensorId(), item);
@@ -174,17 +200,21 @@ public class TopDomain
 		for (Map.Entry<Long, RawData> entry : sensorMap.entrySet())
 			{
 			RawData rd = entry.getValue();
-			if ((rd == null) || (time.getTime() != rd.getCastedAt().getTime()))
+// * データが無い場合
+			if (rd == null)
 				{
 				data.add("-");
 				}
-			// 時刻が一致している場合
+// * ①の処理で、未更新（古いデータが残っている）の場合
+			else if (time.getTime() != rd.getCastedAt().getTime())
+				{
+				data.add("-");
+				}
+// * 時刻が一致している場合
 			else
 				{
-				String value = rd.getValue();
-				data.add(value);
+				data.add(rd.getValue());
 				}
-
 			}
 		return data;
 		}
