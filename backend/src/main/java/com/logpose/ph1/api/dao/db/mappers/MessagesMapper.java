@@ -103,4 +103,6 @@ public interface MessagesMapper {
 			@Param("deviceId") Long deviceId, 
 			@Param("tz") String tz, 
 			@Param("castedAt") Date castedAt);
+	
+	Date selectLastCastedTime(@Param("deviceId") Long deviceId);
 }

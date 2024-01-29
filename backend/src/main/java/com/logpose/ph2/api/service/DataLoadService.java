@@ -14,6 +14,7 @@ import com.logpose.ph2.api.bulk.service.S1DeviceDataLoaderService;
 import com.logpose.ph2.api.bulk.service.S2DeviceDayService;
 import com.logpose.ph2.api.bulk.service.S3DailyBaseDataGeneratorService;
 import com.logpose.ph2.api.bulk.service.S4ModelDataApplyrService;
+import com.logpose.ph2.api.bulk.service.SigFoxMessageService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
@@ -32,6 +33,8 @@ public class DataLoadService
 
 	@Autowired
 	S0Initializer s0Initializer;
+	@Autowired
+	SigFoxMessageService sigFoxMessageService;
 	@Autowired
 	S1DeviceDataLoaderService s1deviceDataLoaderService;
 	@Autowired
@@ -56,6 +59,7 @@ public class DataLoadService
 		{
 // * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
 		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
+		this.sigFoxMessageService.doService(devices);	
 		for (Ph2DevicesEnyity device : devices)
 			{
 // * コーディネーターを生成する

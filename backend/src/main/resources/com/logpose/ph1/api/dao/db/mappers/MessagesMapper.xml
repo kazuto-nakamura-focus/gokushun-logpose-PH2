@@ -301,7 +301,6 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
-    
   <select fetchSize="5000" id="selectByCastedAt" parameterType="java.util.Date" resultMap="BaseResultMap">
 	SELECT 
     	id, device_id, seq, raw, 
@@ -318,6 +317,15 @@
 	    AND
 		   length(raw)=24
 	ORDER BY casted_at ASC
-
   </select>
+
+	<select id="selectLastCastedTime" parameterType="java.lang.Long"
+		resultType="java.util.Date">
+		SELECT
+			Max(casted_at)
+		FROM
+			messages
+		WHERE
+			device_id = #{deviceId}
+	</select>
 </mapper>

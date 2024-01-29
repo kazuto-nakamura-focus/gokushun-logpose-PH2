@@ -47,5 +47,12 @@ public class Configration
 		{
 		return new DefaultPsParameters();
 		}
+	
+	@Bean
+	@ConfigurationProperties(prefix = "sigfox")
+	public DefaultSigFoxParameters configDefaultSigFoxParameters()
+		{
+		return new DefaultSigFoxParameters();
+		}
 
 	}
