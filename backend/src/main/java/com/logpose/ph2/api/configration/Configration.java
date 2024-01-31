@@ -8,13 +8,6 @@ import org.springframework.context.annotation.Configuration;
 public class Configration
 	{
 	@Bean
-	@ConfigurationProperties(prefix = "hikari")
-	public DefaultHikariParameter configHikari()
-		{
-		return new DefaultHikariParameter();
-		}
-	
-	@Bean
 	@ConfigurationProperties(prefix = "paramset.default.growth")
 	public DefaultGrowthParameters configUrl()
 		{
