@@ -58,7 +58,7 @@ public class DeviceServiceImpl implements DeviceService
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class, transactionManager = "txManager2")
+	@Transactional(rollbackFor = Exception.class)
 	public List<DeviceInfoDTO> list()
 		{
 		return this.deviceDomain.getDeviceList();
