@@ -10,6 +10,4 @@ public class DefaultSigFoxParameters
 	private String userNz;
 	private String passwordNz;
 	private String url;
-	private String baseAuthTK;
-	private String baseAuthNZ;
 	}

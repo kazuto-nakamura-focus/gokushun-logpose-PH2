@@ -76,12 +76,13 @@
 			mapperName="Ph2ModelDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> 
-
-		<table tableName="messages" domainObjectName="MessagesEnyity"
+		-->
+		<table tableName="messages" domainObjectName="MessagesEntity"
 			mapperName="MessagesMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
+		<!--
 		<table tableName="ph2_users" domainObjectName="Ph2UsersEntity" mapperName="Ph2UsersMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_brand_master" 
@@ -133,12 +134,12 @@
 			</table> <table tableName="ph2_paramset_ps_weibull" domainObjectName="Ph2ParamsetPsWeibullEntity" 
 			mapperName="Ph2ParamsetPsWeibullMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table>-->
+			</table>
 			 <table tableName="ph2_real_leaf_shoots_area" domainObjectName="Ph2RealLeafShootsAreaEntity" 
 			mapperName="Ph2RealLeafShootsAreaMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> 
-			<!--<table tableName="ph2_real_leaf_shoots_count" domainObjectName="Ph2RealLeafShootsCountEntity" 
+			<table tableName="ph2_real_leaf_shoots_count" domainObjectName="Ph2RealLeafShootsCountEntity" 
 			mapperName="Ph2RealLeafShootsCountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>  <table tableName="ph2_real_fruits_data" domainObjectName="Ph2RealFruitsDataEntity" 

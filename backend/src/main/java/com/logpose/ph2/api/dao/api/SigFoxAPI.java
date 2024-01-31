@@ -36,10 +36,14 @@ public class SigFoxAPI
 		{
 // * URLの設定
 		String url = sigFoxUrl.replace("%deviceId", sigFoxDeviceId);
-		url = url.replace("%since", String.valueOf(sinceTimeStamp));
+		if(sinceTimeStamp > 0)
+			{
+			url = url + "?since=" + String.valueOf(sinceTimeStamp);
+			}
 // * 問合せの実行
 		return this.getMessages(url, baseAuth);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * SigFoxからメッセージデータを取得する
@@ -50,20 +54,29 @@ public class SigFoxAPI
 	// -------------------------------------------------
 	public SigFoxMessagesEntity getMessages(String url, String baseAuth)
 		{
+		ResponseEntity<SigFoxMessagesEntity> response = null;
 // * ヘッダーにBaseURLを設定する
 		HttpHeaders headers = new HttpHeaders();
-		headers.add("Authorization", baseAuth);
+		headers.set("Authorization", "Basic " + baseAuth);
+		HttpEntity<String> request = new HttpEntity<>(headers);
 // * Get処理の実行
-		ResponseEntity<SigFoxMessagesEntity> response = restTemplate.exchange(url,
-				HttpMethod.GET, new HttpEntity<>(headers), SigFoxMessagesEntity.class);
+		try
+			{
+			response = restTemplate.exchange(url, HttpMethod.GET, request, SigFoxMessagesEntity.class);
 // * 戻り値のチェックと返却
-		HttpStatusCode statusCode = response.getStatusCode();
-		if (statusCode.is2xxSuccessful())
-			{
-			return response.getBody();
+			HttpStatusCode statusCode = response.getStatusCode();
+			if (statusCode.is2xxSuccessful())
+				{
+				return response.getBody();
+				}
+			else
+				{
+				throw new RuntimeException("クエリ" + url + "は失敗しました。");
+				}
 			}
-		else
+		catch (Exception e)
 			{
+			e.printStackTrace();
 			throw new RuntimeException("クエリ" + url + "は失敗しました。");
 			}
 		}

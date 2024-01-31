@@ -14,16 +14,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.logpose.ph1.api.dao.db.entity.MessagesEnyity;
-import com.logpose.ph1.api.dao.db.mappers.MessagesMapper;
 import com.logpose.ph2.api.bulk.domain.BaseDataGenerator;
 import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
+import com.logpose.ph2.api.dao.db.entity.MessagesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntityExample;
+import com.logpose.ph2.api.dao.db.mappers.MessagesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
@@ -75,14 +75,14 @@ public class S1DeviceDataLoaderService
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
 		Ph2DevicesEnyity device = coordinator.getDevice();
-		try (Cursor<MessagesEnyity> messageCorsor = this.messagesMapper
+		try (Cursor<MessagesEntity> messageCorsor = this.messagesMapper
 				.selectByCastedAt(device.getId(), device.getTz(), firstDate))
 			{
-			Iterator<MessagesEnyity> messages = messageCorsor.iterator();
+			Iterator<MessagesEntity> messages = messageCorsor.iterator();
 			DataListModel messageData = new DataListModel();
 			while (messages.hasNext())
 				{
-				MessagesEnyity message = messages.next();
+				MessagesEntity message = messages.next();
 				lastDate = message.getCastedAt();
 				messageData = this.createTables(device, coordinator.getSensors(), messageData,
 						message, cache);
@@ -100,7 +100,7 @@ public class S1DeviceDataLoaderService
 			Ph2DevicesEnyity device,
 			List<SensorDataDTO> records,
 			DataListModel dataListModel,
-			MessagesEnyity message,
+			MessagesEntity message,
 			MinutesCacher cache)
 		{
 // * レコード内のrawデータを３文字づつ抽出し、文字リストを作成する。

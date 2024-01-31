@@ -1,1 +1,1607 @@
-{"data":[{"device":{"id":"77122C"},"time":1706478617000,"data":"0c0c4e0d07b10e00010f0000","rolloverCounter":0,"seqNumber":3069,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706478592000,"data":"080ebf090ebf0a0ec00b0ec0","rolloverCounter":0,"seqNumber":3068,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706478568000,"data":"040ebf050ebf060ec0070ec0","rolloverCounter":0,"seqNumber":3067,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706478543000,"data":"0000f20109ee020ebe030ebe","rolloverCounter":0,"seqNumber":3066,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477915000,"data":"0c0c4c0d079c0e00010f0000","rolloverCounter":0,"seqNumber":3065,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477890000,"data":"080ebf090ebf0a0ebf0b0ebf","rolloverCounter":0,"seqNumber":3064,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477864000,"data":"040ebf050ebf060ebf070ec0","rolloverCounter":0,"seqNumber":3063,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477840000,"data":"0000f20109ed020ebe030ebd","rolloverCounter":0,"seqNumber":3062,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477212000,"data":"0c0c4b0d07960e00010f0000","rolloverCounter":0,"seqNumber":3061,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477186000,"data":"080ebf090ebf0a0ebf0b0ebf","rolloverCounter":0,"seqNumber":3060,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477162000,"data":"040ebf050ebf060ebf070ebf","rolloverCounter":0,"seqNumber":3059,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706477137000,"data":"0000f20109ec020ebe030ebd","rolloverCounter":0,"seqNumber":3058,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706476508000,"data":"0c0c430d07840e00010f0000","rolloverCounter":0,"seqNumber":3057,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706476483000,"data":"080ebf090ebf0a0ebf0b0ebf","rolloverCounter":0,"seqNumber":3056,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706476459000,"data":"040ebf050ebf060ebf070ebf","rolloverCounter":0,"seqNumber":3055,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706476434000,"data":"0000f20109ea020ebd030ebd","rolloverCounter":0,"seqNumber":3054,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475805000,"data":"0c0c3c0d075e0e00010f0000","rolloverCounter":0,"seqNumber":3053,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475780000,"data":"080ebf090ebe0a0ebf0b0ebf","rolloverCounter":0,"seqNumber":3052,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475756000,"data":"040ebe050ebe060ebf070ebf","rolloverCounter":0,"seqNumber":3051,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475731000,"data":"0000f20109e9020ebd030ebd","rolloverCounter":0,"seqNumber":3050,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475102000,"data":"0c0c2a0d07590e00010f0000","rolloverCounter":0,"seqNumber":3049,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475078000,"data":"080ebe090ebe0a0ebf0b0ebf","rolloverCounter":0,"seqNumber":3048,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475053000,"data":"040ebe050ebe060ebf070ebf","rolloverCounter":0,"seqNumber":3047,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706475028000,"data":"0000f10109e8020ebd030ebc","rolloverCounter":0,"seqNumber":3046,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706474399000,"data":"0c0c1c0d075f0e00010f0000","rolloverCounter":0,"seqNumber":3045,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706474374000,"data":"080ebe090ebe0a0ebf0b0ebf","rolloverCounter":0,"seqNumber":3044,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706474350000,"data":"040ebe050ebe060ebf070ebf","rolloverCounter":0,"seqNumber":3043,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706474324000,"data":"0000f10109e7020ebd030ebc","rolloverCounter":0,"seqNumber":3042,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706473695000,"data":"0c0c200d075a0e00010f0000","rolloverCounter":0,"seqNumber":3041,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706473671000,"data":"080ebe090ebe0a0ebe0b0ebf","rolloverCounter":0,"seqNumber":3040,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706473646000,"data":"040ebe050ebe060ebe070ebf","rolloverCounter":0,"seqNumber":3039,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706473621000,"data":"0000f10109e6020ebd030ebc","rolloverCounter":0,"seqNumber":3038,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472993000,"data":"0c0c1e0d076e0e00010f0000","rolloverCounter":0,"seqNumber":3037,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472968000,"data":"080ebe090ebe0a0ebf0b0ebf","rolloverCounter":0,"seqNumber":3036,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472944000,"data":"040ebe050ebe060ebf070ebf","rolloverCounter":0,"seqNumber":3035,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472918000,"data":"0000f10109e5020ebd030ebc","rolloverCounter":0,"seqNumber":3034,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472289000,"data":"0c0c230d07560e00010f0000","rolloverCounter":0,"seqNumber":3033,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472265000,"data":"080ebe090ebe0a0ebe0b0ebf","rolloverCounter":0,"seqNumber":3032,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472240000,"data":"040ebe050ebe060ebe070ebe","rolloverCounter":0,"seqNumber":3031,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706472215000,"data":"0000f10109e3020ebd030ebc","rolloverCounter":0,"seqNumber":3030,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706471586000,"data":"0c0c230d07700e00010f0000","rolloverCounter":0,"seqNumber":3029,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706471561000,"data":"080ebe090ebe0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":3028,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706471537000,"data":"040ebe050ebe060ebe070ebe","rolloverCounter":0,"seqNumber":3027,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706471512000,"data":"0000f10109e2020ebd030ebc","rolloverCounter":0,"seqNumber":3026,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470883000,"data":"0c0c290d07490e00010f0000","rolloverCounter":0,"seqNumber":3025,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470858000,"data":"080ebe090ebe0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":3024,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470833000,"data":"040ebe050ebe060ebe070ebe","rolloverCounter":0,"seqNumber":3023,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470808000,"data":"0000f10109e1020ebc030ebc","rolloverCounter":0,"seqNumber":3022,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470180000,"data":"0c0c170d075c0e00010f0000","rolloverCounter":0,"seqNumber":3021,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470155000,"data":"080ebe090ebe0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":3020,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470130000,"data":"040ebe050ebe060ebe070ebe","rolloverCounter":0,"seqNumber":3019,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706470105000,"data":"0000f10109e0020ebc030ebc","rolloverCounter":0,"seqNumber":3018,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706469477000,"data":"0c0c200d07410e00010f0000","rolloverCounter":0,"seqNumber":3017,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706469452000,"data":"080ebd090ebe0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":3016,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706469427000,"data":"040ebd050ebe060ebe070ebe","rolloverCounter":0,"seqNumber":3015,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706469403000,"data":"0000f10109df020ebc030ebc","rolloverCounter":0,"seqNumber":3014,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706468773000,"data":"0c0c140d072c0e00010f0000","rolloverCounter":0,"seqNumber":3013,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706468749000,"data":"080ebd090ebd0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":3012,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706468724000,"data":"040ebd050ebd060ebe070ebe","rolloverCounter":0,"seqNumber":3011,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706468700000,"data":"0000f10109dd020ebc030ebc","rolloverCounter":0,"seqNumber":3010,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706468070000,"data":"0c0c040d07260e00010f0000","rolloverCounter":0,"seqNumber":3009,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706468046000,"data":"080ebd090ebd0a0ebd0b0ebd","rolloverCounter":0,"seqNumber":3008,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706468021000,"data":"040ebd050ebd060ebd070ebd","rolloverCounter":0,"seqNumber":3007,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706467996000,"data":"0000f10109dc020ebc030ebb","rolloverCounter":0,"seqNumber":3006,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706467368000,"data":"0c0bfe0d07040e00010f0000","rolloverCounter":0,"seqNumber":3005,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706467342000,"data":"080ebd090ebd0a0ebd0b0ebd","rolloverCounter":0,"seqNumber":3004,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706467317000,"data":"040ebd050ebd060ebd070ebd","rolloverCounter":0,"seqNumber":3003,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706467293000,"data":"0000f10109db020ebb030ebb","rolloverCounter":0,"seqNumber":3002,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706466664000,"data":"0c0bea0d06fa0e00010f0000","rolloverCounter":0,"seqNumber":3001,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706466639000,"data":"080ebd090ebd0a0ebd0b0ebd","rolloverCounter":0,"seqNumber":3000,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706466614000,"data":"040ebd050ebd060ebd070ebe","rolloverCounter":0,"seqNumber":2999,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":2},{"device":{"id":"77122C"},"time":1706466590000,"data":"0000f10109da020ebb030ebb","rolloverCounter":0,"seqNumber":2998,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465961000,"data":"0c0beb0d07250e00010f0000","rolloverCounter":0,"seqNumber":2997,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465936000,"data":"080ebd090ebd0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":2996,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465912000,"data":"040ebd050ebd060ebe070ebe","rolloverCounter":0,"seqNumber":2995,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465887000,"data":"0000f20109d9020ebc030ebb","rolloverCounter":0,"seqNumber":2994,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465258000,"data":"0c0c010d07330e00010f0000","rolloverCounter":0,"seqNumber":2993,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465233000,"data":"080ebd090ebd0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":2992,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465209000,"data":"040ebd050ebd060ebe070ebe","rolloverCounter":0,"seqNumber":2991,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706465184000,"data":"0000f20109d8020ebc030ebc","rolloverCounter":0,"seqNumber":2990,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706464555000,"data":"0c0c0a0d071e0e00010f0000","rolloverCounter":0,"seqNumber":2989,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706464529000,"data":"080ebd090ebd0a0ebe0b0ebe","rolloverCounter":0,"seqNumber":2988,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706464505000,"data":"040ebd050ebd060ebd070ebe","rolloverCounter":0,"seqNumber":2987,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706464481000,"data":"0000f10109d6020ebc030ebb","rolloverCounter":0,"seqNumber":2986,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463852000,"data":"0c0c150d071d0e00010f0000","rolloverCounter":0,"seqNumber":2985,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463827000,"data":"080ebd090ebd0a0ebe0b0ebd","rolloverCounter":0,"seqNumber":2984,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463802000,"data":"040ebd050ebd060ebd070ebe","rolloverCounter":0,"seqNumber":2983,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463777000,"data":"0000f10109d5020ebc030ebb","rolloverCounter":0,"seqNumber":2982,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463148000,"data":"0c0c060d06fe0e00010f0000","rolloverCounter":0,"seqNumber":2981,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463124000,"data":"080ebd090ebd0a0ebd0b0ebd","rolloverCounter":0,"seqNumber":2980,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463099000,"data":"040ebd050ebd060ebd070ebd","rolloverCounter":0,"seqNumber":2979,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706463074000,"data":"0000f10109d4020ebb030ebb","rolloverCounter":0,"seqNumber":2978,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706462445000,"data":"0c0c000d06f80e00010f0000","rolloverCounter":0,"seqNumber":2977,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706462421000,"data":"080ebd090ebd0a0ebd0b0ebd","rolloverCounter":0,"seqNumber":2976,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706462396000,"data":"040ebc050ebd060ebd070ebd","rolloverCounter":0,"seqNumber":2975,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706462371000,"data":"0000f10109d2020ebb030ebb","rolloverCounter":0,"seqNumber":2974,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706461742000,"data":"0c0bf50d06f80e00010f0000","rolloverCounter":0,"seqNumber":2973,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706461717000,"data":"080ebc090ebd0a0ebd0b0ebd","rolloverCounter":0,"seqNumber":2972,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706461693000,"data":"040ebc050ebd060ebd070ebd","rolloverCounter":0,"seqNumber":2971,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3},{"device":{"id":"77122C"},"time":1706461667000,"data":"0000f10109d1020ebb030ebb","rolloverCounter":0,"seqNumber":2970,"rinfos":[],"satInfos":[],"nbFrames":3,"operator":"SIGFOX_Japan_KCCS","country":"JPN","computedLocation":[],"lqi":3}],"paging":{"next":"https://api.sigfox.com/v2/devices/77122C/messages?limit=100&before=1706461667000"}}
+{
+    "data": [
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706478617000,
+            "data": "0c0c4e0d07b10e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3069,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706478592000,
+            "data": "080ebf090ebf0a0ec00b0ec0",
+            "rolloverCounter": 0,
+            "seqNumber": 3068,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706478568000,
+            "data": "040ebf050ebf060ec0070ec0",
+            "rolloverCounter": 0,
+            "seqNumber": 3067,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706478543000,
+            "data": "0000f20109ee020ebe030ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3066,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477915000,
+            "data": "0c0c4c0d079c0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3065,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477890000,
+            "data": "080ebf090ebf0a0ebf0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3064,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477864000,
+            "data": "040ebf050ebf060ebf070ec0",
+            "rolloverCounter": 0,
+            "seqNumber": 3063,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477840000,
+            "data": "0000f20109ed020ebe030ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3062,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477212000,
+            "data": "0c0c4b0d07960e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3061,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477186000,
+            "data": "080ebf090ebf0a0ebf0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3060,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477162000,
+            "data": "040ebf050ebf060ebf070ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3059,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706477137000,
+            "data": "0000f20109ec020ebe030ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3058,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706476508000,
+            "data": "0c0c430d07840e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3057,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706476483000,
+            "data": "080ebf090ebf0a0ebf0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3056,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706476459000,
+            "data": "040ebf050ebf060ebf070ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3055,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706476434000,
+            "data": "0000f20109ea020ebd030ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3054,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475805000,
+            "data": "0c0c3c0d075e0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3053,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475780000,
+            "data": "080ebf090ebe0a0ebf0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3052,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475756000,
+            "data": "040ebe050ebe060ebf070ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3051,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475731000,
+            "data": "0000f20109e9020ebd030ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3050,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475102000,
+            "data": "0c0c2a0d07590e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3049,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475078000,
+            "data": "080ebe090ebe0a0ebf0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3048,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475053000,
+            "data": "040ebe050ebe060ebf070ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3047,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706475028000,
+            "data": "0000f10109e8020ebd030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3046,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706474399000,
+            "data": "0c0c1c0d075f0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3045,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706474374000,
+            "data": "080ebe090ebe0a0ebf0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3044,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706474350000,
+            "data": "040ebe050ebe060ebf070ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3043,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706474324000,
+            "data": "0000f10109e7020ebd030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3042,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706473695000,
+            "data": "0c0c200d075a0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3041,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706473671000,
+            "data": "080ebe090ebe0a0ebe0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3040,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706473646000,
+            "data": "040ebe050ebe060ebe070ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3039,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706473621000,
+            "data": "0000f10109e6020ebd030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3038,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472993000,
+            "data": "0c0c1e0d076e0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3037,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472968000,
+            "data": "080ebe090ebe0a0ebf0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3036,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472944000,
+            "data": "040ebe050ebe060ebf070ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3035,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472918000,
+            "data": "0000f10109e5020ebd030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3034,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472289000,
+            "data": "0c0c230d07560e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3033,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472265000,
+            "data": "080ebe090ebe0a0ebe0b0ebf",
+            "rolloverCounter": 0,
+            "seqNumber": 3032,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472240000,
+            "data": "040ebe050ebe060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3031,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706472215000,
+            "data": "0000f10109e3020ebd030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3030,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706471586000,
+            "data": "0c0c230d07700e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3029,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706471561000,
+            "data": "080ebe090ebe0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3028,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706471537000,
+            "data": "040ebe050ebe060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3027,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706471512000,
+            "data": "0000f10109e2020ebd030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3026,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470883000,
+            "data": "0c0c290d07490e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3025,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470858000,
+            "data": "080ebe090ebe0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3024,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470833000,
+            "data": "040ebe050ebe060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3023,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470808000,
+            "data": "0000f10109e1020ebc030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3022,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470180000,
+            "data": "0c0c170d075c0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3021,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470155000,
+            "data": "080ebe090ebe0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3020,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470130000,
+            "data": "040ebe050ebe060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3019,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706470105000,
+            "data": "0000f10109e0020ebc030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3018,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706469477000,
+            "data": "0c0c200d07410e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3017,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706469452000,
+            "data": "080ebd090ebe0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3016,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706469427000,
+            "data": "040ebd050ebe060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3015,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706469403000,
+            "data": "0000f10109df020ebc030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3014,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706468773000,
+            "data": "0c0c140d072c0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3013,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706468749000,
+            "data": "080ebd090ebd0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3012,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706468724000,
+            "data": "040ebd050ebd060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 3011,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706468700000,
+            "data": "0000f10109dd020ebc030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 3010,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706468070000,
+            "data": "0c0c040d07260e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3009,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706468046000,
+            "data": "080ebd090ebd0a0ebd0b0ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3008,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706468021000,
+            "data": "040ebd050ebd060ebd070ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3007,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706467996000,
+            "data": "0000f10109dc020ebc030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 3006,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706467368000,
+            "data": "0c0bfe0d07040e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3005,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706467342000,
+            "data": "080ebd090ebd0a0ebd0b0ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3004,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706467317000,
+            "data": "040ebd050ebd060ebd070ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3003,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706467293000,
+            "data": "0000f10109db020ebb030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 3002,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706466664000,
+            "data": "0c0bea0d06fa0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 3001,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706466639000,
+            "data": "080ebd090ebd0a0ebd0b0ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 3000,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706466614000,
+            "data": "040ebd050ebd060ebd070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2999,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 2
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706466590000,
+            "data": "0000f10109da020ebb030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 2998,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465961000,
+            "data": "0c0beb0d07250e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 2997,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465936000,
+            "data": "080ebd090ebd0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2996,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465912000,
+            "data": "040ebd050ebd060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2995,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465887000,
+            "data": "0000f20109d9020ebc030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 2994,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465258000,
+            "data": "0c0c010d07330e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 2993,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465233000,
+            "data": "080ebd090ebd0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2992,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465209000,
+            "data": "040ebd050ebd060ebe070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2991,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706465184000,
+            "data": "0000f20109d8020ebc030ebc",
+            "rolloverCounter": 0,
+            "seqNumber": 2990,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706464555000,
+            "data": "0c0c0a0d071e0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 2989,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706464529000,
+            "data": "080ebd090ebd0a0ebe0b0ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2988,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706464505000,
+            "data": "040ebd050ebd060ebd070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2987,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706464481000,
+            "data": "0000f10109d6020ebc030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 2986,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463852000,
+            "data": "0c0c150d071d0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 2985,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463827000,
+            "data": "080ebd090ebd0a0ebe0b0ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 2984,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463802000,
+            "data": "040ebd050ebd060ebd070ebe",
+            "rolloverCounter": 0,
+            "seqNumber": 2983,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463777000,
+            "data": "0000f10109d5020ebc030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 2982,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463148000,
+            "data": "0c0c060d06fe0e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 2981,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463124000,
+            "data": "080ebd090ebd0a0ebd0b0ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 2980,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463099000,
+            "data": "040ebd050ebd060ebd070ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 2979,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706463074000,
+            "data": "0000f10109d4020ebb030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 2978,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706462445000,
+            "data": "0c0c000d06f80e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 2977,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706462421000,
+            "data": "080ebd090ebd0a0ebd0b0ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 2976,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706462396000,
+            "data": "040ebc050ebd060ebd070ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 2975,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706462371000,
+            "data": "0000f10109d2020ebb030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 2974,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706461742000,
+            "data": "0c0bf50d06f80e00010f0000",
+            "rolloverCounter": 0,
+            "seqNumber": 2973,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706461717000,
+            "data": "080ebc090ebd0a0ebd0b0ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 2972,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706461693000,
+            "data": "040ebc050ebd060ebd070ebd",
+            "rolloverCounter": 0,
+            "seqNumber": 2971,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        },
+        {
+            "device": {
+                "id": "77122C"
+            },
+            "time": 1706461667000,
+            "data": "0000f10109d1020ebb030ebb",
+            "rolloverCounter": 0,
+            "seqNumber": 2970,
+            "rinfos": [],
+            "satInfos": [],
+            "nbFrames": 3,
+            "operator": "SIGFOX_Japan_KCCS",
+            "country": "JPN",
+            "computedLocation": [],
+            "lqi": 3
+        }
+    ],
+    "paging": {
+        "next": "https://api.sigfox.com/v2/devices/77122C/messages?limit=100&before=1706461667000"
+    }
+}

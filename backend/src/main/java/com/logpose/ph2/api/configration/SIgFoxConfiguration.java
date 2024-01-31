@@ -20,22 +20,23 @@ public class SIgFoxConfiguration
 	 */
 	// --------------------------------------------------
 	@Bean
-	public DefaultSigFoxParameters createSigFoxAPI(DefaultSigFoxParameters params)
+	public DefaultSecurityParameters createSigFoxAPI(DefaultSigFoxParameters params)
 		{
+		DefaultSecurityParameters dsp = new DefaultSecurityParameters();
 // * TokyoデータのAuthorizationデータの作成
-		String user = System.getenv(params.getUser());
-		String password = System.getenv(params.getPassword());
+		String user = params.getUser();
+		String password = params.getPassword();
 		String auth = user + ":" + password;
 		String encodedStr =
 	            Base64.getEncoder().encodeToString(auth.getBytes());
-		params.setBaseAuthTK(encodedStr);
+		 dsp.setBaseAuthSigFoxTK(encodedStr);
 // * NZデータのAuthorizationデータの作成		
-		user = System.getenv(params.getUserNz());
-		password = System.getenv(params.getPasswordNz());
+		user =params.getUserNz();
+		password = params.getPasswordNz();
 		auth = user + ":" + password;
 		encodedStr =
 	            Base64.getEncoder().encodeToString(auth.getBytes());
-		params.setBaseAuthTK(encodedStr);		
-		return params;
+		dsp.setBaseAuthSigFoxNZ(encodedStr);		
+		return dsp;
 		}
 	}
