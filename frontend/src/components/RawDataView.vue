@@ -224,8 +224,6 @@ export default {
             };
             this.masterRawDataHeader.push(item);
           }
-          console.log(this.masterRawDataHeader);
-          console.log(rawData.data);
           for (const items of rawData.data) {
             let value = {};
             let i = 0;
