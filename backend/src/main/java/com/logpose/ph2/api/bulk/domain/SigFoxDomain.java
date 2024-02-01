@@ -3,6 +3,7 @@ package com.logpose.ph2.api.bulk.domain;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,9 @@ import com.logpose.ph2.api.dao.db.mappers.MessagesMapper;
 @Component
 public class SigFoxDomain
 	{
+	// ===============================================
+	// クラスメンバー
+	// ===============================================
 	private static Logger LOG = LogManager.getLogger(SigFoxDomain.class);
 
 	@Autowired
@@ -30,6 +34,9 @@ public class SigFoxDomain
 	@Autowired
 	private MessagesMapper messagesMapper;
 
+	// ===============================================
+	// 公開クラス群
+	// ===============================================
 	@Transactional(rollbackFor = Exception.class)
 	public void createMessages(Ph2DevicesEnyity device, SigFoxAPI api)
 		{
@@ -83,19 +90,20 @@ public class SigFoxDomain
 	public String insertMessages(Long deviceId, SigFoxMessagesEntity message) 
 		{
 		List<SigFoxDataEntity> data = message.getData();
+		long timezone = TimeZone.getTimeZone( "JST" ).getRawOffset();
 		for(SigFoxDataEntity item : data)
 			{
 			MessagesEntity entity = new MessagesEntity();
-			Date castedAt = new Date();
-			castedAt.setTime(item.getTime());
-			entity.setCastedAt(castedAt);
+			Date utc = new Date();
+			utc.setTime(item.getTime()-timezone);
+			entity.setCastedAt(utc);
 			entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 			entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 			entity.setDeviceId(deviceId);
 			entity.setRaw(item.getData());
 			entity.setSeq(item.getSeqNumber());
 			MessagesEntityExample exe = new MessagesEntityExample();
-			exe.createCriteria().andDeviceIdEqualTo(deviceId).andCastedAtEqualTo(castedAt);
+			exe.createCriteria().andDeviceIdEqualTo(deviceId).andCastedAtEqualTo(utc);
 			long pastRecords = this.messagesMapper.countByExample(exe);
 			if( 0 == pastRecords)
 				{
