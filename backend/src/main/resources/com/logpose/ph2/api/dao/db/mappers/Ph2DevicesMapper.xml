@@ -380,10 +380,11 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
-      <select id="selectAll" resultMap="BaseResultMap">
+   <select id="selectAll" resultMap="BaseResultMap">
     select 
     <include refid="Base_Column_List" />
     from ph2_devices
+    order by id
   </select>
   
  

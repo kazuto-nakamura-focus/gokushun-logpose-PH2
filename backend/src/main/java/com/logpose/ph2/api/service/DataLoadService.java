@@ -59,7 +59,7 @@ public class DataLoadService
 		{
 // * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
 		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
-		this.sigFoxMessageService.doService(devices);	
+		this.sigFoxMessageService.doService(devices);
 		for (Ph2DevicesEnyity device : devices)
 			{
 // * コーディネーターを生成する
@@ -86,12 +86,20 @@ public class DataLoadService
 		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
 		for (Ph2DevicesEnyity device : devices)
 			{
+			try
+				{
 // * コーディネーターを生成する
-			LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device,
-					dto.getIsAll(),
-					dto.getStartDate());
+				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device,
+						dto.getIsAll(),
+						dto.getStartDate());
 // * コーディネーターを引数にデータロードを実行する
-			this.loadDevice(ldc);
+				this.loadDevice(ldc);
+				}
+			catch (Exception e)
+				{
+				LOG.error(device.getId() + "のロードに失敗しました。");
+				e.printStackTrace();
+				}
 			}
 		}
 
