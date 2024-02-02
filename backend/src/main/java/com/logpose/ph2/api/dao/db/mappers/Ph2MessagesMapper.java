@@ -1,10 +1,13 @@
 package com.logpose.ph2.api.dao.db.mappers;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntityExample;
 import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntityExample;
+@Mapper
 public interface Ph2MessagesMapper {
 
 	/**
