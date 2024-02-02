@@ -76,9 +76,14 @@
 			mapperName="Ph2ModelDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> 
-		-->
+
 		<table tableName="messages" domainObjectName="MessagesEntity"
 			mapperName="MessagesMapper" enableInsert="true"
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" modelType="flat">
+		</table>		-->
+		<table tableName="ph2_messages" domainObjectName="Ph2MessagesEntity"
+			mapperName="Ph2MessagesMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>

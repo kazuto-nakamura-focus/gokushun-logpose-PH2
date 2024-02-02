@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
+import com.logpose.ph2.api.dao.api.entity.SigFoxDeviceListEntity;
 import com.logpose.ph2.api.dao.api.entity.SigFoxMessagesEntity;
 
 import lombok.Data;
@@ -23,6 +24,34 @@ public class SigFoxAPI
 	// ===============================================
 	// パブリック関数
 	// ===============================================
+	public SigFoxDeviceListEntity getDeviceList(String baseAuth)
+		{
+// * 問合せの実行
+		return this.getDeviceList(sigFoxUrl, baseAuth);
+		}
+
+	public SigFoxDeviceListEntity getDeviceList(String url, String baseAuth)
+		{
+		ResponseEntity<SigFoxDeviceListEntity> response = null;
+// * ヘッダーにBaseURLを設定する
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Authorization", "Basic " + baseAuth);
+		HttpEntity<String> request = new HttpEntity<>(headers);
+// * Get処理の実行
+
+		response = restTemplate.exchange(url, HttpMethod.GET, request, SigFoxDeviceListEntity.class);
+		// * 戻り値のチェックと返却
+		HttpStatusCode statusCode = response.getStatusCode();
+		if (statusCode.is2xxSuccessful())
+			{
+			return response.getBody();
+			}
+		else
+			{
+			throw new RuntimeException("クエリ" + url + "は失敗しました。");
+			}
+		}
+
 	// --------------------------------------------------
 	/**
 	 * SigFoxからメッセージデータを取得する
@@ -36,7 +65,7 @@ public class SigFoxAPI
 		{
 // * URLの設定
 		String url = sigFoxUrl.replace("%deviceId", sigFoxDeviceId);
-		if(sinceTimeStamp > 0)
+		if (sinceTimeStamp > 0)
 			{
 			url = url + "?since=" + String.valueOf(sinceTimeStamp);
 			}

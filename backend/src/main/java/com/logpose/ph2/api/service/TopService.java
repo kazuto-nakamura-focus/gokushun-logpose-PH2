@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelMasterEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelMasterEntityExample;
@@ -42,7 +43,8 @@ public class TopService
 	 *
 	 * @return List<DataSummaryDTO>
 	 */
-	// --------------------------------------------------
+	// -------------------------------------------------
+	@Transactional(readOnly = true)
 	public List<DataSummaryDTO> getFieldData()
 		{
 		return this.topDomain.getFieldData();
@@ -56,6 +58,7 @@ public class TopService
 	 * @return List<FieldDataWithSensor>
 	 */
 	// --------------------------------------------------
+	@Transactional(readOnly = true)
 	public List<FieldDataWithSensor> getSummaryByFields(Long detectId)
 		{
 		return this.topDomain.getDeviceDataList(detectId);
@@ -70,6 +73,7 @@ public class TopService
 	 * @return RawDataList
 	 */
 	// --------------------------------------------------
+	@Transactional(readOnly = true)
 	public RawDataList getRawData(Date startDate, Date endDate, Long deviceId)
 		{
 		return this.topDomain.getRawData(startDate, endDate, deviceId);
@@ -81,6 +85,7 @@ public class TopService
 	 * @return SelectionDTO
 	 */
 	// ###############################################
+	@Transactional(readOnly = true)
 	public SelectionDTO getModels(boolean isModel)
 		{
 		SelectionDTO result = new SelectionDTO();
