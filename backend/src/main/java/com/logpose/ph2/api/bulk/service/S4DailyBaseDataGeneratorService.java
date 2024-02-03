@@ -25,13 +25,13 @@ import com.logpose.ph2.api.dto.BaseDataDTO;
 import com.logpose.ph2.api.dto.SingleDoubleValueDTO;
 
 @Service
-public class S3DailyBaseDataGeneratorService
+public class S4DailyBaseDataGeneratorService
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
 	private static Logger LOG = LogManager
-			.getLogger(S3DailyBaseDataGeneratorService.class);
+			.getLogger(S4DailyBaseDataGeneratorService.class);
 	@Autowired
 	private Ph2JoinedModelMapper ph2JoinedModelMapper;
 	@Autowired

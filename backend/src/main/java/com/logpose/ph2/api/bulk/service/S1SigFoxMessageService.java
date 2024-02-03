@@ -11,7 +11,7 @@ import com.logpose.ph2.api.dao.api.SigFoxAPI;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 
 @Service
-public class SigFoxMessageService
+public class S1SigFoxMessageService
 	{
 	@Autowired
 	private DefaultSigFoxParameters params;

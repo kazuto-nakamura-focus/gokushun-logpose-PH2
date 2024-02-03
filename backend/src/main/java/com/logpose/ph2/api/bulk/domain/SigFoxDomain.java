@@ -23,6 +23,7 @@ import com.logpose.ph2.api.dao.db.entity.MessagesEntity;
 import com.logpose.ph2.api.dao.db.entity.MessagesEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.MessagesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2MessagesMapper;
 
@@ -40,25 +41,49 @@ public class SigFoxDomain
 	private MessagesMapper messagesMapper;
 	@Autowired
 	private Ph2MessagesMapper ph2MessagesMapper;
+
 	// ===============================================
 	// 公開クラス群
 	// ===============================================
-	@Transactional(rollbackFor = Exception.class)
-	public List<String> getDeviceList(SigFoxAPI api)
+	// --------------------------------------------------
+	/**
+	 * Sigfoxのデバイスリストを取得する
+	 *
+	 * @param api 使用するAPIオブジェクト
+	 * @return List<String>
+	 */
+	// --------------------------------------------------
+	public List<String> getDeviceList(SigFoxAPI api, String baseAuth)
 		{
+		LOG.info("SigFoxIDリストの取得処理開始");
+// * 返却用オブジェクトの生成
 		List<String> sigfoxIds = new ArrayList<>();
-		String baseAuth = parameters.getBaseAuthSigFoxTK();
+// * Sigfox IDリストの取得
+		this.getDeviceList(api, baseAuth, sigfoxIds);
+// * 取得したSigfox IDリストの返却
+		return sigfoxIds;
+		}
+
+	// --------------------------------------------------
+	/**
+	 * Sigfoxのデバイスリストを取得する
+	 *
+	 * @return List<DataSummaryDTO>
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class)
+	public List<String> getDeviceList(SigFoxAPI api, String baseAuth, List<String> sigfoxIds)
+		{
 		String nextUrl;
 		try
 			{
-			LOG.info("SigFoxIDリストの取得処理開始");
 			SigFoxDeviceListEntity data = api.getDeviceList(baseAuth);
-			nextUrl = this.getDeviceList(data.getData(), sigfoxIds);
+			nextUrl = this.setSigfoxIdList(data, sigfoxIds);
 			while (null != nextUrl)
 				{
 				Thread.sleep(1000);
 				data = api.getDeviceList(nextUrl, baseAuth);
-				nextUrl = this.getDeviceList(data.getData(), sigfoxIds);
+				nextUrl = this.setSigfoxIdList(data, sigfoxIds);
 				}
 			Thread.sleep(1000);
 			}
@@ -73,27 +98,28 @@ public class SigFoxDomain
 		return sigfoxIds;
 		}
 
-	private String getDeviceList(List<SigFoxDeviceEntity> data, List<String> sigfoxIds)
+	private String setSigfoxIdList(SigFoxDeviceListEntity data, List<String> sigfoxIds)
 		{
-		for(SigFoxDeviceEntity entity : data )
+		for (SigFoxDeviceEntity entity : data.getData())
 			{
 			sigfoxIds.add(entity.getId());
 			}
-		return null;
+		if (null == data.getPaging()) return null;
+		if (null == data.getPaging().getNext()) return null;
+		return data.getPaging().getNext();
 		}
 
-	public void createPh2Messages(String sigfoxId, SigFoxAPI api)
-		{
-		this.createPh2Messages(parameters.getBaseAuthSigFoxTK(), sigfoxId, api);
-		this.createPh2Messages(parameters.getBaseAuthSigFoxNZ(), sigfoxId, api);
-		}
 	@Transactional(rollbackFor = Exception.class)
-	public void createPh2Messages(String baseAuth, String sigfoxId, SigFoxAPI api)
+	public void createPh2Messages(SigFoxAPI api, String baseAuth, String sigfoxId) throws Exception
 		{
-// * 問合せを実行する
-		String nextUrl;
 		try
 			{
+			Ph2MessagesEntityExample exm = new Ph2MessagesEntityExample();
+			exm.createCriteria().andSigfoxIdEqualTo(sigfoxId);
+			long count = this.ph2MessagesMapper.countByExample(exm);
+			if (count > 0) return;
+// * 問合せを実行する
+			String nextUrl;
 			LOG.info(sigfoxId + "データの取り込み処理開始");
 			SigFoxMessagesEntity data = api.getMessages(baseAuth, sigfoxId, 0);
 			nextUrl = this.insertPh2Messages(sigfoxId, data);
@@ -103,24 +129,34 @@ public class SigFoxDomain
 				data = api.getMessages(nextUrl, baseAuth);
 				nextUrl = this.insertPh2Messages(sigfoxId, data);
 				}
-			Thread.sleep(1000);
+			LOG.info(sigfoxId + "データの取り込み処理終了");
 			}
-		catch (RuntimeException e)
+		catch (Exception e)
 			{
 			e.printStackTrace();
+			throw e;
 			}
-		catch (InterruptedException e)
+		finally
 			{
-			e.printStackTrace();
+			try
+				{
+				Thread.sleep(1000);
+				}
+			catch (InterruptedException e)
+				{
+				e.printStackTrace();
+				throw e;
+				}
 			}
 		}
-	
+
 	private String insertPh2Messages(String sigfoxId, SigFoxMessagesEntity data)
 		{
 		long timezone = TimeZone.getTimeZone("JST").getRawOffset();
 
-		for(SigFoxDataEntity item : data.getData())
+		for (SigFoxDataEntity item : data.getData())
 			{
+			if (null == item.getData()) continue;
 			Ph2MessagesEntity entity = new Ph2MessagesEntity();
 			Date utc = new Date();
 			utc.setTime(item.getTime() - timezone);

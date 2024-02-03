@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.bulk.service.S0Initializer;
-import com.logpose.ph2.api.bulk.service.S1DeviceDataLoaderService;
-import com.logpose.ph2.api.bulk.service.S2DeviceDayService;
-import com.logpose.ph2.api.bulk.service.S3DailyBaseDataGeneratorService;
-import com.logpose.ph2.api.bulk.service.S4ModelDataApplyrService;
-import com.logpose.ph2.api.bulk.service.SigFoxMessageService;
+import com.logpose.ph2.api.bulk.service.S2DeviceDataLoaderService;
+import com.logpose.ph2.api.bulk.service.S3DeviceDayService;
+import com.logpose.ph2.api.bulk.service.S4DailyBaseDataGeneratorService;
+import com.logpose.ph2.api.bulk.service.S5ModelDataApplyrService;
+import com.logpose.ph2.api.bulk.service.S1SigFoxMessageService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
@@ -34,15 +34,15 @@ public class DataLoadService
 	@Autowired
 	S0Initializer s0Initializer;
 	@Autowired
-	SigFoxMessageService sigFoxMessageService;
+	S1SigFoxMessageService s1SigFoxMessageService;
 	@Autowired
-	S1DeviceDataLoaderService s1deviceDataLoaderService;
+	S2DeviceDataLoaderService s1deviceDataLoaderService;
 	@Autowired
-	S2DeviceDayService s2deviceDayService;
+	S3DeviceDayService s2deviceDayService;
 	@Autowired
-	S3DailyBaseDataGeneratorService s3dailyBaseDataGeneratorService;
+	S4DailyBaseDataGeneratorService s3dailyBaseDataGeneratorService;
 	@Autowired
-	S4ModelDataApplyrService s4modelDataApplyrService;
+	S5ModelDataApplyrService s4modelDataApplyrService;
 
 	// ===============================================
 	// 公開関数群
@@ -59,7 +59,7 @@ public class DataLoadService
 		{
 // * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
 		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
-		this.sigFoxMessageService.doService(devices);
+		this.s1SigFoxMessageService.doService(devices);
 		for (Ph2DevicesEnyity device : devices)
 			{
 // * コーディネーターを生成する

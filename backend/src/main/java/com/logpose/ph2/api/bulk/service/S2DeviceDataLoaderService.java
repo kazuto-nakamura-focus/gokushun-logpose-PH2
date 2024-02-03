@@ -32,7 +32,7 @@ import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
 @Service
-public class S1DeviceDataLoaderService
+public class S2DeviceDataLoaderService
 	{
 	@Autowired
 	private MessagesMapper messagesMapper;
