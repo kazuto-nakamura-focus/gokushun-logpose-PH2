@@ -10,11 +10,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.bulk.service.S0Initializer;
+import com.logpose.ph2.api.bulk.service.S1SigFoxMessageService;
 import com.logpose.ph2.api.bulk.service.S2DeviceDataLoaderService;
 import com.logpose.ph2.api.bulk.service.S3DeviceDayService;
 import com.logpose.ph2.api.bulk.service.S4DailyBaseDataGeneratorService;
 import com.logpose.ph2.api.bulk.service.S5ModelDataApplyrService;
-import com.logpose.ph2.api.bulk.service.S1SigFoxMessageService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
@@ -59,7 +59,6 @@ public class DataLoadService
 		{
 // * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
 		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
-		this.s1SigFoxMessageService.doService(devices);
 		for (Ph2DevicesEnyity device : devices)
 			{
 // * コーディネーターを生成する
@@ -144,6 +143,17 @@ public class DataLoadService
 			}
 
 		LOG.info("デバイスデータのローディングを開始します。:" + ldc.getDeviceId());
+// * 指定されたデバイスに対してSigFoxのデータを取り込む
+		try
+			{
+			this.s1SigFoxMessageService.doService(ldc.getDevice());
+			}
+		catch(Exception e)
+			{
+			LOG.error("Sigfox データのローディングに失敗しました。:" + ldc.getDeviceId());
+			e.printStackTrace();
+			return;
+			}
 // * メッセージテーブルから基本情報のDBへのロードを実行する
 		s1deviceDataLoaderService.loadMessages(ldc);
 // * 日付をまたがった場合、以下の処理を行う

@@ -157,6 +157,16 @@
       </if>
     </trim>
   </insert>
+  <insert id="multiRowInsert">
+	insert into ph2_messages (sigfox_id, seq, casted_at, raw)
+	values
+	<foreach collection="targets" item="item" separator=",">
+		(#{sigfoxId,jdbcType=CHAR},
+		#{seq,jdbcType=INTEGER},
+		#{castedAt,jdbcType=TIMESTAMP},
+		#{raw,jdbcType=VARCHAR} )
+	</foreach>
+  </insert>
   <select id="countByExample" parameterType="com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntityExample" resultType="java.lang.Long">
     <!--
       WARNING - @mbg.generated
@@ -205,4 +215,31 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  
+    <select fetchSize="5000" id="selectByCastedAt" parameterType="java.util.Date" resultMap="BaseResultMap">
+	SELECT 
+    	sigfox_id, seq,
+    	casted_at AT TIME ZONE 'UTC' AT TIME ZONE #{tz} as casted_at,
+    	raw
+    FROM
+    	 ph2_messages
+	WHERE
+  	<if test="castedAt != null">
+        	casted_at AT TIME ZONE 'UTC' AT TIME ZONE #{tz} &gt; #{castedAt,jdbcType=TIMESTAMP}
+        AND
+	</if>
+	    	sigfox_id = #{sigfoxId}
+	    AND
+		   length(raw)=24
+	ORDER BY casted_at ASC
+   </select>
+  	<select id="selectLastCastedTime" parameterType="java.lang.Long"
+		resultType="java.util.Date">
+		SELECT
+			Max(casted_at)
+		FROM
+			messages
+		WHERE
+			device_id = #{sigfoxId}
+	</select>
 </mapper>

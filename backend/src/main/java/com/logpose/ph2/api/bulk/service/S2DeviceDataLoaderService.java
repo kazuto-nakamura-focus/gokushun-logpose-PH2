@@ -19,14 +19,14 @@ import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
-import com.logpose.ph2.api.dao.db.entity.MessagesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntityExample;
-import com.logpose.ph2.api.dao.db.mappers.MessagesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2MessagesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
@@ -35,7 +35,7 @@ import com.logpose.ph2.api.dto.SensorDataDTO;
 public class S2DeviceDataLoaderService
 	{
 	@Autowired
-	private MessagesMapper messagesMapper;
+	private Ph2MessagesMapper Ph2messagesMapper;
 	@Autowired
 	private BaseDataGeneratorModules modules;
 	@Autowired
@@ -75,14 +75,14 @@ public class S2DeviceDataLoaderService
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
 		Ph2DevicesEnyity device = coordinator.getDevice();
-		try (Cursor<MessagesEntity> messageCorsor = this.messagesMapper
-				.selectByCastedAt(device.getId(), device.getTz(), firstDate))
+		try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
+				.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), firstDate))
 			{
-			Iterator<MessagesEntity> messages = messageCorsor.iterator();
+			Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
 			DataListModel messageData = new DataListModel();
 			while (messages.hasNext())
 				{
-				MessagesEntity message = messages.next();
+				Ph2MessagesEntity message = messages.next();
 				lastDate = message.getCastedAt();
 				messageData = this.createTables(device, coordinator.getSensors(), messageData,
 						message, cache);
@@ -100,7 +100,7 @@ public class S2DeviceDataLoaderService
 			Ph2DevicesEnyity device,
 			List<SensorDataDTO> records,
 			DataListModel dataListModel,
-			MessagesEntity message,
+			Ph2MessagesEntity message,
 			MinutesCacher cache)
 		{
 // * レコード内のrawデータを３文字づつ抽出し、文字リストを作成する。
@@ -111,7 +111,7 @@ public class S2DeviceDataLoaderService
 // * とDBへの登録 を実行する。
 		if (dataListModel.getCount() == 16)
 			{
-			this.baseDataGenerator.generate(message.getDeviceId(), records, dataListModel, cache);
+			this.baseDataGenerator.generate(device.getId(), records, dataListModel, cache);
 			}
 		return dataListModel;
 		}
