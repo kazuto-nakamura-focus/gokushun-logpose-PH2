@@ -200,8 +200,7 @@ public class Ph2DevicesEnyityExample {
 			{
 			if (values == null || values.size() == 0)
 				{
-				throw new RuntimeException(
-						"Value list for " + property + " cannot be null or empty");
+				throw new RuntimeException("Value list for " + property + " cannot be null or empty");
 				}
 			List<java.sql.Date> dateList = new ArrayList<>();
 			Iterator<Date> iter = values.iterator();
@@ -212,15 +211,13 @@ public class Ph2DevicesEnyityExample {
 			addCriterion(condition, dateList, property);
 			}
 
-		protected void addCriterionForJDBCDate(String condition, Date value1, Date value2,
-				String property)
+		protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property)
 			{
 			if (value1 == null || value2 == null)
 				{
 				throw new RuntimeException("Between values for " + property + " cannot be null");
 				}
-			addCriterion(condition, new java.sql.Date(value1.getTime()),
-					new java.sql.Date(value2.getTime()), property);
+			addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
 			}
 
 		public Criteria andIdIsNull()
@@ -532,78 +529,6 @@ public class Ph2DevicesEnyityExample {
 		public Criteria andLocationNotBetween(String value1, String value2)
 			{
 			addCriterion("location not between", value1, value2, "location");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnIsNull()
-			{
-			addCriterion("placed_on is null");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnIsNotNull()
-			{
-			addCriterion("placed_on is not null");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnEqualTo(Date value)
-			{
-			addCriterionForJDBCDate("placed_on =", value, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnNotEqualTo(Date value)
-			{
-			addCriterionForJDBCDate("placed_on <>", value, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnGreaterThan(Date value)
-			{
-			addCriterionForJDBCDate("placed_on >", value, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnGreaterThanOrEqualTo(Date value)
-			{
-			addCriterionForJDBCDate("placed_on >=", value, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnLessThan(Date value)
-			{
-			addCriterionForJDBCDate("placed_on <", value, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnLessThanOrEqualTo(Date value)
-			{
-			addCriterionForJDBCDate("placed_on <=", value, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnIn(List<Date> values)
-			{
-			addCriterionForJDBCDate("placed_on in", values, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnNotIn(List<Date> values)
-			{
-			addCriterionForJDBCDate("placed_on not in", values, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnBetween(Date value1, Date value2)
-			{
-			addCriterionForJDBCDate("placed_on between", value1, value2, "placedOn");
-			return (Criteria) this;
-			}
-
-		public Criteria andPlacedOnNotBetween(Date value1, Date value2)
-			{
-			addCriterionForJDBCDate("placed_on not between", value1, value2, "placedOn");
 			return (Criteria) this;
 			}
 
@@ -1156,6 +1081,150 @@ public class Ph2DevicesEnyityExample {
 		public Criteria andTzNotBetween(String value1, String value2)
 			{
 			addCriterion("tz not between", value1, value2, "tz");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartIsNull()
+			{
+			addCriterion("op_start is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartIsNotNull()
+			{
+			addCriterion("op_start is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartEqualTo(Date value)
+			{
+			addCriterion("op_start =", value, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartNotEqualTo(Date value)
+			{
+			addCriterion("op_start <>", value, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartGreaterThan(Date value)
+			{
+			addCriterion("op_start >", value, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartGreaterThanOrEqualTo(Date value)
+			{
+			addCriterion("op_start >=", value, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartLessThan(Date value)
+			{
+			addCriterion("op_start <", value, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartLessThanOrEqualTo(Date value)
+			{
+			addCriterion("op_start <=", value, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartIn(List<Date> values)
+			{
+			addCriterion("op_start in", values, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartNotIn(List<Date> values)
+			{
+			addCriterion("op_start not in", values, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartBetween(Date value1, Date value2)
+			{
+			addCriterion("op_start between", value1, value2, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpStartNotBetween(Date value1, Date value2)
+			{
+			addCriterion("op_start not between", value1, value2, "opStart");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndIsNull()
+			{
+			addCriterion("op_end is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndIsNotNull()
+			{
+			addCriterion("op_end is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndEqualTo(Date value)
+			{
+			addCriterion("op_end =", value, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndNotEqualTo(Date value)
+			{
+			addCriterion("op_end <>", value, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndGreaterThan(Date value)
+			{
+			addCriterion("op_end >", value, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndGreaterThanOrEqualTo(Date value)
+			{
+			addCriterion("op_end >=", value, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndLessThan(Date value)
+			{
+			addCriterion("op_end <", value, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndLessThanOrEqualTo(Date value)
+			{
+			addCriterion("op_end <=", value, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndIn(List<Date> values)
+			{
+			addCriterion("op_end in", values, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndNotIn(List<Date> values)
+			{
+			addCriterion("op_end not in", values, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndBetween(Date value1, Date value2)
+			{
+			addCriterion("op_end between", value1, value2, "opEnd");
+			return (Criteria) this;
+			}
+
+		public Criteria andOpEndNotBetween(Date value1, Date value2)
+			{
+			addCriterion("op_end not between", value1, value2, "opEnd");
 			return (Criteria) this;
 			}
 		}

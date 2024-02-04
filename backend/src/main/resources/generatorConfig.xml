@@ -81,25 +81,26 @@
 			mapperName="MessagesMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>		-->
+		</table>
 		<table tableName="ph2_messages" domainObjectName="Ph2MessagesEntity"
 			mapperName="Ph2MessagesMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
-		<!--
 		<table tableName="ph2_users" domainObjectName="Ph2UsersEntity" mapperName="Ph2UsersMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_brand_master" 
 			domainObjectName="Ph2BrandMasterEntity" mapperName="Ph2BrandMasterMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> 
+			-->
 		<table tableName="ph2_devices"
 			domainObjectName="Ph2DevicesEnyity" mapperName="Ph2DevicesMapper"
 			enableInsert="true" enableSelectByPrimaryKey="true"
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
 			modelType="flat">
 		</table>
+		<!-- 
 		<table tableName="ph2_sensor_contents" domainObjectName="Ph2SensorContentsEntity" 
 			mapperName="Ph2SensorContentsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
