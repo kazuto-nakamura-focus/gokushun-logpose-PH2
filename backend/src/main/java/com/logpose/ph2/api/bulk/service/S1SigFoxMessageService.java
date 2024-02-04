@@ -49,6 +49,6 @@ public class S1SigFoxMessageService
 			}
 		api.setBasicAuth(baseAuth);
 // * デバイスに対して最新のSigfox データを取り込む
-		this.sigFoxDomain.createMessages(device, api);
+		this.sigFoxDomain.createMessages(device.getSigfoxDeviceId(), api);
 		}
 	}

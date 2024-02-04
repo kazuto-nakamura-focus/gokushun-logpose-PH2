@@ -17,7 +17,6 @@ import com.logpose.ph2.api.dao.api.entity.SigFoxDeviceEntity;
 import com.logpose.ph2.api.dao.api.entity.SigFoxDeviceListEntity;
 import com.logpose.ph2.api.dao.api.entity.SigFoxMessagesEntity;
 import com.logpose.ph2.api.dao.db.cache.MessagesCacher;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2MessagesMapper;
 
@@ -107,10 +106,8 @@ public class SigFoxDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void createMessages(Ph2DevicesEnyity device, SigFoxAPI api) throws InterruptedException
+	public void createMessages(String sigfoxId, SigFoxAPI api) throws InterruptedException
 		{
-// * sigfoxIdが無い場合は対象外
-		String sigfoxId = device.getSigfoxDeviceId();
 		if (null == sigfoxId) return;
 // * sigfoxIdが正しいフォーマットか確認
 		if (!sigfoxId.matches("^[A-Z0-9]{6}$"))

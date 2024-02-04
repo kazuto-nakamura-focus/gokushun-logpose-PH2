@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.dao.db.entity.MessagesEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 
 @Component
 public final class BaseDataGeneratorModules
@@ -22,16 +22,16 @@ public final class BaseDataGeneratorModules
 	 * @return デバイス-データマップ
 	 */
 	// --------------------------------------------------
-	public void createDeviceDataMap(List<MessagesEntity> messages, Map<Long, DataListModel> map)
+	public void createDeviceDataMap(Long deviceId, List<Ph2MessagesEntity> messages, Map<Long, DataListModel> map)
 		{	
-		for (MessagesEntity item : messages)
+		for (Ph2MessagesEntity item : messages)
 			{
 			// * レコードが対象とするデバイスを取得する
-			DataListModel dataList = map.get(item.getDeviceId());
+			DataListModel dataList = map.get(deviceId);
 			if( null == dataList)
 				{
 				dataList = new DataListModel();
-				map.put(item.getDeviceId(), dataList);
+				map.put(deviceId, dataList);
 				}
 			}
 		
