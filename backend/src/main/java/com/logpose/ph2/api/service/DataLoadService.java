@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.bulk.service.S0Initializer;
 import com.logpose.ph2.api.bulk.service.S1SigFoxMessageService;
-import com.logpose.ph2.api.bulk.service.S2DeviceDataLoaderService;
-import com.logpose.ph2.api.bulk.service.S3DeviceDayService;
-import com.logpose.ph2.api.bulk.service.S4DailyBaseDataGeneratorService;
-import com.logpose.ph2.api.bulk.service.S5ModelDataApplyrService;
+import com.logpose.ph2.api.bulk.service.S3DeviceDataLoaderService;
+import com.logpose.ph2.api.bulk.service.S4DeviceDayService;
+import com.logpose.ph2.api.bulk.service.S5DailyBaseDataGeneratorService;
+import com.logpose.ph2.api.bulk.service.S6ModelDataApplyrService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
@@ -36,13 +36,13 @@ public class DataLoadService
 	@Autowired
 	S1SigFoxMessageService s1SigFoxMessageService;
 	@Autowired
-	S2DeviceDataLoaderService s1deviceDataLoaderService;
+	S3DeviceDataLoaderService s1deviceDataLoaderService;
 	@Autowired
-	S3DeviceDayService s2deviceDayService;
+	S4DeviceDayService s2deviceDayService;
 	@Autowired
-	S4DailyBaseDataGeneratorService s3dailyBaseDataGeneratorService;
+	S5DailyBaseDataGeneratorService s3dailyBaseDataGeneratorService;
 	@Autowired
-	S5ModelDataApplyrService s4modelDataApplyrService;
+	S6ModelDataApplyrService s4modelDataApplyrService;
 
 	// ===============================================
 	// 公開関数群

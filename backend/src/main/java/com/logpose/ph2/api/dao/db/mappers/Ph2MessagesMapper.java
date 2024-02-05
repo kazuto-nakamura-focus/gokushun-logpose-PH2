@@ -61,6 +61,7 @@ public interface Ph2MessagesMapper {
 	Cursor<Ph2MessagesEntity> selectByCastedAt(
 			@Param("sigfoxId") String sigfoxId, 
 			@Param("tz") String tz, 
-			@Param("castedAt") Date castedAt);
+			@Param("opStart") Date opStart,
+			@Param("opEnd") Date opEnd);
 
 }

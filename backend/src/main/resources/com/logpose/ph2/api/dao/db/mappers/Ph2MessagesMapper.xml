@@ -224,10 +224,14 @@
     FROM
     	 ph2_messages
 	WHERE
-  	<if test="castedAt != null">
-        	casted_at AT TIME ZONE 'UTC' AT TIME ZONE #{tz} &gt; #{castedAt,jdbcType=TIMESTAMP}
+  	<if test="opStart != null">
+        	casted_at AT TIME ZONE 'UTC' AT TIME ZONE #{tz} <![CDATA[>=]]> #{opStart,jdbcType=TIMESTAMP}
         AND
 	</if>
+  	<if test="opEnd != null">
+        	casted_at AT TIME ZONE 'UTC' AT TIME ZONE #{tz} <![CDATA[<]]>#{opEnd,jdbcType=TIMESTAMP}
+        AND
+	</if>	
 	    	sigfox_id = #{sigfoxId}
 	    AND
 		   length(raw)=24

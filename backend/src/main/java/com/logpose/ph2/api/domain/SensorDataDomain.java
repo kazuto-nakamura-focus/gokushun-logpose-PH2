@@ -10,10 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
-import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
-import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.SensorJoinMapper;
 import com.logpose.ph2.api.dto.sensorData.SenseorDataDTO;
 import com.logpose.ph2.api.utility.DateTimeUtility;
@@ -30,7 +30,7 @@ public class SensorDataDomain
 	@Autowired
 	private SensorJoinMapper sensorJoinMapper;
 	@Autowired
-	private Ph2DashBoardMapper ph2DashBoardMapper;
+	private Ph2RawDataMapper ph2RawDataMapper;
 
 	// ===============================================
 	// 公開関数群
@@ -65,7 +65,7 @@ public class SensorDataDomain
 			throws ParseException
 		{
 		// * ダッシュボードテーブルからデータを取得する
-		List<Ph2DashBoardEntity> records;
+		List<Ph2RawDataEntity> records;
 		// デイリーベースでの取得
 		if (type.shortValue() == 0)
 			{
@@ -76,17 +76,17 @@ public class SensorDataDomain
 			cal.set(Calendar.MINUTE, 20);
 			Date endTime = cal.getTime();
 			// * 時間条件の設定;
-			records = this.ph2DashBoardMapper.selectForDate(sensorId, startDate, endDate, startTime,
+			records = this.ph2RawDataMapper.selectForDate(sensorId, startDate, endDate, startTime,
 					endTime);
 			}
 		// 時間単位での取得
 		else
 			{
-			Ph2DashBoardEntityExample exm = new Ph2DashBoardEntityExample();
+			Ph2RawDataEntityExample exm = new Ph2RawDataEntityExample();
 			exm.createCriteria().andSensorIdEqualTo(sensorId)
 					.andCastedAtGreaterThanOrEqualTo(startDate)
 					.andCastedAtLessThanOrEqualTo(endDate);
-			records = this.ph2DashBoardMapper.selectByExample(exm);
+			records = this.ph2RawDataMapper.selectByExample(exm);
 			}
 		// * 取得したレコードを返却用オブジェクトに代入する
 		SenseorDataDTO dto = new SenseorDataDTO();
@@ -97,7 +97,7 @@ public class SensorDataDomain
 		int day = 0;
 		Calendar cal = Calendar.getInstance();
 
-		for (Ph2DashBoardEntity entity : records)
+		for (Ph2RawDataEntity entity : records)
 			{
 			cal.setTime(entity.getCastedAt());
 			boolean isDayChanged = true;
@@ -177,17 +177,17 @@ public class SensorDataDomain
 		endTime.add(Calendar.DATE, 1);
 		new DeviceDayAlgorithm().setTimeZero(endTime);
 // * 対象となるデータを取得する
-		Ph2DashBoardEntityExample exm = new Ph2DashBoardEntityExample();
+		Ph2RawDataEntityExample exm = new Ph2RawDataEntityExample();
 		exm.createCriteria().andSensorIdEqualTo(sensorId)
 				.andCastedAtGreaterThanOrEqualTo(startTime.getTime())
 				.andCastedAtLessThan(endTime.getTime());
 		exm.setOrderByClause("casted_at");
 		
-		List<Ph2DashBoardEntity> records = this.ph2DashBoardMapper.selectByExample(exm);
+		List<Ph2RawDataEntity> records = this.ph2RawDataMapper.selectByExample(exm);
 // * インターバルは分単位なので、millisecondsに変換する
 		long interval = 60000 * minutes;
 		long prevtime = 0;// * 前の時刻
-		for (Ph2DashBoardEntity entity : records)
+		for (Ph2RawDataEntity entity : records)
 			{
 // * 対象データの取得時刻を得る
 			long data_time = entity.getCastedAt().getTime();

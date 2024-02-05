@@ -19,10 +19,8 @@ import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
-import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
@@ -32,7 +30,7 @@ import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
 @Service
-public class S2DeviceDataLoaderService
+public class S3DeviceDataLoaderService
 	{
 	@Autowired
 	private Ph2MessagesMapper Ph2messagesMapper;
@@ -62,8 +60,6 @@ public class S2DeviceDataLoaderService
 		{
 		Date firstDate = coordinator.getLastHadledDate();
 		Date lastDate = null;
-// * 指定された日付より後のレコードをクリアする
-		this.deleteTables(coordinator.getDeviceId(), coordinator.getLastHadledDate());
 // * DBへの一括登録高速化のためのアクセスキャッシュを生成する
 // * START --------------------------------------
 // * RelBaseDataの最大IDを取得し、レコードを追加するときのID付与の準備をする
@@ -75,8 +71,19 @@ public class S2DeviceDataLoaderService
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
 		Ph2DevicesEnyity device = coordinator.getDevice();
+// * メッセージデータの抽出開始日
+		Date op_start_date = device.getOpStart();
+// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
+		if((null == op_start_date) || (op_start_date.getTime() < firstDate.getTime()))
+			{
+			op_start_date = firstDate;
+			op_start_date.setTime(op_start_date.getTime()+1);
+			}
+// * メッセージデータの抽出終了日
+		Date op_end_date = device.getOpEnd();
+// * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
 		try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
-				.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), firstDate))
+				.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
 			{
 			Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
 			DataListModel messageData = new DataListModel();
@@ -114,22 +121,6 @@ public class S2DeviceDataLoaderService
 			this.baseDataGenerator.generate(device.getId(), records, dataListModel, cache);
 			}
 		return dataListModel;
-		}
-
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	public void deleteTables(long deviceId, Date date)
-		{
-		Ph2RelBaseDataEntityExample relexm = new Ph2RelBaseDataEntityExample();
-		com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntityExample.Criteria criteria = relexm
-				.createCriteria().andDeviceIdEqualTo(deviceId);
-		if (null != date) criteria.andCastedAtGreaterThan(date);
-		this.ph2RelBaseDataMapper.deleteByExample(relexm);
-		// * 過去のダッシュボードの受信時刻移行のデータ削除
-		Ph2DashBoardEntityExample exm = new Ph2DashBoardEntityExample();
-		com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntityExample.Criteria criteria2 = exm
-				.createCriteria().andDeviceIdEqualTo(deviceId);
-		if (null != date) criteria2.andCastedAtGreaterThan(date);
-		this.dashboardMapper.deleteByExample(exm);
 		}
 
 	// ===============================================

@@ -1227,6 +1227,150 @@ public class Ph2DevicesEnyityExample {
 			addCriterion("op_end not between", value1, value2, "opEnd");
 			return (Criteria) this;
 			}
+
+		public Criteria andDataStatusIsNull()
+			{
+			addCriterion("data_status is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusIsNotNull()
+			{
+			addCriterion("data_status is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusEqualTo(Short value)
+			{
+			addCriterion("data_status =", value, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusNotEqualTo(Short value)
+			{
+			addCriterion("data_status <>", value, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusGreaterThan(Short value)
+			{
+			addCriterion("data_status >", value, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusGreaterThanOrEqualTo(Short value)
+			{
+			addCriterion("data_status >=", value, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusLessThan(Short value)
+			{
+			addCriterion("data_status <", value, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusLessThanOrEqualTo(Short value)
+			{
+			addCriterion("data_status <=", value, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusIn(List<Short> values)
+			{
+			addCriterion("data_status in", values, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusNotIn(List<Short> values)
+			{
+			addCriterion("data_status not in", values, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusBetween(Short value1, Short value2)
+			{
+			addCriterion("data_status between", value1, value2, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusNotBetween(Short value1, Short value2)
+			{
+			addCriterion("data_status not between", value1, value2, "dataStatus");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateIsNull()
+			{
+			addCriterion("data_status_date is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateIsNotNull()
+			{
+			addCriterion("data_status_date is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateEqualTo(Date value)
+			{
+			addCriterion("data_status_date =", value, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateNotEqualTo(Date value)
+			{
+			addCriterion("data_status_date <>", value, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateGreaterThan(Date value)
+			{
+			addCriterion("data_status_date >", value, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateGreaterThanOrEqualTo(Date value)
+			{
+			addCriterion("data_status_date >=", value, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateLessThan(Date value)
+			{
+			addCriterion("data_status_date <", value, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateLessThanOrEqualTo(Date value)
+			{
+			addCriterion("data_status_date <=", value, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateIn(List<Date> values)
+			{
+			addCriterion("data_status_date in", values, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateNotIn(List<Date> values)
+			{
+			addCriterion("data_status_date not in", values, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateBetween(Date value1, Date value2)
+			{
+			addCriterion("data_status_date between", value1, value2, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andDataStatusDateNotBetween(Date value1, Date value2)
+			{
+			addCriterion("data_status_date not between", value1, value2, "dataStatusDate");
+			return (Criteria) this;
+			}
 		}
 
 	/**

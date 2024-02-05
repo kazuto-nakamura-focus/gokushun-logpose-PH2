@@ -13,13 +13,13 @@ import com.logpose.ph2.api.bulk.domain.ModelDataDomain;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 
 @Service
-public class S5ModelDataApplyrService
+public class S6ModelDataApplyrService
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
 	private static Logger LOG = LogManager
-			.getLogger(S5ModelDataApplyrService.class);
+			.getLogger(S6ModelDataApplyrService.class);
 	@Autowired
 	private ModelDataDomain modelDataDomain;
 

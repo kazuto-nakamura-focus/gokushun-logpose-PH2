@@ -20,12 +20,12 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 
 @Component
-public class S3DeviceDayService
+public class S4DeviceDayService
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	private static Logger LOG = LogManager.getLogger(S3DeviceDayService.class);
+	private static Logger LOG = LogManager.getLogger(S4DeviceDayService.class);
 	@Autowired
 	private Ph2DeviceDayMapper ph2DeviceDayMapper;
 	@Autowired
