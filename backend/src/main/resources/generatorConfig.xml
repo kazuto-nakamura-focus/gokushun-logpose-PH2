@@ -93,14 +93,14 @@
 			domainObjectName="Ph2BrandMasterEntity" mapperName="Ph2BrandMasterMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> 
-			-->
+			
 		<table tableName="ph2_devices"
 			domainObjectName="Ph2DevicesEnyity" mapperName="Ph2DevicesMapper"
 			enableInsert="true" enableSelectByPrimaryKey="true"
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
 			modelType="flat">
 		</table>
-		<!-- 
+ 
 		<table tableName="ph2_sensor_contents" domainObjectName="Ph2SensorContentsEntity" 
 			mapperName="Ph2SensorContentsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
@@ -170,10 +170,18 @@
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_el_stage_master" 
 			domainObjectName="Ph2ElStageMasterEntity" mapperName="Ph2ElStageMasterMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
-			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_raw_data" 
+			enableDeleteByPrimaryKey="true" modelType="flat"> </table> 
+			-->
+			<table tableName="ph2_raw_data" 
 			domainObjectName="Ph2RawDataEntity" mapperName="Ph2RawDataMapper" enableInsert="true" 
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
-			modelType="flat"> </table> <table tableName="ph2_real_fruits_bearing" domainObjectName="Ph2RealFruitsBearingEntity" 
+			modelType="flat"> </table>
+						<table tableName="ph2_heaadlines" 
+			domainObjectName="Ph2HeadLinesEntity" mapperName="Ph2HeadLinesMapper" enableInsert="true" 
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
+			modelType="flat"> </table>
+			<!--
+			 <table tableName="ph2_real_fruits_bearing" domainObjectName="Ph2RealFruitsBearingEntity" 
 			mapperName="Ph2RealFruitsBearingMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> 

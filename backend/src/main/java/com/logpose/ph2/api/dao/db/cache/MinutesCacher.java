@@ -5,11 +5,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2BaseDataEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2InsolationDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 
@@ -24,12 +24,12 @@ public class MinutesCacher
 	private long id;
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	private Ph2BaseDataMapper ph2BaseDataMapper;
-	private Ph2DashBoardMapper ph2DashboardMapper;
+	private Ph2RawDataMapper ph2DashboardMapper;
 	private Ph2InsolationDataMapper ph2InsolationDataMapper;
 // * 分ベース関係データ
 	private final List<Ph2RelBaseDataEntity> relBaseData = new ArrayList<>();
 // * ダッシュボードデータ
-	private final List<Ph2DashBoardEntity> dashBoads = new ArrayList<>();
+	private final List<Ph2RawDataEntity> dashBoads = new ArrayList<>();
 // * 光合成有効放射束密度 / 日射強度
 	private final List<Ph2InsolationDataEntity> Insolation = new ArrayList<>();
 // * 温度基礎データ
@@ -69,7 +69,7 @@ public class MinutesCacher
 			Date castedAt,
 			Double value)
 		{
-		Ph2DashBoardEntity entity = new Ph2DashBoardEntity();
+		Ph2RawDataEntity entity = new Ph2RawDataEntity();
 		entity.setCastedAt(castedAt);
 		entity.setContentId(contentId);
 		entity.setDeviceId(deviceId);

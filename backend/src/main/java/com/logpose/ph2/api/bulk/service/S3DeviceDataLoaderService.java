@@ -22,7 +22,7 @@ import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2MessagesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
@@ -41,7 +41,7 @@ public class S3DeviceDataLoaderService
 	@Autowired
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	@Autowired
-	private Ph2DashBoardMapper dashboardMapper;
+	private Ph2RawDataMapper dashboardMapper;
 	@Autowired
 	private Ph2BaseDataMapper ph2BaseDataMapper;
 	@Autowired

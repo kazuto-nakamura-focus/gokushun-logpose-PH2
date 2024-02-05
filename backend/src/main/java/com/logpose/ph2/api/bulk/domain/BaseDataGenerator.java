@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
@@ -26,7 +26,7 @@ public class BaseDataGenerator
 	@Autowired
 	Ph2BaseDataMapper ph2BaseDataMapper;
 	@Autowired
-	Ph2DashBoardMapper dashboardMapper;
+	Ph2RawDataMapper dashboardMapper;
 	@Autowired
 	Ph2InsolationDataMapper ph2InsolationDataMapper;
 
