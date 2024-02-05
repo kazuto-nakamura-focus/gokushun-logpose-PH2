@@ -7,12 +7,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.logpose.ph2.api.bulk.domain.DeviceStatusDomain;
-import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntityExample;
-import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 
 /**
@@ -24,8 +22,6 @@ public class S2DeviceDataInitService
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	@Autowired
-	private DeviceStatusDomain statusDomain;
 	@Autowired
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	@Autowired
@@ -49,19 +45,13 @@ public class S2DeviceDataInitService
 				.createCriteria().andDeviceIdEqualTo(deviceId);
 		if (null != date) criteria.andCastedAtGreaterThan(date);
 		this.ph2RelBaseDataMapper.deleteByExample(relexm);
-
-		Ph2RawDataEntityExample dbexm = new Ph2RawDataEntityExample();
-		Ph2RawDataEntityExample.Criteria criteria2 = dbexm
-				.createCriteria().andDeviceIdEqualTo(deviceId);
-		if (null != date) criteria2.andCastedAtGreaterThan(date);
-		this.Ph2RawDataMapper.deleteByExample(dbexm);
+		
+		this.Ph2RawDataMapper.deleteByDevice(deviceId);
 		
 		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
 		Ph2DeviceDayEntityExample.Criteria criteria3 = exm
 				.createCriteria().andDeviceIdEqualTo(deviceId);
 		if (null != date) criteria3.andDateGreaterThan(date);
 		this.ph2DeviceDayMapper.deleteByExample(exm);
-		
-		this.statusDomain.setDataInitialized(deviceId);
 		}
 	}

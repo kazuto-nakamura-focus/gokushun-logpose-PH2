@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.bulk.domain.BaseDataGenerator;
 import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
@@ -22,18 +23,19 @@ import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2MessagesMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
 @Service
-public class S3DeviceDataLoaderService
+public class S3RawDataLoaderService
 	{
 	@Autowired
 	private Ph2MessagesMapper Ph2messagesMapper;
+	@Autowired
+	private DeviceDayAlgorithm deviceDayAlgorithm;
 	@Autowired
 	private BaseDataGeneratorModules modules;
 	@Autowired
@@ -41,13 +43,11 @@ public class S3DeviceDataLoaderService
 	@Autowired
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	@Autowired
-	private Ph2RawDataMapper dashboardMapper;
+	private Ph2RawDataMapper rawDataMapper;
 	@Autowired
 	private Ph2BaseDataMapper ph2BaseDataMapper;
 	@Autowired
 	private Ph2InsolationDataMapper ph2InsolationDataMapper;
-	@Autowired
-	private Ph2JoinedMapper ph2JoinedMapper;
 
 	// --------------------------------------------------
 	/**
@@ -56,10 +56,8 @@ public class S3DeviceDataLoaderService
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
 	@CacheEvict(value="getFieldData",  allEntries = true)
-	public void loadMessages(LoadCoordinator coordinator) throws IOException
+	public Date loadMessages(LoadCoordinator coordinator) throws IOException
 		{
-		Date firstDate = coordinator.getLastHadledDate();
-		Date lastDate = null;
 // * DBへの一括登録高速化のためのアクセスキャッシュを生成する
 // * START --------------------------------------
 // * RelBaseDataの最大IDを取得し、レコードを追加するときのID付与の準備をする
@@ -67,17 +65,24 @@ public class S3DeviceDataLoaderService
 		if (null == id) id = Long.valueOf(1);
 // * アクセスキャッシュの生成
 		MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
-				ph2BaseDataMapper, dashboardMapper, ph2InsolationDataMapper);
+				ph2BaseDataMapper, rawDataMapper, ph2InsolationDataMapper, null);
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
 		Ph2DevicesEnyity device = coordinator.getDevice();
 // * メッセージデータの抽出開始日
 		Date op_start_date = device.getOpStart();
 // * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
-		if((null == op_start_date) || (op_start_date.getTime() < firstDate.getTime()))
+		Date firstDate = coordinator.getLastHadledDate();
+		if(null !=firstDate)
 			{
-			op_start_date = firstDate;
-			op_start_date.setTime(op_start_date.getTime()+1);
+			firstDate =deviceDayAlgorithm.addMilliscond(firstDate);
+			if(null != op_start_date)
+				{
+				if(op_start_date.getTime() < firstDate.getTime())
+					{
+					op_start_date = firstDate;
+					}
+				}
 			}
 // * メッセージデータの抽出終了日
 		Date op_end_date = device.getOpEnd();
@@ -90,16 +95,17 @@ public class S3DeviceDataLoaderService
 			while (messages.hasNext())
 				{
 				Ph2MessagesEntity message = messages.next();
-				lastDate = message.getCastedAt();
 				messageData = this.createTables(device, coordinator.getSensors(), messageData,
 						message, cache);
 				}
+// * ローディング情報に最後の生データ登録時刻を返却する。
+			cache.flush();
+			return cache.getLastCastedDate();
 			}
 		catch (Exception e)
 			{
 			throw e;
 			}
-		cache.flush();
 		}
 
 	@Transactional(propagation = Propagation.REQUIRES_NEW)

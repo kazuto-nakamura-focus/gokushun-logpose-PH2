@@ -1,12 +1,9 @@
 package com.logpose.ph2.api.bulk.vo;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
-import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
@@ -18,10 +15,11 @@ public class LoadCoordinator
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	// * 分ごとのデータのための関係テーブル
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	@Getter
 	private Ph2DevicesEnyity device;
+	@Getter
+	private boolean isAll = false;
 	@Getter
 	private Date lastHadledDate = null;
 	@Getter
@@ -30,8 +28,9 @@ public class LoadCoordinator
 	// ===============================================
 	// コンストラクタ
 	// ===============================================
-	public LoadCoordinator(Ph2RelBaseDataMapper ph2RelBaseDataMapper)
+	public LoadCoordinator(boolean isAll, Ph2RelBaseDataMapper ph2RelBaseDataMapper)
 		{
+		this.isAll = isAll;
 		this.ph2RelBaseDataMapper = ph2RelBaseDataMapper;
 		}
 
@@ -48,45 +47,14 @@ public class LoadCoordinator
 		{
 		this.device = device;
 		}
-
 	// --------------------------------------------------
 	/**
-	 * デバイスを設定する
-	 * @param device Ph2DevicesEnyity
+	 * 最後にデータがロードされた時刻を設定する
 	 */
 	// --------------------------------------------------
-	public void setDevice(Long deviceId, Ph2DevicesMapper ph2DevicesMapper)
+	public void setInitialStartDate()
 		{
-		if (null == this.device)
-			{
-			this.device = ph2DevicesMapper.selectByPrimaryKey(deviceId);
-			}
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 対象データの取得開始日指定を受取るとそこから
-	 * １ミリ秒前を最後のデータ取得時間とする。
-	 * @param startDate 対象データの取得開始日
-	 */
-	// --------------------------------------------------
-	public void setInitialStartDate(Date date)
-		{
-		if (null != date)
-			{
-// * カレンダーに変換
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(date);
-// * 時刻を00:00:00 000に設定
-			new DeviceDayAlgorithm().setTimeZero(cal);
-// * １ミリ秒前に設定
-			cal.add(Calendar.MILLISECOND, -1);
-			this.lastHadledDate = cal.getTime();
-			}
-		else
-			{
-			this.lastHadledDate = this.ph2RelBaseDataMapper.selectLatest(device.getId());
-			}
+		this.lastHadledDate = this.ph2RelBaseDataMapper.selectLatest(device.getId());
 		}
 
 	// --------------------------------------------------

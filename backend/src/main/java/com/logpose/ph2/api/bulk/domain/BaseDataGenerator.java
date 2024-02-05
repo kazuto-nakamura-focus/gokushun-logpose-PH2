@@ -9,8 +9,8 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 import com.logpose.ph2.api.formula.Formula;
@@ -63,7 +63,7 @@ public class BaseDataGenerator
 				// * 基礎データテーブルへの登録
 				cache.addBaseData(id, (float) value, sensor.getSensorId());
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -75,7 +75,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toHumidity(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -87,7 +87,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toSunLight(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				// * 光合成有効放射束密度 = 9.19 * x
@@ -119,7 +119,7 @@ public class BaseDataGenerator
 				if (value != null)
 					{
 					// * ダッシュボード登録
-					cache.addDashboardData(deviceId, sensor.getSensorId(),
+					cache.addRawDataData(deviceId, sensor.getSensorId(),
 							sensor.getSensorContentId(),
 							dataList.getCastedAt(),
 							value);
@@ -133,7 +133,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toDendro(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -146,7 +146,7 @@ public class BaseDataGenerator
 				// double value = Formula.toResitence(x);
 				double value = x;
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -158,7 +158,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toMoisture(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -170,7 +170,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toTemperature(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -182,7 +182,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toTemperature(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -194,7 +194,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toVMCOrgaic(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}
@@ -206,7 +206,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				double value = Formula.toVMCMineral(x);
 				// * ダッシュボード登録
-				cache.addDashboardData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
+				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
 						value);
 				}

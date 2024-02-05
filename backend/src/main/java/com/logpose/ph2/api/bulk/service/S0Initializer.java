@@ -1,6 +1,5 @@
 package com.logpose.ph2.api.bulk.service;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,38 +27,6 @@ public class S0Initializer
 	// ===============================================
 	// --------------------------------------------------
 	/**
-	 *  データロードのパラメータを作成する
-	 * @param device デバイス情報
-	 * @param isAllData 全てのデータを更新するかどうか
-	 * @param startDate 日付指定。NULLなら最後の更新日
-	 * @return LoadCoordinator
-	 */
-	// --------------------------------------------------
-	@Transactional(readOnly = true)
-	public LoadCoordinator initializeCoordinator(Ph2DevicesEnyity device, boolean isAllData,
-			Date startDate)
-		{
-		LoadCoordinator coordinator = new LoadCoordinator(ph2RelBaseDataMapper);
-		coordinator.setDevice(device);
-		if (!isAllData)
-			coordinator.setInitialStartDate(startDate);
-		coordinator.setSensors(this.ph2JoinedMapper);
-		return coordinator;
-		}
-
-	@Transactional(readOnly = true)
-	public LoadCoordinator initializeCoordinator(Long deviceId, boolean isAllData, Date startDate)
-		{
-		LoadCoordinator coordinator = new LoadCoordinator(ph2RelBaseDataMapper);
-		coordinator.setDevice(deviceId, this.ph2DeviceMapper);
-		if (!isAllData)
-			coordinator.setInitialStartDate(startDate);
-		coordinator.setSensors(this.ph2JoinedMapper);
-		return coordinator;
-		}
-
-	// --------------------------------------------------
-	/**
 	 *  全てのデバイス情報をDBから取得して返す
 	 * @return デバイス情報
 	 */
@@ -69,4 +36,36 @@ public class S0Initializer
 		{
 		return this.ph2DeviceMapper.selectAll();
 		}
+
+	// --------------------------------------------------
+	/**
+	 *  デバイス情報を取得する
+	 * @param deviceId 取得するデバイス情報のID
+	 * @return デバイス情報
+	 */
+	// --------------------------------------------------
+	@Transactional(readOnly = true)
+	public Ph2DevicesEnyity getDeviceInfo(Long deviceId)
+		{
+		return this.ph2DeviceMapper.selectByPrimaryKey(deviceId);
+		}
+
+	// --------------------------------------------------
+	/**
+	 *  データロードのパラメータを作成する
+	 * @param device デバイス情報
+	 * @param isAllData 全てのデータを更新するかどうか
+	 * @return LoadCoordinator
+	 */
+	// --------------------------------------------------
+	@Transactional(readOnly = true)
+	public LoadCoordinator initializeCoordinator(Ph2DevicesEnyity device, boolean isAllData)
+		{
+		LoadCoordinator coordinator = new LoadCoordinator(isAllData, ph2RelBaseDataMapper);
+		coordinator.setDevice(device);
+		coordinator.setSensors(this.ph2JoinedMapper);
+		if (!isAllData) coordinator.setInitialStartDate();
+		return coordinator;
+		}
+
 	}

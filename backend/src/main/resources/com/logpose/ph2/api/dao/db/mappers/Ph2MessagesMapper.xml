@@ -161,10 +161,10 @@
 	insert into ph2_messages (sigfox_id, seq, casted_at, raw)
 	values
 	<foreach collection="targets" item="item" separator=",">
-		(#{sigfoxId,jdbcType=CHAR},
-		#{seq,jdbcType=INTEGER},
-		#{castedAt,jdbcType=TIMESTAMP},
-		#{raw,jdbcType=VARCHAR} )
+		(#{item.sigfoxId,jdbcType=CHAR},
+		#{item.seq,jdbcType=INTEGER},
+		#{item.castedAt,jdbcType=TIMESTAMP},
+		#{item.raw,jdbcType=VARCHAR} )
 	</foreach>
   </insert>
   <select id="countByExample" parameterType="com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntityExample" resultType="java.lang.Long">
@@ -237,13 +237,15 @@
 		   length(raw)=24
 	ORDER BY casted_at ASC
    </select>
-  	<select id="selectLastCastedTime" parameterType="java.lang.Long"
+   
+   
+  	<select id="selectLastCastedTime" parameterType="java.lang.String"
 		resultType="java.util.Date">
 		SELECT
 			Max(casted_at)
 		FROM
-			messages
+			ph2_messages
 		WHERE
-			device_id = #{sigfoxId}
+			sigfox_id = #{sigfoxId}
 	</select>
 </mapper>

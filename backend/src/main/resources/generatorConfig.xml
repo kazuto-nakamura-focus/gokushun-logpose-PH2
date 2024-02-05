@@ -171,12 +171,11 @@
 			domainObjectName="Ph2ElStageMasterEntity" mapperName="Ph2ElStageMasterMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> 
-			-->
 			<table tableName="ph2_raw_data" 
 			domainObjectName="Ph2RawDataEntity" mapperName="Ph2RawDataMapper" enableInsert="true" 
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
-			modelType="flat"> </table>
-						<table tableName="ph2_heaadlines" 
+			modelType="flat"> </table>-->
+						<table tableName="ph2_headlines" 
 			domainObjectName="Ph2HeadLinesEntity" mapperName="Ph2HeadLinesMapper" enableInsert="true" 
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
 			modelType="flat"> </table>
