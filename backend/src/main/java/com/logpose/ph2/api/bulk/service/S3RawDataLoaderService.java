@@ -9,7 +9,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cursor.Cursor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -55,7 +54,6 @@ public class S3RawDataLoaderService
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	@CacheEvict(value="getFieldData",  allEntries = true)
 	public Date loadMessages(LoadCoordinator coordinator) throws IOException
 		{
 // * DBへの一括登録高速化のためのアクセスキャッシュを生成する

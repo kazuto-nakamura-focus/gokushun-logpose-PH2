@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class S4HeadLineLoaderService
 	// 公開関数群
 	// ===============================================
 	@Transactional(rollbackFor = Exception.class)
+	@CacheEvict(value="getFieldData",  allEntries = true)
 	public void createHealines(Long deviceId, Date lastTime)
 		{
 // * RawDataから最後の更新日付のデータを取得する

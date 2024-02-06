@@ -150,9 +150,9 @@ public class DataLoadService
 		try
 			{
 			LOG.info("デバイスデータのローディングを開始します。:" + deviceId);
-			while(true)
+			while (true)
 				{
-				if(this.statusDomain.setDataOnLoad(deviceId)) break;
+				if (this.statusDomain.setDataOnLoad(deviceId)) break;
 				LOG.info("デバイスデータのロック解除を待機します。:" + deviceId);
 				Thread.sleep(10000);
 				}
@@ -188,12 +188,14 @@ public class DataLoadService
 			Date lastUpdated = this.s3RawDataLoaderService.loadMessages(ldc);
 			this.statusDomain.setRawDataLoaded(deviceId);
 			LOG.error("生データ生成の終了:" + deviceId);
-			
+
 // * メッセージテーブルから基本情報のDBへのロードを実行する
-			LOG.error("ヘッドラインデータ生成の開始:" + deviceId);
-			this.s4HeadLineLoaderService.createHealines(deviceId, lastUpdated);
-			LOG.error("ヘッドラインデータ生成の終了:" + deviceId);
-			
+			if (lastUpdated != null)
+				{
+				LOG.error("ヘッドラインデータ生成の開始:" + deviceId);
+				this.s4HeadLineLoaderService.createHealines(deviceId, lastUpdated);
+				LOG.error("ヘッドラインデータ生成の終了:" + deviceId);
+				}
 // * 日付をまたがった場合、以下の処理を行う
 			List<Ph2DeviceDayEntity> deviceDays = this.s5deviceDayService.initDeviceDay(ldc);
 			if (deviceDays.size() > 0)

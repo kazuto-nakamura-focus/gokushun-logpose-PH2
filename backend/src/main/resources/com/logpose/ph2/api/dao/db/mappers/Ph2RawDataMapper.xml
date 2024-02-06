@@ -290,7 +290,7 @@
     -->
     delete from ph2_raw_data
     where 
-    	sensor_id in (select sensor_id from ph2_devices where id = #{deviceId})
+    	sensor_id in (select id from ph2_sensors where device_id = #{deviceId})
   </delete>
 	
 	<insert id="multiRowInsert">
