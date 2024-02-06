@@ -5,15 +5,16 @@ import java.util.Date;
 import java.util.List;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2BaseDataEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2InsolationDataEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RelBaseDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2DashBoardMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 @AllArgsConstructor
 public class MinutesCacher
@@ -24,12 +25,14 @@ public class MinutesCacher
 	private long id;
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	private Ph2BaseDataMapper ph2BaseDataMapper;
-	private Ph2DashBoardMapper ph2DashboardMapper;
+	private Ph2RawDataMapper ph2RawDataMapper;
 	private Ph2InsolationDataMapper ph2InsolationDataMapper;
+	@Getter
+	private Date lastCastedDate;
 // * 分ベース関係データ
 	private final List<Ph2RelBaseDataEntity> relBaseData = new ArrayList<>();
 // * ダッシュボードデータ
-	private final List<Ph2DashBoardEntity> dashBoads = new ArrayList<>();
+	private final List<Ph2RawDataEntity> rawData = new ArrayList<>();
 // * 光合成有効放射束密度 / 日射強度
 	private final List<Ph2InsolationDataEntity> Insolation = new ArrayList<>();
 // * 温度基礎データ
@@ -50,6 +53,7 @@ public class MinutesCacher
 			{
 			this.insertRelBaseData();
 			}
+		this.lastCastedDate = castedDay;
 		return id;
 		}
 
@@ -63,21 +67,20 @@ public class MinutesCacher
 	 * @param value
 	 */
 	// -----------------------------------------------------------------
-	public void addDashboardData(Long deviceId,
+	public void addRawDataData(Long deviceId,
 			long sensorId,
 			long contentId,
 			Date castedAt,
 			Double value)
 		{
-		Ph2DashBoardEntity entity = new Ph2DashBoardEntity();
+		Ph2RawDataEntity entity = new Ph2RawDataEntity();
 		entity.setCastedAt(castedAt);
 		entity.setContentId(contentId);
-		entity.setDeviceId(deviceId);
 		entity.setSensorId(sensorId);
 		entity.setValue(String.valueOf(value));
-		this.dashBoads.add(entity);
-		if (this.dashBoads.size() == 1000)
-			this.insertDashBoard();
+		this.rawData.add(entity);
+		if (this.rawData.size() == 1000)
+			this.insertRawData();
 		}
 
 	// -----------------------------------------------------------------
@@ -124,7 +127,7 @@ public class MinutesCacher
 		if(this.relBaseData.size() > 0) insertRelBaseData();
 		if(this.baseDatum.size() > 0) insertBaseData();
 		if(this.Insolation.size() > 0) insertInsolationData();
-		if(this.dashBoads.size() > 0) insertDashBoard();
+		if(this.rawData.size() > 0) insertRawData();
 		}
 
 	// -----------------------------------------------------------------
@@ -135,10 +138,10 @@ public class MinutesCacher
 		}
 
 	// -----------------------------------------------------------------
-	private void insertDashBoard()
+	private void insertRawData()
 		{
-		this.ph2DashboardMapper.multiRowInsert(this.dashBoads);
-		this.dashBoads.clear();
+		this.ph2RawDataMapper.multiRowInsert(this.rawData);
+		this.rawData.clear();
 		}
 
 	// -----------------------------------------------------------------

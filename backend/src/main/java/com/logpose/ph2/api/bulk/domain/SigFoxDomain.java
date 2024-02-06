@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.api.SigFoxAPI;
 import com.logpose.ph2.api.dao.api.entity.SigFoxDataEntity;
 import com.logpose.ph2.api.dao.api.entity.SigFoxDeviceEntity;
@@ -27,6 +28,8 @@ public class SigFoxDomain
 	// クラスメンバー
 	// ===============================================
 	private static Logger LOG = LogManager.getLogger(SigFoxDomain.class);
+	@Autowired
+	private DeviceDayAlgorithm deviceDayAlgorithm;
 	@Autowired
 	private Ph2MessagesMapper ph2MessagesMapper;
 
@@ -123,6 +126,11 @@ public class SigFoxDomain
 			lastTime = new Date();
 			lastTime.setTime(0);
 			}
+// * 受信時刻がある場合は1ミリ秒追加する
+		else
+			{
+			lastTime =deviceDayAlgorithm.addMilliscond(lastTime);
+			}
 // * 問合せを実行する
 		String nextUrl;
 
@@ -130,6 +138,7 @@ public class SigFoxDomain
 // * DB登録用のキャッシュを生成
 		MessagesCacher cache = new MessagesCacher(this.ph2MessagesMapper);
 // * SigFoxデータの最終取得する日以降のものを取得
+		Thread.sleep(1000);
 		SigFoxMessagesEntity data = api.getMessages(sigfoxId, lastTime.getTime());
 // * メッセージデータを生成し、キャッシュに登録
 		nextUrl = this.insertPh2Messages(sigfoxId, data, cache);

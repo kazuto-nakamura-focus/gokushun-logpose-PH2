@@ -53,16 +53,12 @@ public class TopDomain
 // * デバイスリストの取得
 		List<DataSummaryDTO> devices = this.topDomainMapper
 				.selectFieldDeviceList();
-// * 取得開始日付
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MONTH, -3);
-		Date date = cal.getTime();
 // * 各デバイス毎にセンサーデータを取得する
 		List<DataSummaryDTO> result = new ArrayList<>();
 		for (DataSummaryDTO item : devices)
 			{
 			List<FieldData> data = this.topDomainMapper
-					.selectFieldDataList(item.getDeviceId(), date);
+					.selectFieldDataList(item.getDeviceId());
 			if (data.size() > 0)
 				{
 				item.setDataList(data);
@@ -82,12 +78,8 @@ public class TopDomain
 	// --------------------------------------------------
 	public List<FieldDataWithSensor> getDeviceDataList(Long contentId)
 		{
-// * 取得開始日付
-		Calendar cal = Calendar.getInstance();
-		cal.set(Calendar.MONTH, -1);
-		Date date = cal.getTime();
 // * 各デバイス毎の同一タイプのセンサーデータを取得する。
-		return this.topDomainMapper.selectDeviceDataList(contentId, date);
+		return this.topDomainMapper.selectDeviceDataList(contentId);
 		}
 
 	// --------------------------------------------------

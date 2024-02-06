@@ -17,10 +17,10 @@ public interface TopDomainMapper
 	{
 	List<DataSummaryDTO> selectFieldDeviceList();
 	
-	List<FieldData> selectFieldDataList(@Param("deviceId") Long deviceId, @Param("date") Date date);
+	List<FieldData> selectFieldDataList(@Param("deviceId") Long deviceId);
 	List<RawData> selectRawData(@Param("startDate") Date startDate, 
 				@Param("endDate") Date endDate,@Param("deviceId") Long deviceId);
-	List<FieldDataWithSensor> selectDeviceDataList(@Param("contentId") Long contentId, @Param("date") Date date);
+	List<FieldDataWithSensor> selectDeviceDataList(@Param("contentId") Long contentId);
 
 	List<ModelTargetDTO> selectModelTargets();
 	

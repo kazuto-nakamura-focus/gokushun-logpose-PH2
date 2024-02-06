@@ -38,39 +38,30 @@
 		<result column="casted_at" property="castedAt"></result>
 		<result column="display_no" property="displayNo"></result>
 	</resultMap>
-	
 	<select id="selectFieldDataList" resultMap="FieldDTO">
 	SELECT
-	ph2_dashboard.content_id as id,
-		ph2_dashboard.value as value,
-		ph2_dashboard.casted_at as casted_at,
+		ph2_sensors.sensor_content_id as id,
+		ph2_raw_data.value as value,
+		ph2_raw_data.casted_at as casted_at,
 		ph2_sensors.name as name,
 		ph2_sensor_contents.unit as unit,
 		ph2_dashboard_sensors.display_no as display_no
 	FROM
-		ph2_dashboard
-	LEFT JOIN
-		ph2_dashboard_sensors ON ph2_dashboard.sensor_id = ph2_dashboard_sensors.sensor_id
+		ph2_headlines
 	JOIN
-  		ph2_sensors on ph2_dashboard.sensor_id = ph2_sensors."id"
+		ph2_raw_data on ph2_headlines.raw_data_id = ph2_raw_data.id
+  	JOIN
+  		ph2_sensors on ph2_raw_data.sensor_id = ph2_sensors.id
+	LEFT JOIN
+		ph2_dashboard_sensors ON ph2_raw_data.sensor_id = ph2_dashboard_sensors.sensor_id
   	JOIN
   		ph2_sensor_contents on ph2_sensors.sensor_content_id = ph2_sensor_contents.id
 	WHERE
-		ph2_dashboard.casted_at in(
-			select
-				Max(ph2_dashboard.casted_at)
-			FROM
-				ph2_dashboard
-			JOIN
-  				ph2_sensor_contents on ph2_dashboard.content_id = ph2_sensor_contents."id"
-  			WHERE
-  				ph2_dashboard.device_id = #{deviceId}
-  			)
-	and
-		ph2_dashboard.device_id = #{deviceId}
+		ph2_headlines.device_id = #{deviceId}
 	ORDER BY 
-		ph2_dashboard_sensors.display_no, ph2_dashboard.content_id
+		ph2_dashboard_sensors.display_no, ph2_sensor_contents.id
 	</select>
+
 	
 	<resultMap id="RawData" type="com.logpose.ph2.api.dto.rawData.RawData">
 		<result column="castedAt" property="castedAt"></result>
@@ -80,22 +71,22 @@
 	</resultMap>
 	<select id="selectRawData" resultMap="RawData">
 	SELECT
-		ph2_dashboard.casted_at as castedAt,
-		ph2_dashboard.sensor_id as sensorId,
-		ph2_dashboard.content_id as contentId,
-		ph2_dashboard.value as value
+		ph2_raw_data.casted_at as castedAt,
+		ph2_raw_data.sensor_id as sensorId,
+		ph2_raw_data.content_id as contentId,
+		ph2_raw_data.value as value
 	FROM
-		ph2_dashboard
+		ph2_raw_data
 	JOIN
-  		ph2_sensor_contents on ph2_dashboard.content_id = ph2_sensor_contents."id"
+		ph2_sensors on ph2_raw_data.sensor_id = ph2_sensors.id
 	WHERE
-		ph2_dashboard.casted_at  <![CDATA[>=]]>  #{startDate}
+		ph2_raw_data.casted_at  <![CDATA[>=]]>  #{startDate}
 	and
-		ph2_dashboard.casted_at  <![CDATA[<]]>  #{endDate}
+		ph2_raw_data.casted_at  <![CDATA[<]]>  #{endDate}
 	and
-		ph2_dashboard.device_id = #{deviceId}
+		ph2_sensors.device_id = #{deviceId}
 	order by 
-		ph2_dashboard.casted_at asc
+		ph2_raw_data.casted_at asc
 	</select>
 	
 	<resultMap id="FieldDataWithSensor"
@@ -110,37 +101,25 @@
 	</resultMap>
     <select id="selectDeviceDataList" resultMap="FieldDataWithSensor">
 	SELECT
-		ph2_devices."id" as id,
-		ph2_dashboard."value" as value,
-		ph2_dashboard.casted_at as casted_at,
-		ph2_devices."name" as name,
-		ph2_sensors.name as sensorName,
-		ph2_sensor_contents.unit as unit
+		ph2_devices."id" AS ID,
+		ph2_raw_data."value" AS "value",
+		ph2_raw_data.casted_at AS casted_at,
+		ph2_devices."name" AS NAME,
+		ph2_sensors.NAME AS sensorName,
+		ph2_sensor_contents.unit AS unit 
 	FROM
-		ph2_dashboard
-	JOIN ph2_sensors on ph2_dashboard.sensor_id = ph2_sensors.id
-	JOIN ph2_devices ON ph2_dashboard.device_id =ph2_devices."id"
-	JOIN (
-		SELECT
-			ph2_dashboard.device_id AS ID,
-			ph2_dashboard.content_id AS content_id,
-			MAX ( ph2_dashboard.casted_at ) AS casted_at
-		FROM
-			ph2_dashboard
-		WHERE
-			ph2_dashboard.content_id = #{contentId}
-		<!--AND ph2_dashboard.casted_at <![CDATA[>=]]> #{date}  -->
-		GROUP BY
-			ph2_dashboard.device_id, ph2_dashboard.content_id
-		) tmp 
-		ON ph2_dashboard.device_id = tmp."id" 
-			and ph2_dashboard.casted_at = tmp.casted_at
-			and ph2_dashboard.content_id = tmp.content_id
-	JOIN ph2_fields on ph2_devices.field_id = ph2_fields.id
-	JOIN
-  		ph2_sensor_contents on ph2_sensors.sensor_content_id = ph2_sensor_contents.id
+		ph2_headlines
+		JOIN ph2_devices ON ph2_headlines.device_id = ph2_devices."id"
+		JOIN ph2_fields ON ph2_devices.field_id = ph2_fields."id"
+		JOIN ph2_raw_data ON ph2_headlines.raw_data_id = ph2_raw_data."id"
+		JOIN ph2_sensors ON ph2_raw_data.sensor_id = ph2_sensors."id"
+		JOIN ph2_sensor_contents ON ph2_sensors.sensor_content_id = ph2_sensor_contents."id"
+	WHERE
+		ph2_sensor_contents.id = #{contentId}
 	ORDER BY
-		ph2_fields."name" , ph2_devices."name", ph2_sensors."name"
+		ph2_fields."name",
+		ph2_devices."name",
+		ph2_sensors."name"
 	</select>
 	
 	<resultMap id="ModelTargetDTO"

@@ -4,6 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.springframework.stereotype.Component;
+
 @Component
 public class DeviceDayAlgorithm
 	{
@@ -37,6 +38,22 @@ public class DeviceDayAlgorithm
 			}
 		return baseDate;
 		}
+
+	// --------------------------------------------------
+	/**
+	 *  日付けに対して1ミリ秒追加する(>=対応)
+	 * 
+	 * @param date 設定対象の日付
+	 */
+	// --------------------------------------------------
+	public Date addMilliscond(Date date)
+		{
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MILLISECOND, 1);
+		return cal.getTime();
+		}
+
 	// --------------------------------------------------
 	/**
 	 *  日付を00:00:00 000に設定する
@@ -51,6 +68,7 @@ public class DeviceDayAlgorithm
 		date.set(Calendar.SECOND, 0);
 		date.set(Calendar.MILLISECOND, 0);
 		}
+
 	// --------------------------------------------------
 	/**
 	 *  日付を00:00:00 000に設定する
@@ -63,6 +81,7 @@ public class DeviceDayAlgorithm
 		this.setTimeZero(date);
 		return date.getTime();
 		}
+
 	// --------------------------------------------------
 	/**
 	 *  日付を00:00:00 000に設定する
@@ -76,6 +95,7 @@ public class DeviceDayAlgorithm
 		cal.setTime(date);
 		return getTimeZero(cal);
 		}
+
 	// --------------------------------------------------
 	/**
 	 *  当日の最初
@@ -89,6 +109,7 @@ public class DeviceDayAlgorithm
 		this.setTimeZero(deviceDay);
 		return deviceDay.getTime();
 		}
+
 	// --------------------------------------------------
 	/**
 	 *  前日の取得
