@@ -11,7 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.dao.db.entity.Ph2HeadLinesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2HeadLinesEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2HeadLinesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 
@@ -34,9 +33,7 @@ public class S4HeadLineLoaderService
 	public void createHealines(Long deviceId, Date lastTime)
 		{
 // * RawDataから最後の更新日付のデータを取得する
-		Ph2RawDataEntityExample ex = new Ph2RawDataEntityExample();
-		ex.createCriteria().andCastedAtEqualTo(lastTime);
-		List<Ph2RawDataEntity> entities = this.rawDataMapper.selectByExample(ex);
+		List<Ph2RawDataEntity> entities = this.rawDataMapper.selectByDevice(deviceId, lastTime);
 		
 		Ph2HeadLinesEntityExample hdex = new Ph2HeadLinesEntityExample();
 		hdex.createCriteria().andDeviceIdEqualTo(deviceId);

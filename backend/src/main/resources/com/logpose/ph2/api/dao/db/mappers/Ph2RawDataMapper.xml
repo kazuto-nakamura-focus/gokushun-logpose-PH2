@@ -304,4 +304,21 @@
 			#{item.value,jdbcType=VARCHAR} )
 		</foreach>
 	</insert>
+	
+	<select id="selectByDevice"  resultMap="BaseResultMap">
+		SELECT
+			ph2_raw_data.id as id,
+			ph2_raw_data.sensor_id as sensor_id,
+			ph2_raw_data.casted_at as casted_at,
+			ph2_raw_data.content_id as content_id,
+			ph2_raw_data.value as value
+		FROM
+			ph2_raw_data
+		JOIN
+			ph2_sensors on ph2_raw_data.sensor_id = ph2_sensors.id
+		WHERE
+			ph2_raw_data.casted_at = #{castedAt}
+			and
+			ph2_sensors.device_id = #{deviceId}
+	</select>
 </mapper>

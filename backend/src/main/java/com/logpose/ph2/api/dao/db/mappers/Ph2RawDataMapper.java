@@ -73,4 +73,6 @@ public interface Ph2RawDataMapper {
 	int multiRowInsert(@Param("targets") List<Ph2RawDataEntity> targets);
 	
 	int deleteByDevice(@Param("deviceId") Long deviceId);
+	
+	List<Ph2RawDataEntity> selectByDevice(@Param("deviceId") Long deviceId, @Param("castedAt") Date castedAt);
 }
