@@ -81,6 +81,10 @@ public class S3RawDataLoaderService
 					op_start_date = firstDate;
 					}
 				}
+			else
+				{
+				op_start_date = firstDate;
+				}
 			}
 // * メッセージデータの抽出終了日
 		Date op_end_date = device.getOpEnd();
