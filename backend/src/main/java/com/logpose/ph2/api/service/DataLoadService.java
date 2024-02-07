@@ -147,15 +147,14 @@ public class DataLoadService
 			return;
 			}
 		Long deviceId = ldc.getDeviceId();
+
+		LOG.info("デバイスデータのローディングを開始します。:" + deviceId);
+		if (false == this.statusDomain.setDataOnLoad(deviceId))
+			{
+			LOG.info("デバイスデータがロック中なので、処理を終了します。:" + deviceId);
+			}
 		try
 			{
-			LOG.info("デバイスデータのローディングを開始します。:" + deviceId);
-			while (true)
-				{
-				if (this.statusDomain.setDataOnLoad(deviceId)) break;
-				LOG.info("デバイスデータのロック解除を待機します。:" + deviceId);
-				Thread.sleep(10000);
-				}
 // * 指定されたデバイスに対してSigFoxのデータを取り込む
 			try
 				{
