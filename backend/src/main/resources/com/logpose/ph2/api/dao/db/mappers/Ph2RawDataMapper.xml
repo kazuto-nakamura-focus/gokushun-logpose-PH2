@@ -307,7 +307,7 @@
 	
 	<select id="selectByDevice"  resultMap="BaseResultMap">
 		SELECT
-			ph2_raw_data.id as id,
+			distinct
 			ph2_raw_data.sensor_id as sensor_id,
 			ph2_raw_data.casted_at as casted_at,
 			ph2_raw_data.content_id as content_id,
