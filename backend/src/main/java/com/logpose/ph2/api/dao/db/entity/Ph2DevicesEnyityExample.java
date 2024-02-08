@@ -532,6 +532,78 @@ public class Ph2DevicesEnyityExample {
 			return (Criteria) this;
 			}
 
+		public Criteria andPlacedOnIsNull()
+			{
+			addCriterion("placed_on is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnIsNotNull()
+			{
+			addCriterion("placed_on is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("placed_on =", value, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnNotEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("placed_on <>", value, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnGreaterThan(Date value)
+			{
+			addCriterionForJDBCDate("placed_on >", value, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnGreaterThanOrEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("placed_on >=", value, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnLessThan(Date value)
+			{
+			addCriterionForJDBCDate("placed_on <", value, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnLessThanOrEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("placed_on <=", value, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnIn(List<Date> values)
+			{
+			addCriterionForJDBCDate("placed_on in", values, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnNotIn(List<Date> values)
+			{
+			addCriterionForJDBCDate("placed_on not in", values, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnBetween(Date value1, Date value2)
+			{
+			addCriterionForJDBCDate("placed_on between", value1, value2, "placedOn");
+			return (Criteria) this;
+			}
+
+		public Criteria andPlacedOnNotBetween(Date value1, Date value2)
+			{
+			addCriterionForJDBCDate("placed_on not between", value1, value2, "placedOn");
+			return (Criteria) this;
+			}
+
 		public Criteria andClientIsNull()
 			{
 			addCriterion("client is null");
@@ -1240,61 +1312,61 @@ public class Ph2DevicesEnyityExample {
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusEqualTo(Short value)
+		public Criteria andDataStatusEqualTo(Integer value)
 			{
 			addCriterion("data_status =", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusNotEqualTo(Short value)
+		public Criteria andDataStatusNotEqualTo(Integer value)
 			{
 			addCriterion("data_status <>", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusGreaterThan(Short value)
+		public Criteria andDataStatusGreaterThan(Integer value)
 			{
 			addCriterion("data_status >", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusGreaterThanOrEqualTo(Short value)
+		public Criteria andDataStatusGreaterThanOrEqualTo(Integer value)
 			{
 			addCriterion("data_status >=", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusLessThan(Short value)
+		public Criteria andDataStatusLessThan(Integer value)
 			{
 			addCriterion("data_status <", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusLessThanOrEqualTo(Short value)
+		public Criteria andDataStatusLessThanOrEqualTo(Integer value)
 			{
 			addCriterion("data_status <=", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusIn(List<Short> values)
+		public Criteria andDataStatusIn(List<Integer> values)
 			{
 			addCriterion("data_status in", values, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusNotIn(List<Short> values)
+		public Criteria andDataStatusNotIn(List<Integer> values)
 			{
 			addCriterion("data_status not in", values, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusBetween(Short value1, Short value2)
+		public Criteria andDataStatusBetween(Integer value1, Integer value2)
 			{
 			addCriterion("data_status between", value1, value2, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusNotBetween(Short value1, Short value2)
+		public Criteria andDataStatusNotBetween(Integer value1, Integer value2)
 			{
 			addCriterion("data_status not between", value1, value2, "dataStatus");
 			return (Criteria) this;
