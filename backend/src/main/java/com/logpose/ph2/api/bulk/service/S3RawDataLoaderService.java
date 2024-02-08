@@ -29,7 +29,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
 /**
- * 
+ * Sigfoxのメッセージテーブルから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
  */
 @Service
 public class S3RawDataLoaderService
@@ -53,6 +53,7 @@ public class S3RawDataLoaderService
 	private Ph2BaseDataMapper ph2BaseDataMapper;
 	@Autowired
 	private Ph2InsolationDataMapper ph2InsolationDataMapper;
+
 	// ===============================================
 	// 公開関数群
 	// ===============================================
@@ -80,12 +81,12 @@ public class S3RawDataLoaderService
 		Date op_start_date = device.getOpStart();
 		// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
 		Date firstDate = coordinator.getLastHadledDate();
-		if(null !=firstDate)
+		if (null != firstDate)
 			{
-			firstDate =deviceDayAlgorithm.addMilliscond(firstDate);
-			if(null != op_start_date)
+			firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
+			if (null != op_start_date)
 				{
-				if(op_start_date.getTime() < firstDate.getTime())
+				if (op_start_date.getTime() < firstDate.getTime())
 					{
 					op_start_date = firstDate;
 					}
@@ -114,6 +115,7 @@ public class S3RawDataLoaderService
 			return cache.getLastCastedDate();
 			}
 		}
+
 	// --------------------------------------------------
 	/**
 	 * メッセージから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
