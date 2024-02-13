@@ -272,7 +272,6 @@ export default {
           singleClickEdit: true,
           headerName: "サイズ",
           resizable: true,
-          editable: true,
           width: 100,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
@@ -282,6 +281,16 @@ export default {
           },
           refData: this.useDeviceMasters.sensorSizes,
           valueListGap: 0,
+          editable: (params) =>
+            params.data.displayId == "4" || params.data.displayId == null,
+          cellStyle: (params) => {
+            if (
+              !(params.data.displayId == null || params.data.displayId == "4")
+            ) {
+              return { backgroundColor: "#aaa" };
+            }
+            return { backgroundColor: "rgba(0, 0, 0, 0)" };
+          },
         },
         {
           field: "kst",
@@ -299,7 +308,7 @@ export default {
             ) {
               return { backgroundColor: "#aaa" };
             }
-            //  return null;
+            return { backgroundColor: "rgba(0, 0, 0, 0)" };
           },
         },
         {
@@ -311,13 +320,13 @@ export default {
           width: 80,
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
-          cellStyle: (params) => {
+            cellStyle: (params) => {
             if (
               !(params.data.displayId == null || params.data.displayId == "4")
             ) {
               return { backgroundColor: "#aaa" };
             }
-            //  return null;
+            return { backgroundColor: "rgba(0, 0, 0, 0)" };
           },
         },
         {
@@ -401,19 +410,27 @@ export default {
     // セルの値が変化した場合
     //* ============================================
     onColumnValueChanged: function (param) {
+      //既存のデータ（ノード）を格納
+      const node = param?.node;
+      
       //* 樹液流の場合
+      //Display IDが4以外（「樹液流」以外」）の場合、設定されているsizeId・kst・stemDiameterをNullに設定
+      //Null設定することで、セルを更新する際に空欄になる。
       if ("4" != param.data.displayId) {
-        console.log("***");
-        console.log(this.gridOptions.columnDefs[5]);
-        this.gridOptions.columnDefs[5].cellStyle = {
-          "background-color": "#aaa",
-        };
-        this.gridOptions.api.refreshCells();
+        const nodeData = node?.data;
+        nodeData.sizeId = null;
+        nodeData.kst = null;
+        nodeData.stemDiameter = null;
       }
-      /*param.data.kst.editable = (4 == param.data.displayId);
-      param.data.kst.cellStyle = (4 == param.data.displayI) ? null: "#aaa";
-      param.data.stemDiameter.editable = 4 == param.data.displayId;
-      param.data.stemDiameter.cellStyle = (4 == param.data.displayI) ? null: "#aaa"*/
+      
+      //該当行の特定カラムを再度更新する。
+      //更新するセルのスタイルは、columnDefで定義したCellStyleを基づき、スタイルを更新する。
+      const refreshParams = {
+        force: true,
+        columns: ["sizeId", "kst", "stemDiameter",],
+        rowNodes: [node],
+      }
+      param.api.refreshCells(refreshParams);
     },
     update: function () {
       const message =
@@ -422,11 +439,14 @@ export default {
           : "登録してもよろしいですか？";
       const deviceId = this.mode == "update" ? this.deviceInfoData.id : null;
       if (confirm(message)) {
-        console.log("updateRowData", this.rowData);
+        const rowData = [];
+        this.gridApi.forEachNode(node => {rowData.push(node.data)});
+        
         // センサー情報を追加する
         let sensorItems = [];
         // 画面のセンサー情報のリストを取り出す
-        for (const item of this.rowData) {
+        for (const item of rowData) {
+          console.log("item", item);
           if (
             null != item.displayId &&
             null != item.name &&
@@ -435,6 +455,8 @@ export default {
             sensorItems.push(item);
           }
         }
+        console.log("sensorItems");
+        console.log(sensorItems);
         const data = {
           //デバイス情報
           id: deviceId,
@@ -556,16 +578,24 @@ export default {
     },
 
     //row追加・削除
+    //this.rowDataを利用せず、リアルタイムでAggridテーブルからデータを取得して、追加・削除制御を行う。
     onCellClicked(params) {
+      const gridApi = params?.api;
+      const nodes = [];
+      gridApi?.forEachNode((node) => nodes.push(node));
       if (params.column.colId === "remove") {
-        this.rowData = this.rowData.filter((item) => item.id != params.data.id);
         params.api.applyTransaction({
-          remove: [params.node.data],
+          remove: [params.data],
         });
-      }
-      if (params.column.colId === "add") {
-        var row = Object.assign({}, this.skelton);
-        this.rowData.push(row);
+
+        if(nodes.length == 1){
+          let row = Object.assign({}, this.skelton);
+          params.api.applyTransaction({
+            add: [row],
+          });
+        }
+      }else if (params.column.colId === "add") {
+        let row = Object.assign({}, this.skelton);
         params.api.applyTransaction({
           add: [row],
         });
