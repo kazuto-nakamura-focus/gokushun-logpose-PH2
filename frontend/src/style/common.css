@@ -1,9 +1,9 @@
 /* ---------------------------------------
  トップ画面タイトル
 ------------------------------------------*/
-.theme--light.v-btn.v-btn--icon {
+/* .theme--light.v-btn.v-btn--icon {
   color:#FFF;
-}
+} */
 
 .theme--light.v-app-bar.v-toolbar.v-sheet {
   background-color: rgb(0, 180, 40);

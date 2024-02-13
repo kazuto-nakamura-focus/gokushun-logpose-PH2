@@ -210,7 +210,7 @@ export default {
           let i = 0;
           this.masterRawDataHeader.push({
             text: "日時",
-            value: "col" + (i++),
+            value: "col" + i++,
             align: "center",
             sortable: false,
           });
@@ -218,7 +218,7 @@ export default {
           for (const id of header) {
             const item = {
               text: this.headerMap[id],
-              value: "col" + (i++),
+              value: "col" + i++,
               align: "center",
               sortable: false,
             };
@@ -227,16 +227,15 @@ export default {
           for (const items of rawData.data) {
             let value = {};
             let i = 0;
-            for (const item of items){
-              let itemValue =item;
-              if(i != 0 ){
+            for (const item of items) {
+              let itemValue = item;
+              if (i != 0) {
                 itemValue = this.PRIVATE.getValue(itemValue);
               }
-              value["col" + i] = new Object;
+              value["col" + i] = new Object();
               value["col" + i] = itemValue;
               i++;
             }
-            console.log(value);
             this.masterRawData.push(value);
           }
         })

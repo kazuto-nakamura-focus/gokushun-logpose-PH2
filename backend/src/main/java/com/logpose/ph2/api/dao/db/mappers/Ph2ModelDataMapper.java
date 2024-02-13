@@ -92,4 +92,5 @@ public interface Ph2ModelDataMapper {
 	
 	List<LeafModelDataEntity> selectLeafModelDataByType(@Param("deviceId") Long deviceId, @Param("year") Short year);
 
+	int deleteByDevice(@Param("deviceId") Long deviceId);
 }

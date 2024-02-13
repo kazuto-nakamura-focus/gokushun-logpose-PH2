@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
-import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
@@ -23,8 +22,6 @@ public class BaseDataGenerator
 	// ===============================================
 	@Autowired
 	Ph2RelBaseDataMapper ph2RelBaseDataMapper;
-	@Autowired
-	Ph2BaseDataMapper ph2BaseDataMapper;
 	@Autowired
 	Ph2RawDataMapper dashboardMapper;
 	@Autowired

@@ -11,7 +11,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.algorythm.DailyDataAlgorythm;
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.configration.DefaultFtageValues;
 import com.logpose.ph2.api.configration.DefaultGrowthParameters;
@@ -24,6 +23,7 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetGrowthMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
@@ -46,13 +46,13 @@ public class GrowthDomain extends GraphDomain
 	@Autowired
 	private DefaultFtageValues fstageValues;
 	@Autowired
-	private DailyDataAlgorythm dailyDataAlgorythm;
-	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
 	@Autowired
 	private Ph2RealGrowthFStageMapper ph2RealGrowthFStageMapper;
 	@Autowired
 	private Ph2ParamsetGrowthMapper ph2ParamsetGrowthMapper;
+	@Autowired
+	private GrowthDomainMapper growthDomainMapper;
 	/*
 	 * @Autowired
 	 * private Ph2FDataMapper ph2FDataMapper;
@@ -176,19 +176,19 @@ public class GrowthDomain extends GraphDomain
 			Ph2ParamsetGrowthEntity param)
 			throws ParseException
 		{
-		// * デバイスID、年度からFStage情報を取得
+// * デバイスID、年度からFStage情報を取得
 		List<Ph2RealGrowthFStageEntity> fstageInfo = this
 				.getFStageData(deviceId, year);
-		// * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
-		List<DailyBaseDataDTO> realDayData = this.dailyDataAlgorythm
-				.getDailyBaseData(deviceId, year);
-		// * 計算処理を実行
+// * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
+		List<DailyBaseDataDTO> realDayData = this.growthDomainMapper
+				.selectDailyData(deviceId, year, null);
+// * 計算処理を実行
 		if (0 != realDayData.size())
 			{
 			GrowthGraphDataModel modelData = new GrowthGraphDataModel();
 			modelData.calculateFvalues(realDayData, param, fstageInfo,
 					this.fstageValues.getSprout());
-			// * グラフデータの生成
+// * グラフデータの生成
 			return modelData.toGraphData();
 			}
 		else return null;

@@ -43,7 +43,32 @@
 		ORDER BY dd.date asc
 	</select>
 	
-
+	<select id="selectDailyData" resultMap="DailyBaseDataDTO">
+		SELECT
+		dd.id as dayId,
+		dd.lapse_day as lapse_day,
+		dd.date as date,
+		db.tm as tm,
+		db.sun_time as sun_time,
+		db.average as average,
+		db.cdd as cdd,
+		db.par as par,
+		dd.has_real as isReal
+		FROM
+		ph2_device_day dd
+		JOIN
+		ph2_daily_base_data db on dd.id=db.day_id
+		WHERE
+		dd.device_id = #{deviceId}
+		AND
+	 	<if test="date != null">
+		dd.date <![CDATA[>=]]> #{date}
+		AND
+		</if>
+		dd.year = #{year}
+		ORDER BY dd.date asc
+	</select>
+	
 	<resultMap id="FDataEntity"
 		type="com.logpose.ph2.api.dao.db.entity.joined.FDataEntity">
 		<result column="date" property="date"></result>

@@ -1,7 +1,6 @@
 package com.logpose.ph2.api.bulk.service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -34,14 +33,26 @@ public class S7ModelDataApplyrService
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public void doService(Long deviceId, List<Ph2DeviceDayEntity> deviceDays) throws ParseException
+	public void doService(Long deviceId, List<Ph2DeviceDayEntity> deviceDays) throws Exception
 		{
 		LOG.info("モデルデータの作成を開始します。", deviceId);
-		// * 年度の開始日まで移動
-		List<Ph2DeviceDayEntity> tmp = new ArrayList<>();
+		short year = 0;
 		for (Ph2DeviceDayEntity entity : deviceDays)
 			{
-			this.modelDataDomain.doService(deviceId, entity.getYear(), entity.getDate());
+// * 年度替わりの場合
+			if (entity.getYear().shortValue() != year)
+				{
+				year = entity.getYear().shortValue();
+// * 経過日が１で、実データがある場合
+				if (entity.getLapseDay().shortValue() == 1)
+					{
+					if(entity.getHasReal())
+						{
+						LOG.info(year + "年度モデルデータの作成。", deviceId);
+						this.modelDataDomain.doService(deviceId, entity.getYear(), entity.getDate());
+						}
+					}
+				}
 			}
 		LOG.info("モデルデータの作成が終了しました。", deviceId);
 		}

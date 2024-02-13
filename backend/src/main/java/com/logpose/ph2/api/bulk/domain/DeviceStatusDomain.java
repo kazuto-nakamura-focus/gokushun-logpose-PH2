@@ -35,7 +35,7 @@ public class DeviceStatusDomain
 		Ph2DevicesEnyity entity = this.ph2DevicesMapper.selectByPrimaryKey(deviceId);
 		int status = entity.getDataStatus();
 		status = (status | 1)  -1;
-		this.setDataStatus(deviceId, (short) status);
+		this.setDataStatus(deviceId, status);
 		}
 	
 	// --------------------------------------------------
@@ -48,11 +48,11 @@ public class DeviceStatusDomain
 	public boolean setDataOnLoad(Long deviceId)
 		{
 		Ph2DevicesEnyity entity = this.ph2DevicesMapper.selectByPrimaryKey(deviceId);
-		Short status = entity.getDataStatus();
+		Integer status = entity.getDataStatus();
 		if(null == status) status = 0;
 		if((status.intValue() & 1) == 0 )
 			{
-			this.setDataStatus(deviceId, (short) 1);
+			this.setDataStatus(deviceId, 1);
 			return true;
 			}
 		else return false;
@@ -66,7 +66,7 @@ public class DeviceStatusDomain
 	@Transactional(rollbackFor = Exception.class)
 	public void setDataInitialized(Long deviceId)
 		{
-		this.setDataStatus(deviceId, (short) 3);
+		this.setDataStatus(deviceId, 3);
 		}
 	// --------------------------------------------------
 	/**
@@ -77,12 +77,12 @@ public class DeviceStatusDomain
 	@Transactional(rollbackFor = Exception.class)
 	public void setRawDataLoaded(Long deviceId)
 		{
-		this.setDataStatus(deviceId, (short) 7);
+		this.setDataStatus(deviceId, 7);
 		}
 	// ===============================================
 	// 保護関数群
 	// ===============================================
-	public void setDataStatus(Long deviceId, Short status)
+	public void setDataStatus(Long deviceId, Integer status)
 		{
 		Ph2DevicesEnyity entity = this.ph2DevicesMapper.selectByPrimaryKey(deviceId);
 		entity.setDataStatus(status);

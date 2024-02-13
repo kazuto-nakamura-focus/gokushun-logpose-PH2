@@ -72,8 +72,8 @@ public class DeviceDayDomain
 			Ph2DeviceDayEntity ddentity = days.get(0);
 			// * ---END---
 			// 該当データがない場合は終了
-			if (days.size() == 0)
-				break;
+//			if (days.size() == 0)
+//				break;
 // * デバイス日付IDに対応する参照モデルデータを取得する
 			Ph2ModelDataEntityExample exm = new Ph2ModelDataEntityExample();
 			exm.createCriteria().andDayIdEqualTo(ddentity.getId());

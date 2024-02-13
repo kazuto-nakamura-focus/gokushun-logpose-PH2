@@ -44,13 +44,14 @@
 			</table> <table tableName="ph2_base_data" domainObjectName="Ph2BaseDataEntity" 
 			mapperName="Ph2BaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table>
+			</table>-->
 			 <table tableName="ph2_daily_base_data"
 				domainObjectName="Ph2DailyBaseDataEntity" 
 				mapperName="Ph2DailyBaseDataMapper" 
 				enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
+			<!--
 			<table tableName="ph2_dashboard_display"
 				domainObjectName="Ph2DashBoardDisplayEntity" 
 				mapperName="Ph2DashBoardDisplayMapper" 
@@ -93,7 +94,7 @@
 			domainObjectName="Ph2BrandMasterEntity" mapperName="Ph2BrandMasterMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> 
-			-->
+			
 		<table tableName="ph2_devices"
 			domainObjectName="Ph2DevicesEnyity" mapperName="Ph2DevicesMapper"
 			enableInsert="true" enableSelectByPrimaryKey="true"
@@ -104,6 +105,7 @@
 			mapperName="Ph2SensorsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 		</table> 
+	-->
  	<!-- 
 		<table tableName="ph2_sensor_contents" domainObjectName="Ph2SensorContentsEntity" 
 			mapperName="Ph2SensorContentsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
