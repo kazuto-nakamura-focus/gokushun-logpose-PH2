@@ -8,12 +8,12 @@
         @delete="deleteItem"
       />
     </div>
-    <wait-dialog ref="wait" />
+    <!-- <wait-dialog ref="wait" /> -->
   </div>
 </template>
 <script>
 import Ph2GraphComponent from "./Ph2GraphComponent.vue";
-import WaitDialog from "@/components/dialog/WaitDialog.vue";
+// import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 export default {
   //* ============================================
@@ -21,7 +21,7 @@ export default {
   //* ============================================
   components: {
     Ph2GraphComponent,
-    WaitDialog,
+    // WaitDialog,
   },
   //* ============================================
   // データ
@@ -46,13 +46,11 @@ export default {
         isMultiple: isMultiple, // 単一グラフか複数グラフか
         name: name, // グラフ線の名前
       };
-      this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
-      setTimeout(() => this.displayGraph(item), 10);
+      this.displayGraph(item);
     },
 
     displayGraph(item) {
       this.graphList.push(item);
-      this.$refs.wait.finish();
     },
     //* ============================================
     // グラフアイテムの削除

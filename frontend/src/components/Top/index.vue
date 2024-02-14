@@ -132,11 +132,11 @@ export default {
         }
         //console.log(this.sourceData);
         this.$store.dispatch("changeSourceData", this.sourceData);
-        this.$refs.wait.finish();
       })
       .catch((error) => {
         //失敗時
         console.log(error);
+      }).finally(()=>{
         this.$refs.wait.finish();
       });
   },
