@@ -71,7 +71,6 @@ public class DataLoadService
 		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
 		for (Ph2DevicesEnyity device : devices)
 			{
-			if(device.getId().intValue() != 53) continue;
 			try
 				{
 // * コーディネーターを生成する
