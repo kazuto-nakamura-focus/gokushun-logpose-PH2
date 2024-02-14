@@ -69,6 +69,35 @@
               v-model="deviceInfoData.baseDateShort"
             ></v-text-field>
 
+            <div>運用開始日</div>
+
+            <v-text-field
+              dense
+              hide-details="auto"
+              outlined
+              placeholder="YYYY/MM/DD"
+              v-model="deviceInfoData.opStartShort"
+            ></v-text-field>
+
+            <div>引継ぎデバイスID</div>
+
+            <v-text-field
+              dense
+              hide-details="auto"
+              outlined
+              v-model="deviceInfoData.prevDeviceId"
+            ></v-text-field>
+
+            <div>運用終了日</div>
+
+            <v-text-field
+              dense
+              hide-details="auto"
+              outlined
+              placeholder="YYYY/MM/DD"
+              v-model="deviceInfoData.opEndShort"
+            ></v-text-field>
+
             <div>タイムゾーン</div>
             <!--<v-select
               v-model="deviceInfoData.timeZone"
@@ -320,7 +349,7 @@ export default {
           width: 80,
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
-            cellStyle: (params) => {
+          cellStyle: (params) => {
             if (
               !(params.data.displayId == null || params.data.displayId == "4")
             ) {
@@ -412,7 +441,7 @@ export default {
     onColumnValueChanged: function (param) {
       //既存のデータ（ノード）を格納
       const node = param?.node;
-      
+
       //* 樹液流の場合
       //Display IDが4以外（「樹液流」以外」）の場合、設定されているsizeId・kst・stemDiameterをNullに設定
       //Null設定することで、セルを更新する際に空欄になる。
@@ -422,14 +451,14 @@ export default {
         nodeData.kst = null;
         nodeData.stemDiameter = null;
       }
-      
+
       //該当行の特定カラムを再度更新する。
       //更新するセルのスタイルは、columnDefで定義したCellStyleを基づき、スタイルを更新する。
       const refreshParams = {
         force: true,
-        columns: ["sizeId", "kst", "stemDiameter",],
+        columns: ["sizeId", "kst", "stemDiameter"],
         rowNodes: [node],
-      }
+      };
       param.api.refreshCells(refreshParams);
     },
     update: function () {
@@ -440,8 +469,10 @@ export default {
       const deviceId = this.mode == "update" ? this.deviceInfoData.id : null;
       if (confirm(message)) {
         const rowData = [];
-        this.gridApi.forEachNode(node => {rowData.push(node.data)});
-        
+        this.gridApi.forEachNode((node) => {
+          rowData.push(node.data);
+        });
+
         // センサー情報を追加する
         let sensorItems = [];
         // 画面のセンサー情報のリストを取り出す
@@ -466,6 +497,9 @@ export default {
           sigFoxDeviceId: this.deviceInfoData.sigFoxDeviceId,
           baseDateShort: this.deviceInfoData.baseDateShort,
           timeZone: this.deviceInfoData.timeZone,
+          prevDeviceId: this.deviceInfoData.prevDeviceId,
+          opStartShort: this.deviceInfoData.opStartShort,
+          opEndShort: this.deviceInfoData.opEndShort,
           //センサー情報
           sensorItems: sensorItems,
         };
@@ -588,13 +622,13 @@ export default {
           remove: [params.data],
         });
 
-        if(nodes.length == 1){
+        if (nodes.length == 1) {
           let row = Object.assign({}, this.skelton);
           params.api.applyTransaction({
             add: [row],
           });
         }
-      }else if (params.column.colId === "add") {
+      } else if (params.column.colId === "add") {
         let row = Object.assign({}, this.skelton);
         params.api.applyTransaction({
           add: [row],
