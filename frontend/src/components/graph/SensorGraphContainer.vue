@@ -14,6 +14,7 @@
         ></vue-loading>
       </div>
     </div>
+    <wait-dialog ref="wait" />
   </v-app>
 </template>
   
@@ -22,6 +23,8 @@ import { SensorChart } from "@/lib/graph/ApexCharts/SensorChart.js";
 import Ph2GraphArea from "./Ph2GraphArea.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
+
+import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 export default {
   data() {
@@ -50,6 +53,7 @@ export default {
   components: {
     Ph2GraphArea,
     VueLoading,
+    WaitDialog,
   },
   methods: {
     //* --------------------------------------------
@@ -64,6 +68,7 @@ export default {
       );
     },
     setSonsorData(titlePaths, contentId, sensorId, startDate, endDate, interval, name, title) {
+      this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
       useSensoreData(sensorId, startDate, endDate, interval)
         .then((response) => {
           // 成功時
@@ -89,6 +94,8 @@ export default {
         .catch((error) => {
           //失敗時
           console.log(error);
+        }).finally(()=>{
+          this.$refs.wait.finish();
         });
     },
   },

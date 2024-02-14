@@ -2,6 +2,7 @@
   <v-app>
     <v-container>
       <Ph2GraphArea ref="chr" />
+      <wait-dialog ref="wait" />
     </v-container>
   </v-app>
 </template>
@@ -15,6 +16,8 @@ import {
   useLeafGraphAreaByParamSet,
   usePhotosynthesisGraphByParamSet,
 } from "@/api/TopStateGrowth";
+
+import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 export default {
   data() {
@@ -48,6 +51,7 @@ export default {
   },
   components: {
     Ph2GraphArea,
+    WaitDialog,
   },
   methods: {
     //* --------------------------------------------
@@ -75,6 +79,7 @@ export default {
         this.selectedItem.year;
       this.modelId = this.selectedItem.modelId;
       if (this.modelId == 1) {
+        this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         useModelData(
           selectedItems.selectedDevice.id,
           selectedItems.selectedYear.id
@@ -103,8 +108,11 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
+          }).finally(()=>{
+            this.$refs.wait.finish();
           });
       } else if (this.modelId == 2) {
+        this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         useLeafGraphAreaByParamSet(
           selectedItems.selectedDevice.id,
           selectedItems.selectedYear.id
@@ -164,8 +172,11 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
+          }).finally(()=>{
+            this.$refs.wait.finish();
           });
       } else if (this.modelId == 3) {
+        this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         usePhotosynthesisGraphByParamSet(
           selectedItems.selectedDevice.id,
           selectedItems.selectedYear.id
@@ -204,6 +215,8 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
+          }).finally(()=>{
+            this.$refs.wait.finish();
           });
       }
     },
