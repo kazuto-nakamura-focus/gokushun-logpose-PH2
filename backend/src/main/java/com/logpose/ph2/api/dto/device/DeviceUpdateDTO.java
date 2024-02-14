@@ -24,6 +24,12 @@ public class DeviceUpdateDTO extends Label
 	private String timeZone;
 	// SigFox device id
 	private String sigFoxDeviceId;
+	// * 引継ぎ元デバイス
+	private Long prevDeviceId;
+	// * 運用開始日
+	private String opStartShort;
+	// * 運用終了日
+	private String opEndShort;
 	
 	private List<SensorUnitUpdate> sensorItems;
 	}

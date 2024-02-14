@@ -3,6 +3,7 @@
 <mapper
 	namespace="com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper">
 
+<!-- ************************************************************************** -->
 	<resultMap id="DeviceInfo"
 		type="com.logpose.ph2.api.dto.element.DeviceInfo">
 		<result column="id" property="id"></result>
@@ -24,7 +25,7 @@
 		ORDER BY name DESC
 	</select>
 
-	<!-- ************************************************************************** -->
+<!-- ************************************************************************** -->
 	<resultMap id="DeviceInfoDTO"
 		type="com.logpose.ph2.api.dto.DeviceInfoDTO">
 		<result column="id" property="id"></result>
@@ -51,7 +52,7 @@
 		ORDER BY name DESC
 	</select>
 	
-		<!-- ************************************************************************** -->
+<!-- ************************************************************************** -->
 	<resultMap id="DeviceDetailDTO"
 		type="com.logpose.ph2.api.dto.device.DeviceDetailDTO">
 		<result column="id" property="id"></result>
@@ -63,6 +64,9 @@
 		<result column="brand" property="brand"></result>
 		<result column="registeredDate" property="registeredDate"></result>
 		<result column="sigFoxDeviceId" property="sigFoxDeviceId"></result>
+		<result column="prevDeviceId" property="prevDeviceId"></result>
+		<result column="opStart" property="opStart"></result>
+		<result column="opEnd" property="opEnd"></result>		
 	</resultMap>
 	
 	<select id="selectDeviceDetail" resultMap="DeviceDetailDTO">
@@ -75,7 +79,10 @@
 		d.brand as brand,
 		d.tz as timeZone,
 		to_char(d.created_at, 'yyyy/mm/dd') as registeredDate,
-		d.sigfox_device_id as sigFoxDeviceId
+		d.sigfox_device_id as sigFoxDeviceId,
+		d.previous_device_id as  prevDeviceId,
+		d.op_start as opStart,
+		d.op_end as opEnd
 		FROM
 		ph2_devices d
 		JOIN

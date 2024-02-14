@@ -616,6 +616,78 @@ public class Ph2DailyBaseDataEntityExample {
 			addCriterion("sun_time not between", value1, value2, "sunTime");
 			return (Criteria) this;
 			}
+
+		public Criteria andRawCddIsNull()
+			{
+			addCriterion("raw_cdd is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddIsNotNull()
+			{
+			addCriterion("raw_cdd is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddEqualTo(Double value)
+			{
+			addCriterion("raw_cdd =", value, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddNotEqualTo(Double value)
+			{
+			addCriterion("raw_cdd <>", value, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddGreaterThan(Double value)
+			{
+			addCriterion("raw_cdd >", value, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddGreaterThanOrEqualTo(Double value)
+			{
+			addCriterion("raw_cdd >=", value, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddLessThan(Double value)
+			{
+			addCriterion("raw_cdd <", value, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddLessThanOrEqualTo(Double value)
+			{
+			addCriterion("raw_cdd <=", value, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddIn(List<Double> values)
+			{
+			addCriterion("raw_cdd in", values, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddNotIn(List<Double> values)
+			{
+			addCriterion("raw_cdd not in", values, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddBetween(Double value1, Double value2)
+			{
+			addCriterion("raw_cdd between", value1, value2, "rawCdd");
+			return (Criteria) this;
+			}
+
+		public Criteria andRawCddNotBetween(Double value1, Double value2)
+			{
+			addCriterion("raw_cdd not between", value1, value2, "rawCdd");
+			return (Criteria) this;
+			}
 		}
 
 	/**

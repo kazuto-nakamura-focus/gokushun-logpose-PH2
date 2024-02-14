@@ -50,6 +50,10 @@ public class MessagesCacher
 	// -----------------------------------------------------------------
 	public void flush()
 		{
-		if(this.messagesData.size() >0 ) this.ph2MessagesMapper.multiRowInsert(this.messagesData);
+		if(this.messagesData.size() >0 ) 
+			{
+			this.ph2MessagesMapper.multiRowInsert(this.messagesData);
+			this.messagesData.clear();
+			}
 		}
 	}

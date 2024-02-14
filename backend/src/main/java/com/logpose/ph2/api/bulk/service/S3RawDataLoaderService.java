@@ -28,9 +28,15 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
+/**
+ * Sigfoxのメッセージテーブルから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
+ */
 @Service
 public class S3RawDataLoaderService
 	{
+	// ===============================================
+	// クラスメンバー
+	// ===============================================
 	@Autowired
 	private Ph2MessagesMapper Ph2messagesMapper;
 	@Autowired
@@ -48,9 +54,13 @@ public class S3RawDataLoaderService
 	@Autowired
 	private Ph2InsolationDataMapper ph2InsolationDataMapper;
 
+	// ===============================================
+	// 公開関数群
+	// ===============================================
 	// --------------------------------------------------
 	/**
-	 * 
+	 * SigFoxデータをデバイス単位に加工して各種テーブルに格納する。
+	 * @param LoadCoordinator
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
@@ -67,16 +77,16 @@ public class S3RawDataLoaderService
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
 		Ph2DevicesEnyity device = coordinator.getDevice();
-// * メッセージデータの抽出開始日
+		// * メッセージデータの抽出開始日
 		Date op_start_date = device.getOpStart();
-// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
+		// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
 		Date firstDate = coordinator.getLastHadledDate();
-		if(null !=firstDate)
+		if (null != firstDate)
 			{
-			firstDate =deviceDayAlgorithm.addMilliscond(firstDate);
-			if(null != op_start_date)
+			firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
+			if (null != op_start_date)
 				{
-				if(op_start_date.getTime() < firstDate.getTime())
+				if (op_start_date.getTime() < firstDate.getTime())
 					{
 					op_start_date = firstDate;
 					}
@@ -104,16 +114,23 @@ public class S3RawDataLoaderService
 			cache.flush();
 			return cache.getLastCastedDate();
 			}
-		catch (Exception e)
-			{
-			throw e;
-			}
 		}
 
-	@Transactional(propagation = Propagation.REQUIRES_NEW)
-	private DataListModel createTables(
+	// --------------------------------------------------
+	/**
+	 * メッセージから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
+	 * @param device
+	 * @param sensors
+	 * @param dataListModel
+	 * @param message
+	 * @param cache
+	 * @return DataListModel
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+	public DataListModel createTables(
 			Ph2DevicesEnyity device,
-			List<SensorDataDTO> records,
+			List<SensorDataDTO> sensors,
 			DataListModel dataListModel,
 			Ph2MessagesEntity message,
 			MinutesCacher cache)
@@ -122,11 +139,10 @@ public class S3RawDataLoaderService
 		List<String> data = splitByLength(message.getRaw(), 3);
 // * データリストの設定を行う
 		dataListModel = this.modules.setData(message.getCastedAt(), data, dataListModel);
-// * データリストのカウントが16に達した時、BAT-BDC-02基礎データ作成処理#計算処理
-// * とDBへの登録 を実行する。
+// * データリストのカウントが16に達した時、計算処理とDBへの登録 を実行する。
 		if (dataListModel.getCount() == 16)
 			{
-			this.baseDataGenerator.generate(device.getId(), records, dataListModel, cache);
+			this.baseDataGenerator.generate(device.getId(), sensors, dataListModel, cache);
 			}
 		return dataListModel;
 		}
@@ -143,5 +159,4 @@ public class S3RawDataLoaderService
 			}
 		return strs;
 		}
-
 	}

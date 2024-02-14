@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.algorythm.DailyDataAlgorythm;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
@@ -21,6 +20,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafCountMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsCountMapper;
+import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.DeviceDayDomain;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
@@ -34,7 +34,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	// ===============================================
 
 	@Autowired
-	private DailyDataAlgorythm dailyDataAlgorythm;
+	private GrowthDomainMapper growthDomainMapper;
 
 	@Autowired
 	private Ph2RealLeafShootsCountMapper ph2RealLeafShootsCountMapper;
@@ -77,8 +77,8 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 			}
 
 // * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
-		List<DailyBaseDataDTO> realDayData = this.dailyDataAlgorythm
-				.getDailyBaseData(deviceId, year);
+		List<DailyBaseDataDTO> realDayData = this.growthDomainMapper
+				.selectDailyData(deviceId, year, null);
 // * 日ごとデータがある場合
 		if (0 != realDayData.size())
 			{

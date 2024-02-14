@@ -26,7 +26,7 @@ public class DeviceDayCacher
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	public void addDeviceDayData(Ph2DeviceDayEntity entity)
+	public long addDeviceDayData(Ph2DeviceDayEntity entity)
 		{
 		id++;
 		entity.setId(id);
@@ -41,6 +41,7 @@ public class DeviceDayCacher
 			this.insertDeviceDay();
 			this.insertModelData();
 			}
+		return id;
 		}
 	
 	// -----------------------------------------------------------------

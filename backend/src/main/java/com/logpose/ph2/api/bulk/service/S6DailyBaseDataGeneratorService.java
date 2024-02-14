@@ -13,16 +13,19 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
+import com.logpose.ph2.api.dao.db.cache.DailyBaseCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DailyBaseDataEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2DailyBaseDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample.Criteria;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.joined.ExtendDailyBaseDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
 import com.logpose.ph2.api.dto.BaseDataDTO;
 import com.logpose.ph2.api.dto.SingleDoubleValueDTO;
+
+import lombok.Data;
 
 @Service
 public class S6DailyBaseDataGeneratorService
@@ -44,48 +47,88 @@ public class S6DailyBaseDataGeneratorService
 	// ===============================================
 	// 公開関数群
 	// ===============================================
+	// --------------------------------------------------
+	/**
+	 * DBに日ごとデータを設定する
+	 * @param device
+	 * @param deviceDays
+	 */
+	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public List<Ph2DeviceDayEntity> doService(LoadCoordinator ldc,
+	public void doService(LoadCoordinator ldc,
 			List<Ph2DeviceDayEntity> deviceDays)
 		{
-		LOG.info("日ベースのデータ作成開始");
-		SingleDoubleValueDTO prevCdd = new SingleDoubleValueDTO();
-		prevCdd.setValue((double) 0);
-		for (Ph2DeviceDayEntity deviceDay : deviceDays)
+		LOG.info("日ベースのデータ作成開始：" + ldc.getDeviceId());
+		DailyBaseCacher cache = new DailyBaseCacher(ph2DailyBaseDataMapper);
+
+// * データの移行が必要かどうかチェックする
+		List<ExtendDailyBaseDataEntity> trs_dd = this.checkTransfer(ldc);
+		int i = 0;
+		if (null != trs_dd)
 			{
+// * データの移行を行う
+			i = this.copyOldData(ldc.getDeviceId(), deviceDays, trs_dd, cache);
+			}
+		double cdd = 0;
+		if( i > 0 )
+			{
+			cdd = trs_dd.get(trs_dd.size()-1).getCdd();
+			}
+		List<Ph2DeviceDayEntity> unset_devices = new ArrayList<>();
+		SingleDoubleValueDTO prevCdd = new SingleDoubleValueDTO();
+		prevCdd.setValue(cdd);
+		for (;i<deviceDays.size();i++)
+			{
+			Ph2DeviceDayEntity device_day = deviceDays.get(i);
+// * 経過日初日の場合CDD値をクリアする
+			if (1 == device_day.getLapseDay().shortValue())
+				{
+				prevCdd.setValue((double) 0);
+				}
 // * その日の１０分単位のデータで気温と光合成有効放射束密度を取得する
 			List<BaseDataDTO> tmRecords = this.ph2JoinedModelMapper.getBaseData(
-					deviceDay.getDeviceId(), deviceDay.getDate(),
-					this.deviceDayAlgorithm.getNextDayZeroHour(deviceDay.getDate()));
+					device_day.getDeviceId(), device_day.getDate(),
+					this.deviceDayAlgorithm.getNextDayZeroHour(device_day.getDate()));
 // * その日のデータが存在する場合
 			if (tmRecords.size() > 0)
 				{
-				this.addTmData(deviceDay, tmRecords, prevCdd);
-				this.setIsolationData(deviceDay, tmRecords);
-				deviceDay.setHasReal(true);
-				this.ph2DeviceDayMapper.updateByPrimaryKey(deviceDay);
+				DailyBaseDataDTO result = this.addTmData(device_day, tmRecords, prevCdd);
+				this.setIsolationData(device_day, tmRecords, result, cache);
+				device_day.setHasReal(true);
+				this.ph2DeviceDayMapper.updateByPrimaryKey(device_day);
+
+				unset_devices.clear();
+				}
+			else
+				{
+				unset_devices.add(device_day);
 				}
 			}
+// * 同じデバイスで年度間の参照をするので、一旦DBへ書き込む
+		cache.flush();
+// * 実データ以後のデータを前年度から取り込む
+		this.copyLastYearData(ldc.getDeviceId(), unset_devices, 0, cache);
+// * DBへの更新
+		cache.flush();
 		LOG.info("日ベースのデータ作成終了");
-// * 指定デバイスの実値を持つ最初の1日めのデータを取得する設定を行う。
-		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
-		Criteria criteria = exm.createCriteria().andDeviceIdEqualTo(ldc.getDeviceId())
-				.andLapseDayEqualTo((short) 1).andHasRealEqualTo(true);
-// * 日付の指定がある場合
-		if (null != ldc.getLastHadledDate())
-			{
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(ldc.getLastHadledDate());
-			cal.add(Calendar.YEAR, -1);
-			criteria.andDateGreaterThan(cal.getTime());
-			}
-		exm.setOrderByClause("date  asc");
-		return this.ph2DeviceDayMapper.selectByExample(exm);
 		}
 
-	private void addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList,
+	// ===============================================
+	// 保護関数群
+	// ===============================================
+	// --------------------------------------------------
+	/**
+	 * DBに日ごとの基礎データを設定する
+	 * @param device
+	 * @param tmRecords
+	 * @param prevCdd
+	 */
+	// --------------------------------------------------
+	private DailyBaseDataDTO addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList,
 			SingleDoubleValueDTO prevCdd)
 		{
+		DailyBaseDataDTO result = new DailyBaseDataDTO();
+
 		float min = tempList.get(0).getTemperature();
 		float max = min;
 		long prevTime = 0;
@@ -121,35 +164,33 @@ public class S6DailyBaseDataGeneratorService
 				max = temperature;
 			}
 		// * 日別基礎データテーブルに追加
-		Ph2DailyBaseDataEntityExample exm = new Ph2DailyBaseDataEntityExample();
-		exm.createCriteria().andDayIdEqualTo(device.getId());
-		Ph2DailyBaseDataEntity entity;
-		List<Ph2DailyBaseDataEntity> entities = this.ph2DailyBaseDataMapper.selectByExample(exm);
-		if (entities.size() > 0)
-			{
-			entity = entities.get(0);
-			}
-		else
+		Ph2DailyBaseDataEntity entity = this.ph2DailyBaseDataMapper.selectByPrimaryKey(device.getId());
+		if (null == entity)
 			{
 			entity = new Ph2DailyBaseDataEntity();
+			result.setNew(true);
 			}
 		entity.setDayId(device.getId());
 		entity.setAverage(sum / count);
 		entity.setTm((min + max) / 2 - 10);
-		double cdd = prevCdd.getValue() + ((min + max) / 2 - 9.18);
+		entity.setRawCdd((min + max) / 2 - 9.18);
+		double cdd = prevCdd.getValue() + entity.getRawCdd();
 		prevCdd.setValue(cdd);
 		entity.setCdd(cdd);
-		if (entities.size() > 0)
-			{
-			this.ph2DailyBaseDataMapper.updateByExample(entity, exm);
-			}
-		else
-			{
-			this.ph2DailyBaseDataMapper.insert(entity);
-			}
+		result.setEntity(entity);
+		return result;
 		}
 
-	public void setIsolationData(Ph2DeviceDayEntity device, List<BaseDataDTO> tmRecords)
+	// --------------------------------------------------
+	/**
+	 * DBにPARと日射時間を設定する
+	 * @param device
+	 * @param tmRecords
+	 * @param result
+	 */
+	// --------------------------------------------------
+	private void setIsolationData(Ph2DeviceDayEntity device,
+			List<BaseDataDTO> tmRecords, DailyBaseDataDTO result, DailyBaseCacher cache)
 		{
 // * PAR値（光合成有効放射束密度ベース）のみのリスト作成する
 // * --- BEGIN ---
@@ -193,11 +234,144 @@ public class S6DailyBaseDataGeneratorService
 			prev_time = data.getCastedAt();
 			}
 // * DBにPARと日射時間を設定する
-		Ph2DailyBaseDataEntityExample exm = new Ph2DailyBaseDataEntityExample();
-		exm.createCriteria().andDayIdEqualTo(device.getId());
-		Ph2DailyBaseDataEntity entity = this.ph2DailyBaseDataMapper.selectByExample(exm).get(0);
-		entity.setPar(sum);
-		entity.setSunTime(sun_time);
-		this.ph2DailyBaseDataMapper.updateByExample(entity, exm);
+		result.getEntity().setPar(sum);
+		result.getEntity().setSunTime(sun_time);
+		if (result.isNew())
+			{
+			cache.addDailyBaseData(result.getEntity());
+			}
+		else
+			this.ph2DailyBaseDataMapper.updateByPrimaryKey(result.getEntity());
 		}
+
+	// --------------------------------------------------
+	/**
+	 * データの移行が必要かどうかチェックする
+	 * @param ldc
+	 * @retrun List<ExtendDailyBaseDataEntity>
+	 */
+	// --------------------------------------------------
+	private List<ExtendDailyBaseDataEntity> checkTransfer(LoadCoordinator ldc)
+		{
+// * 引継ぎ元デバイスIDが無ければ、終了
+		Ph2DevicesEnyity  device = ldc.getDevice();
+		if (null == device.getPreviousDeviceId()) return null;
+		
+// * 現在処理中のデバイスの最も古いデータの日付をRelBaseDataから取得する
+		final Calendar oldest_date = Calendar.getInstance();
+		oldest_date.setTime(ldc.getOldestBaseDate());
+		this.deviceDayAlgorithm.setTimeZero(oldest_date);
+
+// * デバイスディテーブルからその日付のデバイスディを取得する
+		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(ldc.getDeviceId())
+				.andDateEqualTo(oldest_date.getTime());
+		List<Ph2DeviceDayEntity> device_days = this.ph2DeviceDayMapper.selectByExample(exm);
+		Ph2DeviceDayEntity device_day = device_days.get(0);
+		
+// * 引継ぎデータを取得
+// * 現在処理中のデバイスの最も古いデータの日付より前のDailyBaseDataを引継ぎ元デバイスから取得する
+		List<ExtendDailyBaseDataEntity> base_data = this.ph2DailyBaseDataMapper.selectOldData(device.getPreviousDeviceId(),
+				device_day.getYear(), device_day.getLapseDay());
+
+// * データが無ければ終了
+		if (base_data.size() == 0) return null;
+		
+		return base_data;
+		}
+
+	// --------------------------------------------------
+	/**
+	 * 過去のデータをコピーする
+	 * @param deviceId
+	 * @param newDeviceDays
+	 * @param oldDeviceDays
+	 * @param cache
+	 */
+	// --------------------------------------------------
+	private int copyOldData(long deviceId,
+			List<Ph2DeviceDayEntity> newDeviceDays, List<ExtendDailyBaseDataEntity> oldDeviceDays, DailyBaseCacher cache)
+		{
+// * 引継ぎ元のデータの経過日までデバイスディを移動
+		int i = 0;
+		ExtendDailyBaseDataEntity first_prev_data = oldDeviceDays.get(0);
+		for (Ph2DeviceDayEntity dd : newDeviceDays)
+			{
+			if (first_prev_data.getLapseDay().intValue() == dd.getLapseDay().intValue()) break;
+			i++;
+			} ;
+// * 引継ぎデバイスIDからのデータの移行deviceday
+		for (ExtendDailyBaseDataEntity prev : oldDeviceDays)
+			{
+			Ph2DeviceDayEntity device_day = newDeviceDays.get(i++);
+// * DailyBaseDataレコードの作成とDBへの登録
+			prev.setDayId(device_day.getId());
+			// レコードに追加
+			if (null == this.ph2DailyBaseDataMapper.selectByPrimaryKey(prev.getDayId()))
+				{
+				cache.addDailyBaseData(prev);
+				}
+			else
+				this.ph2DailyBaseDataMapper.updateByPrimaryKey(prev);
+// * DeviceDayレコードの更新
+			device_day.setHasReal(true);
+			this.ph2DeviceDayMapper.updateByPrimaryKey(device_day);
+			}
+		return i;
+		}
+
+	// --------------------------------------------------
+	/**
+	 * 引継ぎ元の日ごとデータをコピーする
+	 * @param deviceId
+	 * @param deviceDays
+	 * @param cache
+	 */
+	// --------------------------------------------------
+	private void copyLastYearData(
+			Long deviceId, List<Ph2DeviceDayEntity> deviceDays, double cdd, DailyBaseCacher cache)
+		{
+// * 未設定のデータが無い場合は終了
+		if (deviceDays.size() == 0) return;
+// * 実データの無い最初の日
+		Ph2DeviceDayEntity day1 = deviceDays.get(0);
+// * 実データの無い最後の日
+		Ph2DeviceDayEntity day2 = deviceDays.get(deviceDays.size() - 1);
+
+// * 引継ぎ元のデータを得る。その年の実データがあるデバイスディデータを昇順で
+		List<ExtendDailyBaseDataEntity> prev_data =//
+				this.ph2DailyBaseDataMapper.selectLastYearData(//
+						day1.getDeviceId(), (short) (day1.getYear() - 1), day1.getLapseDay(), day2.getLapseDay());
+// * 引継ぎ元のデータが無ければ終了
+		if (0 == prev_data.size()) return;
+// * データが継続できなければ(同じ経過日でなければ）終了
+		if (prev_data.get(0).getLapseDay().intValue() != day1.getLapseDay().intValue()) return;
+
+// * 昨年データの移行
+		int i = 0;
+		for (ExtendDailyBaseDataEntity prev : prev_data)
+			{
+// * DailyBaseDataレコードの作成とDBへの登録
+// デバイスディIDの設定
+			Ph2DeviceDayEntity device_day = deviceDays.get(i++);
+			prev.setDayId(device_day.getId());
+			// cddの更新
+			cdd += prev.getRawCdd();
+			prev.setCdd(cdd);
+			// レコードに追加
+			if (null == this.ph2DailyBaseDataMapper.selectByPrimaryKey(prev.getDayId()))
+				{
+				cache.addDailyBaseData(prev);
+				}
+			else
+				this.ph2DailyBaseDataMapper.updateByPrimaryKey(prev);
+			}
+		}
+	}
+
+@Data
+class DailyBaseDataDTO
+	{
+	Ph2DailyBaseDataEntity entity;
+	boolean isNew = false;
 	}

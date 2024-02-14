@@ -1240,61 +1240,61 @@ public class Ph2DevicesEnyityExample {
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusEqualTo(Short value)
+		public Criteria andDataStatusEqualTo(Integer value)
 			{
 			addCriterion("data_status =", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusNotEqualTo(Short value)
+		public Criteria andDataStatusNotEqualTo(Integer value)
 			{
 			addCriterion("data_status <>", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusGreaterThan(Short value)
+		public Criteria andDataStatusGreaterThan(Integer value)
 			{
 			addCriterion("data_status >", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusGreaterThanOrEqualTo(Short value)
+		public Criteria andDataStatusGreaterThanOrEqualTo(Integer value)
 			{
 			addCriterion("data_status >=", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusLessThan(Short value)
+		public Criteria andDataStatusLessThan(Integer value)
 			{
 			addCriterion("data_status <", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusLessThanOrEqualTo(Short value)
+		public Criteria andDataStatusLessThanOrEqualTo(Integer value)
 			{
 			addCriterion("data_status <=", value, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusIn(List<Short> values)
+		public Criteria andDataStatusIn(List<Integer> values)
 			{
 			addCriterion("data_status in", values, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusNotIn(List<Short> values)
+		public Criteria andDataStatusNotIn(List<Integer> values)
 			{
 			addCriterion("data_status not in", values, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusBetween(Short value1, Short value2)
+		public Criteria andDataStatusBetween(Integer value1, Integer value2)
 			{
 			addCriterion("data_status between", value1, value2, "dataStatus");
 			return (Criteria) this;
 			}
 
-		public Criteria andDataStatusNotBetween(Short value1, Short value2)
+		public Criteria andDataStatusNotBetween(Integer value1, Integer value2)
 			{
 			addCriterion("data_status not between", value1, value2, "dataStatus");
 			return (Criteria) this;
@@ -1369,6 +1369,78 @@ public class Ph2DevicesEnyityExample {
 		public Criteria andDataStatusDateNotBetween(Date value1, Date value2)
 			{
 			addCriterion("data_status_date not between", value1, value2, "dataStatusDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdIsNull()
+			{
+			addCriterion("previous_device_id is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdIsNotNull()
+			{
+			addCriterion("previous_device_id is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdEqualTo(Long value)
+			{
+			addCriterion("previous_device_id =", value, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdNotEqualTo(Long value)
+			{
+			addCriterion("previous_device_id <>", value, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdGreaterThan(Long value)
+			{
+			addCriterion("previous_device_id >", value, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdGreaterThanOrEqualTo(Long value)
+			{
+			addCriterion("previous_device_id >=", value, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdLessThan(Long value)
+			{
+			addCriterion("previous_device_id <", value, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdLessThanOrEqualTo(Long value)
+			{
+			addCriterion("previous_device_id <=", value, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdIn(List<Long> values)
+			{
+			addCriterion("previous_device_id in", values, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdNotIn(List<Long> values)
+			{
+			addCriterion("previous_device_id not in", values, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdBetween(Long value1, Long value2)
+			{
+			addCriterion("previous_device_id between", value1, value2, "previousDeviceId");
+			return (Criteria) this;
+			}
+
+		public Criteria andPreviousDeviceIdNotBetween(Long value1, Long value2)
+			{
+			addCriterion("previous_device_id not between", value1, value2, "previousDeviceId");
 			return (Criteria) this;
 			}
 		}

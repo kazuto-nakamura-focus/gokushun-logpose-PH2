@@ -83,7 +83,7 @@
         :onEnd="fromDevice"
       />
       <confirmDailog :shared="sharedConfirm" ref="confirm" />
-      <wait-dialog  ref="wait" />
+      <wait-dialog ref="wait" />
     </v-container>
   </v-app>
 </template>
@@ -97,13 +97,14 @@ import {
 import MSEditDeviceWrapper from "./MSEditDevice/MSEditDeviceWrapper.vue";
 import confirmDailog from "@/components/dialog/confirmDialog.vue";
 import { DialogController } from "@/lib/mountController.js";
-import WaitDialog from '@/components/dialog/WaitDialog.vue';
+import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true },
   { text: "圃場", value: "field", sortable: true },
   { text: "品種", value: "brand", sortable: true },
   { text: "登録日時", value: "registeredDate", sortable: false },
+  { text: "ID", value: "id", sortable: true },
 ];
 
 export default {
@@ -138,7 +139,7 @@ export default {
   components: {
     MSEditDeviceWrapper,
     confirmDailog,
-    WaitDialog
+    WaitDialog,
   },
 
   methods: {

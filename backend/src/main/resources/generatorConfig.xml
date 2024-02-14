@@ -44,13 +44,14 @@
 			</table> <table tableName="ph2_base_data" domainObjectName="Ph2BaseDataEntity" 
 			mapperName="Ph2BaseDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table>
+			</table>-->
 			 <table tableName="ph2_daily_base_data"
 				domainObjectName="Ph2DailyBaseDataEntity" 
 				mapperName="Ph2DailyBaseDataMapper" 
 				enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
+			<!--
 			<table tableName="ph2_dashboard_display"
 				domainObjectName="Ph2DashBoardDisplayEntity" 
 				mapperName="Ph2DashBoardDisplayMapper" 
@@ -100,7 +101,12 @@
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
 			modelType="flat">
 		</table>
- 
+		<table tableName="ph2_sensors" domainObjectName="Ph2SensorsEntity" 
+			mapperName="Ph2SensorsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+		</table> 
+	-->
+ 	<!-- 
 		<table tableName="ph2_sensor_contents" domainObjectName="Ph2SensorContentsEntity" 
 			mapperName="Ph2SensorContentsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
@@ -112,9 +118,6 @@
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> <table tableName="ph2_rel_field_device" domainObjectName="Ph2RelFieldDeviceEntity" 
 			mapperName="Ph2RelFieldDeviceMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
-			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> <table tableName="ph2_sensors" domainObjectName="Ph2SensorsEntity" 
-			mapperName="Ph2SensorsMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> <table tableName="ph2_model_master" domainObjectName="Ph2ModelMasterEntity" 
 			mapperName="Ph2ModelMasterMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
@@ -174,12 +177,12 @@
 			<table tableName="ph2_raw_data" 
 			domainObjectName="Ph2RawDataEntity" mapperName="Ph2RawDataMapper" enableInsert="true" 
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
-			modelType="flat"> </table>-->
+			modelType="flat"> </table>
 						<table tableName="ph2_headlines" 
 			domainObjectName="Ph2HeadLinesEntity" mapperName="Ph2HeadLinesMapper" enableInsert="true" 
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
 			modelType="flat"> </table>
-			<!--
+	
 			 <table tableName="ph2_real_fruits_bearing" domainObjectName="Ph2RealFruitsBearingEntity" 
 			mapperName="Ph2RealFruitsBearingMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 

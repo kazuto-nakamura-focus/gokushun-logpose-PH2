@@ -16,6 +16,10 @@ public interface GrowthDomainMapper
 			@Param("deviceId") Long deviceId, @Param("year") short year, 
 			@Param("date") Date date, @Param("isReal") boolean isReal);
 	
+	List<DailyBaseDataDTO> selectDailyData(
+			@Param("deviceId") Long deviceId, @Param("year") short year, 
+			@Param("date") Date date);
+	
 	List<FDataEntity> selectValueAndDays(@Param("deviceId") Long deviceId, @Param("year") short year);
 
 	}
