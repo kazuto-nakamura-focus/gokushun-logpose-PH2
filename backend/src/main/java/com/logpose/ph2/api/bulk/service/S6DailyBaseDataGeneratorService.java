@@ -23,7 +23,6 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
 import com.logpose.ph2.api.dto.BaseDataDTO;
-import com.logpose.ph2.api.dto.SingleDoubleValueDTO;
 
 import lombok.Data;
 
@@ -69,22 +68,12 @@ public class S6DailyBaseDataGeneratorService
 // * データの移行を行う
 			i = this.copyOldData(ldc.getDeviceId(), deviceDays, trs_dd, cache);
 			}
-		double cdd = 0;
-		if( i > 0 )
-			{
-			cdd = trs_dd.get(trs_dd.size()-1).getCdd();
-			}
+
 		List<Ph2DeviceDayEntity> unset_devices = new ArrayList<>();
-		SingleDoubleValueDTO prevCdd = new SingleDoubleValueDTO();
-		prevCdd.setValue(cdd);
 		for (;i<deviceDays.size();i++)
 			{
 			Ph2DeviceDayEntity device_day = deviceDays.get(i);
-// * 経過日初日の場合CDD値をクリアする
-			if (1 == device_day.getLapseDay().shortValue())
-				{
-				prevCdd.setValue((double) 0);
-				}
+
 // * その日の１０分単位のデータで気温と光合成有効放射束密度を取得する
 			List<BaseDataDTO> tmRecords = this.ph2JoinedModelMapper.getBaseData(
 					device_day.getDeviceId(), device_day.getDate(),
@@ -92,7 +81,7 @@ public class S6DailyBaseDataGeneratorService
 // * その日のデータが存在する場合
 			if (tmRecords.size() > 0)
 				{
-				DailyBaseDataDTO result = this.addTmData(device_day, tmRecords, prevCdd);
+				DailyBaseDataDTO result = this.addTmData(device_day, tmRecords);
 				this.setIsolationData(device_day, tmRecords, result, cache);
 				device_day.setHasReal(true);
 				this.ph2DeviceDayMapper.updateByPrimaryKey(device_day);
@@ -124,8 +113,7 @@ public class S6DailyBaseDataGeneratorService
 	 * @param prevCdd
 	 */
 	// --------------------------------------------------
-	private DailyBaseDataDTO addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList,
-			SingleDoubleValueDTO prevCdd)
+	private DailyBaseDataDTO addTmData(Ph2DeviceDayEntity device, List<BaseDataDTO> tempList)
 		{
 		DailyBaseDataDTO result = new DailyBaseDataDTO();
 
@@ -174,9 +162,7 @@ public class S6DailyBaseDataGeneratorService
 		entity.setAverage(sum / count);
 		entity.setTm((min + max) / 2 - 10);
 		entity.setRawCdd((min + max) / 2 - 9.18);
-		double cdd = prevCdd.getValue() + entity.getRawCdd();
-		prevCdd.setValue(cdd);
-		entity.setCdd(cdd);
+		entity.setCdd((double) -1);
 		result.setEntity(entity);
 		return result;
 		}

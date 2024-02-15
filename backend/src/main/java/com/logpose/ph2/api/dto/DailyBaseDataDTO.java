@@ -13,6 +13,7 @@ public class DailyBaseDataDTO
 	private float tm;
 	private float average;
 	private double cdd;
+	private double rawCdd;
 	private double par;
 	private long sunTime;
 	private boolean isReal;

@@ -11,6 +11,7 @@
 		<result column="tm" property="tm"></result>
 		<result column="average" property="average"></result>
 		<result column="cdd" property="cdd"></result>
+		<result column="raw_cdd" property="rawCdd"></result>
 		<result column="par" property="par"></result>
 		<result column="sun_time" property="sunTime"></result>
 		<result column="isReal" property="isReal"></result>
@@ -26,6 +27,7 @@
 		db.sun_time as sun_time,
 		db.average as average,
 		db.cdd as cdd,
+		db.raw_cdd as raw_cdd,
 		db.par as par,
 		#{isReal} as isReal
 		FROM

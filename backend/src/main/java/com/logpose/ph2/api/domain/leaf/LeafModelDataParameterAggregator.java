@@ -12,15 +12,18 @@ import com.logpose.ph2.api.configration.DefaultLeafCountParameters;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntityExample;
+import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafCountMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsCountMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WibleMasterMapper;
-import com.logpose.ph2.api.dao.db.mappers.joined.LeafDomainMapper;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.master.ModelMaster;
@@ -47,7 +50,9 @@ public class LeafModelDataParameterAggregator
 	@Autowired
 	private Ph2ParamsetLeafCountMapper ph2ParamsetLeafCountMapper;
 	@Autowired
-	private LeafDomainMapper leafDomainMapper;
+	private Ph2RealGrowthFStageMapper realGrowthFStageMapper;
+	@Autowired
+	private Ph2ModelDataMapper modelDataMapper;
 
 	// ===============================================
 	// 公開メソッド
@@ -63,12 +68,27 @@ public class LeafModelDataParameterAggregator
 // * 葉面積パラメータセットの取得
 		LeafParamSetDTO paramset = this.getParmaters(deviceId, year);
 		parameters.setParams(paramset);
+		
 // * 萌芽日
-		List<Integer> rec = this.leafDomainMapper.getSproutDay(4, deviceId, year);
-		parameters.setLapseDay(rec.get(0));
+		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId)//
+			.andYearEqualTo(year).andStageEndEqualTo((short) 4);
+		List<Ph2RealGrowthFStageEntity> rec = this.realGrowthFStageMapper.selectByExample(exm);
+		Ph2RealGrowthFStageEntity entity = rec.get(0);
+		List<Integer> sproutDay = this.modelDataMapper.//
+				selectLapseDayByFValue(deviceId, year, entity.getActualDate(), entity.getAccumulatedF());
+		// 萌芽日が存在しない場合はデフォルト設定
+		if(sproutDay.size() == 0)
+			{
+			sproutDay = this.modelDataMapper.//
+					selectLapseDayByFValue(deviceId, year, null, (double) 15);
+			}
+		parameters.setLapseDay(sproutDay.get(0));
+		
 // * 新梢数
 		int shoot_count = this.getShootCount(deviceId, year);
 		parameters.setShootCount(shoot_count);
+		
 // * ワイブル分布の取得
 		List<Ph2WibleMasterEntity> wibles = this.ph2WibleMasterMapper
 				.selectByExample(new Ph2WibleMasterEntityExample());

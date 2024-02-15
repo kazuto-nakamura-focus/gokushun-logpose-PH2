@@ -15,6 +15,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntityExample;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafCountMapper;
@@ -32,7 +33,9 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-
+	@Autowired
+	private Ph2DailyBaseDataMapper ph2DailyBaseDataMapper;
+	
 	@Autowired
 	private GrowthDomainMapper growthDomainMapper;
 
@@ -88,7 +91,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 // * データの出力先の設定をする
 			LeafModelDataExporter exporter = new LeafModelDataExporter(ph2ModelDataMapper);
 // * データの生成を行う
-			new LeafModelDataGenerator(parameters, exporter, realDayData);
+			new LeafModelDataGenerator(ph2DailyBaseDataMapper, parameters, exporter, realDayData);
 			}
 		}
 
