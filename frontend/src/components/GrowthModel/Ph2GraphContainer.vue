@@ -78,6 +78,7 @@ export default {
         ">" +
         this.selectedItem.year;
       this.modelId = this.selectedItem.modelId;
+      const year = this.selectedItem.year;
       if (this.modelId == 1) {
         this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         useModelData(
@@ -91,10 +92,9 @@ export default {
               alert("データがありません。");
               return;
             }
-
             // グラフの表示オプションを設定
             let gc = new GrowthChart();
-            gc.setOptions("生育ステージ推定モデル", "日付", "累積F値", results);
+            gc.setOptions("生育ステージ推定モデル", "日付", "累積F値", results, year);
             // グラフ表示を行う
             gc.setLoadingParent(this);
             this.$refs.chr.addGraph(
@@ -140,7 +140,8 @@ export default {
               "葉面積推定モデル",
               "日付",
               "葉面積(㎡)",
-              response["data"].data[0]
+              response["data"].data[0],
+              year
             );
             console.log(response["data"].data[1]);
             // グラフ表示を行う
@@ -158,7 +159,8 @@ export default {
               "葉枚数推定モデル",
               "日付",
               "葉枚数(枚)",
-              response["data"].data[1]
+              response["data"].data[1],
+              year
             );
             // グラフ表示を行う
             this.$refs.chr.addGraph(
@@ -201,7 +203,8 @@ export default {
               "光合成推定モデル",
               "日付",
               "光合成量(kgCO2 vine^-1)",
-              results
+              results,
+              year
             );
             // グラフ表示を行う
             this.$refs.chr.addGraph(

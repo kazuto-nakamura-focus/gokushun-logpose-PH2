@@ -33,7 +33,7 @@
   </v-container>
 </template>
 <script>
-import { useSensorList, useUpdateSettings } from "@/api/DashboardAPI.js";
+import { useSensorList, useUpdateSettings} from "@/api/DashboardAPI.js";
 import SensorMenu from "./SensorMenu.vue";
 export default {
   props: {
@@ -69,32 +69,55 @@ export default {
           } else {
             //* メニュ―項目の設定
             const dashBoardSensorsDTOList = results.data;
+            console.log(dashBoardSensorsDTOList);
             //* 全メニューの設定 --- START
-            let hasSetting = false;
+            // let hasSetting = false;
             for (const item of dashBoardSensorsDTOList) {
               const menuItem = {
                 id: item.sensorId,
                 name: item.sensorName,
               };
               this.sensors.push(menuItem);
-              if (item.displayNo != null) hasSetting = true;
             }
+            //「未選択」の項目を追加
+            const notSelectSensor = {
+              id: -1,
+              name: "未選択",
+            }
+            //ドロップダウン項目一覧の先頭に追加
+            this.sensors.unshift(notSelectSensor)
+
             for (let i = 1; i <= this.MAX; i++) {
               this.$refs["menu" + i].setMenu(this.sensors);
+              
+              //センサー一覧のデータ内に、設置済みのIDも含まれている。
+              //既に設置済み場合、sensorDtoに値が格納する。
+              //格納されない場合、「未選択」項目を選ぶようにする。
+              const sensorDto = dashBoardSensorsDTOList.find((item) => {
+                return i == item.displayNo
+              })
+              const defaultId = sensorDto != null && sensorDto.sensorId != null ? sensorDto.sensorId : -1;
+              this.$refs["menu" + i].setDefault(defaultId);
             }
             //* --- END
             //* 既に設置済み場合
-            if (hasSetting) {
-              for (const item of dashBoardSensorsDTOList) {
-                if (item.displayNo != null) {
-                  this.$refs["menu" + item.displayNo].setDefault(item.sensorId);
-                }
-              }
-            } else {
-              for (const item of dashBoardSensorsDTOList) {
-                this.$refs["menu" + item.dataId].setDefault(item.sensorId);
-              }
-            }
+            // dashBoardSensorsDTOList.forEach((item, index) => {
+            //   const displayNo = item.displayNo;
+            //   let defaultId = displayNo != null ? item.sensorId : -1;
+            //   this.$refs["menu" + (index+1)].setDefault(defaultId);
+            // });
+            // if (hasSetting) {
+
+            //   for (const item of dashBoardSensorsDTOList) {
+            //     if (item.displayNo != null) {
+            //       this.$refs["menu" + item.displayNo].setDefault(item.sensorId);
+            //     }
+            //   }
+            // } else {
+            //   for (const item of dashBoardSensorsDTOList) {
+            //     this.$refs["menu" + item.dataId].setDefault(item.sensorId);
+            //   }
+            // }
           }
         })
         .catch((error) => {
@@ -107,11 +130,13 @@ export default {
     useUpdateSettings: function () {
       let args = [];
       for (let i = 1; i <= this.MAX; i++) {
+        const selectedId = this.$refs["menu" + i].getSelected();
         const item = {
           displayNo: i,
-          sensorId: this.$refs["menu" + i].getSelected(),
+          sensorId: selectedId == -1 ? null : selectedId,
         };
         args.push(item);
+        console.log(item);
       }
       const dashboardSet = {
         deviceId: this.deviceId,

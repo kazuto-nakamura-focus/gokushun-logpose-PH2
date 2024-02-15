@@ -93,7 +93,7 @@ public class DeviceServiceImpl implements DeviceService
 			}
 		else
 			{
-			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			result.setBaseDateShort(dateFormat.format(baseDate));
 			}
 		if(null != result.getOpStart())

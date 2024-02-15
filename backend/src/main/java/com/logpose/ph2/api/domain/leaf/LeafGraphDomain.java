@@ -48,7 +48,7 @@ public class LeafGraphDomain extends GraphDomain
 		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
 		RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
 // * 日付カテゴリ
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		List<String> category = new ArrayList<>();
 
 		Double minArea = Double.MAX_VALUE;

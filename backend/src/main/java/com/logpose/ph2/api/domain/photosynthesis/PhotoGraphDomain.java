@@ -48,7 +48,7 @@ public class PhotoGraphDomain extends GraphDomain
 		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
-		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		for (ModelDataEntity entity : entites)
 			{
 			if (entity.getIsReal())
