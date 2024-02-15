@@ -125,6 +125,7 @@ export default {
         year: this.selectedYear.id,
       };
       
+      const year = this.selectedItem.year;
       if (this.modelId == 1) {
         useModelData(this.selectedDevice.id, this.selectedYear.id)
           .then((response) => {
@@ -138,7 +139,8 @@ export default {
             this.$refs.chr.addGraph(
               this.selectedItem,
               gc.data.chartOptions,
-              results
+              results,
+              year
             );
           })
           .catch((error) => {
@@ -159,7 +161,8 @@ export default {
             this.$refs.chr.addGraph(
               this.selectedItem,
               gc.data.chartOptions,
-              results
+              results,
+              year
             );
           })
           .catch((error) => {
@@ -182,7 +185,8 @@ export default {
             this.$refs.chr.addGraph(
               this.selectedItem,
               gc.data.chartOptions,
-              results
+              results,
+              year
             );
             console.log(results);
           })
