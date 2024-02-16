@@ -164,7 +164,12 @@ export class GrowthChart {
     parent.isLoading = true;
     this.data.parent = parent;
   }
-  setOptions(title, xtitle, ytitle, source, year) {
+  setOptions(title, xtitle, ytitle, source, year, digits) {
+    if(digits != null){
+      this.data.chartOptions.yaxis.labels.formatter = (value) => {
+        return Number.parseFloat(value).toFixed(digits);
+      }
+    }
     //* タイトル
     this.data.chartOptions.title.text = title;
     //* X軸タイトル

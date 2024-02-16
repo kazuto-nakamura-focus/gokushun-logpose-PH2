@@ -141,7 +141,8 @@ export default {
               "日付",
               "葉面積(㎡)",
               response["data"].data[0],
-              year
+              year,
+              2,
             );
             console.log(response["data"].data[1]);
             // グラフ表示を行う
@@ -204,7 +205,8 @@ export default {
               "日付",
               "光合成量(kgCO2 vine^-1)",
               results,
-              year
+              year,
+              4
             );
             // グラフ表示を行う
             this.$refs.chr.addGraph(
