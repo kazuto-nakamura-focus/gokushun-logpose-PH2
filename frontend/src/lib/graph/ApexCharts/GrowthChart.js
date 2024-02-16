@@ -125,7 +125,8 @@ export class GrowthChart {
         yaxis: {
           labels: {
             formatter: function (val) {
-              return Math.round(val);
+              return val;
+              // return Math.round(val);
             },
           },
           title: {
@@ -164,7 +165,12 @@ export class GrowthChart {
     parent.isLoading = true;
     this.data.parent = parent;
   }
-  setOptions(title, xtitle, ytitle, source, year) {
+  setOptions(title, xtitle, ytitle, source, year, digits,) {
+    if(digits != null){
+      this.data.chartOptions.yaxis.labels.formatter = (val) => {
+        return Number.parseFloat(val).toFixed(digits);
+      };
+    }
     //* タイトル
     this.data.chartOptions.title.text = title;
     //* X軸タイトル
