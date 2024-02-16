@@ -142,7 +142,7 @@ export default {
               "葉面積(㎡)",
               response["data"].data[0],
               year,
-              3,
+              2,
             );
             console.log(response["data"].data[1]);
             // グラフ表示を行う
@@ -161,7 +161,7 @@ export default {
               "日付",
               "葉枚数(枚)",
               response["data"].data[1],
-              year,
+              year
             );
             // グラフ表示を行う
             this.$refs.chr.addGraph(
