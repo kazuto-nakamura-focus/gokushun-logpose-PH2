@@ -206,7 +206,7 @@ export default {
               "光合成量(kgCO2 vine^-1)",
               results,
               year,
-              4
+              5
             );
             // グラフ表示を行う
             this.$refs.chr.addGraph(
