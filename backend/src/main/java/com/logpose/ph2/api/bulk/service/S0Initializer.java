@@ -1,7 +1,5 @@
 package com.logpose.ph2.api.bulk.service;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,18 +23,6 @@ public class S0Initializer
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 *  全てのデバイス情報をDBから取得して返す
-	 * @return デバイス情報
-	 */
-	// --------------------------------------------------
-	@Transactional(readOnly = true)
-	public List<Ph2DevicesEnyity> getDeviceAllInfo()
-		{
-		return this.ph2DeviceMapper.selectAll();
-		}
-
 	// --------------------------------------------------
 	/**
 	 *  デバイス情報を取得する

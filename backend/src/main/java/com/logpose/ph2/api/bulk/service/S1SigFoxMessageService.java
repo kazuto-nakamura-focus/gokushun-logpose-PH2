@@ -11,6 +11,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 
 /**
  * SigFoxのデータをデバイス毎に取り込む
+ * @author 高橋史成
  */
 @Service
 public class S1SigFoxMessageService

@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,7 +23,6 @@ import com.logpose.ph2.api.bulk.service.S5DeviceDayService;
 import com.logpose.ph2.api.bulk.service.S6DailyBaseDataGeneratorService;
 import com.logpose.ph2.api.bulk.service.S7ModelDataApplyrService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
-import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 
@@ -59,24 +60,27 @@ public class DataLoadService
 	// ===============================================
 	// --------------------------------------------------
 	/**
-	 * 全てのデバイスのメッセージテーブルからまだロードされていないデータ
-	 * を各テーブルに加工して取り込む
+	 * 全てのデバイスのデータを最新の状態に更新する
 	 * @throws IOException
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
 	public void updateData() throws IOException, ParseException
 		{
+// * 処理済みハッシュリスト
+		Set<Long> finishList = new HashSet<Long>();
 // * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
-		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
+		List<Ph2DevicesEnyity> devices = this.statusDomain.selectAll();
 		for (Ph2DevicesEnyity device : devices)
 			{
 			try
 				{
-// * コーディネーターを生成する
-				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device, false);
-				// * コーディネーターを引数にデータロードを実行する
-				this.loadDevice(ldc);
+// * 既に処理済みの場合、終了
+				if (finishList.contains(device.getId())) continue;
+// * 全ロードモードかどうか
+				boolean isAll = this.statusDomain.isAll(device);
+// * データロードを実行する
+				this.loadDevices(isAll, device, finishList);
 				}
 			catch (Exception e)
 				{
@@ -90,23 +94,25 @@ public class DataLoadService
 	/**
 	 * 全てのデバイスのメッセージテーブルからまだロードされていないデータ
 	 * を各テーブルに加工して取り込む
-	 * @param dto パラメータ
 	 * @throws IOException
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public void createAllData(DataLoadDTO dto) throws IOException, ParseException
+	public void createAllData() throws IOException, ParseException
 		{
+// * 処理済みハッシュリスト
+		Set<Long> finishList = new HashSet<Long>();
 // * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
-		List<Ph2DevicesEnyity> devices = this.s0Initializer.getDeviceAllInfo();
+		List<Ph2DevicesEnyity> devices = this.statusDomain.selectAll();
+// * 現在の時刻を取得する
 		for (Ph2DevicesEnyity device : devices)
 			{
 			try
 				{
-// * コーディネーターを生成する
-				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device, true);
+// * 既に処理済みの場合、終了
+				if (finishList.contains(device.getId())) continue;
 // * コーディネーターを引数にデータロードを実行する
-				this.loadDevice(ldc);
+				this.loadDevices(true, device, finishList);
 				}
 			catch (Exception e)
 				{
@@ -116,6 +122,33 @@ public class DataLoadService
 			}
 		}
 
+	// --------------------------------------------------
+	/**
+	 * 指定されたデバイスIDに対してデータローディング処理を行う
+	 * @param deviceId
+	 * @throws Exception 
+	 */
+	// --------------------------------------------------
+	public void createData(Long deviceId) throws Exception
+		{
+// * 処理済みハッシュリスト
+		Set<Long> finishList = new HashSet<Long>();
+		Ph2DevicesEnyity device = this.s0Initializer.getDeviceInfo(deviceId);
+		try
+			{
+// * コーディネーターを引数にデータロードを実行する
+			this.loadDevices(true, device, finishList);
+			}
+		catch (Exception e)
+			{
+			LOG.error(device.getId() + "のロードに失敗しました。");
+			throw e;
+			}
+		}
+
+	// ===============================================
+	// 保護関数群
+	// ===============================================
 	// --------------------------------------------------
 	/**
 	 * 全てのデバイスのメッセージテーブルからまだロードされていないデータ
@@ -124,40 +157,94 @@ public class DataLoadService
 	 * @throws Exception 
 	 */
 	// --------------------------------------------------
-	public void createData(DataLoadDTO dto) throws Exception
+	private void loadDevices(boolean mode, Ph2DevicesEnyity device, Set<Long> finishList) throws Exception
 		{
-		List<Ph2DevicesEnyity> targets = new ArrayList<>();
-		
-// * 対象となるデバイスデータを取得する
-		Long deviceId = dto.getDeviceId();
-		while (null != deviceId)
+// * 最新のみ更新の場合
+		if (!mode)
 			{
-			Ph2DevicesEnyity device = this.s0Initializer.getDeviceInfo(deviceId);
-			targets.add(0, device);
-			deviceId = device.getPreviousDeviceId();
-			}
-
-// * 各対象デバイスに対して処理を実行する
-		for (Ph2DevicesEnyity target : targets)
-			{
+// * 終了リストに追加
+			finishList.add(device.getId());
+// * 該当デバイスのロック
+			if (false == this.statusDomain.setDataOnLoad(device))
+				{
+				LOG.info("デバイスデータがロック中なので、処理を終了します。:" + device.getId());
+				return;
+				}
 			try
 				{
-// * コーディネーターを生成する
-				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(target, true);
+// * コーディネーターの作成
+				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(device, false);
 // * コーディネーターを引数にデータロードを実行する
 				this.loadDevice(ldc);
 				}
-			catch (Exception e)
+			finally
 				{
-				LOG.error(target.getId() + "のロードに失敗しました。");
-				throw e;
+// * 該当デバイスのロック解除
+				this.statusDomain.setDataNotLoading(device);
+				}
+			}
+// * 全更新の場合
+		else
+			{
+			// * 該当デバイスのロック
+			if (false == this.statusDomain.setDataOnLoad(device))
+				{
+				LOG.info("デバイスデータがロック中なので、処理を終了します。:" + device.getId());
+				return;
+				}
+
+			List<Ph2DevicesEnyity> targets = new ArrayList<>();
+			List<Long> lockList = new ArrayList<>();
+			lockList.add(device.getId());
+			targets.add(0, device);
+			finishList.add(device.getId());
+// * 対象となるデバイスデータを取得する
+			Long prevId = device.getPreviousDeviceId();
+			while (null != prevId)
+				{
+				Ph2DevicesEnyity curr = this.s0Initializer.getDeviceInfo(prevId);
+				if (false == this.statusDomain.setDataOnLoad(curr))
+					{
+					LOG.info("デバイスデータがロック中なので、処理を終了します。:" + curr.getId());
+					return;
+					}
+				// まだ実行されていなければ、ロックリストと実行リストに入れる
+				if (!finishList.contains(curr.getId()))
+					{
+					lockList.add(curr.getId());
+					targets.add(0, curr);
+					finishList.add(curr.getId());
+					}
+				else
+					{
+					lockList.add(curr.getId());
+					}
+				prevId = curr.getPreviousDeviceId();
+				}
+			try
+				{
+// * 各対象デバイスに対して処理を実行する
+				for (Ph2DevicesEnyity target : targets)
+					{
+// * コーディネーターを生成する
+					LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(target, true);
+// * コーディネーターを引数にデータロードを実行する
+					this.loadDevice(ldc);
+// * 全ロードモードになっていれば、解除する
+					if (this.statusDomain.isAll(target))
+						{
+						this.statusDomain.setUpdateNotAll(target);
+						}
+					}
+				}
+			finally
+				{
+// * 該当デバイスのロック解除
+				this.statusDomain.unLockDevices(lockList);
 				}
 			}
 		}
 
-	// ===============================================
-	// 保護関数群
-	// ===============================================
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスのメッセージテーブルからまだロードされていないデータ
@@ -168,7 +255,7 @@ public class DataLoadService
 	// --------------------------------------------------
 	private void loadDevice(LoadCoordinator ldc) throws Exception
 		{
-// * 必要な情報が揃っていなければ、処理をしないで終了する
+		// * 必要な情報が揃っていなければ、処理をしないで終了する
 		if (!ldc.isLoadable())
 			{
 			LOG.warn("ローディングに必要な情報はありません。:" + ldc.getDeviceId());
@@ -177,11 +264,6 @@ public class DataLoadService
 		Long deviceId = ldc.getDeviceId();
 
 		LOG.info("デバイスデータのローディングを開始します。:" + deviceId);
-		if (false == this.statusDomain.setDataOnLoad(deviceId))
-			{
-			LOG.info("デバイスデータがロック中なので、処理を終了します。:" + deviceId);
-			return;
-			}
 		try
 			{
 // * 指定されたデバイスに対してSigFoxのデータを取り込む
@@ -202,7 +284,7 @@ public class DataLoadService
 					{
 					LOG.info("データ初期化の開始:" + deviceId);
 					this.s2deviceDataInitService.deleteTables(deviceId, null);
-					this.statusDomain.setDataInitialized(deviceId);
+					this.statusDomain.setDataInitialized(ldc.getDevice());
 					LOG.info("データ初期化の終了:" + deviceId);
 					}
 				catch (Exception e)
@@ -214,7 +296,7 @@ public class DataLoadService
 // * メッセージテーブルから基本情報のDBへのロードを実行する
 			LOG.info("生データ生成の開始:" + deviceId);
 			Date lastUpdated = this.s3RawDataLoaderService.loadMessages(ldc);
-			this.statusDomain.setRawDataLoaded(deviceId);
+			this.statusDomain.setRawDataLoaded(ldc.getDevice());
 			LOG.info("生データ生成の終了:" + deviceId);
 
 // * メッセージテーブルから基本情報のDBへのロードを実行する
@@ -230,12 +312,14 @@ public class DataLoadService
 				{
 				this.s6dailyBaseDataGeneratorService.doService(ldc, deviceDays);
 				this.s7modelDataApplyrService.doService(deviceId, deviceDays);
+				this.statusDomain.setModelDataCreated(ldc.getDevice());
 				}
-			LOG.info("デバイスデータのローディングが終了しました。");
+			LOG.info("デバイスデータのローディングが終了しました。:" + deviceId);
 			}
-		finally
+		catch (Exception e)
 			{
-			this.statusDomain.setDataNotLoading(deviceId);
+			e.printStackTrace();
+			LOG.info("デバイスデータのローディングに失敗しました。:" + deviceId);
 			}
 		}
 	}

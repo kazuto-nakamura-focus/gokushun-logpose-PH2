@@ -77,11 +77,11 @@ public class DeviceDataLoader
 // * デバイスの指定が無い場合、全てのデバイスを対象とする
 			if (null == dto.getDeviceId())
 				{
-				this.dataLoadService.createAllData(dto);
+				this.dataLoadService.createAllData();
 				}
 			else
 				{
-				this.dataLoadService.createData(dto);
+				this.dataLoadService.createData(dto.getDeviceId());
 				}
 			as_dto.setSuccess(null);
 			}

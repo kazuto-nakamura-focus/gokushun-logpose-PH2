@@ -81,6 +81,7 @@ public class DeviceServiceImpl implements DeviceService
 	 */
 	// --------------------------------------------------
 	@Override
+	@Transactional(readOnly = true)
 	public DeviceDetailDTO getDetail(Long deviceId)
 		{
 		DeviceDetailDTO result = this.deviceDomain.getDetail(deviceId);
@@ -96,12 +97,12 @@ public class DeviceServiceImpl implements DeviceService
 			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
 			result.setBaseDateShort(dateFormat.format(baseDate));
 			}
-		if(null != result.getOpStart())
+		if (null != result.getOpStart())
 			{
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			result.setOpStartShort(dateFormat.format(result.getOpStart()));
 			}
-		if(null != result.getOpEnd())
+		if (null != result.getOpEnd())
 			{
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(result.getOpEnd());
@@ -135,6 +136,8 @@ public class DeviceServiceImpl implements DeviceService
 			this.sensorDomain.delete(deviceId);
 // * デバイスの削除
 			this.deviceDomain.deleteByDeviceId(deviceId);
+// * 全データの更新
+			this.deviceStatusDomain.prepareForAllUpdate(locks);
 			}
 		catch (Exception e)
 			{
@@ -170,6 +173,8 @@ public class DeviceServiceImpl implements DeviceService
 				{
 				this.sensorDomain.add(device.getId(), dto.getSensorItems());
 				}
+// * 全データの更新
+			this.deviceStatusDomain.prepareForAllUpdate(locks);
 			}
 		catch (Exception e)
 			{
@@ -202,6 +207,8 @@ public class DeviceServiceImpl implements DeviceService
 // * 引継ぎ元データの設定（あれば）
 			this.deviceDomain.setPreviousDevice(device);
 			this.sensorDomain.add(dto.getId(), dto.getSensorItems());
+// * 全データの更新
+			this.deviceStatusDomain.prepareForAllUpdate(locks);
 			}
 		catch (Exception e)
 			{

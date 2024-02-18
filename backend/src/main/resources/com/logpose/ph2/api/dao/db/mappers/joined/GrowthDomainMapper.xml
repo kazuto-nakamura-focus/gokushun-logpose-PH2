@@ -54,6 +54,7 @@
 		db.sun_time as sun_time,
 		db.average as average,
 		db.cdd as cdd,
+		db.raw_cdd as raw_cdd,
 		db.par as par,
 		dd.has_real as isReal
 		FROM

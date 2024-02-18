@@ -78,5 +78,9 @@ public interface Ph2DevicesMapper {
 
 	List<ModelRefDataDTO> selectDeviceList();
 
-	List<Ph2DevicesEnyity> selectAll();
+	List<Ph2DevicesEnyity> selectAll(@Param("status") Integer status);
+	
+	int updateAllStatus(@Param("status") int status, @Param("idList") List<Long> idList);
+	int unsetAllStatus(@Param("status") int status, @Param("idList") List<Long> idList);
+	
 }

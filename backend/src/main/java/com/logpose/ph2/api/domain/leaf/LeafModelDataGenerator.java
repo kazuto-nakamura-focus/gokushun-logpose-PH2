@@ -40,6 +40,7 @@ public class LeafModelDataGenerator
 				{
 				cdd += data.getRawCdd();
 				daily_base_data.setCdd(cdd);
+				data.setCdd(cdd);
 	// * wible値を取得
 				double wible = parameters.getWibles().get(lapse_day).getValue();
 	// * 樹冠葉面積モデル値を算出
@@ -49,6 +50,7 @@ public class LeafModelDataGenerator
 			else
 				{
 				daily_base_data.setCdd((double) 0);
+				data.setCdd(0);
 				}
 			mapper.updateByPrimaryKey(daily_base_data);
 			

@@ -420,6 +420,8 @@
     </set>
     where id = #{id,jdbcType=BIGINT}
   </update>
+  
+ <!-- ************************************************************************** -->
   <update id="updateByPrimaryKey" parameterType="com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity">
     <!--
       WARNING - @mbg.generated
@@ -444,22 +446,50 @@
     where id = #{id,jdbcType=BIGINT}
   </update>
   
+  <!-- ************************************************************************** -->
    <select id="selectAll" resultMap="BaseResultMap">
     select 
-    <include refid="Base_Column_List" />
+   	<include refid="Base_Column_List" />
     from ph2_devices
+    <if test="status != null">
+    where
+    	(data_status <![CDATA[&]]> #{status}) <![CDATA[>]]> 0
+	</if>
     order by op_start, id
   </select>
   
- 
+	<!-- ************************************************************************** -->
   	<resultMap id="ModelRefDataDTO" type="com.logpose.ph2.api.dto.ModelRefDataDTO">
 		<result column="deviceId" property="deviceId" />
 		<result column="baseDate" property="baseDate" />
 	</resultMap>	
+	
+	<!-- ************************************************************************** -->
     <select id="selectDeviceList" resultMap="ModelRefDataDTO">
-    select 
-    	id as deviceId,
-    	base_date as baseDate
-    from ph2_devices
-  </select>
+    	select 
+    		id as deviceId,
+    		base_date as baseDate
+   		from ph2_devices
+	</select>
+    
+    <!-- ************************************************************************** -->
+      <update id="updateAllStatus" >
+      	update ph2_devices
+      	set data_status = data_status | #{status}
+      	where
+      		id in             
+      		<foreach item="item" collection="idList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+      </update>
+    <!-- ************************************************************************** -->
+      <update id="unsetAllStatus" >
+      	update ph2_devices
+      	set data_status = ( data_status | #{status} )- #{status}
+      	where
+      		id in             
+      		<foreach item="item" collection="idList" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+      </update>
 </mapper>
