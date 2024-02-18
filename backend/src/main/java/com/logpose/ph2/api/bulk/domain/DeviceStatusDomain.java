@@ -157,13 +157,21 @@ public class DeviceStatusDomain
 // * 引継ぎ元のデバイスがあれば、ロックを掛ける
 		if (null != device.getPreviousDeviceId())
 			{
-			Ph2DevicesEnyity tmp = new Ph2DevicesEnyity();
-			tmp.setId(device.getPreviousDeviceId());
-			if (!this.setDataOnLoad(tmp))
+			Ph2DevicesEnyity tmp = this.ph2DevicesMapper.selectByPrimaryKey(device.getPreviousDeviceId());
+			if( null != tmp)
 				{
-				new RuntimeException(ONLOAD_ERROR);
+				tmp.setId(device.getPreviousDeviceId());
+				if (!this.setDataOnLoad(tmp))
+					{
+					new RuntimeException(ONLOAD_ERROR);
+					}
+				rockList.add(device.getPreviousDeviceId());
 				}
-			rockList.add(device.getPreviousDeviceId());
+			else
+				{
+				device.setPreviousDeviceId(null);
+				this.ph2DevicesMapper.updateByPrimaryKey(device);
+				}
 			}
 // * このデバイスを参照しているデバイスがあれば、ロックをかける
 		Ph2DevicesEnyityExample exm = new Ph2DevicesEnyityExample();
