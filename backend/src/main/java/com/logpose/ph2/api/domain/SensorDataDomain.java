@@ -163,7 +163,7 @@ public class SensorDataDomain
 			Long sensorId, Date startDate, Date endDate, long minutes)
 			throws ParseException
 		{
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		SenseorDataDTO results = new SenseorDataDTO();// * 返却用データ
 		double min = Double.MAX_VALUE;//* 最小値
 		double max = Double.MIN_VALUE;//*最大値
@@ -203,7 +203,7 @@ public class SensorDataDomain
 				if (max < value) max = value;
 // * カテゴリーの設定
 				StringBuilder sb = new StringBuilder(dateFormat.format(entity.getCastedAt()));
-				sb.replace(10,11, "0");
+//				sb.replace(10,11, "0");
 				results.getCategory().add(sb.toString());
 // * 次のインターバルの設定
 				prevtime = data_time;

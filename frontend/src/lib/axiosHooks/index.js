@@ -11,4 +11,6 @@ const axios = Axios.create({
   withCredentials: true,
 });
 
+axios.defaults.timeout = 60 * 1000;
+
 export default axios;

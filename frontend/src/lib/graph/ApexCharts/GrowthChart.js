@@ -56,13 +56,13 @@ const yaxisAnnotations = {
 }
 
 const todayXaxisAnnotation = {
-  x: moment().format("MM/DD"),
+  x: moment().format("YYYY/MM/DD"),
   borderColor: '#FF0000',
   strokeDashArray: 0,
   label: {
     borderColor: '#FF0000',
     show: true,
-    text: `TODAY（${moment().format("MM/DD")}）`,
+    text: `TODAY（${moment().format("YYYY/MM/DD")}）`,
     orientation: 'horizontal',
     style: {
       color: '#FF0000',
@@ -142,7 +142,7 @@ export class GrowthChart {
           },
           labels: {
             formatter: function (val) {
-              return moment(val).format("MM/DD");
+              return moment(val).format("YYYY/MM/DD");
             },
           },
         },
@@ -164,7 +164,12 @@ export class GrowthChart {
     parent.isLoading = true;
     this.data.parent = parent;
   }
-  setOptions(title, xtitle, ytitle, source) {
+  setOptions(title, xtitle, ytitle, source, year, digits) {
+    if(digits != null){
+      this.data.chartOptions.yaxis.labels.formatter = (value) => {
+        return Number.parseFloat(value).toFixed(digits);
+      }
+    }
     //* タイトル
     this.data.chartOptions.title.text = title;
     //* X軸タイトル
@@ -193,11 +198,18 @@ export class GrowthChart {
     } else {
       this.data.chartOptions.annotations.yaxis = [];
     }
-    const strToday = moment().format("MM/DD");
-    todayXaxisAnnotation["x"] = strToday;
-    todayXaxisAnnotation["label"]["text"] = `TODAY（${strToday}）`;
+    //選択した年が表示日の年と一致している場合、Todayアノテーション線を表示する。
+    if(year != null){
+      const today = moment();
+      const todayYear = today.year();
+      if(year == todayYear){
+        const strToday = today.format("YYYY/MM/DD");
+        todayXaxisAnnotation["x"] = strToday;
+        todayXaxisAnnotation["label"]["text"] = `TODAY（${strToday}）`;
+        this.data.chartOptions.annotations.xaxis = [todayXaxisAnnotation];
+      }
+    }
 
-    this.data.chartOptions.annotations.xaxis = [todayXaxisAnnotation],
     this.data.chartOptions.yaxis.max = source.YEnd;
     this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;
