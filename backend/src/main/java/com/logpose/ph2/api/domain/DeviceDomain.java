@@ -112,11 +112,15 @@ public class DeviceDomain
 		{
 // * デバイスの削除
 		this.devicesMapper.deleteByPrimaryKey(deviceId);
+// * このデバイスを参照しているデバイスの引継ぎIDをNULLにする
 		Ph2DevicesEnyityExample devExm = new Ph2DevicesEnyityExample();
 		devExm.createCriteria().andPreviousDeviceIdEqualTo(deviceId);
-		Ph2DevicesEnyity update = new Ph2DevicesEnyity();
-		update.setPreviousDeviceId(null);
-		this.devicesMapper.updateByExampleSelective(update, devExm);
+		List<Ph2DevicesEnyity> list = this.devicesMapper.selectByExample(devExm);
+		for(Ph2DevicesEnyity device : list)
+			{
+			device.setPreviousDeviceId(null);
+			this.devicesMapper.updateByPrimaryKey(device);
+			}
 		}
 
 	// --------------------------------------------------

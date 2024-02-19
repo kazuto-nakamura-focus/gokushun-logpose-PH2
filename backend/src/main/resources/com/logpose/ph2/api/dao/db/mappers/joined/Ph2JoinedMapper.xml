@@ -20,7 +20,7 @@
 	</resultMap>	
 	
 	 <select id="getSensorData" resultMap="SensorDataDTO">
-SELECT
+		SELECT
 	 		distinct
 	 		sn.device_id as deviceId,
 	 		sn.id as sensorId,
