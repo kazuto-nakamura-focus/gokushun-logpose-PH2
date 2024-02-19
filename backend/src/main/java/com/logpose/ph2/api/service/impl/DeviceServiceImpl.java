@@ -84,24 +84,28 @@ public class DeviceServiceImpl implements DeviceService
 	@Transactional(readOnly = true)
 	public DeviceDetailDTO getDetail(Long deviceId)
 		{
+// * デバイステーブルからデバイス情報を取得する
 		DeviceDetailDTO result = this.deviceDomain.getDetail(deviceId);
-		// * 基準日を表示用に修正する
+// * 基準日を表示用に修正する
 		Date baseDate = result.getBaseDate();
-		// * 未指定の場合
+// * 未指定の場合、デフォルト設定する
 		if (null == baseDate)
 			{
 			result.setBaseDateShort("01/01");
 			}
+// * 年度を省略する
 		else
 			{
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd");
 			result.setBaseDateShort(dateFormat.format(baseDate));
 			}
+// * 運用開始日を文字列に変換する
 		if (null != result.getOpStart())
 			{
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			result.setOpStartShort(dateFormat.format(result.getOpStart()));
 			}
+// * 運用終了日を前日に修正し、文字列に変換する
 		if (null != result.getOpEnd())
 			{
 			Calendar cal = Calendar.getInstance();
@@ -110,6 +114,7 @@ public class DeviceServiceImpl implements DeviceService
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
 			result.setOpEndShort(dateFormat.format(cal.getTime()));
 			}
+// * センサーデータを取得する
 		List<SensorUnitReference> sensors = this.sensorDomain.getSensors(deviceId);
 		result.setSensorItems(sensors);
 		return result;
