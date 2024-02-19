@@ -59,6 +59,10 @@
                   @click:row="clickRow"
                   mobile-breakpoint="0"
                   :hide-default-footer="false"
+                  :page.sync="currentPage"
+                  :items-per-page.sync="currentItemsPerPage"
+                  @update:page="onPageChange"
+                  @update:items-per-page="onItemsPerPageChange"
                 >
                 </v-data-table>
                 <v-data-table
@@ -73,6 +77,10 @@
                   @click:row="clickRow"
                   mobile-breakpoint="0"
                   :hide-default-footer="false"
+                  :page.sync="currentPage"
+                  :items-per-page.sync="currentItemsPerPage"
+                  @update:page="onPageChange"
+                  @update:items-per-page="onItemsPerPageChange"
                 >
                 </v-data-table>
               </v-col>
@@ -149,6 +157,11 @@ export default {
 
       mapLoader: null,
       map: null,
+
+      //テーブルの現在ページ・ページ内行数を格納する。
+      //ページ・ページ内行数が変更することで、こちらの値を変更する。
+      currentPage: 1,
+      currentItemsPerPage: 10,
     };
   },
 
@@ -321,6 +334,15 @@ export default {
           console.log(error);
         });
     },
+    
+    // ページ変更時のページ番号を一時的に記憶する。
+    onPageChange: function(newPage) {
+      this.currentPage = newPage;
+    },
+    // 行数変更時の行数を一時的に記憶する。
+    onItemsPerPageChange: function(newItemsPerPage) {
+      this.currentItemsPerPage = newItemsPerPage;
+    }
   },
 };
 </script>
