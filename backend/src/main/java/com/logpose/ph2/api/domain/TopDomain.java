@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
@@ -47,7 +46,6 @@ public class TopDomain
 	 * @return List<DataSummaryDTO>
 	 */
 	// --------------------------------------------------
-	@Cacheable("getFieldData")
 	public List<DataSummaryDTO> getFieldData()
 		{
 // * デバイスリストの取得
