@@ -41,7 +41,7 @@ export default {
         { text: "葉面濡れ(raw counts)" },
         { text: "土壌水分(pF)" },
         { text: "土壌温度(℃)" },
-        { text: "日射(μmol/㎡s)" },
+        { text: "体積含水率(μmol/㎡s)" },
         { text: "樹液流2(g/h)"},
       ],
 
