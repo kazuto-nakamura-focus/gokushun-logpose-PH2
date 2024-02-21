@@ -54,8 +54,7 @@ public class S6DailyBaseDataGeneratorService
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void doService(LoadCoordinator ldc,
-			List<Ph2DeviceDayEntity> deviceDays)
+	public void doService(LoadCoordinator ldc, List<Ph2DeviceDayEntity> deviceDays)
 		{
 		LOG.info("日ベースのデータ作成開始：" + ldc.getDeviceId());
 		DailyBaseCacher cache = new DailyBaseCacher(ph2DailyBaseDataMapper);
@@ -70,7 +69,7 @@ public class S6DailyBaseDataGeneratorService
 			}
 
 		List<Ph2DeviceDayEntity> unset_devices = new ArrayList<>();
-		for (;i<deviceDays.size();i++)
+		for (; i < deviceDays.size(); i++)
 			{
 			Ph2DeviceDayEntity device_day = deviceDays.get(i);
 
@@ -85,7 +84,6 @@ public class S6DailyBaseDataGeneratorService
 				this.setIsolationData(device_day, tmRecords, result, cache);
 				device_day.setHasReal(true);
 				this.ph2DeviceDayMapper.updateByPrimaryKey(device_day);
-
 				unset_devices.clear();
 				}
 			else
@@ -162,7 +160,7 @@ public class S6DailyBaseDataGeneratorService
 		entity.setAverage(sum / count);
 		entity.setTm((min + max) / 2 - 10);
 		entity.setRawCdd((min + max) / 2 - 9.18);
-		entity.setCdd((double) -1);
+		entity.setCdd(0.0);
 		result.setEntity(entity);
 		return result;
 		}
@@ -240,9 +238,9 @@ public class S6DailyBaseDataGeneratorService
 	private List<ExtendDailyBaseDataEntity> checkTransfer(LoadCoordinator ldc)
 		{
 // * 引継ぎ元デバイスIDが無ければ、終了
-		Ph2DevicesEnyity  device = ldc.getDevice();
+		Ph2DevicesEnyity device = ldc.getDevice();
 		if (null == device.getPreviousDeviceId()) return null;
-		
+
 // * 現在処理中のデバイスの最も古いデータの日付をRelBaseDataから取得する
 		final Calendar oldest_date = Calendar.getInstance();
 		oldest_date.setTime(ldc.getOldestBaseDate());
@@ -254,15 +252,16 @@ public class S6DailyBaseDataGeneratorService
 				.andDateEqualTo(oldest_date.getTime());
 		List<Ph2DeviceDayEntity> device_days = this.ph2DeviceDayMapper.selectByExample(exm);
 		Ph2DeviceDayEntity device_day = device_days.get(0);
-		
+
 // * 引継ぎデータを取得
 // * 現在処理中のデバイスの最も古いデータの日付より前のDailyBaseDataを引継ぎ元デバイスから取得する
-		List<ExtendDailyBaseDataEntity> base_data = this.ph2DailyBaseDataMapper.selectOldData(device.getPreviousDeviceId(),
+		List<ExtendDailyBaseDataEntity> base_data = this.ph2DailyBaseDataMapper.selectOldData(
+				device.getPreviousDeviceId(),
 				device_day.getYear(), device_day.getLapseDay());
 
 // * データが無ければ終了
 		if (base_data.size() == 0) return null;
-		
+
 		return base_data;
 		}
 
@@ -276,7 +275,8 @@ public class S6DailyBaseDataGeneratorService
 	 */
 	// --------------------------------------------------
 	private int copyOldData(long deviceId,
-			List<Ph2DeviceDayEntity> newDeviceDays, List<ExtendDailyBaseDataEntity> oldDeviceDays, DailyBaseCacher cache)
+			List<Ph2DeviceDayEntity> newDeviceDays, List<ExtendDailyBaseDataEntity> oldDeviceDays,
+			DailyBaseCacher cache)
 		{
 // * 引継ぎ元のデータの経過日までデバイスディを移動
 		int i = 0;
@@ -286,7 +286,7 @@ public class S6DailyBaseDataGeneratorService
 			if (first_prev_data.getLapseDay().intValue() == dd.getLapseDay().intValue()) break;
 			i++;
 			} ;
-// * 引継ぎデバイスIDからのデータの移行deviceday
+// * 引継ぎデバイスIDからのデータの移行
 		for (ExtendDailyBaseDataEntity prev : oldDeviceDays)
 			{
 			Ph2DeviceDayEntity device_day = newDeviceDays.get(i++);

@@ -264,10 +264,22 @@ public class S5DeviceDayService
 		DeviceDayCacher cacher = new DeviceDayCacher(maxId, ph2DeviceDayMapper, ph2ModelDataMapper);
 
 // * 初期化
-		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
 		Calendar seek = Calendar.getInstance();
 		seek.setTime(term.getStartDate().getTime());
 		long dayCount = term.getDayCount() + 1;
+		
+// * デバイス年度の設定
+		int year = seek.get(Calendar.YEAR);
+		Calendar baseDate = Calendar.getInstance();
+		// * 基準日
+		baseDate.setTime(term.getBaseDate().getTime());
+		// * シークする年の設定
+		baseDate.set(Calendar.YEAR, seek.get(Calendar.YEAR));
+		// * シーク開始日が基準日より以前の場合
+		if(baseDate.getTimeInMillis() >= seek.getTimeInMillis() )
+			{
+			year--;
+			}
 
 // * デバイスディテーブルのレコードを追加する
 		for (; seek.getTimeInMillis() < term.getEndDate().getTimeInMillis(); seek.add(Calendar.DATE, 1), dayCount++)
@@ -276,9 +288,11 @@ public class S5DeviceDayService
 			if ((seek.get(Calendar.MONTH) == term.getBaseDate().get(Calendar.MONTH)) &&
 					(seek.get(Calendar.DATE) == term.getBaseDate().get(Calendar.DATE)))
 				{
+				year++;
 				dayCount = 1;
 				}
 			// * 日付テーブルから該当デバイスレコードを取得する。
+			Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
 			exm.createCriteria().andDeviceIdEqualTo(device.getId())
 					.andDateEqualTo(seek.getTime()).andLapseDayEqualTo((short) dayCount);
 			List<Ph2DeviceDayEntity> olds = this.ph2DeviceDayMapper.selectByExample(exm);
@@ -291,13 +305,14 @@ public class S5DeviceDayService
 				result.add(olds.get(0));
 				continue;
 				}
-
+			
+			
 			Ph2DeviceDayEntity entity = new Ph2DeviceDayEntity();
 			entity.setDate(seek.getTime());
 			entity.setDeviceId(device.getId());
 			entity.setHasReal(false);
 			entity.setLapseDay((short) dayCount);
-			entity.setYear((short) seek.get(Calendar.YEAR));
+			entity.setYear((short) year);
 			cacher.addDeviceDayData(entity);
 			result.add(entity);
 			}

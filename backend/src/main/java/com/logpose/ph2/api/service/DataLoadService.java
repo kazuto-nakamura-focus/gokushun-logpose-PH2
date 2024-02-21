@@ -21,7 +21,8 @@ import com.logpose.ph2.api.bulk.service.S3RawDataLoaderService;
 import com.logpose.ph2.api.bulk.service.S4HeadLineLoaderService;
 import com.logpose.ph2.api.bulk.service.S5DeviceDayService;
 import com.logpose.ph2.api.bulk.service.S6DailyBaseDataGeneratorService;
-import com.logpose.ph2.api.bulk.service.S7ModelDataApplyrService;
+import com.logpose.ph2.api.bulk.service.S7WeatherHistoryImport;
+import com.logpose.ph2.api.bulk.service.S8ModelDataApplyrService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
@@ -53,7 +54,9 @@ public class DataLoadService
 	@Autowired
 	S6DailyBaseDataGeneratorService s6dailyBaseDataGeneratorService;
 	@Autowired
-	S7ModelDataApplyrService s7modelDataApplyrService;
+	S7WeatherHistoryImport s7WeatherHistoryImport;
+	@Autowired
+	S8ModelDataApplyrService s8modelDataApplyrService;
 
 	// ===============================================
 	// 公開関数群
@@ -311,7 +314,12 @@ public class DataLoadService
 			if ((null != deviceDays) && (deviceDays.size() > 0))
 				{
 				this.s6dailyBaseDataGeneratorService.doService(ldc, deviceDays);
-				this.s7modelDataApplyrService.doService(deviceId, deviceDays);
+				
+				LOG.info("デバイスデータの欠損をマスターデータから補完します。:" + deviceId);
+				this.s7WeatherHistoryImport.importFromMaster(deviceDays);
+				LOG.info("デバイスデータの欠損のマスターデータからの補完完了：" + deviceId);
+				
+				this.s8modelDataApplyrService.doService(deviceId, deviceDays);
 				this.statusDomain.setModelDataCreated(ldc.getDevice());
 				}
 			LOG.info("デバイスデータのローディングが終了しました。:" + deviceId);

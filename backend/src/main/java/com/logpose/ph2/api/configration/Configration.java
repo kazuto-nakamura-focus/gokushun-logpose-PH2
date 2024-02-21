@@ -47,5 +47,10 @@ public class Configration
 		{
 		return new DefaultSigFoxParameters();
 		}
-
+	@Bean
+	@ConfigurationProperties(prefix = "weather.query")
+	public DefaultWeatherlAPIParameters configDefaultWeatherlAPIParameters()
+		{
+		return new DefaultWeatherlAPIParameters();
+		}
 	}
