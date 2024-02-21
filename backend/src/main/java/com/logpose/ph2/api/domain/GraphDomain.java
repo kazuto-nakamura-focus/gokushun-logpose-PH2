@@ -60,6 +60,8 @@ public class GraphDomain
 				for (; index < values.size(); index++)
 					{
 					final FDataEntity value = values.get(index);
+// * データが無ければ終了
+					if(null == value.getValue()) return resultData;
 					if (value.getValue() > sigF)
 						{
 						EventDaysDTO eventDay = new EventDaysDTO();

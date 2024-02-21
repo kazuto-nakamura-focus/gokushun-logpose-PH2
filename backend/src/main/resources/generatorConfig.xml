@@ -205,6 +205,11 @@
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table> -->
-		
+		<table tableName="ph2_weather_daily_master"
+			domainObjectName="Ph2WeatherDailyMasterEntity"
+			mapperName="Ph2WeatherDailyrMapper" enableInsert="true"
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" modelType="flat">
+		</table>
 	</context>
 </generatorConfiguration>
