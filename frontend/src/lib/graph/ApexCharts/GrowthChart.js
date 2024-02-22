@@ -1,7 +1,7 @@
 //import { concat } from "core-js/core/array";
 import moment from "moment";
 const yaxisAnnotations = {
-  "萌芽期":{
+  "萌芽期": {
     borderColor: '#70ad47',
     borderWidth: 2,
     strokeDashArray: 0,
@@ -14,7 +14,7 @@ const yaxisAnnotations = {
       },
     }
   },
-  "開花日":{
+  "開花日": {
     borderColor: '#ff0066',
     borderWidth: 2,
     strokeDashArray: 0,
@@ -27,7 +27,7 @@ const yaxisAnnotations = {
       },
     }
   },
-  "べレーゾン":{
+  "べレーゾン": {
     borderColor: '#4472c4',
     borderWidth: 2,
     strokeDashArray: 0,
@@ -40,7 +40,7 @@ const yaxisAnnotations = {
       },
     }
   },
-  "収穫日":{
+  "収穫日": {
     borderColor: '#ed7d31',
     borderWidth: 2,
     strokeDashArray: 0,
@@ -83,6 +83,9 @@ export class GrowthChart {
           type: 'area',
           stacked: false,
           height: 350,
+          animations: {
+            enabled: false,
+          },
           zoom: {
             type: 'x',
             enabled: true,
@@ -105,9 +108,9 @@ export class GrowthChart {
           size: 0,
         },
         stroke: {
-          width: [3, 3],
+          width: 2,
           curve: 'straight',
-          dashArray: [0, 3]
+          //        dashArray: [0, 3]
         },
         title: {
           text: '生育推定',
@@ -136,15 +139,16 @@ export class GrowthChart {
           categories: [],
           type: 'datetime',
           tickAmount: 12, // 365日の12分割
+          axisTicks: { show: false, },
           title: {
             text: '',
             offsetY: -20,
           },
-          labels: {
-            formatter: function (val) {
-              return moment(val).format("YYYY/MM/DD");
-            },
-          },
+          //    labels: {
+          //      formatter: function (val) {
+          //        return moment(val).format("YYYY/MM/DD");
+          //      },
+          //    },
         },
         tooltip: {
           shared: false,
@@ -156,7 +160,7 @@ export class GrowthChart {
         },
         annotations: {
           yaxis: []
-        }
+        },
       }
     }
   }
@@ -166,10 +170,10 @@ export class GrowthChart {
   }
   setOptions(title, xtitle, ytitle, source, year, digits) {
     console.log(title);
-    if(title == "生育ステージ推定モデル"){
+    if (title == "生育ステージ推定モデル") {
       this.data.chartOptions.chart.height = 500;
     }
-    if(digits != null){
+    if (digits != null) {
       this.data.chartOptions.yaxis.labels.formatter = (value) => {
         return Number.parseFloat(value).toFixed(digits);
       }
@@ -187,8 +191,8 @@ export class GrowthChart {
         const value = item?.value;
         const name = item?.name;
         let annotation = yaxisAnnotations[`${name}`];
-        
-        if(annotation === undefined) continue;
+
+        if (annotation === undefined) continue;
         annotation['y'] = value;
         annotation['label']['text'] = name;
 
@@ -203,10 +207,10 @@ export class GrowthChart {
       this.data.chartOptions.annotations.yaxis = [];
     }
     //選択した年が表示日の年と一致している場合、Todayアノテーション線を表示する。
-    if(year != null){
+    if (year != null) {
       const today = moment();
       const todayYear = today.year();
-      if(year == todayYear){
+      if (year == todayYear) {
         const strToday = today.format("YYYY/MM/DD");
         todayXaxisAnnotation["x"] = strToday;
         todayXaxisAnnotation["label"]["text"] = `TODAY（${strToday}）`;

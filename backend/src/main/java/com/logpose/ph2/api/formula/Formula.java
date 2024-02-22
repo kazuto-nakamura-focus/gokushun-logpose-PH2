@@ -284,6 +284,7 @@ public class Formula
 	// --------------------------------------------------
 	public static double toVMCOrgaic(double x)
 		{
+		x = x/1000;
 		// -0.039+1.8753V-4.0596V^2+6.3711V^3-4.7477V^4+1.3911V^5
 		return -0.039+1.8753*x-Math.pow(4.0596*x, 2)
 			+ Math.pow(6.3711*x, 3) - Math.pow(4.7477*x, 4)
@@ -299,6 +300,7 @@ public class Formula
 	// --------------------------------------------------
 	public static double toVMCMineral(double x)
 		{
+		x = x/1000;
 		// -0.0714+1.719V-3.7213V^2+5.8402V^3-4.3521V^4+1.2752V^5
 		return -0.0714+1.719*x-Math.pow(3.7213*x, 2)
 			+ Math.pow(5.8402*x, 3) - Math.pow(4.3521*x, 4)
