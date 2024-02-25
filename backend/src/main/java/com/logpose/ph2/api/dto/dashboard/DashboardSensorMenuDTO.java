@@ -3,12 +3,13 @@ package com.logpose.ph2.api.dto.dashboard;
 import java.util.List;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardSensorsEntity;
+import com.logpose.ph2.api.dto.element.Label;
 
 import lombok.Data;
 
 @Data
-public class DashBoardSensorsDTO
+public class DashboardSensorMenuDTO
 	{
-	private Long deviceId;
-	private List<Ph2DashBoardSensorsEntity> sensors;
+	private List<Label> menu;
+	private List<Ph2DashBoardSensorsEntity> displays;
 	}

@@ -150,8 +150,8 @@ export default {
         6: "葉面濡れ(raw counts)",
         7: "土壌水分(pF)",
         8: "土壌温度(℃)",
-        9: "体積含水率\r\nオーガニック(％)",
-        10: "体積含水率-(％)",
+        9: "体積含水率-オーガニック(％)",
+        10: "体積含水率-ミネラル(％)",
       },
       masterRawData: [],
 
@@ -254,7 +254,6 @@ export default {
     handleDownloadCSV: function () {
       const arrayHeaders = [];
       const arrayDatas = [];
-      console.log(this.masterRawDataHeader.length);
       this.masterRawDataHeader.map((headerItem) => {
         arrayHeaders.push(headerItem.text);
       });

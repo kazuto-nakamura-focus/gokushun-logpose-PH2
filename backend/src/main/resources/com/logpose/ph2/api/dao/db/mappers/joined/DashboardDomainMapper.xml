@@ -2,7 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper
 	namespace="com.logpose.ph2.api.dao.db.mappers.joined.DashboardDomainMapper">
-
+	
+<!-- ************************************************************************** -->
 	<resultMap id="DashBoardDevicesDTO"
 		type="com.logpose.ph2.api.dto.dashboard.DashBoardDevicesDTO">
 		<result column="field_id" property="fieldId"></result>
@@ -20,34 +21,5 @@
 			ph2_devices dv
 		left join
 			ph2_dashboard_display dd on dv.id = dd.device_id
-	</select>
-	
-	<resultMap id="DashBoardSensorsDTO"
-		type="com.logpose.ph2.api.dto.dashboard.DashBoardSensorsDTO">
-		<result column="device_id" property="deviceId"></result>
-		<result column="sensor_id" property="sensorId"></result>
-		<result column="sensor_name" property="sensorName"></result>
-		<result column="dataId" property="dataId"></result>
-		<result column="dataName" property="dataName"></result>
-		<result column="display_no" property="displayNo"></result>
-	</resultMap>
-
-	<select id="selectSensorSettings" resultMap="DashBoardSensorsDTO">
-		SELECT
-			sn.device_id as device_id,
-			sn.id as sensor_id,
-			sn.name as sensor_name,
-			sc.id as dataId,
-			sc.name as dataName,
-			ds.display_no as display_no
-		FROM
-			ph2_sensors sn
-		JOIN
-			ph2_sensor_contents sc on sn.sensor_content_id=sc.id
-		LEFT JOIN
-			ph2_dashboard_sensors ds on  sn.id = ds.sensor_id
-		WHERE
-			sn.device_id = #{deviceId}
-		ORDER BY ds.display_no, sc.id
 	</select>
 </mapper>

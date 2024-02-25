@@ -7,5 +7,6 @@ public class DefaultWeatherlAPIParameters
 	{
 	private String hourly;
 	private String daily;
-	private String hisotryUrl;
+	private String historyUrl;
+	private String currentUrl;
 	}

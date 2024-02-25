@@ -7,11 +7,12 @@ export class TopDataParser {
     for (const dataElem of data) {
       // * 各データ要素を表示用アイテムに代入する
       var item = {};
-      item.title = dataElem.field;
+      item.title = dataElem.field; // 圃場名
       item.comment = dataElem.device;
-      item.date = dataElem.date;
+      item.date = dataElem.date; // 更新時刻
       item.fieldId = dataElem.fieldId;
       item.deviceId = dataElem.deviceId;
+      item.forecast = dataElem.forecastList;
       item.state = new Object;
       item.state = false;
       item.items = [];

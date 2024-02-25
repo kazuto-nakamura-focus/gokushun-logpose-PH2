@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.bulk.domain.DeviceStatusDomain;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
+import com.logpose.ph2.api.domain.DashboardDomain;
 import com.logpose.ph2.api.domain.DeviceDomain;
 import com.logpose.ph2.api.domain.MasterDomain;
 import com.logpose.ph2.api.domain.SensorDomain;
@@ -43,7 +44,9 @@ public class DeviceServiceImpl implements DeviceService
 	private MasterDomain masterDomain;
 	@Autowired
 	private DeviceStatusDomain deviceStatusDomain;
-
+	@Autowired
+	private DashboardDomain dashboardDomain;
+	
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
@@ -167,6 +170,8 @@ public class DeviceServiceImpl implements DeviceService
 		{
 // * デバイスの追加
 		Ph2DevicesEnyity device = this.deviceDomain.add(dto);
+// * ダッシュボード表示の追加
+		this.dashboardDomain.addDevice(device.getId());
 // * 関連デバイスのロック
 		List<Long> locks = this.deviceStatusDomain.lockDevices(device);
 		try

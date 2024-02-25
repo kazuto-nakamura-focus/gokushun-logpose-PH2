@@ -10,7 +10,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.bulk.domain.DeviceStatusDomain;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
@@ -33,8 +32,6 @@ public class DeviceDomain
 	private Ph2FieldDeviceJoinMapper fieldDeviceJoinMapper;
 	@Autowired
 	private Ph2DevicesMapper devicesMapper;
-	@Autowired
-	private DeviceStatusDomain deviceStatusDomain;
 
 	// ===============================================
 	// パブリック関数群

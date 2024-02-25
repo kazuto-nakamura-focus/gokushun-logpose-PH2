@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardDisplayEntity;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.dashboard.DashBoardSensorsDTO;
-import com.logpose.ph2.api.dto.dashboard.DashboardSet;
+import com.logpose.ph2.api.dto.dashboard.DashboardSensorMenuDTO;
 import com.logpose.ph2.api.dto.dashboard.DashboardTarget;
 import com.logpose.ph2.api.service.DashboardService;
 
@@ -78,7 +78,7 @@ public class DashboardController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<DashBoardSensorsDTO> as_result = this.dashboardService.getSensorList(deviceId);
+			DashboardSensorMenuDTO as_result = this.dashboardService.getSensorList(deviceId);
 			as_dto.setSuccess(as_result);
 			}
 		catch (Exception e)
@@ -116,7 +116,7 @@ public class DashboardController
 	 */
 	// --------------------------------------------------
 	@PostMapping("/sensors")
-	public ResponseDTO updateSettings(HttpServletRequest httpReq, @RequestBody @Validated DashboardSet dto)
+	public ResponseDTO updateSettings(HttpServletRequest httpReq, @RequestBody @Validated DashBoardSensorsDTO dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try

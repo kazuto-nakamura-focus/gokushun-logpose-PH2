@@ -306,7 +306,7 @@ public class DataLoadService
 			if (lastUpdated != null)
 				{
 				LOG.info("ヘッドラインデータ生成の開始:" + deviceId);
-				this.s4HeadLineLoaderService.createHealines(deviceId, lastUpdated);
+				this.s4HeadLineLoaderService.createHealines(ldc.getDevice(), lastUpdated);
 				LOG.info("ヘッドラインデータ生成の終了:" + deviceId);
 				}
 // * 日付をまたがった場合、以下の処理を行う

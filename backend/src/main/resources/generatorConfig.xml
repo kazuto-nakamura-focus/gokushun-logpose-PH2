@@ -58,12 +58,7 @@
 				enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
-			<table tableName="ph2_dashboard_sensors"
-				domainObjectName="Ph2DashBoardSensorsEntity" 
-				mapperName="Ph2DashBoardSensorsMapper" 
-				enableInsert="true" enableSelectByPrimaryKey="true" 
-			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table>
+
 			<table tableName="ph2_insolation_data" domainObjectName="Ph2InsolationDataEntity" 
 			mapperName="Ph2InsolationDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
@@ -204,12 +199,25 @@
 			mapperName="Ph2WibleMasterMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table> -->
-		<table tableName="ph2_weather_daily_master"
-			domainObjectName="Ph2WeatherDailyMasterEntity"
-			mapperName="Ph2WeatherDailyrMapper" enableInsert="true"
+		</table>
+				<table tableName="ph2_dashboard_sensors"
+			domainObjectName="Ph2DashBoardSensorsEntity"
+			mapperName="Ph2DashBoardSensorsMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>
+		<table tableName="ph2_weather_code_master"
+			domainObjectName="Ph2WeatherCodeMasterEntity"
+			mapperName="Ph2WeatherCodeMapper" enableInsert="true"
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" modelType="flat">
+		</table>-->
+		<table tableName="ph2_wheather_forecast"
+			domainObjectName="Ph2WeatherForecastEntity"
+			mapperName="Ph2WeatherForecastMapper" enableInsert="true"
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" modelType="flat">
+		</table>
+
 	</context>
 </generatorConfiguration>

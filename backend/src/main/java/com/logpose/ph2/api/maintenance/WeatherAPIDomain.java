@@ -62,7 +62,7 @@ public class WeatherAPIDomain
 
 		WeatherRequest request = new WeatherRequest();
 // * URL
-		request.setUrl(this.apiDao.getParams().getHisotryUrl());
+		request.setUrl(this.apiDao.getParams().getHistoryUrl());
 // * 圃場情報から位置を得る
 		Ph2FieldsEntity field = this.apiDao.getPh2FieldsMapper().selectByPrimaryKey(device.getFieldId());
 		request.setLatitude(field.getLatitude().toString());

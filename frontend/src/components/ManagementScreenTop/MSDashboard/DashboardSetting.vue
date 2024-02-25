@@ -23,7 +23,7 @@ export default {
   },
   methods: {
     //* ============================================
-    // APIのコールとデータの設定-フィールドリストの取得
+    // APIのコールとデータの設定-圃場リストの取得
     //* ============================================
     initialize() {
       useDeviceTarget()
@@ -31,14 +31,14 @@ export default {
           const results = response["data"];
           //* 結果データの検証
           if (results.status != 0) {
-            console.log(results.message);
-            alert("フィールドリストの取得に失敗しました。");
+            throw new Error(results.message);
           } else {
             this.fieldItems = results.data;
           }
         })
         .catch((error) => {
           console.log(error);
+          alert("圃場リストの取得に失敗しました。");
         });
     },
   },

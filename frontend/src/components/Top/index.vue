@@ -136,7 +136,8 @@ export default {
       .catch((error) => {
         //失敗時
         console.log(error);
-      }).finally(()=>{
+      })
+      .finally(() => {
         this.$refs.wait.finish();
       });
   },

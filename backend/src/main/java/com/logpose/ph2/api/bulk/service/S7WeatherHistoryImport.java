@@ -85,7 +85,7 @@ public class S7WeatherHistoryImport
 				entity.setPar(weather.getPar());
 				entity.setSunTime(weather.getSunTime());
 				entity.setTm(weather.getTm());
-				
+
 // * キャッシュへの登録
 				cache.addDailyBaseData(entity);
 				

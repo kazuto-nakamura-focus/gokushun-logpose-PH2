@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2DashBoardDisplayEntity;
 import com.logpose.ph2.api.dto.dashboard.DashBoardSensorsDTO;
-import com.logpose.ph2.api.dto.dashboard.DashboardSet;
+import com.logpose.ph2.api.dto.dashboard.DashboardSensorMenuDTO;
 import com.logpose.ph2.api.dto.dashboard.DashboardTarget;
 
 /**
@@ -14,36 +14,38 @@ import com.logpose.ph2.api.dto.dashboard.DashboardTarget;
 public interface DashboardService
 	{
 	// ===============================================
-	// パブリック関数
+	// 公開関数群
 	// ===============================================
 	// --------------------------------------------------
 	/**
 	 * 設定対象となるデバイスリストを取得する
+	 * @return 設定対象となるデバイスリスト
 	 */
 	// -------------------------------------------------
 	public List<DashboardTarget> getFieldData();
-	
-	// --------------------------------------------------
-	/**
-	 * 指定されたデバイスデータのセンサー情報を取得する
-	 * @param deviceId
-	 */
-	// --------------------------------------------------
-	public List<DashBoardSensorsDTO> getSensorList(Long deviceId);
 
 	// --------------------------------------------------
 	/**
-	 * センサー情報を更新する
-	 * @param dto
+	 * 指定されたデバイスデータのセンサー情報のリストを取得する
+	 * @param deviceId デバイスID
+	 * @param 指定されたデバイスデータのセンサー情報のリスト 
 	 */
 	// --------------------------------------------------
-	public void updateSettings(DashboardSet dto);
+	public DashboardSensorMenuDTO getSensorList(Long deviceId);
 
 	// --------------------------------------------------
 	/**
 	 * デバイス情報を更新する
-	 * @param dto
+	 * @param DashboardSet
 	 */
 	// --------------------------------------------------
-	void updateDisplay(Ph2DashBoardDisplayEntity dto);
+	void updateDisplay(Ph2DashBoardDisplayEntity DashboardSet);
+
+	// --------------------------------------------------
+	/**
+	 * センサー情報を更新する
+	 * @param DashboardSet
+	 */
+	// --------------------------------------------------
+	public void updateSettings(DashBoardSensorsDTO dashBoardSensors);
 	}

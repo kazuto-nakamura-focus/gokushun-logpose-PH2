@@ -14,7 +14,10 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorsEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2SensorsMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2WeatherForecastMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.TopDomainMapper;
 import com.logpose.ph2.api.dto.DataSummaryDTO;
 import com.logpose.ph2.api.dto.ModelTargetDTO;
@@ -29,8 +32,13 @@ import com.logpose.ph2.api.dto.top.FieldDataWithSensor;
 @Component
 public class TopDomain
 	{
+	// ===============================================
+	// クラスメンバー
+	// ===============================================
 	@Autowired
 	private Ph2SensorsMapper ph2SensorsMapper;
+	@Autowired
+	private Ph2WeatherForecastMapper ph2WeatherForecastMapper;
 	@Autowired
 	private TopDomainMapper topDomainMapper;
 	@Autowired
@@ -52,18 +60,44 @@ public class TopDomain
 		List<DataSummaryDTO> devices = this.topDomainMapper
 				.selectFieldDeviceList();
 // * 各デバイス毎にセンサーデータを取得する
-		List<DataSummaryDTO> result = new ArrayList<>();
+		FieldData dammy = new FieldData();
+		dammy.setValue(null);
 		for (DataSummaryDTO item : devices)
 			{
+// * 表示用に１０セル分のデータをデフォルト作成
+			List<FieldData> display = new ArrayList<>();
+			for(int i=0;i<10;i++)
+				{
+				display.add(dammy);
+				}
+			item.setDataList(display);
+// * セルデータを取得し、リストの表示番号-1に対して入れ替え
 			List<FieldData> data = this.topDomainMapper
 					.selectFieldDataList(item.getDeviceId());
 			if (data.size() > 0)
 				{
-				item.setDataList(data);
-				result.add(item);
+				for(final FieldData fieldData : data)
+					{
+					Short displayNo = fieldData.getDisplayNo();
+					if(null != displayNo)
+						{
+						display.set(displayNo-1, fieldData);
+						}
+					else
+						{
+						display.set(fieldData.getId().shortValue()-1, fieldData);
+						}
+					};
 				}
+// * 気象情報の取得
+			Ph2WeatherForecastEntityExample exm = new Ph2WeatherForecastEntityExample();
+			exm.createCriteria().andDeviceIdEqualTo(item.getDeviceId());
+			exm.setOrderByClause("time");
+			List<Ph2WeatherForecastEntity> weather = this.ph2WeatherForecastMapper.selectByExample(exm);
+			item.setForecastList(weather);
 			}
-		return result;
+		
+		return devices;
 		}
 
 	// --------------------------------------------------
