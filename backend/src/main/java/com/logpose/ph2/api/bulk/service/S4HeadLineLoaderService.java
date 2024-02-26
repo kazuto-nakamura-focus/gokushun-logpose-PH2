@@ -81,7 +81,7 @@ public class S4HeadLineLoaderService
 			request.setLatitude(field.getLatitude().toString());
 			request.setLongitude(field.getLongitude().toString());
 			request.setUrl(param.getCurrentUrl());
-			request.setKey(System.getenv("free_wheather_key"));
+			request.setKey("355d4dae284c491da0825008240702");
 			// 天気コードの取得
 			List<Ph2WeatherForecastEntity> res = api.getForcastEntities(deviceId, request);
 			for(final Ph2WeatherForecastEntity item : res)
