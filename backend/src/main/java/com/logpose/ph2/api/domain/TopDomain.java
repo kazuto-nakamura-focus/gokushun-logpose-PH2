@@ -14,13 +14,12 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2SensorsEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2SensorsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WeatherForecastMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.TopDomainMapper;
 import com.logpose.ph2.api.dto.DataSummaryDTO;
 import com.logpose.ph2.api.dto.ModelTargetDTO;
+import com.logpose.ph2.api.dto.dashboard.DashboardForecast;
 import com.logpose.ph2.api.dto.element.FieldData;
 import com.logpose.ph2.api.dto.rawData.RawData;
 import com.logpose.ph2.api.dto.rawData.RawDataList;
@@ -90,10 +89,7 @@ public class TopDomain
 					};
 				}
 // * 気象情報の取得
-			Ph2WeatherForecastEntityExample exm = new Ph2WeatherForecastEntityExample();
-			exm.createCriteria().andDeviceIdEqualTo(item.getDeviceId());
-			exm.setOrderByClause("time");
-			List<Ph2WeatherForecastEntity> weather = this.ph2WeatherForecastMapper.selectByExample(exm);
+			List<DashboardForecast> weather = this.ph2WeatherForecastMapper.selectWithText(item.getDeviceId());
 			item.setForecastList(weather);
 			}
 		

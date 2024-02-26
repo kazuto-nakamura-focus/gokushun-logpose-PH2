@@ -205,4 +205,23 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
+  <!-- ************************************************************************** -->
+  <resultMap id="ForecastDTO" type="com.logpose.ph2.api.dto.dashboard.DashboardForecast">
+    <result column="date" jdbcType="TIMESTAMP" property="date" />
+    <result column="text" jdbcType="VARCHAR" property="text" />
+    <result column="url" jdbcType="VARCHAR" property="url" />
+   </resultMap>
+    <select id="selectWithText" resultMap="ForecastDTO">
+    	select 
+    		ph2_wheather_forecast.time as date,
+    		ph2_wheather_forecast.url as url,
+    		ph2_wheather_code_master.text_jp as text
+    	from
+    		ph2_wheather_forecast
+    	join
+    		ph2_wheather_code_master on ph2_wheather_forecast.code = ph2_wheather_code_master.code
+    	where
+    		ph2_wheather_forecast.device_id = #{deviceId}
+    		order by date
+  	</select>
 </mapper>

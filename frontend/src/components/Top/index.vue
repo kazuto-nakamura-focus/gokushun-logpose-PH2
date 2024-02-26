@@ -27,6 +27,36 @@
                             {{ item.comment }}
                           </div>
                         </div>
+                        <div class="device_info">
+                          <div>最終更新時刻:{{ item.date }}</div>
+                          <div
+                            class="device_info_item"
+                            style="
+                              text-align: center;
+                              dosplay: flex;
+                              justify-content: center;
+                            "
+                            v-if="item.forecast.length > 0"
+                          >
+                            <div>
+                              <img :src="item.wheather_url" width="30px" />
+                            </div>
+                            <div>{{ item.wheather_text }}</div>
+                            <div v-for="(item, i) in item.forecast" :key="i">
+                              <div
+                                style="
+                                  text-align: center;
+                                  font-size: 6pt;
+                                  line-height: 10pt;
+                                "
+                              >
+                                <img :src="item.url" width="20px" /><br />
+                                {{ item.time }}<br />
+                                {{ item.text }}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                         <div class="flexbox">
                           <div
                             v-for="komoku in item.items"
@@ -48,9 +78,6 @@
                               {{ komoku.value }}
                               <small>{{ komoku.unit }}</small>
                               <br />
-                              <i
-                                ><small>{{ komoku.date }}</small></i
-                              >
                             </a>
                           </div>
                         </div>
@@ -236,7 +263,21 @@ export default {
   white-space: nowrap;
   justify-content: space-between;
 }
-
+.device_info {
+  background-color: #f5fbe5;
+  font-size: 9pt;
+  text-align: center;
+}
+.device_info_item {
+  background-color: #f5fbe5;
+  font-size: 9pt;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  line-height: 30px;
+  margin-right: 6px;
+}
 // データ部
 .flexbox {
   width: 100%;
@@ -246,11 +287,11 @@ export default {
 }
 .box-item {
   width: 50%;
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 6px;
+  padding-bottom: 6px;
   font-size: 9pt;
   text-align: center;
-  height: 60px;
+  height: 50px;
   border: 1px solid #ddd;
 }
 .box-item a {

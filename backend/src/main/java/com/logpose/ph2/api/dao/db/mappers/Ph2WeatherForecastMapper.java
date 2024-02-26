@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntityExample;
+import com.logpose.ph2.api.dto.dashboard.DashboardForecast;
 
 @Mapper
 public interface Ph2WeatherForecastMapper {
@@ -54,4 +55,6 @@ public interface Ph2WeatherForecastMapper {
 	 */
 	int updateByExample(@Param("row") Ph2WeatherForecastEntity row,
 			@Param("example") Ph2WeatherForecastEntityExample example);
+	
+	List<DashboardForecast> selectWithText(@Param("deviceId") Long deviceId);
 }

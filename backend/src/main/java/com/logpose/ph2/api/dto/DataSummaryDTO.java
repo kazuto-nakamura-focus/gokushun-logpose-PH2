@@ -2,7 +2,7 @@ package com.logpose.ph2.api.dto;
 
 import java.util.List;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntity;
+import com.logpose.ph2.api.dto.dashboard.DashboardForecast;
 import com.logpose.ph2.api.dto.element.FieldData;
 
 import lombok.Data;
@@ -26,5 +26,5 @@ public class DataSummaryDTO
 //* 各データリスト
 	private List<FieldData> dataList;
 // * 気象情報
-	private List<Ph2WeatherForecastEntity> forecastList;
+	private List<DashboardForecast> forecastList;
 	}
