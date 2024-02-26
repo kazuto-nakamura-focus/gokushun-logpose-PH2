@@ -4,6 +4,9 @@
       <div class="cm_Title">
         {{ title }}
       </div>
+      <div>
+        項目を変更する時は上のパネルの表示項目を選んでクリックしてください。
+      </div>
       <v-data-table
         :headers="headers"
         :items="selectedDataList"

@@ -9,7 +9,6 @@
 		<result column="field_id" property="fieldId"></result>
 		<result column="field" property="field"></result>
 		<result column="device_id" property="deviceId"></result>
-		<result column="data_status_date" property="date"></result>
 		<result column="device" property="device"></result>
 	</resultMap>
 <!-- ************************************************************************** -->
@@ -17,7 +16,6 @@
 	SELECT
 		ph2_devices."id" AS device_id,
 		ph2_devices."name" AS device,
-		ph2_devices.data_status_date as data_status_date,
 		ph2_fields."id" AS field_id,
 		ph2_fields."name" AS field
 	FROM

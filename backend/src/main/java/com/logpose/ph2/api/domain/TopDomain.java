@@ -63,6 +63,7 @@ public class TopDomain
 		dammy.setValue(null);
 		for (DataSummaryDTO item : devices)
 			{
+			String lastDate = null;
 // * 表示用に１０セル分のデータをデフォルト作成
 			List<FieldData> display = new ArrayList<>();
 			for(int i=0;i<10;i++)
@@ -77,6 +78,11 @@ public class TopDomain
 				{
 				for(final FieldData fieldData : data)
 					{
+					if(null == lastDate)
+						{
+						lastDate = fieldData.getCastedAt();
+						item.setDate(lastDate);
+						}
 					Short displayNo = fieldData.getDisplayNo();
 					if(null != displayNo)
 						{

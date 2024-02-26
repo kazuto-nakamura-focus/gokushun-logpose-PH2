@@ -29,6 +29,9 @@
                         </div>
                         <div class="device_info">
                           <div>最終更新時刻:{{ item.date }}</div>
+                          <div v-if="item.forecast.length == 0">
+                            <img src="@/assets/suspend-icon.png" width="40px" />
+                          </div>
                           <div
                             class="device_info_item"
                             style="
@@ -46,8 +49,9 @@
                               <div
                                 style="
                                   text-align: center;
-                                  font-size: 6pt;
+                                  font-size: 7pt;
                                   line-height: 10pt;
+                                  margin-right: 6px;
                                 "
                               >
                                 <img :src="item.url" width="20px" /><br />
@@ -159,6 +163,11 @@ export default {
         }
         //console.log(this.sourceData);
         this.$store.dispatch("changeSourceData", this.sourceData);
+        var koumoku = {
+          variable: 1,
+          name: "温度",
+        };
+        this.openModel(koumoku);
       })
       .catch((error) => {
         //失敗時
