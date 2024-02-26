@@ -57,19 +57,16 @@
       </v-row>
     </v-container>
     <!-- グラフ表示 -->
-    <apexchart
-      type="area"
-      width="100%"
-      height="400"
-      ref="chart"
+    <ph-2-graphic-tool
+      v-if="chartDisplay == true"
       :options="chart.options"
       :series="chart.series"
-    ></apexchart>
+    ></ph-2-graphic-tool>
   </v-card>
 </template>
     
 <script>
-import VueApexCharts from "vue-apexcharts";
+import Ph2GraphicTool from "@/components-v1/common/Ph2GraphicTool.vue";
 import "@mdi/font/css/materialdesignicons.css";
 import moment from "moment";
 
@@ -81,7 +78,7 @@ export default {
     },
   },
   components: {
-    apexchart: VueApexCharts,
+    ph2GraphicTool: Ph2GraphicTool,
   },
 
   data() {
@@ -97,6 +94,7 @@ export default {
         "ベレーゾン推定日",
         "収穫推定日",
       ],
+      chartDisplay: false,
       annotationLabel: null,
     };
   },
@@ -225,7 +223,7 @@ export default {
         if (tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
       }
 
-      this.$refs.chart.updateSeries(
+      /* this.$refs.chart.updateSeries(
         [
           {
             data: realGraph.data,
@@ -239,10 +237,21 @@ export default {
         ],
         false,
         true
-      );
+      );*/
       this.chart.options = this.arguments.options;
-      this.$refs.chart.updateOptions(this.chart.options, false, true, false);
-      this.$refs.chart.refresh();
+      this.chart.series = [
+        {
+          data: realGraph.data,
+        },
+        {
+          data: predictGraph.data,
+        },
+        {
+          data: measuredGraph.data,
+        },
+      ];
+
+      this.chartDisplay = true;
     },
     //* ============================================
     // 単一グラフを作成する
@@ -252,7 +261,7 @@ export default {
       for (const item of this.arguments.data) {
         graph.data.push(item);
       }
-      this.$refs.chart.updateSeries(
+      /*   this.$refs.chart.updateSeries(
         [
           {
             data: graph.data,
@@ -260,10 +269,10 @@ export default {
         ],
         false,
         true
-      );
+      );*/
       this.chart.options = this.arguments.options;
-      this.$refs.chart.updateOptions(this.chart.options, false, true, false);
-      this.$refs.chart.refresh();
+      this.chart.series = [{ data: graph.data }];
+      this.chartDisplay = true;
     },
     //* ============================================
     // 閉じる実行
