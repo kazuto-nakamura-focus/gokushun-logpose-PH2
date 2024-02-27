@@ -9,7 +9,7 @@
   
   <script>
 import { GrowthChart } from "@/lib/graph/ApexCharts/GrowthChart.js";
-import Ph2GraphArea from "../graph/Ph2GraphArea.vue";
+import Ph2GraphArea from "@/components-v1/common/Ph2GraphTab.vue";
 
 import {
   useModelData,
@@ -94,7 +94,13 @@ export default {
             }
             // グラフの表示オプションを設定
             let gc = new GrowthChart();
-            gc.setOptions("生育ステージ推定モデル", "日付", "累積F値", results, year);
+            gc.setOptions(
+              "生育ステージ推定モデル",
+              "日付",
+              "累積F値",
+              results,
+              year
+            );
             // グラフ表示を行う
             gc.setLoadingParent(this);
             this.$refs.chr.addGraph(
@@ -108,7 +114,8 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
-          }).finally(()=>{
+          })
+          .finally(() => {
             this.$refs.wait.finish();
           });
       } else if (this.modelId == 2) {
@@ -142,7 +149,7 @@ export default {
               "葉面積(㎡)",
               response["data"].data[0],
               year,
-              2,
+              2
             );
             console.log(response["data"].data[1]);
             // グラフ表示を行う
@@ -175,7 +182,8 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
-          }).finally(()=>{
+          })
+          .finally(() => {
             this.$refs.wait.finish();
           });
       } else if (this.modelId == 3) {
@@ -220,7 +228,8 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
-          }).finally(()=>{
+          })
+          .finally(() => {
             this.$refs.wait.finish();
           });
       }
