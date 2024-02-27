@@ -252,7 +252,7 @@ export default {
         true
       );*/
       this.chart.options = this.arguments.options;
-      this.chart.series = [{ data: graph.data }];
+      this.chart.series = [{ name: this.arguments.name, data: graph.data }];
       this.chartDisplay = true;
     },
     //* ============================================

@@ -20,7 +20,7 @@
   
   <script>
 import { SensorChart } from "@/lib/graph/ApexCharts/SensorChart.js";
-import Ph2GraphArea from "./Ph2GraphArea.vue";
+import Ph2GraphArea from "@/components-v1/common/Ph2GraphTab.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
 
@@ -33,8 +33,8 @@ export default {
       isLoading: false, // ローダー
 
       yTitle: [
-        { text: "温度(℃)"},
-        { text: "湿度(％RH)"},
+        { text: "温度(℃)" },
+        { text: "湿度(％RH)" },
         { text: "日射(W/㎡)" },
         { text: "樹液流1(g/h)" },
         { text: "デンドロ(μm)" },
@@ -42,12 +42,10 @@ export default {
         { text: "土壌水分(pF)" },
         { text: "土壌温度(℃)" },
         { text: "体積含水率(vol%)" },
-        { text: "樹液流2(g/h)"},
+        { text: "樹液流2(g/h)" },
       ],
 
-      xTitle: [
-        { text: "日時"},
-      ],
+      xTitle: [{ text: "" }],
     };
   },
   components: {
@@ -59,15 +57,42 @@ export default {
     //* --------------------------------------------
     //* グラフデータ生成
     //* --------------------------------------------
-    setGraphData: function (titlePaths, contentId, sensorId, startDate, endDate, interval, name, title) {
+    setGraphData: function (
+      titlePaths,
+      contentId,
+      sensorId,
+      startDate,
+      endDate,
+      interval,
+      name,
+      title
+    ) {
       this.isLoading = true;
       this.$nextTick(
         function () {
-          this.setSonsorData(titlePaths, contentId, sensorId, startDate, endDate, interval, name, title);
+          this.setSonsorData(
+            titlePaths,
+            contentId,
+            sensorId,
+            startDate,
+            endDate,
+            interval,
+            name,
+            title
+          );
         }.bind(this)
       );
     },
-    setSonsorData(titlePaths, contentId, sensorId, startDate, endDate, interval, name, title) {
+    setSonsorData(
+      titlePaths,
+      contentId,
+      sensorId,
+      startDate,
+      endDate,
+      interval,
+      name,
+      title
+    ) {
       this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
       useSensoreData(sensorId, startDate, endDate, interval)
         .then((response) => {
@@ -76,7 +101,12 @@ export default {
           if (status === 0) {
             // グラフの表示オプションを設定
             let gc = new SensorChart();
-            gc.setOptions(title, this.xTitle[0].text, this.yTitle[contentId-1].text, data);
+            gc.setOptions(
+              title,
+              this.xTitle[0].text,
+              this.yTitle[contentId - 1].text,
+              data
+            );
             console.log(data.category);
             // グラフ表示を行う
             gc.setLoadingParent(this);
@@ -94,7 +124,8 @@ export default {
         .catch((error) => {
           //失敗時
           console.log(error);
-        }).finally(()=>{
+        })
+        .finally(() => {
           this.$refs.wait.finish();
         });
     },

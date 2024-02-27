@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card>
+    <v-card elevation="6" v-if="titles.length > 0">
       <v-tabs grow bg-color="teal-accent-1" v-model="tab">
         <v-tab v-for="title in titles" :key="title.id">
           {{ title.name }}
