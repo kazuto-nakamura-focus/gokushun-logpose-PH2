@@ -73,9 +73,9 @@ export default {
       };
       const titlePaths =
         this.selectedItem.field +
-        ">" +
+        "|" +
         this.selectedItem.device +
-        ">" +
+        "|" +
         this.selectedItem.year;
       this.modelId = this.selectedItem.modelId;
       const year = this.selectedItem.year;
@@ -96,7 +96,7 @@ export default {
             let gc = new GrowthChart();
             gc.setOptions(
               "生育ステージ推定モデル",
-              "日付",
+              "",
               "累積F値",
               results,
               year
@@ -145,7 +145,7 @@ export default {
             gc.setLoadingParent(this);
             gc.setOptions(
               "葉面積推定モデル",
-              "日付",
+              "",
               "葉面積(㎡)",
               response["data"].data[0],
               year,
@@ -165,7 +165,7 @@ export default {
             gc.setLoadingParent(this);
             gc.setOptions(
               "葉枚数推定モデル",
-              "日付",
+              "",
               "葉枚数(枚)",
               response["data"].data[1],
               year
@@ -210,7 +210,7 @@ export default {
             gc.setLoadingParent(this);
             gc.setOptions(
               "光合成推定モデル",
-              "日付",
+              "",
               "光合成量(kgCO2 vine^-1)",
               results,
               year,

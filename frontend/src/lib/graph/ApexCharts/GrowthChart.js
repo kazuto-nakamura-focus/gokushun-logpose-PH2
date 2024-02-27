@@ -139,16 +139,16 @@ export class GrowthChart {
           categories: [],
           type: 'datetime',
           tickAmount: 12, // 365日の12分割
-          axisTicks: { show: false, },
+          axisTicks: { show: true, },
           title: {
             text: '',
             offsetY: -20,
           },
-          //    labels: {
-          //      formatter: function (val) {
-          //        return moment(val).format("YYYY/MM/DD");
-          //      },
-          //    },
+          labels: {
+            formatter: function (val) {
+              return moment(val).format("YYYY/MM/DD");
+            },
+          },
         },
         tooltip: {
           shared: false,
