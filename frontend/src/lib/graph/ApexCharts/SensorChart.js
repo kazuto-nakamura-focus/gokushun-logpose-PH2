@@ -1,5 +1,6 @@
 //import { concat } from "core-js/core/array";
-//import moment from "moment";
+import moment from "moment";
+
 export class SensorChart {
   constructor() {
     this.data = {
@@ -17,9 +18,9 @@ export class SensorChart {
             autoSelected: 'zoom'
           },
           events: {
-            parent : null,
-            mounted: function() {
-            this.data.parent.isLoading = false;
+            parent: null,
+            mounted: function () {
+              this.data.parent.isLoading = false;
             }.bind(this)
           }
         },
@@ -30,7 +31,7 @@ export class SensorChart {
           size: 0,
         },
         stroke: {
-          width: [3, 3],
+          width: 2,
           curve: 'straight',
           dashArray: [0, 3]
         },
@@ -65,11 +66,11 @@ export class SensorChart {
             text: '',
             offsetY: -20,
           },
-        /*  labels: {
+          labels: {
             formatter: function (val) {
-              return moment(val).format("MM/DD");
-            }
-          },*/
+              return moment(val).format("YYYY/MM/DD");
+            },
+          },
         },
         tooltip: {
           shared: false,
@@ -85,11 +86,11 @@ export class SensorChart {
       }
     }
   }
-  setLoadingParent(parent){
+  setLoadingParent(parent) {
     parent.isLoading = true;
     this.data.parent = parent;
   }
-  
+
   setOptions(title, xtitle, ytitle, source) {
     //* タイトル
     this.data.chartOptions.title.text = title;
@@ -98,27 +99,27 @@ export class SensorChart {
     //* Y軸タイトル
     this.data.chartOptions.yaxis.title.text = ytitle;
     //* アノテーション
-  /*  let annotations = []
-    if ((source.annotations != null) && (source.annotations.length > 0)) {
-      for (const item of source.annotations) {
-        let annotation = {
-          y: item.value,
-          label: {
-            borderColor: '#00E396',
-            position: "left",
-            textAnchor: "start",
-            style: {
-              color: '#00B428',
-            },
-            text: item.name
-          }
-        };
-        annotations.push(annotation);
-      }
-      if (annotations.length > 0) {
-        this.data.chartOptions.annotations.yaxis = annotations;
-      }
-    }*/
+    /*  let annotations = []
+      if ((source.annotations != null) && (source.annotations.length > 0)) {
+        for (const item of source.annotations) {
+          let annotation = {
+            y: item.value,
+            label: {
+              borderColor: '#00E396',
+              position: "left",
+              textAnchor: "start",
+              style: {
+                color: '#00B428',
+              },
+              text: item.name
+            }
+          };
+          annotations.push(annotation);
+        }
+        if (annotations.length > 0) {
+          this.data.chartOptions.annotations.yaxis = annotations;
+        }
+      }*/
     this.data.chartOptions.yaxis.max = source.YEnd;
     this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;

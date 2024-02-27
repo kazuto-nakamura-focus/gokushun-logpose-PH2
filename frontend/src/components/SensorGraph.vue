@@ -242,8 +242,10 @@ export default {
         this.selectedSensor.name + ":" + this.startDate + "～" + this.endDate;
       const title =
         this.selectedItems.selectedField.name +
-        ">" +
-        this.selectedItems.selectedDevice.name;
+        "|" +
+        this.selectedItems.selectedDevice.name +
+        "|" +
+        this.selectedSensor.name;
 
       this.$refs.gfa.setGraphData(
         title,

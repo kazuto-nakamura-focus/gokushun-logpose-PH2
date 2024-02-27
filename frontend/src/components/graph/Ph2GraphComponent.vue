@@ -1,58 +1,33 @@
 <template>
   <v-card elevation-6>
     <v-container>
-      <v-row>
+      <v-row style="height: 20px">
         <v-col align="right">
           <div>
             <v-icon @click="handleClose()">mdi-close</v-icon>
           </div>
         </v-col>
       </v-row>
-      <v-row>
+      <v-row style="height: 36px">
         <v-col align="left" style="display: flex">
-          <div
-            style="
-              padding: 5px;
-              display: flex;
-              border: 1px solid rgb(204, 204, 204);
-              border-radius: 5px;
-              box-shadow: rgb(185, 184, 184) 5px 5px 5px;
-              width: fit-content;
-            "
-          >
-            <div style="font-size: 10pt">
-              <b>{{ titlePath }}</b>
-            </div>
-            <div style="font-size: 10pt">
-              &nbsp;<small
-                ><i>{{ time }}</i></small
-              >
-            </div>
-          </div>
-
           <div
             v-if="annotationLabel"
             style="
-              margin-left: 10px;
+            text-align: left
+              margin-left: 3px;
               padding: 5px;
-              display: flex;
-              border: 1px solid rgb(204, 204, 204);
-              border-radius: 5px;
-              box-shadow: rgb(185, 184, 184) 5px 5px 5px;
-              width: fit-content;
-            "
+              font-size: 10pt; font-family:Yu Gothic"
           >
-            <div style="font-size: 10pt">
-              <b>{{ annotationLabel }}</b>
-            </div>
+            <b>{{ annotationLabel }}</b>
           </div>
         </v-col>
       </v-row>
-      <v-row>
-        <v-col align="left">
-          <b
-            ><small>{{ comment }}</small></b
-          >
+      <v-row style="padding-bottom: 20px">
+        <v-col
+          align="left"
+          style='font-size: 10pt; font-family: "Yu Gothic;margin-left:6px'
+        >
+          <b>{{ comment }}</b>
         </v-col>
       </v-row>
     </v-container>
@@ -131,6 +106,9 @@ export default {
       const predictGraph = this.prepareChart("推定");
 
       this.comment = this.arguments.data.comment;
+      if (null != this.comment) {
+        this.comment = "コメント:" + this.comment;
+      }
 
       //「実績」値の一覧
       const values = this.arguments.data?.values;
@@ -241,12 +219,15 @@ export default {
       this.chart.options = this.arguments.options;
       this.chart.series = [
         {
+          name: "実績値",
           data: realGraph.data,
         },
         {
+          name: "推定値",
           data: predictGraph.data,
         },
         {
+          name: "実測値",
           data: measuredGraph.data,
         },
       ];
@@ -271,7 +252,7 @@ export default {
         true
       );*/
       this.chart.options = this.arguments.options;
-      this.chart.series = [{ data: graph.data }];
+      this.chart.series = [{ name: this.arguments.name, data: graph.data }];
       this.chartDisplay = true;
     },
     //* ============================================

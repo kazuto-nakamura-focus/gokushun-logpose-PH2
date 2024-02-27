@@ -4,7 +4,7 @@
       <v-col>
         <v-card elevation="0" class="ma-1">
           <div :style="bindTitleStyle()" class="pa-3">{{ label }}</div>
-          <v-slide-group class="pa-1" :multiple="multiple">
+          <v-slide-group class="pa-1" :multiple="multiple" show-arrows>
             <v-slide-item
               v-for="(item, index) in list"
               :key="index"
@@ -58,25 +58,24 @@ export default {
 
   data() {
     return {
-
       label: this.title != null ? this.title + ":" : null,
-      list: this.data
+      list: this.data,
     };
   },
 
   watch: {},
   methods: {
-   //* --------------------------------------------
+    //* --------------------------------------------
     //* ボタン選択時の処理
     //* --------------------------------------------
     onCardClick(item, index, active) {
       if (this.multiple == false) {
-        for(const element of this.list) {
-          if(element === item ) continue;
+        for (const element of this.list) {
+          if (element === item) continue;
           element["active"] = false;
         }
       }
-      if( item["active"]){
+      if (item["active"]) {
         item["active"] = false;
       } else {
         item["active"] = true;
