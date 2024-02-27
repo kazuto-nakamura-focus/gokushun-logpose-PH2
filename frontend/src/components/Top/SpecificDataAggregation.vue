@@ -2,9 +2,7 @@
   <v-app>
     <v-container style="text-align: center">
       <v-card elevation="3" width="100%">
-        <div class="cm_Title">
-          {{ title }}
-        </div>
+        <div class="cm_Title">現在稼働中の {{ title }} 一覧</div>
         <div style="font-size: 10pt">
           項目を変更する時は上のパネルの表示項目を選んでクリックしてください。
         </div>
@@ -15,6 +13,9 @@
           :sort-by.sync="sortBy"
           :sort-desc.sync="sortDesc"
         >
+          <template v-slot:[`item.url`]="{ item }">
+            <v-img :src="item.url" width="30px"></v-img>
+          </template>
         </v-data-table>
       </v-card>
     </v-container>
@@ -36,10 +37,11 @@ export default {
           text: "センサー名",
           value: "sensorName",
           sortable: true,
-          width: "30%",
+          width: "20%",
         },
         { text: "値", value: "value", sortable: true, width: "10%" },
         { text: "測定日", value: "date", sortable: true, width: "30%" },
+        { text: "天気", value: "url", sortable: false, width: "10%" },
       ],
       headerMap: {
         1: "温度(℃)",
@@ -77,6 +79,7 @@ export default {
               sensorName: item.sensorName,
               value: item.value,
               date: item.castedAt.substring(0, 19),
+              url: "http:" + item.url,
             };
             this.selectedDataList.push(selected);
           }

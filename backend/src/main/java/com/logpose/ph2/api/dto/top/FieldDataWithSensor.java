@@ -16,4 +16,6 @@ public class FieldDataWithSensor extends FieldData
 	{
 // * センサー名
 	private String sensorName;
+// * 天気画像URL
+	private String url;
 	}

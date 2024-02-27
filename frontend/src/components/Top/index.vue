@@ -27,7 +27,9 @@
                         </div>
                       </div>
                       <div class="device_info">
-                        <div>最終更新時刻:{{ item.date }}</div>
+                        <div style="margin: 4px 0">
+                          最終更新時刻:{{ item.date }}
+                        </div>
                         <div v-if="item.forecast.length == 0">
                           <img src="@/assets/suspend-icon.png" width="40px" />
                         </div>
@@ -37,11 +39,12 @@
                             text-align: center;
                             dosplay: flex;
                             justify-content: center;
+                            padding-bottom: 5px;
                           "
                           v-if="item.forecast.length > 0"
                         >
                           <div>
-                            <img :src="item.wheather_url" width="30px" />
+                            <img :src="item.wheather_url" width="36px" />
                           </div>
                           <div>{{ item.wheather_text }}</div>
                           <div v-for="(item, i) in item.forecast" :key="i">
