@@ -27,7 +27,7 @@
           align="left"
           style='font-size: 10pt; font-family: "Yu Gothic;margin-left:6px'
         >
-          <b>コメント:{{ comment }}</b>
+          <b>{{ comment }}</b>
         </v-col>
       </v-row>
     </v-container>
@@ -106,6 +106,9 @@ export default {
       const predictGraph = this.prepareChart("推定");
 
       this.comment = this.arguments.data.comment;
+      if (null != this.comment) {
+        this.comment = "コメント:" + this.comment;
+      }
 
       //「実績」値の一覧
       const values = this.arguments.data?.values;
