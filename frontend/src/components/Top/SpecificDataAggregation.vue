@@ -1,21 +1,23 @@
 <template>
   <v-app>
-    <v-card elevation="3" width="80%">
-      <div class="cm_Title">
-        {{ title }}
-      </div>
-      <div>
-        項目を変更する時は上のパネルの表示項目を選んでクリックしてください。
-      </div>
-      <v-data-table
-        :headers="headers"
-        :items="selectedDataList"
-        mobile-breakpoint="0"
-        :sort-by.sync="sortBy"
-        :sort-desc.sync="sortDesc"
-      >
-      </v-data-table>
-    </v-card>
+    <v-container style="text-align: center">
+      <v-card elevation="3" width="100%">
+        <div class="cm_Title">
+          {{ title }}
+        </div>
+        <div style="font-size: 10pt">
+          項目を変更する時は上のパネルの表示項目を選んでクリックしてください。
+        </div>
+        <v-data-table
+          :headers="headers"
+          :items="selectedDataList"
+          mobile-breakpoint="0"
+          :sort-by.sync="sortBy"
+          :sort-desc.sync="sortDesc"
+        >
+        </v-data-table>
+      </v-card>
+    </v-container>
   </v-app>
 </template>
 <script>
@@ -39,6 +41,18 @@ export default {
         { text: "値", value: "value", sortable: true, width: "10%" },
         { text: "測定日", value: "date", sortable: true, width: "30%" },
       ],
+      headerMap: {
+        1: "温度(℃)",
+        2: "湿度(％RH)",
+        3: "日射(W/㎡)",
+        4: "樹液流(g/h)",
+        5: "デンドロ(μm)",
+        6: "葉面濡れ(raw counts)",
+        7: "土壌水分(pF)",
+        8: "土壌温度(℃)",
+        9: "体積含水率-オーガニック(％)",
+        10: "体積含水率-ミネラル(％)",
+      },
     };
   },
 
@@ -49,7 +63,7 @@ export default {
   methods: {
     initialize: function (koumoku) {
       this.selectedDataList = [];
-      this.title = koumoku.name;
+      this.title = this.headerMap[koumoku.variable];
       useSum(koumoku.variable)
         .then((response) => {
           //成功時

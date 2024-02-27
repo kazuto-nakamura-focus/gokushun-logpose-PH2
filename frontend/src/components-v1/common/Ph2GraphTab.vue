@@ -3,7 +3,14 @@
     <v-card elevation="6" v-if="titles.length > 0">
       <v-tabs grow bg-color="teal-accent-1" v-model="tab">
         <v-tab v-for="title in titles" :key="title.id">
-          {{ title.name }}
+          <div style="display: block">
+            <div>
+              {{ title.name }}
+            </div>
+            <div style="font-size: 9pt">
+              {{ title.subname }}
+            </div>
+          </div>
         </v-tab>
         <v-tab-item v-for="item in graphList" :key="item.id">
           <ph-2-graph-component
@@ -40,16 +47,16 @@ export default {
     //* ============================================
     // グラフ追加処理
     //* ============================================
-    addGraph: function (titlePath, chartOptions, chartData, isMultiple, name) {
+    addGraph: function (titleObj, chartOptions, chartData, isMultiple, name) {
       let title = {
         id: this.id,
-        name: titlePath,
+        name: titleObj.main,
+        subname: titleObj.sub,
       };
       this.titles.push(title);
-
       let item = {
         id: this.id++, // ID
-        title: titlePath, // グラフタイトル
+        title: title.sub, // グラフタイトル
         options: chartOptions, // グラフオプション
         data: chartData, // グラフデータ
         isMultiple: isMultiple, // 単一グラフか複数グラフか

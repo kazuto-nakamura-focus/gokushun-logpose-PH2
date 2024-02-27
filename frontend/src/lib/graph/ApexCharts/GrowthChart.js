@@ -169,7 +169,6 @@ export class GrowthChart {
     this.data.parent = parent;
   }
   setOptions(title, xtitle, ytitle, source, year, digits) {
-    console.log(title);
     if (title == "生育ステージ推定モデル") {
       this.data.chartOptions.chart.height = 500;
     }

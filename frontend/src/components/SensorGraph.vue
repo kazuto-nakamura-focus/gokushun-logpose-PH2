@@ -240,12 +240,13 @@ export default {
     setGraph() {
       const dateText =
         this.selectedSensor.name + ":" + this.startDate + "～" + this.endDate;
-      const title =
+      // * グラフタイトルの作成
+      const title = {};
+      title.main =
         this.selectedItems.selectedField.name +
         "|" +
-        this.selectedItems.selectedDevice.name +
-        "|" +
-        this.selectedSensor.name;
+        this.selectedItems.selectedDevice.name;
+      title.sub = this.selectedSensor.name;
 
       this.$refs.gfa.setGraphData(
         title,

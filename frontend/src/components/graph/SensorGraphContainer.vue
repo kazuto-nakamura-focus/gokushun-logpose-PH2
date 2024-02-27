@@ -107,7 +107,6 @@ export default {
               this.yTitle[contentId - 1].text,
               data
             );
-            console.log(data.category);
             // グラフ表示を行う
             gc.setLoadingParent(this);
             this.$refs.chr.addGraph(

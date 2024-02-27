@@ -71,12 +71,16 @@ export default {
         device: selectedItems.selectedDevice.name,
         year: selectedItems.selectedYear.id,
       };
-      const titlePaths =
+      // * グラフタイトルの作成
+      const title = {};
+      title.main =
         this.selectedItem.field +
         "|" +
         this.selectedItem.device +
         "|" +
         this.selectedItem.year;
+      title.sub = selectedItems.selectedModel.name;
+
       this.modelId = this.selectedItem.modelId;
       const year = this.selectedItem.year;
       if (this.modelId == 1) {
@@ -104,7 +108,7 @@ export default {
             // グラフ表示を行う
             gc.setLoadingParent(this);
             this.$refs.chr.addGraph(
-              titlePaths,
+              title,
               gc.data.chartOptions,
               results,
               true,
@@ -154,7 +158,7 @@ export default {
             console.log(response["data"].data[1]);
             // グラフ表示を行う
             this.$refs.chr.addGraph(
-              titlePaths,
+              title,
               gc.data.chartOptions,
               response["data"].data[0],
               true,
@@ -172,7 +176,7 @@ export default {
             );
             // グラフ表示を行う
             this.$refs.chr.addGraph(
-              titlePaths,
+              title,
               gc.data.chartOptions,
               response["data"].data[1],
               true,
@@ -218,7 +222,7 @@ export default {
             );
             // グラフ表示を行う
             this.$refs.chr.addGraph(
-              titlePaths,
+              title,
               gc.data.chartOptions,
               results,
               true,

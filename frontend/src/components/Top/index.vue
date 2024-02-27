@@ -5,104 +5,102 @@
     <v-container>
       <v-row>
         <v-col cols="12">
-          <template>
-            <v-container>
-              <v-row justify="center">
-                <carousel
-                  :navigationEnabled="true"
-                  :perPageCustom="[
-                    [0, 1],
-                    [720, 2],
-                    [1325, 3],
-                  ]"
-                >
-                  <slide v-for="item in displayData" :key="item.deviceId">
-                    <div class="slider-inner" v-if="item.visible">
-                      <div class="data-contents">
-                        <div class="table_header pt-5 pb-5 pl-3 pr-3">
-                          <div class="table_header_title">
-                            {{ item.title }}
-                          </div>
-                          <div class="table_header_comment">
-                            {{ item.comment }}
-                          </div>
+          <v-container>
+            <v-row justify="center">
+              <carousel
+                :navigationEnabled="true"
+                :perPageCustom="[
+                  [0, 1],
+                  [720, 2],
+                  [1325, 3],
+                ]"
+              >
+                <slide v-for="item in displayData" :key="item.deviceId">
+                  <div class="slider-inner" v-if="item.visible">
+                    <div class="data-contents">
+                      <div class="table_header pt-5 pb-5 pl-3 pr-3">
+                        <div class="table_header_title">
+                          {{ item.title }}
                         </div>
-                        <div class="device_info">
-                          <div>最終更新時刻:{{ item.date }}</div>
-                          <div v-if="item.forecast.length == 0">
-                            <img src="@/assets/suspend-icon.png" width="40px" />
-                          </div>
-                          <div
-                            class="device_info_item"
-                            style="
-                              text-align: center;
-                              dosplay: flex;
-                              justify-content: center;
-                            "
-                            v-if="item.forecast.length > 0"
-                          >
-                            <div>
-                              <img :src="item.wheather_url" width="30px" />
-                            </div>
-                            <div>{{ item.wheather_text }}</div>
-                            <div v-for="(item, i) in item.forecast" :key="i">
-                              <div
-                                style="
-                                  text-align: center;
-                                  font-size: 7pt;
-                                  line-height: 10pt;
-                                  margin-right: 6px;
-                                "
-                              >
-                                <img :src="item.url" width="20px" /><br />
-                                {{ item.time }}<br />
-                                {{ item.text }}
-                              </div>
-                            </div>
-                          </div>
+                        <div class="table_header_comment">
+                          {{ item.comment }}
                         </div>
-                        <div class="flexbox">
-                          <div
-                            v-for="komoku in item.items"
-                            :key="komoku.idx"
-                            class="box-item"
-                          >
-                            <div v-if="komoku.variable == ''">
-                              {{ komoku.name }}
-                              <br />
-                              {{ komoku.value }}
-                            </div>
-
-                            <a
-                              v-if="komoku.variable != ''"
-                              @click="openModel(komoku)"
+                      </div>
+                      <div class="device_info">
+                        <div>最終更新時刻:{{ item.date }}</div>
+                        <div v-if="item.forecast.length == 0">
+                          <img src="@/assets/suspend-icon.png" width="40px" />
+                        </div>
+                        <div
+                          class="device_info_item"
+                          style="
+                            text-align: center;
+                            dosplay: flex;
+                            justify-content: center;
+                          "
+                          v-if="item.forecast.length > 0"
+                        >
+                          <div>
+                            <img :src="item.wheather_url" width="30px" />
+                          </div>
+                          <div>{{ item.wheather_text }}</div>
+                          <div v-for="(item, i) in item.forecast" :key="i">
+                            <div
+                              style="
+                                text-align: center;
+                                font-size: 7pt;
+                                line-height: 10pt;
+                                margin-right: 6px;
+                              "
                             >
-                              {{ komoku.name }}
-                              <br />
-                              {{ komoku.value }}
-                              <small>{{ komoku.unit }}</small>
-                              <br />
-                            </a>
+                              <img :src="item.url" width="20px" /><br />
+                              {{ item.time }}<br />
+                              {{ item.text }}
+                            </div>
                           </div>
                         </div>
                       </div>
+                      <div class="flexbox">
+                        <div
+                          v-for="komoku in item.items"
+                          :key="komoku.idx"
+                          class="box-item"
+                        >
+                          <div v-if="komoku.variable == ''">
+                            {{ komoku.name }}
+                            <br />
+                            {{ komoku.value }}
+                          </div>
+
+                          <a
+                            v-if="komoku.variable != ''"
+                            @click="openModel(komoku)"
+                          >
+                            {{ komoku.name }}
+                            <br />
+                            {{ komoku.value }}
+                            <small>{{ komoku.unit }}</small>
+                            <br />
+                          </a>
+                        </div>
+                      </div>
                     </div>
-                  </slide>
-                </carousel>
-              </v-row>
-            </v-container>
-          </template>
+                  </div>
+                </slide>
+              </carousel>
+            </v-row>
+          </v-container>
         </v-col>
       </v-row>
-      <div style="width: 100%; text-align: center">
-        <div style="width: 100%; text-align: center">
+      <v-row>
+        <v-col cols="12">
           <SpecificDataAggregation
             v-show="isAggregated"
             ref="sa"
             :shared="sharedAggregation"
           />
-        </div>
-      </div>
+        </v-col>
+      </v-row>
     </v-container>
     <wait-dialog ref="wait" />
   </v-app>
