@@ -66,7 +66,7 @@ public class S4HeadLineLoaderService
 // * 本日の場合、天気データを更新する
 		Calendar cal = Calendar.getInstance();
 		long diff = cal.getTimeInMillis() - lastTime.getTime();
-		if(86400000 > diff)
+		if(4200000 > diff)
 			{
 // *テーブルの削除
 			Ph2WeatherForecastEntityExample exm = new Ph2WeatherForecastEntityExample();
