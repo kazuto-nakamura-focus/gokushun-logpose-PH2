@@ -49,13 +49,13 @@ public class S4HeadLineLoaderService
 		long deviceId = device.getId();
 // * RawDataから最後の更新日付のデータを取得する
 		List<Ph2RawDataEntity> entities = this.rawDataMapper.selectByDevice(deviceId, lastTime);
-		
-// * 	ヘッドラインデータを作成する
+
+// * ヘッドラインデータを作成する
 		Ph2HeadLinesEntityExample hdex = new Ph2HeadLinesEntityExample();
 		hdex.createCriteria().andDeviceIdEqualTo(deviceId);
 		this.ph2HeadLinesMapper.deleteByExample(hdex);
-		
-		for(Ph2RawDataEntity entity : entities)
+
+		for (Ph2RawDataEntity entity : entities)
 			{
 			Ph2HeadLinesEntity headline = new Ph2HeadLinesEntity();
 			headline.setDeviceId(deviceId);
@@ -64,15 +64,17 @@ public class S4HeadLineLoaderService
 			}
 
 // * 本日の場合、天気データを更新する
+
+		// *テーブルの削除
+		Ph2WeatherForecastEntityExample exm = new Ph2WeatherForecastEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(device.getId());
+		this.ph2WeatherForecastMapper.deleteByExample(exm);
+
+		// * 天気情報の更新
 		Calendar cal = Calendar.getInstance();
 		long diff = cal.getTimeInMillis() - lastTime.getTime();
-		if(4200000 > diff)
+		if (4200000 > diff)
 			{
-// *テーブルの削除
-			Ph2WeatherForecastEntityExample exm = new Ph2WeatherForecastEntityExample();
-			exm.createCriteria().andDeviceIdEqualTo(device.getId());
-			this.ph2WeatherForecastMapper.deleteByExample(exm);
-			
 			FreeWeatherAPI api = new FreeWeatherAPI();
 			// リクエストの作成
 			FreeWeatherRequest request = new FreeWeatherRequest();
@@ -84,7 +86,7 @@ public class S4HeadLineLoaderService
 			request.setKey("355d4dae284c491da0825008240702");
 			// 天気コードの取得
 			List<Ph2WeatherForecastEntity> res = api.getForcastEntities(deviceId, request);
-			for(final Ph2WeatherForecastEntity item : res)
+			for (final Ph2WeatherForecastEntity item : res)
 				{
 				this.ph2WeatherForecastMapper.insert(item);
 				}
