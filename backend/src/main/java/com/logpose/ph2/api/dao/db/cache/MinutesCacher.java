@@ -23,6 +23,7 @@ public class MinutesCacher
 	// クラスメンバー
 	// ===============================================
 	private long id;
+	private static boolean lock = false;
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	private Ph2BaseDataMapper ph2BaseDataMapper;
 	private Ph2RawDataMapper ph2RawDataMapper;
@@ -41,6 +42,16 @@ public class MinutesCacher
 	// ===============================================
 	// 公開関数群
 	// ===============================================
+	public static synchronized boolean lock()
+		{
+		if( lock) return false;
+		lock = true;
+		return lock;
+		}
+	public static synchronized void unlock()
+		{
+		lock = false;
+		}
 	public long addRelBaseData(Long deviceId, Date castedDay)
 		{
 		id++;

@@ -18,7 +18,7 @@ import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.cache.DeviceDayCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 
@@ -149,7 +149,7 @@ public class S5DeviceDayService
 	// --------------------------------------------------
 	private DeviceTerm setEffectiveTerm(LoadCoordinator ldc, Date oldest)
 		{
-		Ph2DevicesEnyity device = ldc.getDevice();
+		Ph2DevicesEntity device = ldc.getDevice();
 
 // * 必要なデータの最も古い日付け
 		final Calendar oldest_date = Calendar.getInstance();
@@ -254,70 +254,86 @@ public class S5DeviceDayService
 	 * @param term
 	 */
 	// --------------------------------------------------
-	private List<Ph2DeviceDayEntity> createDeviceDayTable(Ph2DevicesEnyity device, DeviceTerm term)
+	private List<Ph2DeviceDayEntity> createDeviceDayTable(Ph2DevicesEntity device, DeviceTerm term)
 		{
 		List<Ph2DeviceDayEntity> result = new ArrayList<>();
 
+		while (!DeviceDayCacher.lock())
+			{
+			try
+				{
+				Thread.sleep(1000);
+				}
+			catch (Exception e)
+				{
+				}
+			}
+		try
+			{
 // * デバイスディのIDとキャッシュ管理オブジェクトの生成
-		Long maxId = this.ph2DeviceDayMapper.selectMaxId();
-		if (null == maxId) maxId = Long.valueOf(1);
-		DeviceDayCacher cacher = new DeviceDayCacher(maxId, ph2DeviceDayMapper, ph2ModelDataMapper);
+			Long maxId = this.ph2DeviceDayMapper.selectMaxId();
+			if (null == maxId) maxId = Long.valueOf(1);
+			DeviceDayCacher cacher = new DeviceDayCacher(maxId, ph2DeviceDayMapper, ph2ModelDataMapper);
 
 // * 初期化
-		Calendar seek = Calendar.getInstance();
-		seek.setTime(term.getStartDate().getTime());
-		long dayCount = term.getDayCount() + 1;
-		
+			Calendar seek = Calendar.getInstance();
+			seek.setTime(term.getStartDate().getTime());
+			long dayCount = term.getDayCount() + 1;
+
 // * デバイス年度の設定
-		int year = seek.get(Calendar.YEAR);
-		Calendar baseDate = Calendar.getInstance();
-		// * 基準日
-		baseDate.setTime(term.getBaseDate().getTime());
-		// * シークする年の設定
-		baseDate.set(Calendar.YEAR, seek.get(Calendar.YEAR));
-		// * シーク開始日が基準日より以前の場合
-		if(baseDate.getTimeInMillis() >= seek.getTimeInMillis() )
-			{
-			year--;
-			}
+			int year = seek.get(Calendar.YEAR);
+			Calendar baseDate = Calendar.getInstance();
+			// * 基準日
+			baseDate.setTime(term.getBaseDate().getTime());
+			// * シークする年の設定
+			baseDate.set(Calendar.YEAR, seek.get(Calendar.YEAR));
+			// * シーク開始日が基準日より以前の場合
+			if (baseDate.getTimeInMillis() >= seek.getTimeInMillis())
+				{
+				year--;
+				}
 
 // * デバイスディテーブルのレコードを追加する
-		for (; seek.getTimeInMillis() < term.getEndDate().getTimeInMillis(); seek.add(Calendar.DATE, 1), dayCount++)
-			{
-			// * 基準日に到達した場合
-			if ((seek.get(Calendar.MONTH) == term.getBaseDate().get(Calendar.MONTH)) &&
-					(seek.get(Calendar.DATE) == term.getBaseDate().get(Calendar.DATE)))
+			for (; seek.getTimeInMillis() < term.getEndDate().getTimeInMillis(); seek.add(Calendar.DATE, 1), dayCount++)
 				{
-				year++;
-				dayCount = 1;
+				// * 基準日に到達した場合
+				if ((seek.get(Calendar.MONTH) == term.getBaseDate().get(Calendar.MONTH)) &&
+						(seek.get(Calendar.DATE) == term.getBaseDate().get(Calendar.DATE)))
+					{
+					year++;
+					dayCount = 1;
+					}
+				// * 日付テーブルから該当デバイスレコードを取得する。
+				Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
+				exm.createCriteria().andDeviceIdEqualTo(device.getId())
+						.andDateEqualTo(seek.getTime()).andLapseDayEqualTo((short) dayCount);
+				List<Ph2DeviceDayEntity> olds = this.ph2DeviceDayMapper.selectByExample(exm);
+				if (this.ph2DeviceDayMapper.countByExample(exm) > 1)
+					{
+					throw new RuntimeException("重複データがあります。day_id" + olds.get(1).getId());
+					}
+				if (this.ph2DeviceDayMapper.countByExample(exm) == 1)
+					{
+					result.add(olds.get(0));
+					continue;
+					}
+
+				Ph2DeviceDayEntity entity = new Ph2DeviceDayEntity();
+				entity.setDate(seek.getTime());
+				entity.setDeviceId(device.getId());
+				entity.setHasReal(false);
+				entity.setLapseDay((short) dayCount);
+				entity.setYear((short) year);
+				cacher.addDeviceDayData(entity);
+				result.add(entity);
 				}
-			// * 日付テーブルから該当デバイスレコードを取得する。
-			Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
-			exm.createCriteria().andDeviceIdEqualTo(device.getId())
-					.andDateEqualTo(seek.getTime()).andLapseDayEqualTo((short) dayCount);
-			List<Ph2DeviceDayEntity> olds = this.ph2DeviceDayMapper.selectByExample(exm);
-			if (this.ph2DeviceDayMapper.countByExample(exm) > 1)
-				{
-				throw new RuntimeException("重複データがあります。day_id" + olds.get(1).getId());
-				}
-			if (this.ph2DeviceDayMapper.countByExample(exm) == 1)
-				{
-				result.add(olds.get(0));
-				continue;
-				}
-			
-			
-			Ph2DeviceDayEntity entity = new Ph2DeviceDayEntity();
-			entity.setDate(seek.getTime());
-			entity.setDeviceId(device.getId());
-			entity.setHasReal(false);
-			entity.setLapseDay((short) dayCount);
-			entity.setYear((short) year);
-			cacher.addDeviceDayData(entity);
-			result.add(entity);
+			cacher.flush();
+			return result;
 			}
-		cacher.flush();
-		return result;
+		finally
+			{
+			DeviceDayCacher.unlock();
+			}
 		}
 	}
 

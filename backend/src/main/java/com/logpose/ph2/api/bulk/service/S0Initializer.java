@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
@@ -31,7 +31,7 @@ public class S0Initializer
 	 */
 	// --------------------------------------------------
 	@Transactional(readOnly = true)
-	public Ph2DevicesEnyity getDeviceInfo(Long deviceId)
+	public Ph2DevicesEntity getDeviceInfo(Long deviceId)
 		{
 		return this.ph2DeviceMapper.selectByPrimaryKey(deviceId);
 		}
@@ -45,7 +45,7 @@ public class S0Initializer
 	 */
 	// --------------------------------------------------
 	@Transactional(readOnly = true)
-	public LoadCoordinator initializeCoordinator(Ph2DevicesEnyity device, boolean isAllData)
+	public LoadCoordinator initializeCoordinator(Ph2DevicesEntity device, boolean isAllData)
 		{
 		LoadCoordinator coordinator = new LoadCoordinator(isAllData, ph2RelBaseDataMapper);
 		coordinator.setDevice(device);

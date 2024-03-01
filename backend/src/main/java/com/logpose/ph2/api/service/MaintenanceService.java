@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.maintenance.WeatherAPIDaoPackage;
 import com.logpose.ph2.api.maintenance.WeatherAPIDomain;
 
@@ -21,11 +21,11 @@ public class MaintenanceService
 	
 	public void importFromAPI() throws Exception
 		{
-		List<Ph2DevicesEnyity> devices = this.daoPack.getDeviceStatusDomain().selectAll();
+		List<Ph2DevicesEntity> devices = this.daoPack.getDeviceStatusDomain().selectAll();
 		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
 
 		LOG.info("マスターデータをインポートします。");
-		for (Ph2DevicesEnyity device : devices)
+		for (Ph2DevicesEntity device : devices)
 			{
 			new WeatherAPIDomain(daoPack).importData(device);
 			}

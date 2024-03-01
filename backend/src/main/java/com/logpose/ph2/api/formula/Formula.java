@@ -110,15 +110,15 @@ public class Formula
 	// --------------------------------------------------
 	public static double toPsAmount(
 			double f, double g,
-			double prev, double leafArea, 
+			double prev, double leafArea,
 			double PAR, long sunLight, int shootCount)
 		{
 		// Σ(f*exp(g*PAR/600/日照時間(h)*6)*PAR/600/日照時間(h)*6/2.02*樹冠葉面積/新梢数*60/1000)*新梢数*44/1000
-		double shortPar = PAR/600/(sunLight/3600)*6;
+		double shortPar = PAR / 600 / (sunLight / 3600) * 6;
 		// Σ(f*exp(g*shortPar)*shortPar/2.02*樹冠葉面積/新梢数*60/1000)*新梢数*44/1000
 		return prev +
-				(f * Math.exp(g * shortPar) * shortPar / 81.4 * leafArea / shootCount * 60 / 1000) * 
-				shootCount * 44 / 1000;
+				(f * Math.exp(g * shortPar) * shortPar / 81.4 * leafArea / shootCount * 60 / 1000) *
+						shootCount * 44 / 1000;
 		}
 
 	// --------------------------------------------------
@@ -284,12 +284,12 @@ public class Formula
 	// --------------------------------------------------
 	public static double toVMCOrgaic(double x)
 		{
-		x = x/1000;
-		// -0.039+1.8753V-4.0596V^2+6.3711V^3-4.7477V^4+1.3911V^5
-		return -0.039+1.8753*x-Math.pow(4.0596*x, 2)
-			+ Math.pow(6.3711*x, 3) - Math.pow(4.7477*x, 4)
-			+ Math.pow(1.3911*x, 5);
+		 x = x / 1000;
+		// (-0.039+1.8753*x-4.0596*x**2+6.3711*x**3-4.7477*x**4+1.3911*x**5)*100;
+		return -0.039 + 1.8753 * x - 4.0596 * Math.pow(x, 2) + 6.3711 * Math.pow(x, 3) - 4.7477 * Math.pow(x, 4)
+				+ 1.3911 * Math.pow(x, 5);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * ミネラル土壌体積含水率算出
@@ -302,10 +302,10 @@ public class Formula
 		{
 		x = x/1000;
 		// -0.0714+1.719V-3.7213V^2+5.8402V^3-4.3521V^4+1.2752V^5
-		return -0.0714+1.719*x-Math.pow(3.7213*x, 2)
-			+ Math.pow(5.8402*x, 3) - Math.pow(4.3521*x, 4)
-			+ Math.pow(1.2752*x, 5);
+		return -0.0714 + 1.719 * x - 3.7213 * Math.pow(x, 2) + 5.8402 * Math.pow(x, 3) - 4.3521 * Math.pow(x, 4)
+				+ 1.2752 * Math.pow(x, 5);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * PARを算出する

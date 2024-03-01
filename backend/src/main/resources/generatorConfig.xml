@@ -91,7 +91,7 @@
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> 
 			
 		<table tableName="ph2_devices"
-			domainObjectName="Ph2DevicesEnyity" mapperName="Ph2DevicesMapper"
+			domainObjectName="Ph2DevicesEntity" mapperName="Ph2DevicesMapper"
 			enableInsert="true" enableSelectByPrimaryKey="true"
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true"
 			modelType="flat">
@@ -211,10 +211,16 @@
 			mapperName="Ph2WeatherCodeMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>-->
+		</table>
 		<table tableName="ph2_wheather_forecast"
 			domainObjectName="Ph2WeatherForecastEntity"
 			mapperName="Ph2WeatherForecastMapper" enableInsert="true"
+			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
+			enableDeleteByPrimaryKey="true" modelType="flat">
+		</table>-->
+		<table tableName="ph2_device_model_status"
+			domainObjectName="Ph2DeviceModelStatusEntity"
+			mapperName="Ph2DeviceModelStatusMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
 		</table>

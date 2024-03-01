@@ -11,7 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.configration.DefaultWeatherlAPIParameters;
 import com.logpose.ph2.api.dao.api.FreeWeatherAPI;
 import com.logpose.ph2.api.dao.api.entity.FreeWeatherRequest;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2HeadLinesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2HeadLinesEntityExample;
@@ -44,7 +44,7 @@ public class S4HeadLineLoaderService
 	// 公開関数群
 	// ===============================================
 	@Transactional(rollbackFor = Exception.class)
-	public void createHealines(Ph2DevicesEnyity device, Date lastTime)
+	public void createHealines(Ph2DevicesEntity device, Date lastTime)
 		{
 		long deviceId = device.getId();
 // * RawDataから最後の更新日付のデータを取得する

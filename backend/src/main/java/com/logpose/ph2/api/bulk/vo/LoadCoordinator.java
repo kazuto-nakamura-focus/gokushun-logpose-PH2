@@ -3,7 +3,7 @@ package com.logpose.ph2.api.bulk.vo;
 import java.util.Date;
 import java.util.List;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
@@ -17,7 +17,7 @@ public class LoadCoordinator
 	// ===============================================
 	private Ph2RelBaseDataMapper ph2RelBaseDataMapper;
 	@Getter
-	private Ph2DevicesEnyity device;
+	private Ph2DevicesEntity device;
 	@Getter
 	private boolean isAll = false;
 	@Getter
@@ -40,10 +40,10 @@ public class LoadCoordinator
 	// --------------------------------------------------
 	/**
 	 * デバイスを設定する
-	 * @param device Ph2DevicesEnyity
+	 * @param device Ph2DevicesEntity
 	 */
 	// --------------------------------------------------
-	public void setDevice(Ph2DevicesEnyity device)
+	public void setDevice(Ph2DevicesEntity device)
 		{
 		this.device = device;
 		}

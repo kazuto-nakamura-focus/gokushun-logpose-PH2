@@ -8,9 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
+import com.logpose.ph2.api.dto.element.ObjectStatus;
 
 /**
  *  デバイスデータのステータスを設定する
@@ -36,21 +37,35 @@ public class DeviceStatusDomain
 	// --------------------------------------------------
 	/**
 	 * デバイスリストを取得する
-	 * @return List<Ph2DevicesEnyity>
+	 * @return List<Ph2DevicesEntity>
 	 */
 	// --------------------------------------------------
-	public List<Ph2DevicesEnyity> selectAll()
+	public List<Ph2DevicesEntity> selectAll()
 		{
 		return this.ph2DevicesMapper.selectAll(null);
 		}
-
+	// --------------------------------------------------
+	/**
+	 * オブジェクトステータスリストを取得する
+	 * @return List<Ph2DevicesEntity>
+	 */
+	// --------------------------------------------------
+	public List<ObjectStatus> getStatusList(List<Ph2DevicesEntity> devices)
+		{
+		List<Long> idList = new ArrayList<>();
+		for(final Ph2DevicesEntity device : devices)
+			{
+			idList.add(device.getId());
+			}
+		return this.ph2DevicesMapper.selectDeviceStatus(idList);
+		}
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスが全データロードかどうかチェックする
 	 * @return boolean
 	 */
 	// --------------------------------------------------
-	public boolean isAll(Ph2DevicesEnyity device)
+	public boolean isAll(Ph2DevicesEntity device)
 		{
 		return (device.getDataStatus() & ALL_LOAD_NEEDED) > 0;
 		}
@@ -62,21 +77,28 @@ public class DeviceStatusDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public boolean setDataOnLoad(Ph2DevicesEnyity device)
+	public boolean setDataOnLoad(Ph2DevicesEntity device)
 		{
 // * 最新の情報を得る
-		Ph2DevicesEnyity entity = this.ph2DevicesMapper.selectByPrimaryKey(device.getId());
-// * データをロードモードにする
-		Integer status = entity.getDataStatus();
-		if (null == status) status = 0;
-		if ((status.intValue() & ON_LOADING) == 0)
+		Ph2DevicesEntity entity = this.ph2DevicesMapper.selectByPrimaryKey(device.getId());
+		int prevStatus = (null !=entity.getDataStatus())?entity.getDataStatus().intValue() : 0;
+		int newStatus  = 0;
+// * ロックされていない場合
+		if ((prevStatus & ON_LOADING) == 0)
 			{
-			// 最新の情報に更新
-			if((status.intValue() & ALL_LOAD_NEEDED)>0)
+			// ロック
+			newStatus = ON_LOADING;
+			// 全てのロード要求がある場合、そのステータスを保持
+			if((prevStatus & ALL_LOAD_NEEDED)>0)
 				{
-				device.setDataStatus((ALL_LOAD_NEEDED | ON_LOADING));
+				newStatus = newStatus|ALL_LOAD_NEEDED;
 				}
-			else device.setDataStatus(ON_LOADING);
+			// 通常のロードの場合モデル情報を保持
+			else if((prevStatus & MODEL_DATA_CREATED)>0)
+				{
+				newStatus = newStatus|MODEL_DATA_CREATED;
+				}
+			device.setDataStatus(newStatus);
 			// DBへ更新
 			this.update(device, false);
 			return true;
@@ -92,7 +114,7 @@ public class DeviceStatusDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void setDataNotLoading(Ph2DevicesEnyity device)
+	public void setDataNotLoading(Ph2DevicesEntity device)
 		{
 		int status = device.getDataStatus();
 		status = (status | ON_LOADING) - ON_LOADING;
@@ -107,7 +129,7 @@ public class DeviceStatusDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void setDataInitialized(Ph2DevicesEnyity device)
+	public void setDataInitialized(Ph2DevicesEntity device)
 		{
 		this.setDataStatus(device, DATA_INITIALIZED, true);
 		}
@@ -119,11 +141,23 @@ public class DeviceStatusDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void setRawDataLoaded(Ph2DevicesEnyity device)
+	public void setRawDataLoaded(Ph2DevicesEntity device)
 		{
 		this.setDataStatus(device, RAW_DATA_LOADED, true);
 		}
-
+	// --------------------------------------------------
+	/**
+	 * 指定されたデバイスに対してモデルデータが作成済を解除する
+	 * @param deviceId
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class)
+	public void setUpdateNotModel(Ph2DevicesEntity device)
+		{
+		Integer status = (device.getDataStatus().intValue() | MODEL_DATA_CREATED) - MODEL_DATA_CREATED;
+		device.setDataStatus(status);
+		this.update(device, false);
+		}
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスに対してモデルデータが作成済であることを通知する
@@ -131,7 +165,7 @@ public class DeviceStatusDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void setModelDataCreated(Ph2DevicesEnyity device)
+	public void setModelDataCreated(Ph2DevicesEntity device)
 		{
 		this.setDataStatus(device, MODEL_DATA_CREATED, true);
 		}
@@ -144,7 +178,7 @@ public class DeviceStatusDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public List<Long> lockDevices(Ph2DevicesEnyity device)
+	public List<Long> lockDevices(Ph2DevicesEntity device)
 		{
 		List<Long> rockList = new ArrayList<>();
 // * デバイスに対してロックを試みる
@@ -157,7 +191,7 @@ public class DeviceStatusDomain
 // * 引継ぎ元のデバイスがあれば、ロックを掛ける
 		if (null != device.getPreviousDeviceId())
 			{
-			Ph2DevicesEnyity tmp = this.ph2DevicesMapper.selectByPrimaryKey(device.getPreviousDeviceId());
+			Ph2DevicesEntity tmp = this.ph2DevicesMapper.selectByPrimaryKey(device.getPreviousDeviceId());
 			if( null != tmp)
 				{
 				tmp.setId(device.getPreviousDeviceId());
@@ -174,10 +208,10 @@ public class DeviceStatusDomain
 				}
 			}
 // * このデバイスを参照しているデバイスがあれば、ロックをかける
-		Ph2DevicesEnyityExample exm = new Ph2DevicesEnyityExample();
+		Ph2DevicesEntityExample exm = new Ph2DevicesEntityExample();
 		exm.createCriteria().andPreviousDeviceIdEqualTo(device.getId());
-		List<Ph2DevicesEnyity> devices = this.ph2DevicesMapper.selectByExample(exm);
-		for (Ph2DevicesEnyity ref : devices)
+		List<Ph2DevicesEntity> devices = this.ph2DevicesMapper.selectByExample(exm);
+		for (Ph2DevicesEntity ref : devices)
 			{
 			if (!this.setDataOnLoad(ref))
 				{
@@ -194,7 +228,7 @@ public class DeviceStatusDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void setUpdateNotAll(Ph2DevicesEnyity device)
+	public void setUpdateNotAll(Ph2DevicesEntity device)
 		{
 		Integer status = (device.getDataStatus().intValue() | ALL_LOAD_NEEDED) - ALL_LOAD_NEEDED;
 		device.setDataStatus(status);
@@ -225,14 +259,14 @@ public class DeviceStatusDomain
 	// ===============================================
 	// 保護関数群
 	// ===============================================
-	public void setDataStatus(Ph2DevicesEnyity device, Integer status, boolean dataUpdated)
+	public void setDataStatus(Ph2DevicesEntity device, Integer status, boolean dataUpdated)
 		{
 		int orginal = device.getDataStatus();
 		orginal = (orginal | status);
 		device.setDataStatus(orginal);
 		this.update(device, dataUpdated);
 		}
-	public void update(Ph2DevicesEnyity device, boolean dataUpdated)
+	public void update(Ph2DevicesEntity device, boolean dataUpdated)
 		{
 		device.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		if(dataUpdated) device.setDataStatusDate(device.getUpdatedAt());

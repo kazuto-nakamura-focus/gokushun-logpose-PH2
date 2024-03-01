@@ -76,7 +76,7 @@
 			domainObjectName="Ph2BrandMasterEntity" mapperName="Ph2BrandMasterMapper" 
 			enableInsert="true" enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" 
 			enableDeleteByPrimaryKey="true" modelType="flat"> </table> <table tableName="ph2_devices" 
-			domainObjectName="Ph2DevicesEnyity" mapperName="Ph2DevicesMapper" enableInsert="true" 
+			domainObjectName="Ph2DevicesEntity" mapperName="Ph2DevicesMapper" enableInsert="true" 
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" 
 			modelType="flat"> </table> -->
 		<table tableName="ph2_sensor_contents"

@@ -17,7 +17,7 @@ import com.logpose.ph2.api.dao.db.cache.DailyBaseCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DailyBaseDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ExtendDailyBaseDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DailyBaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
@@ -238,7 +238,7 @@ public class S6DailyBaseDataGeneratorService
 	private List<ExtendDailyBaseDataEntity> checkTransfer(LoadCoordinator ldc)
 		{
 // * 引継ぎ元デバイスIDが無ければ、終了
-		Ph2DevicesEnyity device = ldc.getDevice();
+		Ph2DevicesEntity device = ldc.getDevice();
 		if (null == device.getPreviousDeviceId()) return null;
 
 // * 現在処理中のデバイスの最も古いデータの日付をRelBaseDataから取得する

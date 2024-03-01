@@ -19,7 +19,7 @@ import com.logpose.ph2.api.dao.api.entity.WeatherRequest;
 import com.logpose.ph2.api.dao.db.cache.WeatherDailyMasterCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2WeatherDailyMasterEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2WeatherDailyMasterEntityExample;
@@ -56,7 +56,7 @@ public class WeatherAPIDomain
 	 * @throws Exception 
 	 */
 	// --------------------------------------------------
-	private void createRequests(Ph2DevicesEnyity device, List<Ph2DeviceDayEntity> deviceDays) throws ParseException
+	private void createRequests(Ph2DevicesEntity device, List<Ph2DeviceDayEntity> deviceDays) throws ParseException
 		{
 		requests = new ArrayList<>();
 
@@ -120,7 +120,7 @@ public class WeatherAPIDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void importData(Ph2DevicesEnyity device) throws Exception
+	public void importData(Ph2DevicesEntity device) throws Exception
 		{
 		if (!this.apiDao.getDeviceStatusDomain().setDataOnLoad(device))
 			{
@@ -171,7 +171,7 @@ public class WeatherAPIDomain
 	 * @throws InterruptedException 
 	 */
 	// -------------------------------------------------
-	public void createDailyBaseData(Ph2DevicesEnyity device, Weather weather)
+	public void createDailyBaseData(Ph2DevicesEntity device, Weather weather)
 		{
 		WeatherDaily daily = weather.getDaily();
 		WeatherHourly hourly = weather.getHourly();

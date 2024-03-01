@@ -13,6 +13,7 @@ const useDeviceInfoAdd = (data) => {
   const config = {
     params: {},
   };
+
   return axios.post("/device/info", data, config);
 };
 
@@ -48,12 +49,21 @@ const useDeviceMastersAPI = () => {
   return axios.get("/device/masters", config);
 };
 
+//ロード対象の取得
+const useGetSchedule = (deviceId) => {
+  const config = {
+    params: { deviceId },
+  };
+  return axios.get("/bulk/load/schedule", config);
+};
+
 // デバイスデータのロード
-const useLoadData = (data) => {
+const useLoadData = (deviceId) => {
   const config = {
     params: {},
+    timeout: 900000
   };
-  return axios.post("/bulk/load", data, config);
+  return axios.get("/bulk/load/device/" + deviceId, config);
 };
 
 export {
@@ -63,5 +73,6 @@ export {
   useDeviceInfoAdd,
   useDeviceInfoUpdate,
   useDeviceMastersAPI,
+  useGetSchedule,
   useLoadData,
 };

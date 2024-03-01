@@ -19,7 +19,7 @@ import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2BaseDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2InsolationDataMapper;
@@ -69,50 +69,67 @@ public class S3RawDataLoaderService
 // * DBへの一括登録高速化のためのアクセスキャッシュを生成する
 // * START --------------------------------------
 // * RelBaseDataの最大IDを取得し、レコードを追加するときのID付与の準備をする
-		Long id = this.ph2RelBaseDataMapper.selectMaxId();
-		if (null == id) id = Long.valueOf(1);
+		while (!MinutesCacher.lock())
+			{
+			try
+				{
+				Thread.sleep(1000);
+				}
+			catch (Exception e)
+				{
+				}
+			}
+		try
+			{
+			Long id = this.ph2RelBaseDataMapper.selectMaxId();
+			if (null == id) id = Long.valueOf(1);
 // * アクセスキャッシュの生成
-		MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
-				ph2BaseDataMapper, rawDataMapper, ph2InsolationDataMapper, null);
+			MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
+					ph2BaseDataMapper, rawDataMapper, ph2InsolationDataMapper, null);
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
-		Ph2DevicesEnyity device = coordinator.getDevice();
-		// * メッセージデータの抽出開始日
-		Date op_start_date = device.getOpStart();
-		// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
-		Date firstDate = coordinator.getLastHadledDate();
-		if (null != firstDate)
-			{
-			firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
-			if (null != op_start_date)
+			Ph2DevicesEntity device = coordinator.getDevice();
+			// * メッセージデータの抽出開始日
+			Date op_start_date = device.getOpStart();
+			// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
+			Date firstDate = coordinator.getLastHadledDate();
+			if (null != firstDate)
 				{
-				if (op_start_date.getTime() < firstDate.getTime())
+				firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
+				if (null != op_start_date)
+					{
+					if (op_start_date.getTime() < firstDate.getTime())
+						{
+						op_start_date = firstDate;
+						}
+					}
+				else
 					{
 					op_start_date = firstDate;
 					}
 				}
-			else
+// * メッセージデータの抽出終了日
+			Date op_end_date = device.getOpEnd();
+// * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
+			try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
+					.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
 				{
-				op_start_date = firstDate;
+				Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
+				DataListModel messageData = new DataListModel();
+				while (messages.hasNext())
+					{
+					Ph2MessagesEntity message = messages.next();
+					messageData = this.createTables(device, coordinator.getSensors(), messageData,
+							message, cache);
+					}
+// * ローディング情報に最後の生データ登録時刻を返却する。
+				cache.flush();
+				return cache.getLastCastedDate();
 				}
 			}
-// * メッセージデータの抽出終了日
-		Date op_end_date = device.getOpEnd();
-// * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
-		try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
-				.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
+		finally
 			{
-			Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
-			DataListModel messageData = new DataListModel();
-			while (messages.hasNext())
-				{
-				Ph2MessagesEntity message = messages.next();
-				messageData = this.createTables(device, coordinator.getSensors(), messageData,
-						message, cache);
-				}
-// * ローディング情報に最後の生データ登録時刻を返却する。
-			cache.flush();
-			return cache.getLastCastedDate();
+			MinutesCacher.unlock();
 			}
 		}
 
@@ -129,7 +146,7 @@ public class S3RawDataLoaderService
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public DataListModel createTables(
-			Ph2DevicesEnyity device,
+			Ph2DevicesEntity device,
 			List<SensorDataDTO> sensors,
 			DataListModel dataListModel,
 			Ph2MessagesEntity message,

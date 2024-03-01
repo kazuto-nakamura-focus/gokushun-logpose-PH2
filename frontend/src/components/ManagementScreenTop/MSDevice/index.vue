@@ -91,7 +91,7 @@
         :onEnd="fromDevice"
       />
       <confirmDailog :shared="sharedConfirm" ref="confirm" />
-      <wait-dialog ref="wait" />
+      <loading-device-list :shared="loaderDialog" ref="loader" />
     </v-container>
   </v-app>
 </template>
@@ -100,12 +100,11 @@
 import {
   useDeviceList,
   useDeviceInfoRemove,
-  useLoadData,
 } from "@/api/ManagementScreenTop/MSDevice";
 import MSEditDeviceWrapper from "./MSEditDevice/MSEditDeviceWrapper.vue";
 import confirmDailog from "@/components/dialog/confirmDialog.vue";
+import LoadingDeviceList from "@/components-v1/DataLoaderDialog/LoadingDeviceList.vue";
 import { DialogController } from "@/lib/mountController.js";
-import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true },
@@ -123,6 +122,7 @@ export default {
       display: "list",
       isDeleteMode: false,
       sharedConfirm: new DialogController(),
+      loaderDialog: new DialogController(),
 
       useDeviceInfoDataList: [], //
       selectedDevice: { id: null },
@@ -152,7 +152,7 @@ export default {
   components: {
     MSEditDeviceWrapper,
     confirmDailog,
-    WaitDialog,
+    LoadingDeviceList,
   },
 
   methods: {
@@ -181,30 +181,13 @@ export default {
       );
     },
     callLoader: function () {
-      const data = {
-        deviceId: null,
-        isAll: true,
-        startDate: null,
-      };
-      this.$refs.wait.start("全てのセンサーデータをアップデート中です。", true);
-      useLoadData(data)
-        .then((response) => {
-          //成功時
-          const { status, message } = response["data"];
-          if (status === 0) {
-            alert("全てのセンサーデータのロードが完了しました。");
-            this.$refs.wait.finish();
-            this.onEnd(true);
-          } else {
-            alert("全てのセンサーデータのロードに失敗しました。");
-            throw new Error(message);
-          }
-        })
-        .catch((error) => {
-          //失敗時
-          this.$refs.wait.finish();
-          console.log(error);
-        });
+      this.loaderDialog.setUp(
+        this.$refs.loader,
+        function (loader) {
+          loader.initialize(this.useDeviceInfoDataList);
+        }.bind(this),
+        function () {}
+      );
     },
 
     add: function () {
@@ -264,13 +247,13 @@ export default {
       }
     },
     // ページ変更時のページ番号を一時的に記憶する。
-    onPageChange: function(newPage) {
+    onPageChange: function (newPage) {
       this.currentPage = newPage;
     },
     // 行数変更時の行数を一時的に記憶する。
-    onItemsPerPageChange: function(newItemsPerPage) {
+    onItemsPerPageChange: function (newItemsPerPage) {
       this.currentItemsPerPage = newItemsPerPage;
-    }
+    },
   },
 };
 </script>

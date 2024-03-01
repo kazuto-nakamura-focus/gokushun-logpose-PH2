@@ -103,7 +103,7 @@ public class BaseDataGenerator
 				// * 計算実行
 				Calendar calendar = Calendar.getInstance();
 				calendar.setTime(dataList.getCastedAt());
-				Double value =Double.valueOf(0);
+				Double value = Double.valueOf(0);
 				try
 					{
 					value = Formula.toSapFlow(x1, x2, x3, x4, sensor,
@@ -189,7 +189,7 @@ public class BaseDataGenerator
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
 				// * 計算実行
-				double value = Formula.toVMCOrgaic(x);
+				double value = Formula.toVMCOrgaic(x) * 100;
 				// * ダッシュボード登録
 				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),
@@ -201,7 +201,7 @@ public class BaseDataGenerator
 				// * 電圧取得
 				double x = dataList.getVoltages().get(channel);
 				// * 計算実行
-				double value = Formula.toVMCMineral(x);
+				double value = Formula.toVMCMineral(x) * 100;
 				// * ダッシュボード登録
 				cache.addRawDataData(deviceId, sensor.getSensorId(), sensor.getSensorContentId(),
 						dataList.getCastedAt(),

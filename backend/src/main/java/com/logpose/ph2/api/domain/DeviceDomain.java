@@ -10,8 +10,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
@@ -68,10 +68,10 @@ public class DeviceDomain
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public Ph2DevicesEnyity add(DeviceUpdateDTO dto) throws ParseException
+	public Ph2DevicesEntity add(DeviceUpdateDTO dto) throws ParseException
 		{
 // * 追加するデバイス・エンティティの作成
-		Ph2DevicesEnyity target = new Ph2DevicesEnyity();
+		Ph2DevicesEntity target = new Ph2DevicesEntity();
 		this.setEntity(target, dto);
 		target.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 // * DBへの追加とIDの取得
@@ -91,7 +91,7 @@ public class DeviceDomain
 	public void update(DeviceUpdateDTO dto) throws ParseException
 		{
 // * 対象となるデバイスをテーブルから取得する
-		Ph2DevicesEnyity target = this.devicesMapper.selectByPrimaryKey(dto.getId());
+		Ph2DevicesEntity target = this.devicesMapper.selectByPrimaryKey(dto.getId());
 // * 更新するデバイス・エンティティの作成
 		this.setEntity(target, dto);
 // * DBへの更新
@@ -110,10 +110,10 @@ public class DeviceDomain
 // * デバイスの削除
 		this.devicesMapper.deleteByPrimaryKey(deviceId);
 // * このデバイスを参照しているデバイスの引継ぎIDをNULLにする
-		Ph2DevicesEnyityExample devExm = new Ph2DevicesEnyityExample();
+		Ph2DevicesEntityExample devExm = new Ph2DevicesEntityExample();
 		devExm.createCriteria().andPreviousDeviceIdEqualTo(deviceId);
-		List<Ph2DevicesEnyity> list = this.devicesMapper.selectByExample(devExm);
-		for(Ph2DevicesEnyity device : list)
+		List<Ph2DevicesEntity> list = this.devicesMapper.selectByExample(devExm);
+		for(Ph2DevicesEntity device : list)
 			{
 			device.setPreviousDeviceId(null);
 			this.devicesMapper.updateByPrimaryKey(device);
@@ -130,7 +130,7 @@ public class DeviceDomain
 	public void deleteByFieldId(Long fieldId)
 		{
 // *  圃場の全デバイスの削除
-		Ph2DevicesEnyityExample devExm = new Ph2DevicesEnyityExample();
+		Ph2DevicesEntityExample devExm = new Ph2DevicesEntityExample();
 		devExm.createCriteria().andFieldIdEqualTo(fieldId);
 		this.devicesMapper.deleteByExample(devExm);
 		}
@@ -141,10 +141,10 @@ public class DeviceDomain
 	 *@param fieldId フィールドID
 	 */
 	// --------------------------------------------------	
-	public void setPreviousDevice(Ph2DevicesEnyity target)
+	public void setPreviousDevice(Ph2DevicesEntity target)
 		{
 		if(null == target.getPreviousDeviceId()) return;
-		Ph2DevicesEnyity prev = this.devicesMapper.selectByPrimaryKey(target.getPreviousDeviceId());
+		Ph2DevicesEntity prev = this.devicesMapper.selectByPrimaryKey(target.getPreviousDeviceId());
 		if(null == prev)
 			{
 			target.setPreviousDeviceId(null);
@@ -159,11 +159,11 @@ public class DeviceDomain
 	/** --------------------------------------------------
 	 * エンティティにDTOのデータを設定する
 	 *
-	 *@param target Ph2DevicesEnyity
+	 *@param target Ph2DevicesEntity
 	 *@param dto DeviceUpdateDTO
 	 ------------------------------------------------------ 
 	 * @throws ParseException */
-	private void setEntity(Ph2DevicesEnyity target, DeviceUpdateDTO dto) throws ParseException
+	private void setEntity(Ph2DevicesEntity target, DeviceUpdateDTO dto) throws ParseException
 		{
 // * リクエストの基準日をDate型に変換する
 		// 2020の部分は任意
@@ -195,7 +195,7 @@ public class DeviceDomain
 	/**
 	 * オブジェクト間の違いをチェックする
 	 *
-	 *@param target Ph2DevicesEnyity
+	 *@param target Ph2DevicesEntity
 	 *@param dto DeviceUpdateDTO
 	 */
 	// ------------------------------------------------------

@@ -11,7 +11,7 @@ const useDeviceTarget = () => {
 // デバイスに対応するセンサー情報を取得
 const useSensorList = (deviceId) => {
   const config = {
-    params: {deviceId},
+    params: { deviceId },
   };
   return axios.get("/dashboard/sensors", config);
 };
@@ -19,8 +19,8 @@ const useSensorList = (deviceId) => {
 //デバイス情報の更新
 const useUpdateDisplay = (data) => {
   const config = {
- //   params: {},
-  withCredential:true,
+    //   params: {},
+    withCredential: true,
   };
   return axios.post("/dashboard/device", data, config);
 };
@@ -28,8 +28,8 @@ const useUpdateDisplay = (data) => {
 //センサー情報の更新
 const useUpdateSettings = (data) => {
   const config = {
- //   params: {},
-  withCredential:true,
+    //   params: {},
+    withCredential: true,
   };
   return axios.post("/dashboard/sensors", data, config);
 };

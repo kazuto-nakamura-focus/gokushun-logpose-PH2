@@ -7,7 +7,7 @@ import com.logpose.ph2.api.bulk.domain.SigFoxDomain;
 import com.logpose.ph2.api.configration.DefaultSecurityParameters;
 import com.logpose.ph2.api.configration.DefaultSigFoxParameters;
 import com.logpose.ph2.api.dao.api.SigFoxAPI;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 
 /**
  * SigFoxのデータをデバイス毎に取り込む
@@ -36,7 +36,7 @@ public class S1SigFoxMessageService
 	 * @throws InterruptedException 
 	 */
 	// --------------------------------------------------
-	public void doService(Ph2DevicesEnyity device) throws InterruptedException
+	public void doService(Ph2DevicesEntity device) throws InterruptedException
 		{
 // * APIのDAOを作成し、アクセス情報を設定する
 		SigFoxAPI api = new SigFoxAPI();

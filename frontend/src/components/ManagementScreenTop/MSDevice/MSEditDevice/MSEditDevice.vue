@@ -546,13 +546,8 @@ export default {
     },
 
     dataLoad: function () {
-      const data = {
-        deviceId: this.deviceInfoData.id,
-        isAll: true,
-        startDate: null,
-      };
       this.$refs.wait.start("センサーデータをアップデート中です。", true);
-      useLoadData(data)
+      useLoadData(this.deviceInfoData.id)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.bulk.domain.DeviceStatusDomain;
-import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEnyity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.domain.DashboardDomain;
 import com.logpose.ph2.api.domain.DeviceDomain;
@@ -135,7 +135,7 @@ public class DeviceServiceImpl implements DeviceService
 	public void delete(Long deviceId)
 		{
 // * デバイス情報の取得
-		Ph2DevicesEnyity device = this.devicesMapper.selectByPrimaryKey(deviceId);
+		Ph2DevicesEntity device = this.devicesMapper.selectByPrimaryKey(deviceId);
 // * 関連デバイスのロック
 		List<Long> locks = this.deviceStatusDomain.lockDevices(device);
 		try
@@ -169,7 +169,7 @@ public class DeviceServiceImpl implements DeviceService
 	public void addInfo(DeviceUpdateDTO dto) throws ParseException
 		{
 // * デバイスの追加
-		Ph2DevicesEnyity device = this.deviceDomain.add(dto);
+		Ph2DevicesEntity device = this.deviceDomain.add(dto);
 // * ダッシュボード表示の追加
 		this.dashboardDomain.addDevice(device.getId());
 // * 関連デバイスのロック
@@ -208,7 +208,7 @@ public class DeviceServiceImpl implements DeviceService
 	public void updateInfo(DeviceUpdateDTO dto) throws ParseException
 		{
 // * デバイス情報の取得
-		Ph2DevicesEnyity device = this.devicesMapper.selectByPrimaryKey(dto.getId());
+		Ph2DevicesEntity device = this.devicesMapper.selectByPrimaryKey(dto.getId());
 // * 関連デバイスのロック
 		List<Long> locks = this.deviceStatusDomain.lockDevices(device);
 		try
