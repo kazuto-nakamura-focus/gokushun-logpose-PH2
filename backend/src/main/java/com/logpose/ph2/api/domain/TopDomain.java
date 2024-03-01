@@ -74,21 +74,30 @@ public class TopDomain
 // * セルデータを取得し、リストの表示番号-1に対して入れ替え
 			List<FieldData> data = this.topDomainMapper
 					.selectFieldDataList(item.getDeviceId());
+// * 表示順位を設定する
 			if (data.size() > 0)
 				{
+				boolean hasData = false;
 				for(final FieldData fieldData : data)
 					{
+					// 最終更新日付を設定する
 					if(null == lastDate)
 						{
 						lastDate = fieldData.getCastedAt();
 						item.setDate(lastDate);
 						}
+					// 表示番号を指定された番号に設定する
 					Short displayNo = fieldData.getDisplayNo();
 					if(null != displayNo)
 						{
 						display.set(displayNo-1, fieldData);
+						hasData = true;
 						}
-					else
+					}
+				// 表示番号が無い場合、コンテンツ番号を設定する
+				if(!hasData)
+					{
+					for(final FieldData fieldData : data)
 						{
 						display.set(fieldData.getId().shortValue()-1, fieldData);
 						}
