@@ -103,7 +103,7 @@ public class TopDomain
 						}
 					};
 				}
-// * 気象情報の取得
+// * 気象情報の取得cd 
 			List<DashboardForecast> weather = this.ph2WeatherForecastMapper.selectWithText(item.getDeviceId());
 			item.setForecastList(weather);
 			}

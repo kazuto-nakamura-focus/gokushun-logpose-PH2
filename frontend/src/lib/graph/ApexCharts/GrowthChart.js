@@ -1,59 +1,6 @@
 //import { concat } from "core-js/core/array";
 import moment from "moment";
-const yaxisAnnotations = {
-  "萌芽期": {
-    borderColor: '#70ad47',
-    borderWidth: 2,
-    strokeDashArray: 0,
-    label: {
-      borderColor: '#70ad47',
-      position: "left",
-      textAnchor: "start",
-      style: {
-        color: '#000000',
-      },
-    }
-  },
-  "開花日": {
-    borderColor: '#ff0066',
-    borderWidth: 2,
-    strokeDashArray: 0,
-    label: {
-      borderColor: '#ff0066',
-      position: "left",
-      textAnchor: "start",
-      style: {
-        color: '#000000',
-      },
-    }
-  },
-  "べレーゾン": {
-    borderColor: '#4472c4',
-    borderWidth: 2,
-    strokeDashArray: 0,
-    label: {
-      borderColor: '#4472c4',
-      position: "left",
-      textAnchor: "start",
-      style: {
-        color: '#000000',
-      },
-    }
-  },
-  "収穫日": {
-    borderColor: '#ed7d31',
-    borderWidth: 2,
-    strokeDashArray: 0,
-    label: {
-      borderColor: '#ed7d31',
-      position: "left",
-      textAnchor: "start",
-      style: {
-        color: '#000000',
-      },
-    }
-  }
-}
+
 
 const todayXaxisAnnotation = {
   x: moment().format("YYYY/MM/DD"),
@@ -183,18 +130,31 @@ export class GrowthChart {
     this.data.chartOptions.xaxis.title.text = xtitle;
     //* Y軸タイトル
     this.data.chartOptions.yaxis.title.text = ytitle;
+    //* Y軸の最高値
+    let max = source.YEnd;
     //* アノテーション
     let annotations = []
     if ((source.annotations != null) && (source.annotations.length > 0)) {
       for (const item of source.annotations) {
-        const value = item?.value;
-        const name = item?.name;
-        let annotation = yaxisAnnotations[`${name}`];
-
-        if (annotation === undefined) continue;
-        annotation['y'] = value;
-        annotation['label']['text'] = name;
-
+        // * 最高値がアノテーションの値の方が高い場合
+        if (max < item.value) {
+          max = item.value;
+        }
+        var annotation = {
+          y: item.value,
+          borderColor: item.color,
+          borderWidth: 2,
+          strokeDashArray: 0,
+          label: {
+            borderColor: item.color,
+            position: "left",
+            textAnchor: "start",
+            text: item.name,
+            style: {
+              color: '#000000',
+            },
+          }
+        }
         annotations.push(annotation);
       }
       if (annotations.length > 0) {
@@ -217,7 +177,7 @@ export class GrowthChart {
       }
     }
 
-    this.data.chartOptions.yaxis.max = source.YEnd;
+    this.data.chartOptions.yaxis.max = max;
     this.data.chartOptions.yaxis.min = source.YStart;
     this.data.chartOptions.xaxis.categories = source.category;
   }

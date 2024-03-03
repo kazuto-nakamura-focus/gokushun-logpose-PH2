@@ -83,7 +83,7 @@ import { DeviceParser } from "@/lib/deviceParser.js";
 import { DialogController, MountController } from "@/lib/mountController.js";
 import GEActualValueInput from "@/components/TopStageGrowth/actualValueInput/GEMainInput.vue";
 import ParmeterSetDialog from "@/components/TopStageGrowth/ParameterSet/ParmeterSetDialog.vue";
-import ReferenceFValue from "@/components/TopStageGrowth/ReferenceFValue";
+import ReferenceFValue from "@/components-v1/GrowthModel/RealFValueIput/index.vue";
 import FVActualValueInput from "@/components/TopStageGrowth/actualValueInput/FVInput.vue";
 import LAActualValueInput from "@/components/TopStageGrowth/actualValueInput/LAInput.vue";
 import PEActualValueInput from "@/components/TopStageGrowth/actualValueInput/PEInput.vue";

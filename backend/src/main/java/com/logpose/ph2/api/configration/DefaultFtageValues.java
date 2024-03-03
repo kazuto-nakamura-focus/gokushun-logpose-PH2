@@ -15,5 +15,6 @@ public class DefaultFtageValues
 	private List<Short> end;
 	private List<Double> interval;
 	private List<Double> sig;
+	private List<String> colors;
 	private short sprout;
 	}

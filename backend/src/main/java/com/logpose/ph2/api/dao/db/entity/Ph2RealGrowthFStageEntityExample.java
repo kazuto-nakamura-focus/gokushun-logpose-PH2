@@ -200,8 +200,7 @@ public class Ph2RealGrowthFStageEntityExample {
 			{
 			if (values == null || values.size() == 0)
 				{
-				throw new RuntimeException(
-						"Value list for " + property + " cannot be null or empty");
+				throw new RuntimeException("Value list for " + property + " cannot be null or empty");
 				}
 			List<java.sql.Date> dateList = new ArrayList<>();
 			Iterator<Date> iter = values.iterator();
@@ -212,15 +211,13 @@ public class Ph2RealGrowthFStageEntityExample {
 			addCriterion(condition, dateList, property);
 			}
 
-		protected void addCriterionForJDBCDate(String condition, Date value1, Date value2,
-				String property)
+		protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property)
 			{
 			if (value1 == null || value2 == null)
 				{
 				throw new RuntimeException("Between values for " + property + " cannot be null");
 				}
-			addCriterion(condition, new java.sql.Date(value1.getTime()),
-					new java.sql.Date(value2.getTime()), property);
+			addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
 			}
 
 		public Criteria andIdIsNull()
@@ -1024,6 +1021,90 @@ public class Ph2RealGrowthFStageEntityExample {
 		public Criteria andActualDateNotBetween(Date value1, Date value2)
 			{
 			addCriterionForJDBCDate("actual_date not between", value1, value2, "actualDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorIsNull()
+			{
+			addCriterion("color is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorIsNotNull()
+			{
+			addCriterion("color is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorEqualTo(String value)
+			{
+			addCriterion("color =", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorNotEqualTo(String value)
+			{
+			addCriterion("color <>", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorGreaterThan(String value)
+			{
+			addCriterion("color >", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorGreaterThanOrEqualTo(String value)
+			{
+			addCriterion("color >=", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorLessThan(String value)
+			{
+			addCriterion("color <", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorLessThanOrEqualTo(String value)
+			{
+			addCriterion("color <=", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorLike(String value)
+			{
+			addCriterion("color like", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorNotLike(String value)
+			{
+			addCriterion("color not like", value, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorIn(List<String> values)
+			{
+			addCriterion("color in", values, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorNotIn(List<String> values)
+			{
+			addCriterion("color not in", values, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorBetween(String value1, String value2)
+			{
+			addCriterion("color between", value1, value2, "color");
+			return (Criteria) this;
+			}
+
+		public Criteria andColorNotBetween(String value1, String value2)
+			{
+			addCriterion("color not between", value1, value2, "color");
 			return (Criteria) this;
 			}
 		}

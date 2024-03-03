@@ -13,4 +13,5 @@ public class EventDaysDTO
 	private String name;
 	private Date date;
 	private Double value;
+	private String color;
 	}

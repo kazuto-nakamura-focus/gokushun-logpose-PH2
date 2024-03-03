@@ -101,6 +101,7 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
+      console.log("p");
       const realGraph = this.prepareChart("実績");
       const measuredGraph = this.prepareChart("実測値");
       const predictGraph = this.prepareChart("推定");

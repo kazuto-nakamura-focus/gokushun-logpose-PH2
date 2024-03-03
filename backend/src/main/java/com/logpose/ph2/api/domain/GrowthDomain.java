@@ -149,6 +149,7 @@ public class GrowthDomain extends GraphDomain
 				entity.setStageStart(this.fstageValues.getStart().get(i));
 				entity.setStageEnd(this.fstageValues.getEnd().get(i));
 				entity.setStageName(this.fstageValues.getName().get(i));
+				entity.setColor(this.fstageValues.getColors().get(i));;
 				entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 				long id = this.ph2RealGrowthFStageMapper.insert(entity);
@@ -435,6 +436,7 @@ public class GrowthDomain extends GraphDomain
 				entity.setStageEnd(item.getStageEnd());
 				entity.setStageName(item.getStageName());
 				entity.setActualDate(item.getActualDate());
+				entity.setColor(item.getColor());
 				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 				this.ph2RealGrowthFStageMapper.updateByPrimaryKey(entity);
 				}
