@@ -378,4 +378,15 @@ public class DataLoadService
 			LOG.info("デバイスデータのローディングに失敗しました。:" + deviceId);
 			}
 		}
+	// --------------------------------------------------------
+	/**
+	 * デバイスのロード情報を得る
+	 * @param date 取得するステータスデータの日付
+	 * @return List<ObjectStatus>
+	 */
+	// --------------------------------------------------------
+	public List<ObjectStatus> getInfo(Date date)
+		{
+		return this.statusDomain.getAllStatusList(date);
+		}
 	}

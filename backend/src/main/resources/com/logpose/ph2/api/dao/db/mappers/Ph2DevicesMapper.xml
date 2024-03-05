@@ -513,4 +513,15 @@
                 #{item}
             </foreach>
 	</select>
+<!-- ************************************************************************** -->
+	<select id="selectAllStatus" resultMap="ObjectStatus">
+		select
+			id as id,
+			data_status as status,
+			data_status_date as date
+		from
+			ph2_devices
+		where
+			data_status_date <![CDATA[>]]> #{date}) 
+	</select>
 </mapper>

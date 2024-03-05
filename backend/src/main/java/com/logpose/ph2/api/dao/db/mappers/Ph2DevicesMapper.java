@@ -1,5 +1,6 @@
 package com.logpose.ph2.api.dao.db.mappers;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -84,5 +85,5 @@ public interface Ph2DevicesMapper {
 	int updateAllStatus(@Param("status") int status, @Param("idList") List<Long> idList);
 	int unsetAllStatus(@Param("status") int status, @Param("idList") List<Long> idList);
 	List<ObjectStatus> selectDeviceStatus(@Param("idList") List<Long> idList);
-	
+	List<ObjectStatus> selectAllStatus(@Param("Date") Date date);
 }

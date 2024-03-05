@@ -116,9 +116,10 @@ public class Formula
 		//＝Σ(((f*exp(g*PARdaily/600/日照時間*6)*PARdaily/600/日照時間*6/81.4/1000000)44*600*6)*日照時間*樹冠葉面積*1000)
 		// 日照時間
 		double sunHours = sunLight / 3600;
+		double SunHours6 = sunHours*6;
 		
 		return prev + 
-				((f * Math.exp(g * PAR/600/60)*PAR/600/60/81.4/1000000)*44*600*6)*10*(leafArea/1000);
+				((f * Math.exp(g * PAR/600/SunHours6)*PAR/600/SunHours6/81.4/1000000)*44*600*6)*sunHours*(leafArea/1000);
 		}
 
 	// --------------------------------------------------

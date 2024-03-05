@@ -44,7 +44,9 @@
 import {
   useGetSchedule,
   useLoadData,
+  apiGetAllDataLoadStatus,
 } from "@/api/ManagementScreenTop/MSDevice";
+import moment from "moment";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true, width: "40%" },
@@ -61,7 +63,7 @@ export default {
       devices: [],
       isDialog: false,
       isRunning: false,
-      count: 0,
+      now: null,
     };
   },
   mounted() {
@@ -96,6 +98,7 @@ export default {
     // ======================================================
     callLoaderAPI: function () {
       this.isRunning = true;
+      console.log("s");
       // * ロード対象デバイスを取得する
       useGetSchedule(null)
         .then((response) => {
@@ -103,7 +106,9 @@ export default {
           if (status != 0) {
             throw new Error(message);
           }
+          this.now = moment().format("YYYY-MM-DD");
           this.doLoaderList(data);
+          this.checkDataStatus();
         })
         .catch((error) => {
           //失敗時
@@ -130,7 +135,9 @@ export default {
               list.push(device);
             }
           }
+          this.now = moment().format("YYYY-MM-DD");
           this.doLoaderList(list);
+          this.checkDataStatus();
         })
         .catch((error) => {
           //失敗時
@@ -143,7 +150,6 @@ export default {
     // 対象の作成とロードの実行
     // ======================================================
     doLoaderList: function (list) {
-      this.count = list.length;
       for (const device of list) {
         this.callLoader(device.id);
       }
@@ -155,52 +161,77 @@ export default {
       // * 表示の初期化
       this.changeStatus(deviceId, "ローディング中");
       // * ロードAPIをコール
-      useLoadData(deviceId)
+      useLoadData(deviceId);
+    },
+
+    // ======================================================
+    // 定期的にステータスのチェックを行う
+    // ======================================================
+    checkDataStatus: function () {
+      this.intervalid1 = setInterval(
+        function () {
+          // ステータスチェックAPIのコールとステータス設定
+          this.callApiGetAllDataLoadStatus(this.now);
+          // 結果isRunningがfalseなら監視の終了
+          if (!this.isRunning) {
+            clearInterval(this.intervalid1);
+          }
+        }.bind(this),
+        3000
+      );
+    },
+    // ======================================================
+    // ステータスのチェックを行うAPIのコールと処理
+    // ======================================================
+    callApiGetAllDataLoadStatus(startTime) {
+      apiGetAllDataLoadStatus(startTime)
         .then((response) => {
-          //成功時
           const { status, message, data } = response["data"];
+          console.log(data);
+          let nowobj = moment(this.now);
           if (status != 0) {
             throw new Error(message);
           }
+          let isRunning = false;
           for (const item of data) {
-            this.checkStatus(item.id, item.status);
+            if ((status & 1) > 0) {
+              isRunning = true;
+              this.changeStatus(item.id, "ローディング中");
+            } else {
+              let statusTime = moment(item.date);
+              if (statusTime.isBefore(nowobj)) continue;
+              this.changeStatus(item.id, this.checkStatus(item.status));
+            }
           }
+          this.isRunning = isRunning;
         })
         .catch((error) => {
+          //失敗時
+          alert("状態の確認ができませんでした。");
           console.log(error);
-          alert("デバイスID：" + deviceId + "のロードに失敗しました。");
-        })
-        .finally(() => {
-          this.count--;
-          if (0 == this.count) {
-            alert("ローディングが完了しました。");
-            this.isRunning = false;
-          }
+          this.isRunning = false;
         });
     },
     // ======================================================
     // 実行結果の設定
     // ======================================================
-    checkStatus(id, status) {
+    checkStatus(status) {
       if (status == -1) {
-        this.changeStatus(id, "エラー");
-      } else if ((status & 1) > 0) {
-        this.changeStatus(id, "ロック中のため処理できませんでした。");
+        return "エラー";
       } else if ((status & 8) > 0) {
-        this.changeStatus(id, "完了");
+        return "完了";
       } else {
-        this.changeStatus(
-          id,
-          "基礎データはロードされましたが、モデル作成はできませんでした。"
-        );
+        return "基礎データはロードされましたが、モデル作成はできませんでした。";
       }
     },
     // ======================================================
     // 項目のステータス変更
+    //  与えられたデバイスIDに合わせて表示デバイスのメッセージを
+    //  設定する
     // ======================================================
-    changeStatus(targetId, message) {
+    changeStatus(deviceId, message) {
       for (const item of this.devices) {
-        if (item.id == targetId) {
+        if (item.id == deviceId) {
           item.status = message;
           break;
         }
@@ -208,7 +239,7 @@ export default {
     },
   },
 };
-</script>}
+</script>
 <style lang="scss">
 </style>
   

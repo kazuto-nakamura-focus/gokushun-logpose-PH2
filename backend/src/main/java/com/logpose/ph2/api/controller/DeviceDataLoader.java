@@ -1,10 +1,12 @@
 package com.logpose.ph2.api.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.controller.dto.DataLoadDTO;
@@ -40,6 +43,29 @@ public class DeviceDataLoader
 	// ===============================================
 	// 公開関数群
 	// ===============================================
+	// --------------------------------------------------------
+	/**
+	 * デバイスのロード情報を得る
+	 * @return List<ObjectStatus>
+	 */
+	// --------------------------------------------------------
+	@GetMapping("/load/info")
+	public ResponseDTO load(HttpServletRequest httpReq, 
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("c") Date date)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			List<ObjectStatus> fisnishList = this.dataLoadService.getInfo(date);
+			as_dto.setSuccess(fisnishList);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+	
 	// --------------------------------------------------------
 	/**
 	 * 全デバイスの最新のセンサーデータを加工し、DBへロードする。

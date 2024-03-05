@@ -2,6 +2,7 @@ package com.logpose.ph2.api.bulk.domain;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -256,6 +257,17 @@ public class DeviceStatusDomain
 		{
 		this.ph2DevicesMapper.updateAllStatus(ALL_LOAD_NEEDED, devices);
 		}
+	// --------------------------------------------------------
+	/**
+	 * デバイスのロード情報を得る
+	 * @param date 取得するステータスデータの日付
+	 * @return List<ObjectStatus>
+	 */
+	// --------------------------------------------------------
+	public List<ObjectStatus> getAllStatusList(Date date)
+		{
+		return this.ph2DevicesMapper.selectAllStatus(date);
+		}	
 	// ===============================================
 	// 保護関数群
 	// ===============================================
@@ -271,5 +283,5 @@ public class DeviceStatusDomain
 		device.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		if(dataUpdated) device.setDataStatusDate(device.getUpdatedAt());
 		this.ph2DevicesMapper.updateByPrimaryKeySelective(device);
-		}	
+		}
 	}
