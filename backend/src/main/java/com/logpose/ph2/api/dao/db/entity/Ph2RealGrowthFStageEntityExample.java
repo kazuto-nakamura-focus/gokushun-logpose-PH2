@@ -1107,6 +1107,78 @@ public class Ph2RealGrowthFStageEntityExample {
 			addCriterion("color not between", value1, value2, "color");
 			return (Criteria) this;
 			}
+
+		public Criteria andEstimateDateIsNull()
+			{
+			addCriterion("estimate_date is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateIsNotNull()
+			{
+			addCriterion("estimate_date is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("estimate_date =", value, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateNotEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("estimate_date <>", value, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateGreaterThan(Date value)
+			{
+			addCriterionForJDBCDate("estimate_date >", value, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateGreaterThanOrEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("estimate_date >=", value, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateLessThan(Date value)
+			{
+			addCriterionForJDBCDate("estimate_date <", value, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateLessThanOrEqualTo(Date value)
+			{
+			addCriterionForJDBCDate("estimate_date <=", value, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateIn(List<Date> values)
+			{
+			addCriterionForJDBCDate("estimate_date in", values, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateNotIn(List<Date> values)
+			{
+			addCriterionForJDBCDate("estimate_date not in", values, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateBetween(Date value1, Date value2)
+			{
+			addCriterionForJDBCDate("estimate_date between", value1, value2, "estimateDate");
+			return (Criteria) this;
+			}
+
+		public Criteria andEstimateDateNotBetween(Date value1, Date value2)
+			{
+			addCriterionForJDBCDate("estimate_date not between", value1, value2, "estimateDate");
+			return (Criteria) this;
+			}
 		}
 
 	/**

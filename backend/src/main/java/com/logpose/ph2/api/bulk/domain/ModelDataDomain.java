@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.domain.GrowthDomain;
+import com.logpose.ph2.api.domain.growth.FStageTableDomain;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 
@@ -17,6 +18,8 @@ public class ModelDataDomain
 	@Autowired
 	private GrowthDomain growthDomain;
 	@Autowired
+	private FStageTableDomain fStageTableDomain;
+	@Autowired
 	private LeafDomain leafDomain;
 	@Autowired
 	private PhotoSynthesisDomain photoSynthesisDomain;
@@ -25,6 +28,7 @@ public class ModelDataDomain
 	public void doService(long deviceId, short year, Date startDate) throws ParseException
 		{
 		this.growthDomain.updateModelTable(deviceId, year, startDate);
+		this.fStageTableDomain.resetActualDate(deviceId, year);
 		this.leafDomain.updateModelTable(deviceId, year, startDate);
 		this.photoSynthesisDomain.updateModelTable(deviceId, year, startDate);
 		}

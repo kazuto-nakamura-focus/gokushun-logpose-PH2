@@ -77,4 +77,7 @@ public interface Ph2RealGrowthFStageMapper {
 	 * @mbg.generated
 	 */
 	int updateByPrimaryKey(Ph2RealGrowthFStageEntity row);
+
+	List<Ph2RealGrowthFStageEntity> selectByDeviceAndYear(@Param("deviceId") Long deviceId, @Param("year") Short year);
+
 }

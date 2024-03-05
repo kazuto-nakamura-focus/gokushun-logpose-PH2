@@ -88,6 +88,10 @@ public interface Ph2ModelDataMapper {
 	
 	ValueDateDTO selectFValueByDate(@Param("deviceId") Long deviceId, @Param("date") Date date);
 	
+	ValueDateDTO selectFValueBySpecificDate(@Param("deviceId") Long deviceId, @Param("year") Short year, @Param("date") Date date);
+	
+	List<ValueDateDTO> selectFValueByYear(@Param("deviceId") Long deviceId, @Param("year") Short year);
+	
 	int multiRowInsert(@Param("targets") List<Ph2ModelDataEntity> targets);
 	
 	List<LeafModelDataEntity> selectLeafModelDataByType(@Param("deviceId") Long deviceId, @Param("year") Short year);
@@ -96,4 +100,6 @@ public interface Ph2ModelDataMapper {
 	
 	List<Integer> selectLapseDayByFValue(@Param("deviceId") Long deviceId, @Param("year") Short year,
 			@Param("actualDate") Date actualDate, @Param("fValue") Double fValue);
+	
+	
 }

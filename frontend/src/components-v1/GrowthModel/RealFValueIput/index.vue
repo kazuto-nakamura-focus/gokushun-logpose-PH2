@@ -79,8 +79,9 @@
           </v-container>
         </v-card>
       </v-dialog>
+      <picker-dialog :shared="sharedPicker" ref="picker" />
+      <CellRender v-if="false" />
     </v-container>
-    <CellRender v-if="false" />
   </v-app>
 </template>
 
@@ -92,8 +93,10 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import "@/style/ag-theme-gs.css";
 import { HeaderClass } from "@/components-v1/GrowthModel/RealFValueIput/HeaderClass";
 import CellRender from "@/components-v1/GrowthModel/RealFValueIput/CellRender.vue";
+import PickerDialog from "@/components-v1/common/Ph2ColorPicker.vue";
 import { useGrowthFAll } from "@/api/TopStateGrowth/GEFValue/index";
 import { useGrowthFDataUpdate } from "@/api/TopStateGrowth/GEActualValueInput/index";
+import { DialogController } from "@/lib/mountController.js";
 
 var headerClass = new HeaderClass();
 
@@ -105,6 +108,7 @@ export default {
   components: {
     AgGridVue,
     CellRender,
+    PickerDialog,
   },
   data() {
     return {
@@ -130,6 +134,7 @@ export default {
       gridOptions: null,
       gridApi: null,
       defaultColDef: null,
+      sharedPicker: new DialogController(),
     };
   },
   beforeMount() {
@@ -186,8 +191,20 @@ export default {
     },
     // ボタンクリックされた場合
     onButtonClicked(params) {
-      console.log("ealFValueInput");
-
+      if (params.column.colId == "color") {
+        if (params.colDef.editable) {
+          this.sharedPicker.setUp(
+            this.$refs.picker,
+            function (picker) {
+              picker.initialize(params.data.color);
+            },
+            function (color) {
+              this.rowData[params.rowIndex].color = color;
+              params.api.refreshCells({ columns: ["color"], force: true });
+            }.bind(this)
+          );
+        }
+      }
       if (
         params.column.colId == "action" &&
         params.event.target.dataset.action
@@ -212,6 +229,7 @@ export default {
           for (const item of this.rowData) {
             item.order = i++;
           }
+          this.makeAccumulation(params);
         }
       }
     },

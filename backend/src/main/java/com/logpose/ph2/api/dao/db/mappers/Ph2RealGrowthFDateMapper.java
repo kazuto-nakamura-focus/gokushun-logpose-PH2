@@ -54,4 +54,4 @@ public interface Ph2RealGrowthFDateMapper {
 	 */
 	int updateByExample(@Param("row") Ph2RealGrowthFDateEntity row,
 			@Param("example") Ph2RealGrowthFDateEntityExample example);
-}
+	}

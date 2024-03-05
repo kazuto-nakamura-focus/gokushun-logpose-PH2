@@ -315,25 +315,31 @@
         dd.year = #{year}
     ORDER BY dd.lapse_day  
   </select>
-  
+<!-- ************************************************************************** -->
   	<resultMap id="ValueDateDTO"
 		type="com.logpose.ph2.api.dto.ValueDateDTO">
 		<result column="value" property="value"></result>
 		<result column="date" property="date"></result>
 	</resultMap>
-	 <select id="selectFValueByDate" resultMap="ValueDateDTO">
-    SELECT
-        md.f_value as value,
-        dd.date as date
-    FROM
-        ph2_device_day dd
-    JOIN
-        ph2_model_data md ON dd.id = md.day_id
-    WHERE
-        dd.device_id = #{deviceId}
-   	AND
-        dd.date = #{date}
-  </select>
+ <!-- ************************************************************************** -->
+    <select id="selectFValueByDate" resultMap="ValueDateDTO">
+		SELECT
+			md.f_value AS "value",
+			dd."date" AS "date"
+		FROM
+			ph2_device_day dd
+		JOIN 
+			ph2_model_data md ON dd.ID = md.day_id
+		WHERE
+			dd.device_id = #{deviceId}
+		AND
+			dd.date <![CDATA[<=]]> #{date}
+		AND 
+			dd.has_real = TRUE
+		ORDER BY "date" DESC
+		LIMIT 1
+	</select>
+<!-- ************************************************************************** -->
     <select id="selectRealFValueByDate" resultMap="ValueDateDTO">
     SELECT
         md.f_value as value,
@@ -350,6 +356,40 @@
     	dd.has_real = #{isReal}
     ORDER BY dd.date desc
 	limit 1
+  </select>
+    <!-- ************************************************************************** -->
+    <select id="selectFValueBySpecificDate" resultMap="ValueDateDTO">
+    SELECT
+        md.f_value as value,
+        dd.date as date
+    FROM
+        ph2_device_day dd
+    JOIN
+        ph2_model_data md ON dd.id = md.day_id
+    WHERE
+        dd.device_id = #{deviceId}
+   	AND
+        dd.year = #{year}
+	AND
+     	dd.date = #{date}
+	limit 1
+  </select>
+  <!-- ************************************************************************** -->
+    <select id="selectFValueByYear" resultMap="ValueDateDTO">
+    SELECT
+        md.f_value as value,
+        dd.date as date
+    FROM
+        ph2_device_day dd
+    JOIN
+        ph2_model_data md ON dd.id = md.day_id
+    WHERE
+        dd.device_id = #{deviceId}
+   	AND
+        dd.year = #{year}
+	AND
+     	md.f_value is not null
+    ORDER BY dd.lapse_day
   </select>
 <!-- ************************************************************************** -->
 	<insert id="multiRowInsert">

@@ -13,6 +13,7 @@ import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.growth.FValuesDTO;
 
 /**
  * 光合成推定のサービス
@@ -175,5 +176,14 @@ public interface GrowthService
 	 */
 	// --------------------------------------------------
 	public Ph2ParamsetGrowthEntity getDefault(Long deviceId, Short year);
+	// --------------------------------------------------
+	/**
+	 * 日付からF値の情報を得る
+	 *
+	 * @param id
+	 * @param date
+	 */
+	// --------------------------------------------------
+	public FValuesDTO checkFValueByDate(Long id, Date date);
 
 	}

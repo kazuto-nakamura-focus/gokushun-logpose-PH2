@@ -31,7 +31,6 @@ import com.logpose.ph2.api.dto.GrowthParamSetDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
 import com.logpose.ph2.api.master.ModelMaster;
-import com.logpose.ph2.api.utility.DateTimeUtility;
 
 @Component
 public class GrowthDomain extends GraphDomain
@@ -226,6 +225,7 @@ public class GrowthDomain extends GraphDomain
 					year, year, data.getValues());
 			this.deviceDayDomain.updateModelData(startDay, deviceId, (short) (year - 1), year,
 					data.getPredictValues());
+			
 			}
 		}
 
@@ -400,15 +400,7 @@ public class GrowthDomain extends GraphDomain
 		ValueDateDTO value = this.ph2ModelDataMapper.selectFValueByDate(deviceId, cal.getTime());
 		if (null == value)
 			{
-			try
-				{
-				String errorDate = DateTimeUtility.getStringFromDate(date);
-				throw new RuntimeException("指定された日付(" + errorDate + ")に該当する実績データはまだありません。");
-				}
-			catch (ParseException e)
-				{
-				e.printStackTrace();
-				}
+			throw new RuntimeException("実績データはまだありません。");
 			}
 		return value;
 		}
@@ -436,6 +428,7 @@ public class GrowthDomain extends GraphDomain
 				entity.setStageEnd(item.getStageEnd());
 				entity.setStageName(item.getStageName());
 				entity.setActualDate(item.getActualDate());
+				entity.setEstimateDate(item.getEstimateDate());
 				entity.setColor(item.getColor());
 				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 				this.ph2RealGrowthFStageMapper.updateByPrimaryKey(entity);

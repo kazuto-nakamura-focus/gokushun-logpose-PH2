@@ -13,11 +13,13 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.domain.GrowthDomain;
+import com.logpose.ph2.api.domain.growth.FStageTableDomain;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.growth.FValuesDTO;
 import com.logpose.ph2.api.service.GrowthService;
 
 /**
@@ -32,6 +34,8 @@ public class GrowthServiceImpl implements GrowthService
 	// ===============================================
 	@Autowired
 	private GrowthDomain growthDomain;
+	@Autowired
+	private FStageTableDomain fStageTableDomain;
 
 	// ===============================================
 	// パブリック関数
@@ -186,10 +190,10 @@ public class GrowthServiceImpl implements GrowthService
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void setParameter(Long deviceId, Short year, Long paramId) throws ParseException
-	{
-	this.growthDomain.setDefault(deviceId, year, paramId);
-	}
-	
+		{
+		this.growthDomain.setDefault(deviceId, year, paramId);
+		}
+
 	// --------------------------------------------------
 	/**
 	 * 生育推定パラメータセット詳細取得
@@ -252,6 +256,7 @@ public class GrowthServiceImpl implements GrowthService
 		{
 		return this.growthDomain.addParamSet(null, dto);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 基準パラメータセットの取得
@@ -265,5 +270,19 @@ public class GrowthServiceImpl implements GrowthService
 		{
 // * デフォルトパラメータの取得
 		return this.growthDomain.getParmaters(deviceId, year);
+		}
+
+	// --------------------------------------------------
+	/**
+	 * 日付からF値の情報を得る
+	 *
+	 * @param id
+	 * @param date
+	 */
+	// --------------------------------------------------
+	@Override
+	public FValuesDTO checkFValueByDate(Long id, Date date)
+		{
+		return this.fStageTableDomain.checkFValueByDate(id, date);
 		}
 	}

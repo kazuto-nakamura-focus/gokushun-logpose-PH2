@@ -202,7 +202,7 @@ public class S6DailyBaseDataGeneratorService
 				continue;
 				}
 // * 前の値が０の場合、前の値に対するデータの追加は行わない
-			if (0 != prev_value.doubleValue())
+			if (0 != prev_value.doubleValue()) // TODO 36.76以上の場合だけ足す
 				{
 // * valueが取得された時間との差(秒)
 				long diff_time = (data.getCastedAt().getTime() - prev_time.getTime()) / 1000;

@@ -81,7 +81,7 @@ import ph2GraphContainer from "@/components/GrowthModel/Ph2GraphContainer.vue";
 import allEditButtons from "@/components/TopStageGrowth/hooks/editButtons.json";
 import { DeviceParser } from "@/lib/deviceParser.js";
 import { DialogController, MountController } from "@/lib/mountController.js";
-import GEActualValueInput from "@/components/TopStageGrowth/actualValueInput/GEMainInput.vue";
+import GEActualValueInput from "@/components-v1/GrowthModel/RealInput/GEMainInput.vue";
 import ParmeterSetDialog from "@/components/TopStageGrowth/ParameterSet/ParmeterSetDialog.vue";
 import ReferenceFValue from "@/components-v1/GrowthModel/RealFValueIput/index.vue";
 import FVActualValueInput from "@/components/TopStageGrowth/actualValueInput/FVInput.vue";

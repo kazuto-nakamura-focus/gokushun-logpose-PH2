@@ -25,6 +25,7 @@ import com.logpose.ph2.api.dto.GrowthParamSetDTO;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.growth.FValuesDTO;
 import com.logpose.ph2.api.service.GrowthService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -140,7 +141,6 @@ public class GrowthController
 	 *
 	 * @param deviceId 圃場ID
 	 * @param year 年度
-	 * @param deviceId デバイスID
 	 * @return ResponseDTO(List<FDataDTO>)
 	 */
 	// --------------------------------------------------
@@ -163,7 +163,35 @@ public class GrowthController
 			}
 		return as_dto;
 		}
-
+	// --------------------------------------------------
+	/**
+	 * 指定日より生育推定F値
+	 *
+	 * @param deviceId 圃場ID
+	 * @param year 年度
+	 * @param deviceId デバイスID
+	 * @param date 実績日
+	 * @return ResponseDTO(Double)
+	 */
+	// --------------------------------------------------
+	@GetMapping("/F/date")
+	public ResponseDTO checkdate(HttpServletRequest httpReq,
+			HttpServletResponse res,
+			@RequestParam("id") Long id,
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			FValuesDTO result = this.growthService.checkFValueByDate(id, date);
+			as_dto.setSuccess(result);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
 	// --------------------------------------------------
 	/**
 	 * 生育推定実績値取得
