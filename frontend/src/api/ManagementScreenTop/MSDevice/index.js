@@ -66,7 +66,7 @@ const useLoadData = (deviceId) => {
   return axios.get("/bulk/load/device/" + deviceId, config);
 };
 // デバイスデータのロード
-const apiGetAllDataLoadStatus = (date) => {
+const useGetAllDataLoadStatus = (date) => {
   const config = {
     params: { date },
   };
@@ -82,5 +82,5 @@ export {
   useDeviceMastersAPI,
   useGetSchedule,
   useLoadData,
-  apiGetAllDataLoadStatus,
+  useGetAllDataLoadStatus,
 };

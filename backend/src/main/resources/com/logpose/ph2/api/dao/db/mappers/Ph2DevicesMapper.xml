@@ -522,6 +522,8 @@
 		from
 			ph2_devices
 		where
-			data_status_date <![CDATA[>]]> #{date}) 
+			data_status_date <![CDATA[>]]> #{date}
+			or
+			data_status_date is null
 	</select>
 </mapper>

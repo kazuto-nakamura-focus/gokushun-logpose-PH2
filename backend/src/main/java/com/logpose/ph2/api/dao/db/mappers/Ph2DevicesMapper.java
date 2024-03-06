@@ -85,5 +85,5 @@ public interface Ph2DevicesMapper {
 	int updateAllStatus(@Param("status") int status, @Param("idList") List<Long> idList);
 	int unsetAllStatus(@Param("status") int status, @Param("idList") List<Long> idList);
 	List<ObjectStatus> selectDeviceStatus(@Param("idList") List<Long> idList);
-	List<ObjectStatus> selectAllStatus(@Param("Date") Date date);
+	List<ObjectStatus> selectAllStatus(@Param("date") Date date);
 }

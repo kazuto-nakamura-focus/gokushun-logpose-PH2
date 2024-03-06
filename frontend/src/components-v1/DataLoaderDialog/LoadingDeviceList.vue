@@ -14,7 +14,7 @@
             color="primary"
             class="ma-2 white--text"
             elevation="2"
-            @click="callLoaderAPI()"
+            @click="confirmAction()"
             :disabled="isRunning == true"
             >全ての再ロードを実行する</v-btn
           >
@@ -37,6 +37,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <confirmDailog :shared="sharedConfirm" ref="confirm" />
   </v-app>
 </template>
   
@@ -44,9 +45,11 @@
 import {
   useGetSchedule,
   useLoadData,
-  apiGetAllDataLoadStatus,
+  useGetAllDataLoadStatus,
 } from "@/api/ManagementScreenTop/MSDevice";
 import moment from "moment";
+import { DialogController } from "@/lib/mountController.js";
+import confirmDailog from "@/components/dialog/confirmDialog.vue";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true, width: "40%" },
@@ -59,12 +62,18 @@ export default {
 
   data() {
     return {
+      sharedConfirm: new DialogController(),
+
       headers: HEADERS,
       devices: [],
       isDialog: false,
       isRunning: false,
       now: null,
+      count: 0,
     };
+  },
+  components: {
+    confirmDailog,
   },
   mounted() {
     this.shared.mount(this);
@@ -94,11 +103,30 @@ export default {
       }
     },
     // ======================================================
+    // 確認画面の表示と実行
+    // ======================================================
+    confirmAction() {
+      this.sharedConfirm.setUp(
+        this.$refs.confirm,
+        function (confirm) {
+          confirm.initialize(
+            "全てのセンサーデータが変更されますが、よろしいですか？処理時間は10分ほどかかります。",
+            "はい",
+            "いいえ"
+          );
+        },
+        function (action) {
+          if (action) {
+            this.callLoaderAPI();
+          }
+        }.bind(this)
+      );
+    },
+    // ======================================================
     // 全対象APIコール
     // ======================================================
     callLoaderAPI: function () {
       this.isRunning = true;
-      console.log("s");
       // * ロード対象デバイスを取得する
       useGetSchedule(null)
         .then((response) => {
@@ -108,7 +136,6 @@ export default {
           }
           this.now = moment().format("YYYY-MM-DD");
           this.doLoaderList(data);
-          this.checkDataStatus();
         })
         .catch((error) => {
           //失敗時
@@ -137,7 +164,6 @@ export default {
           }
           this.now = moment().format("YYYY-MM-DD");
           this.doLoaderList(list);
-          this.checkDataStatus();
         })
         .catch((error) => {
           //失敗時
@@ -150,6 +176,8 @@ export default {
     // 対象の作成とロードの実行
     // ======================================================
     doLoaderList: function (list) {
+      this.isRunning = true;
+      this.count = list.length;
       for (const device of list) {
         this.callLoader(device.id);
       }
@@ -161,7 +189,21 @@ export default {
       // * 表示の初期化
       this.changeStatus(deviceId, "ローディング中");
       // * ロードAPIをコール
-      useLoadData(deviceId);
+      useLoadData(deviceId)
+        .then((response) => {
+          console.log(response);
+          this.count--;
+          if (this.count == 0) {
+            this.checkDataStatus();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+          this.count--;
+          if (this.count == 0) {
+            this.checkDataStatus();
+          }
+        });
     },
 
     // ======================================================
@@ -184,10 +226,9 @@ export default {
     // ステータスのチェックを行うAPIのコールと処理
     // ======================================================
     callApiGetAllDataLoadStatus(startTime) {
-      apiGetAllDataLoadStatus(startTime)
+      useGetAllDataLoadStatus(startTime)
         .then((response) => {
           const { status, message, data } = response["data"];
-          console.log(data);
           let nowobj = moment(this.now);
           if (status != 0) {
             throw new Error(message);
@@ -198,9 +239,16 @@ export default {
               isRunning = true;
               this.changeStatus(item.id, "ローディング中");
             } else {
-              let statusTime = moment(item.date);
-              if (statusTime.isBefore(nowobj)) continue;
-              this.changeStatus(item.id, this.checkStatus(item.status));
+              if (null == item.date) {
+                this.changeStatus(
+                  item.id,
+                  "実行中に処理を中断しました。再ロードを試みてください。"
+                );
+              } else {
+                let statusTime = moment(item.date);
+                if (statusTime.isBefore(nowobj)) continue;
+                this.changeStatus(item.id, this.checkStatus(item.status));
+              }
             }
           }
           this.isRunning = isRunning;

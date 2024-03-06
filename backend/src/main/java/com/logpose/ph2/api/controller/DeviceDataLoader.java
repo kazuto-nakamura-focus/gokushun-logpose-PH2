@@ -51,7 +51,7 @@ public class DeviceDataLoader
 	// --------------------------------------------------------
 	@GetMapping("/load/info")
 	public ResponseDTO load(HttpServletRequest httpReq, 
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("c") Date date)
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try

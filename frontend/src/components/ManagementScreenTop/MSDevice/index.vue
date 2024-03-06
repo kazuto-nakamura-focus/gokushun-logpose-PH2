@@ -10,7 +10,7 @@
                   color="primary"
                   class="ma-2 white--text"
                   elevation="2"
-                  @click="load()"
+                  @click="callLoader()"
                   >センサーデータのロード</v-btn
                 >
               </v-col>
@@ -163,23 +163,6 @@ export default {
     // ======================================================
     // ロードボタン選択時
     // ======================================================
-    load: function () {
-      this.sharedConfirm.setUp(
-        this.$refs.confirm,
-        function (confirm) {
-          confirm.initialize(
-            "全てのセンサーデータが変更されますが、よろしいですか？処理時間は10分ほどかかります。",
-            "はい",
-            "いいえ"
-          );
-        },
-        function (action) {
-          if (action) {
-            this.callLoader();
-          }
-        }.bind(this)
-      );
-    },
     callLoader: function () {
       this.loaderDialog.setUp(
         this.$refs.loader,
