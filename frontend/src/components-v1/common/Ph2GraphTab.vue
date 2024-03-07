@@ -48,6 +48,7 @@ export default {
     // グラフ追加処理
     //* ============================================
     addGraph: function (titleObj, chartOptions, chartData, isMultiple, name) {
+      console.log("q");
       let title = {
         id: this.id,
         name: titleObj.main,

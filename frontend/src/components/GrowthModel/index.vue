@@ -85,7 +85,7 @@ import GEActualValueInput from "@/components-v1/GrowthModel/RealInput/GEMainInpu
 import ParmeterSetDialog from "@/components/TopStageGrowth/ParameterSet/ParmeterSetDialog.vue";
 import ReferenceFValue from "@/components-v1/GrowthModel/RealFValueIput/index.vue";
 import FVActualValueInput from "@/components/TopStageGrowth/actualValueInput/FVInput.vue";
-import LAActualValueInput from "@/components/TopStageGrowth/actualValueInput/LAInput.vue";
+import LAActualValueInput from "@/components-v1/LeafModel/RealValueInput/LAInput.vue";
 import PEActualValueInput from "@/components/TopStageGrowth/actualValueInput/PEInput.vue";
 import { TopDataParser } from "@/lib/topDataParser";
 

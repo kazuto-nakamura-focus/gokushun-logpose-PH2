@@ -119,7 +119,7 @@ public class LeafController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<LeafvaluesDTO> result = this.leafService.getAreaAndCount(deviceId, year, date);
+			LeafvaluesDTO result = this.leafService.getAreaAndCount(deviceId, year, date);
 			as_dto.setSuccess(result);
 			}
 		catch (Exception e)
@@ -128,7 +128,32 @@ public class LeafController
 			}
 		return as_dto;
 		}
-
+	// --------------------------------------------------
+	/**
+	 * 新梢辺り葉枚数・平均個葉面積検索処理
+	 *
+	 * @param deviceId
+	 * @param date
+	 * @throws ParseException
+	 */
+	// --------------------------------------------------
+	@GetMapping("/value/allAreaAndCount")
+	public ResponseDTO getAllAreaAndCount(HttpServletRequest httpReq,
+			@RequestParam("deviceId") Long deviceId,
+			@RequestParam("year") Short year)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			List<LeafvaluesDTO> result = this.leafService.getAllAreaAndCount(deviceId, year);
+			as_dto.setSuccess(result);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
 	// --------------------------------------------------
 	/**
 	 * 葉面積・葉枚数パラメータセット詳細取得

@@ -25,6 +25,7 @@ import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.DeviceDayDomain;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
+import com.logpose.ph2.api.dto.LeafvaluesDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
@@ -260,22 +261,35 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	// --------------------------------------------------
 	/**
 	 * 葉面積・葉枚数検索処理
-	 *
 	 * @param deviceId
 	 * @param year
+	 * @param date
+	 * @return LeafvaluesDTO
 	 */
 	// --------------------------------------------------
-	public List<Ph2RealLeafShootsAreaEntity> searchShootArea(
-			Long deviceId, Short year)
+	public LeafvaluesDTO searchShootArea(Long deviceId, Short year, Date date)
 		{
-		return this.ph2RealLeafShootsAreaMapper.selectByDeviceId(deviceId, year);
+		return this.ph2RealLeafShootsAreaMapper.selectByDeviceYearDate(deviceId, year, date);
 		}
-
+	// --------------------------------------------------
+	/**
+	 * 葉面積・葉枚数検索処理
+	 * @param deviceId
+	 * @param year
+	 * @param date
+	 * @return LeafvaluesDTO
+	 */
+	// --------------------------------------------------
+	public List<LeafvaluesDTO> searchShootAreaAll(Long deviceId, Short year)
+		{
+		return this.ph2RealLeafShootsAreaMapper.selectByDeviceYear(deviceId, year);
+		}
+	
 	// --------------------------------------------------
 	/**
 	 * 葉面積・葉枚数検索処理(日付指定あり)
 	 *
-	 * @param deviceId
+	 * @param deviceIds
 	 * @param year
 	 */
 	// --------------------------------------------------

@@ -18,11 +18,22 @@ const useLeafValueAreaAndCountDetail = (deviceId, year, date) => {
     params: {
       deviceId,
       year,
-      date
+      date,
     },
   };
   //->LeafvaluesDTO
   return axios.get("/leaf/value/areaAndCount", config);
+};
+//新梢辺り葉枚数・平均個葉面積検索処理
+const useLeafValueAllAreaAndCountDetail = (deviceId, year) => {
+  const config = {
+    params: {
+      deviceId,
+      year,
+    },
+  };
+  //->LeafvaluesDTO
+  return axios.get("/leaf/value/allAreaAndCount", config);
 };
 
 //新梢数の登録
@@ -46,6 +57,7 @@ const useLeafValueAreaAndCount = (data) => {
 export {
   useLeafValueShootDetail,
   useLeafValueAreaAndCountDetail,
+  useLeafValueAllAreaAndCountDetail,
   useLeafValueShoot,
   useLeafValueAreaAndCount
 };

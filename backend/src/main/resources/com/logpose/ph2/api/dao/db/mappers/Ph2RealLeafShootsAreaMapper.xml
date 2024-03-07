@@ -265,27 +265,73 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  
-    <select id="selectByDeviceId" resultMap="BaseResultMap">
-    SELECT 
-	  <include refid="Base_Column_List" />
-    from ph2_real_leaf_shoots_area
-    WHERE 
-    	device_id = #{deviceId}
-    AND 
-    	year = #{year}
-    ORDER BY target_date desc
-  </select>
+<!-- ************************************************************************** -->
+   <resultMap id="LeafvaluesDTO"
+		type="com.logpose.ph2.api.dto.LeafvaluesDTO">
+		<result column="date" property="date"></result>
+		<result column="count" property="count"></result>
+		<result column="averageArea" property="averageArea"></result>
+		<result column="totalArea" property="totalArea"></result>
+		<result column="estimatedArea" property="estimatedArea"></result>
+	</resultMap>
+<!-- ************************************************************************** -->
+    <select id="selectByDeviceYearDate" resultMap="LeafvaluesDTO">
+		SELECT
+			ph2_real_leaf_shoots_area.target_date as date,
+			ph2_real_leaf_shoots_area."count" as count,
+			ph2_real_leaf_shoots_area."average_area" as averageArea,
+			ph2_real_leaf_shoots_area."real_area" as totalArea,
+			ph2_model_data.crown_leaf_area as estimatedArea
+		FROM
+			ph2_device_day
+		JOIN
+			ph2_model_data on ph2_device_day.id = ph2_model_data.day_id
+		LEFT JOIN
+			ph2_real_leaf_shoots_area on
+				ph2_device_day.device_id = ph2_real_leaf_shoots_area.device_id
+				and
+				ph2_device_day.date = ph2_real_leaf_shoots_area.target_date 
+		WHERE
+			ph2_device_day.device_id = #{deviceId}
+		AND
+			ph2_device_day.year = #{year}
+		AND
+			ph2_device_day.date = #{date}
+  	</select>
+<!-- ************************************************************************** -->
+    <select id="selectByDeviceYear" resultMap="LeafvaluesDTO">
+		SELECT 
+			ph2_real_leaf_shoots_area.target_date as date,
+			ph2_real_leaf_shoots_area."count" as count,
+			ph2_real_leaf_shoots_area."average_area" as averageArea,
+			ph2_real_leaf_shoots_area."real_area" as totalArea,
+			ph2_model_data.crown_leaf_area as estimatedArea
+		FROM
+			ph2_device_day
+		JOIN
+			ph2_real_leaf_shoots_area on
+				ph2_device_day.device_id = ph2_real_leaf_shoots_area.device_id
+				and
+				ph2_device_day.date = ph2_real_leaf_shoots_area.target_date
+		JOIN
+			ph2_model_data on ph2_device_day.id = ph2_model_data.day_id
+		WHERE
+			ph2_device_day.device_id = #{deviceId}
+		AND
+			ph2_device_day.year = #{year}
+  	</select>
+<!-- ************************************************************************** -->
    <select id="selectByDate" resultMap="BaseResultMap">
-    SELECT 
-	  <include refid="Base_Column_List" />
-    from ph2_real_leaf_shoots_area
-    WHERE 
-    	device_id = #{deviceId}
-    AND 
-    	year = #{year}
-    ANd
-    	target_date <![CDATA[<=]]> #{date}
-    ORDER BY target_date desc
+    	SELECT 
+	  		<include refid="Base_Column_List" />
+    	from
+    		ph2_real_leaf_shoots_area
+    	WHERE 
+    		device_id = #{deviceId}
+    	AND 
+    		year = #{year}
+    	AND
+    		target_date <![CDATA[<=]]> #{date}
+    	ORDER BY target_date desc
   </select>
 </mapper>

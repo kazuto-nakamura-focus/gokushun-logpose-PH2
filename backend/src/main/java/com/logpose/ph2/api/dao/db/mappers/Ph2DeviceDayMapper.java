@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntityExample;
+import com.logpose.ph2.api.dto.MaxMinDateDTO;
 @Mapper
 public interface Ph2DeviceDayMapper {
 
@@ -86,4 +87,6 @@ public interface Ph2DeviceDayMapper {
 	Long selectMaxId();
 	
 	Date selectMaxTrueDate(@Param("deviceId") Long deviceId);
+	
+	MaxMinDateDTO selectMaxMinDate(@Param("deviceId") Long deviceId, @Param("year") Short year);
 }

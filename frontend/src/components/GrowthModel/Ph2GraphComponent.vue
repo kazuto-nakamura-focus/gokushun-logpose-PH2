@@ -60,7 +60,7 @@ export default {
   methods: {
     initialize(titlePath, options, data) {
       //  {{ selectedItems.field }} &gt; {{ selectedItems.device }} &gt; {{ selectedItems.year }} (x)
-
+      console.log("cp");
       this.titlePath = titlePath;
       this.chart.series[0].name = "実績";
       this.chart.series[0].data.length = 0;

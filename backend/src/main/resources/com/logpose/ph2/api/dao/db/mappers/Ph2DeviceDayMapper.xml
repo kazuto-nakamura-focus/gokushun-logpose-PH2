@@ -301,7 +301,7 @@
       has_real = #{hasReal,jdbcType=BIT}
     where id = #{id,jdbcType=BIGINT}
   </update>
-  
+ <!-- ************************************************************************** --> 
     <select id="getYear" resultType="java.lang.Short">
     SELECT
        year
@@ -312,7 +312,7 @@
  	AND
  	    ph2_device_day.date = #{date}
   </select>
-
+<!-- ************************************************************************** -->
 	<insert id="multiRowInsert">
 		insert into ph2_device_day (id, device_id, date, year, lapse_day,
 		has_real)
@@ -323,14 +323,14 @@
 			#{item.year,jdbcType=SMALLINT}, #{item.lapseDay,jdbcType=SMALLINT}, #{item.hasReal,jdbcType=BIT})
 		</foreach>
 	</insert>
-	
+<!-- ************************************************************************** -->	
 	<select id="selectMaxId" resultType="java.lang.Long">
    	select
    		max(id)
    	from
    		ph2_device_day
    </select>
-   
+ <!-- ************************************************************************** -->  
    	<select id="selectMaxTrueDate" resultType="java.util.Date">
    	select
    		max(date)
@@ -340,5 +340,23 @@
    		device_id  = #{deviceId}
    		and
    		has_real = true;
+   </select>
+  <!-- ************************************************************************** -->  
+   	<resultMap id="MaxMinDateDTO"
+		type="com.logpose.ph2.api.dto.MaxMinDateDTO">
+		<result column="endDate" property="endDate"></result>
+		<result column="startDate" property="startDate"></result>
+	</resultMap>
+<!-- ************************************************************************** -->  
+    <select id="selectMaxMinDate" resultMap="MaxMinDateDTO">
+		SELECT 
+			MAX( date ) AS endDate,
+			MIN ( date ) AS startDate 
+		FROM
+			ph2_device_day 
+		WHERE
+			device_id = #{deviceId}
+		AND 
+			year = #{year} 
    </select>
 </mapper>

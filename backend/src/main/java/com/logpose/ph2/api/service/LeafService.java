@@ -31,6 +31,7 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException;
+
 	// --------------------------------------------------
 	/**
 	 * 葉面積モデルグラフデータ取得
@@ -66,7 +67,7 @@ public interface LeafService
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public List<LeafvaluesDTO> getAreaAndCount(Long deviceId, Short year, Date date) throws ParseException;
+	public LeafvaluesDTO getAreaAndCount(Long deviceId, Short year, Date date) throws ParseException;
 
 	// --------------------------------------------------
 	/**
@@ -81,6 +82,27 @@ public interface LeafService
 	// --------------------------------------------------
 	public LeafParamSetDTO getDetailParamSet(Long paramSetId) throws JsonMappingException, JsonProcessingException;
 
+	// --------------------------------------------------
+	/**
+	 * 新梢辺り葉枚数・平均個葉面積定義検索処理
+	 *
+	 * @param deviceId
+	 * @param year
+	 * @throws ParseException
+	 */
+	// --------------------------------------------------
+	List<LeafvaluesDTO> getAllAreaAndCount(Long deviceId, Short year);
+
+	// --------------------------------------------------
+	/**
+	 * 基準パラメータセットの取得
+	 *
+	 * @param deviceId
+	 * @param year
+	 */
+	// --------------------------------------------------
+	public LeafParamSetDTO getDefault(Long deviceId, Short year);
+
 	// ===============================================
 	// パブリック関数（更新系)
 	// ===============================================
@@ -94,6 +116,7 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public void addShoot(LeafShootDTO dto) throws ParseException;
+
 	// --------------------------------------------------
 	/**
 	 * 新梢辺り葉枚数・平均個葉面積登録処理
@@ -104,6 +127,7 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public void setAreaAndCount(LeafvaluesDTO dto) throws ParseException;
+
 	// --------------------------------------------------
 	/**
 	 * 基準パラメータセットの設定
@@ -112,6 +136,7 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException;
+
 	// --------------------------------------------------
 	/**
 	 * 葉面積・葉枚数パラメータセット更新
@@ -133,13 +158,5 @@ public interface LeafService
 	 */
 	// --------------------------------------------------
 	public Long addParamSet(LeafParamSetDTO dto);
-	/**
-	 * 基準パラメータセットの取得
-	 *
-	 * @param deviceId
-	 * @param year
-	 */
-	public LeafParamSetDTO getDefault(Long deviceId, Short year);
-
 
 	}

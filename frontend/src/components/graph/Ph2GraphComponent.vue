@@ -58,7 +58,7 @@ export default {
 
   data() {
     return {
-      arguments: this.$props.target,
+      arguments: this.target,
       titlePath: "",
       time: "",
       comment: "",

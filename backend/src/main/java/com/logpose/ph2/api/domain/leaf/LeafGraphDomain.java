@@ -13,6 +13,8 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 
+import lombok.Data;
+
 @Component
 public class LeafGraphDomain extends GraphDomain
 	{
@@ -55,27 +57,44 @@ public class LeafGraphDomain extends GraphDomain
 		Double maxArea = Double.MIN_VALUE;
 		Double minCount = Double.MAX_VALUE;
 		Double maxCount = Double.MIN_VALUE;
+
+		List<MeasureDataItem> measureDataList = new ArrayList<>();
+		int index = 0;
 		for (LeafModelDataEntity entity : entites)
 			{
 // * 実測値の値代入
 			areaModel.getMeauredValues().add(entity.getRealArea());
+// * 実績値がある場合
+			if (null != entity.getRealArea())
+				{
+				MeasureDataItem item = new MeasureDataItem();
+				item.setIndex(index);
+				item.setMeasure(entity.getRealArea());
+				item.setModel(entity.getCrownLeafArea());
+				item.setDiff(item.getMeasure() - item.getModel());
+				measureDataList.add(item);
+				}
+			index++;
+// * 実績値の葉枚数と面積の代入
 			if (entity.getIsReal())
 				{
 				areaModel.getValues().add(entity.getCrownLeafArea());
 				countModel.getValues().add(entity.getLeafCount());
 				}
+// * 予想値の葉枚数と面積の代入
 			else
 				{
 				areaModel.getPredictValues().add(entity.getCrownLeafArea());
 				countModel.getPredictValues().add(entity.getLeafCount());
 				}
 			double area = (null == entity.getCrownLeafArea()) ? 0 : entity.getCrownLeafArea();
+// * 葉面積グラフの最大値・最小値の設定
 			if (minArea > area)
 				minArea = area;
 			if (maxArea < area)
 				maxArea = area;
 // * 実測値がある場合は葉面積グラフの最大値・最小値をその値も参照する
-			if(null != entity.getRealArea())
+			if (null != entity.getRealArea())
 				{
 				area = entity.getRealArea();
 				if (minArea > area)
@@ -83,6 +102,7 @@ public class LeafGraphDomain extends GraphDomain
 				if (maxArea < area)
 					maxArea = area;
 				}
+// * 葉枚数の最大値・最小値の設定
 			double count = (null == entity.getLeafCount()) ? 0 : entity.getLeafCount();
 			if (minCount > count)
 				minCount = count;
@@ -92,12 +112,14 @@ public class LeafGraphDomain extends GraphDomain
 // * 日付カテゴリの設定
 			category.add(sdf.format(entity.getDate()));
 			}
-		// * 最小値・最大値の設定
+// * 実測値のモデルデータ作成
+		this.setMeasuredValues(areaModel.getValues(), areaModel.getMeauredValues(), measureDataList);
+// * 最小値・最大値の設定
 		String first = category.get(0);
 		String last = category.get(category.size() - 1);
 		areaModel.setXStart(first);
 		areaModel.setXEnd(last);
-		
+
 		areaModel.setYStart(minArea);
 		areaModel.setYEnd(maxArea);
 // * 葉面積グラフのコメント設定
@@ -117,7 +139,58 @@ public class LeafGraphDomain extends GraphDomain
 		List<RealModelGraphDataDTO> resultData = new ArrayList<>();
 		resultData.add(areaModel);
 		resultData.add(countModel);
-		resultData.add(areaModel);
 		return resultData;
 		}
+
+	// --------------------------------------------------
+	/**
+	 * 実測値から想定グラフを作成する
+	 *
+	 * @param deviceId デバイスID
+	 * @param year 対象年度
+	 * @return GraphDataDTO
+	 * @throws ParseException 
+	 */
+	// --------------------------------------------------
+	private void setMeasuredValues(List<Double> modelDataList, List<Double> measureDataList,
+			List<MeasureDataItem> existData)
+		{
+		MeasureDataItem prev = null;
+
+		for (MeasureDataItem item : existData)
+			{
+			if (null == prev)
+				{
+				prev = item;
+				continue;
+				}
+			if ((item.getIndex() - prev.getIndex()) > 1)
+				{
+				// * 前回との差の差分
+				double diff = item.getDiff() - prev.getDiff();
+				// * 差の分割
+				double diff_per_day = diff / (item.getIndex() - prev.getIndex());
+				double dayValueDiff = prev.getDiff();
+				for (int i = prev.getIndex() + 1; i < item.getIndex(); i++)
+					{
+					// その日のdiffを決定する
+					dayValueDiff = dayValueDiff + diff_per_day;
+					// その日のモデル値
+					double model = modelDataList.get(i);
+					// その日の実測値を設定
+					measureDataList.set(i, model + dayValueDiff);
+					}
+				}
+			prev = item;
+			}
+		}
+	}
+
+@Data
+class MeasureDataItem
+	{
+	private int index;
+	private double measure;
+	private double model;
+	private double diff;
 	}

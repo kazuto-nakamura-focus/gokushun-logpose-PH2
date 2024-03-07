@@ -110,7 +110,7 @@ public class DataLoadService
 		Map<Long, Ph2DevicesEntity> result = new LinkedHashMap<>();
 
 // * 全てのデバイス情報を取得し、各デバイスに対して処理を行う
-		List<Ph2DevicesEntity> devices =  this.statusDomain.selectAll();
+		List<Ph2DevicesEntity> devices = this.statusDomain.selectAll();
 
 // * 現在の時刻を取得する
 		for (Ph2DevicesEntity device : devices)
@@ -305,17 +305,18 @@ public class DataLoadService
 	// --------------------------------------------------
 	private void loadDevice(LoadCoordinator ldc) throws Exception
 		{
-		// * 必要な情報が揃っていなければ、処理をしないで終了する
-		if (!ldc.isLoadable())
-			{
-			LOG.warn("ローディングに必要な情報はありません。:" + ldc.getDeviceId());
-			return;
-			}
-		Long deviceId = ldc.getDeviceId();
-
-		LOG.info("デバイスデータのローディングを開始します。:" + deviceId);
 		try
 			{
+			// * 必要な情報が揃っていなければ、処理をしないで終了する
+			if (!ldc.isLoadable())
+				{
+				LOG.warn("ローディングに必要な情報はありません。:" + ldc.getDeviceId());
+				return;
+				}
+			Long deviceId = ldc.getDeviceId();
+
+			LOG.info("デバイスデータのローディングを開始します。:" + deviceId);
+
 // * 指定されたデバイスに対してSigFoxのデータを取り込む
 			try
 				{
@@ -375,9 +376,10 @@ public class DataLoadService
 		catch (Exception e)
 			{
 			e.printStackTrace();
-			LOG.info("デバイスデータのローディングに失敗しました。:" + deviceId);
+			LOG.info("デバイスデータのローディングに失敗しました。:" + ldc.getDeviceId());
 			}
 		}
+
 	// --------------------------------------------------------
 	/**
 	 * デバイスのロード情報を得る
