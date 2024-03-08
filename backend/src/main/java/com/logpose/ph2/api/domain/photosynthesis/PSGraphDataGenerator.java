@@ -48,14 +48,16 @@ public class PSGraphDataGenerator
 			exm.createCriteria().andDayIdEqualTo(data.getDayId());
 			Ph2ModelDataEntity model = parameters.getPh2ModelDataMapper().selectByExample(exm)
 					.get(0);
-// * 葉面積推定の値を得る			
+// * 葉面積推定の値を得る
+			
 			double value = Formula.toPsAmount(f_value, g_value, accumulatedValue,
 					model.getCrownLeafArea(), data.getPar(), data.getSunTime(),
 					parameters.getShootCount());
 // * テーブルを更新
 			exporter.add(model, value);
 // * 積算値の更新
-			accumulatedValue = value;
+			accumulatedValue =  ((double)Math.round(value * 100))/100;
+			
 			}
 		}
 	}

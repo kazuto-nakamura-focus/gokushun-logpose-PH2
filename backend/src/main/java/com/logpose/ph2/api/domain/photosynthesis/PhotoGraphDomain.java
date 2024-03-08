@@ -44,23 +44,45 @@ public class PhotoGraphDomain extends GraphDomain
 		// * データが存在しない場合 nullを返す
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
-		
+
 		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		Double min = Double.MAX_VALUE;
+		Double max = Double.MIN_VALUE;
+		Double prev = null;
+		
 		for (ModelDataEntity entity : entites)
 			{
+			category.add(sdf.format(entity.getDate()));
+			
+			Double value = entity.getCulmitiveCnopyPs();
+
+			if(value == null) continue;
+			value =  ((double)Math.round(value * 100))/100; 
+			if( null != prev)
+				{
+				if( (prev.doubleValue() - value.doubleValue()) > 5) continue;
+				}
+			prev = value;
 			if (entity.getIsReal())
 				{
-				areaModel.getValues().add(entity.getCulmitiveCnopyPs());
+				areaModel.getValues().add(value.doubleValue());
 				}
 			else
 				{
-				areaModel.getPredictValues().add(entity.getCulmitiveCnopyPs());
+				areaModel.getPredictValues().add(value.doubleValue());
 				}
 // * 日付カテゴリの設定
-			category.add(sdf.format(entity.getDate()));
+
+			if (null !=value)
+				{
+				if (min > value.doubleValue())
+					min = value.doubleValue();
+				if (max < value.doubleValue())
+					max = value.doubleValue();
+				}
 			}
 // * 最小値・最大値の設定
 		String first = category.get(0);
@@ -68,11 +90,11 @@ public class PhotoGraphDomain extends GraphDomain
 		areaModel
 				.setXStart(first);
 		areaModel.setXEnd(last);
-		areaModel.setYStart(entites.get(0).getCulmitiveCnopyPs());
-		areaModel.setYEnd(entites.get(entites.size() - 1).getCulmitiveCnopyPs());
+		areaModel.setYStart(min);
+		areaModel.setYEnd(max);
 // * コメント
 		super.setComment(deviceId, year, areaModel);
-		
+
 // * 光合成推定グラフの日付カテゴリの設定
 		areaModel.setCategory(category);
 		return areaModel;

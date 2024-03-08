@@ -138,7 +138,7 @@ public class SigFoxDomain
 // * DB登録用のキャッシュを生成
 		MessagesCacher cache = new MessagesCacher(this.ph2MessagesMapper);
 // * SigFoxデータの最終取得する日以降のものを取得
-		Thread.sleep(1000);
+		Thread.sleep(1500);
 		SigFoxMessagesEntity data = api.getMessages(sigfoxId, lastTime.getTime());
 // * メッセージデータを生成し、キャッシュに登録
 		nextUrl = this.insertPh2Messages(sigfoxId, data, cache);

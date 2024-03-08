@@ -46,6 +46,17 @@ public class S6DailyBaseDataGeneratorService
 	// ===============================================
 	// 公開関数群
 	// ===============================================
+	public void doService(LoadCoordinator ldc, List<Ph2DeviceDayEntity> deviceDays)
+		{
+		LOG.info("日ベースのデータ作成開始：" + ldc.getDeviceId());
+		DailyBaseCacher cache = new DailyBaseCacher(ph2DailyBaseDataMapper);
+		List<Ph2DeviceDayEntity> prevData = this.loadData(ldc, deviceDays, cache);
+		this.copyLastYearData(ldc.getDeviceId(), prevData, 0, cache);
+		// * DBへの更新
+		cache.flush();
+		LOG.info("日ベースのデータ作成終了");
+		}
+
 	// --------------------------------------------------
 	/**
 	 * DBに日ごとデータを設定する
@@ -54,11 +65,8 @@ public class S6DailyBaseDataGeneratorService
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void doService(LoadCoordinator ldc, List<Ph2DeviceDayEntity> deviceDays)
+	public List<Ph2DeviceDayEntity> loadData(LoadCoordinator ldc, List<Ph2DeviceDayEntity> deviceDays, DailyBaseCacher cache)
 		{
-		LOG.info("日ベースのデータ作成開始：" + ldc.getDeviceId());
-		DailyBaseCacher cache = new DailyBaseCacher(ph2DailyBaseDataMapper);
-
 // * データの移行が必要かどうかチェックする
 		List<ExtendDailyBaseDataEntity> trs_dd = this.checkTransfer(ldc);
 		int i = 0;
@@ -94,10 +102,7 @@ public class S6DailyBaseDataGeneratorService
 // * 同じデバイスで年度間の参照をするので、一旦DBへ書き込む
 		cache.flush();
 // * 実データ以後のデータを前年度から取り込む
-		this.copyLastYearData(ldc.getDeviceId(), unset_devices, 0, cache);
-// * DBへの更新
-		cache.flush();
-		LOG.info("日ベースのデータ作成終了");
+		return unset_devices;
 		}
 
 	// ===============================================
@@ -314,15 +319,23 @@ public class S6DailyBaseDataGeneratorService
 	 * @param cache
 	 */
 	// --------------------------------------------------
-	private void copyLastYearData(
+	@Transactional(rollbackFor = Exception.class)
+	public void copyLastYearData(
 			Long deviceId, List<Ph2DeviceDayEntity> deviceDays, double cdd, DailyBaseCacher cache)
 		{
+		LOG.info("データの推定値を昨年のデータから引継ぎます。:" + deviceId);
 // * 未設定のデータが無い場合は終了
-		if (deviceDays.size() == 0) return;
+		if (deviceDays.size() == 0)
+			{
+			LOG.info("未設定のデータはありませんでした。:" + deviceId);
+			return;
+			}
 // * 実データの無い最初の日
 		Ph2DeviceDayEntity day1 = deviceDays.get(0);
 // * 実データの無い最後の日
 		Ph2DeviceDayEntity day2 = deviceDays.get(deviceDays.size() - 1);
+		LOG.info("以下の期間のデータを昨年のデータから引継ぎます。:" + deviceId);
+		LOG.info(day1.getDate().toString() + "～" + day2.getDate().toString() + ":" + deviceId);
 
 // * 引継ぎ元のデータを得る。その年の実データがあるデバイスディデータを昇順で
 		List<ExtendDailyBaseDataEntity> prev_data =//
@@ -342,8 +355,8 @@ public class S6DailyBaseDataGeneratorService
 			Ph2DeviceDayEntity device_day = deviceDays.get(i++);
 			prev.setDayId(device_day.getId());
 			// cddの更新
-			cdd += prev.getRawCdd();
-			prev.setCdd(cdd);
+			// cdd += prev.getRawCdd();
+			// prev.setCdd(0.0);
 			// レコードに追加
 			if (null == this.ph2DailyBaseDataMapper.selectByPrimaryKey(prev.getDayId()))
 				{
@@ -361,3 +374,4 @@ class DailyBaseDataDTO
 	Ph2DailyBaseDataEntity entity;
 	boolean isNew = false;
 	}
+

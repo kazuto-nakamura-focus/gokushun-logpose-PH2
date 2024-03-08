@@ -302,7 +302,7 @@
         md.culmitive_cnopy_ps as culmitive_cnopy_ps,
         md.crown_leaf_area as crown_leaf_area,
         md.leaf_count as leaf_count,
-        dd,date as date,
+        dd.date as date,
         dd.lapse_day as lapse_day,
         dd.has_real as has_real
     FROM
@@ -472,5 +472,6 @@
 					ph2_model_data.f_value <![CDATA[>=]]> #{fValue}
 				</otherwise>
 			</choose>
+		order by ph2_device_day.lapse_day
 	</select>
 </mapper>
