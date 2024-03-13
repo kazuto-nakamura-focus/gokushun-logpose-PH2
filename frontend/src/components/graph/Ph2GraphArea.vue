@@ -13,7 +13,6 @@
 </template>
 <script>
 import Ph2GraphComponent from "./Ph2GraphComponent.vue";
-// import WaitDialog from "@/components/dialog/WaitDialog.vue";
 
 export default {
   //* ============================================
@@ -21,7 +20,6 @@ export default {
   //* ============================================
   components: {
     Ph2GraphComponent,
-    // WaitDialog,
   },
   //* ============================================
   // データ
@@ -38,7 +36,7 @@ export default {
     // グラフ追加処理
     //* ============================================
     addGraph: function (titlePath, chartOptions, chartData, isMultiple, name) {
-    let item = {
+      let item = {
         id: this.id++, // ID
         title: titlePath, // グラフタイトル
         options: chartOptions, // グラフオプション

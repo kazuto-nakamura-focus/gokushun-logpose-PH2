@@ -5,9 +5,7 @@
         <v-row v-if="mode == 'update'">
           <!-- 更新モードの時表示-->
           <v-col align="right">
-            <v-icon right icon="mdi-vuetify" @click="deleteDeviceInfo()"
-              >mdi-trash-can-outline</v-icon
-            >
+            <v-icon right icon="mdi-vuetify" @click="deleteDeviceInfo()">mdi-trash-can-outline</v-icon>
           </v-col>
         </v-row>
 
@@ -15,12 +13,7 @@
           <v-col cols="2">
             <div>デバイス名</div>
 
-            <v-text-field
-              dense
-              hide-details="auto"
-              outlined
-              v-model="deviceInfoData.name"
-            ></v-text-field>
+            <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.name"></v-text-field>
 
             <p></p>
 
@@ -39,12 +32,7 @@
 
             <div>品種</div>
 
-            <v-text-field
-              dense
-              hide-details="auto"
-              outlined
-              v-model="deviceInfoData.brand"
-            ></v-text-field>
+            <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.brand"></v-text-field>
 
             <p></p>
 
@@ -81,12 +69,7 @@
 
             <div>引継ぎデバイスID</div>
 
-            <v-text-field
-              dense
-              hide-details="auto"
-              outlined
-              v-model="deviceInfoData.prevDeviceId"
-            ></v-text-field>
+            <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.prevDeviceId"></v-text-field>
 
             <div>運用終了日</div>
 
@@ -133,8 +116,7 @@
                   sizeColumn
                   @cell-clicked="onCellClicked"
                   @cell-value-changed="onColumnValueChanged"
-                >
-                </AgGridVue>
+                ></AgGridVue>
               </div>
             </div>
           </v-col>
@@ -149,24 +131,16 @@
               class="ma-2 white--text"
               elevation="2"
               @click="update()"
-              >{{ label }}</v-btn
-            >
+            >{{ label }}</v-btn>
             <v-btn
               v-if="deviceInfoData.id != null"
               color="primary"
               class="ma-2 white--text"
               elevation="2"
               @click="dataLoad()"
-              >センサーデータのロード</v-btn
-            >
+            >センサーデータのロード</v-btn>
 
-            <v-btn
-              color="gray"
-              class="ma-2 black--text"
-              elevation="2"
-              @click="back()"
-              >キャンセル</v-btn
-            >
+            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">キャンセル</v-btn>
           </div>
         </v-card-actions>
       </template>
@@ -185,7 +159,7 @@ import {
 import { AgGridVue } from "ag-grid-vue";
 import moment from "moment-timezone";
 import "moment/locale/ja";
-import WaitDialog from "@/components/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
 
 function RemoveCellRenderer() {
   let eGui = document.createElement("div");

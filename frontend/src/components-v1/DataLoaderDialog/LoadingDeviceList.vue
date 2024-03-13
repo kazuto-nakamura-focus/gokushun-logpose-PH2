@@ -5,8 +5,7 @@
         <v-card-title>全センサーデータのロード</v-card-title>
 
         <v-card-text>
-          <v-data-table :headers="headers" :items="devices" dense elevation-6>
-          </v-data-table>
+          <v-data-table :headers="headers" :items="devices" dense elevation-6></v-data-table>
         </v-card-text>
 
         <v-card-actions>
@@ -16,8 +15,7 @@
             elevation="2"
             @click="confirmAction()"
             :disabled="isRunning == true"
-            >全ての再ロードを実行する</v-btn
-          >
+          >全ての再ロードを実行する</v-btn>
 
           <v-btn
             color="primary"
@@ -25,15 +23,9 @@
             elevation="2"
             @click="callLoaderSelected()"
             :disabled="isRunning == true"
-            >再ロード(未完了のみ)</v-btn
-          >
+          >再ロード(未完了のみ)</v-btn>
 
-          <v-btn
-            elevation="2"
-            @click="isDialog = false"
-            :disabled="isRunning == true"
-            >閉じる</v-btn
-          >
+          <v-btn elevation="2" @click="isDialog = false" :disabled="isRunning == true">閉じる</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -49,7 +41,7 @@ import {
 } from "@/api/ManagementScreenTop/MSDevice";
 import moment from "moment";
 import { DialogController } from "@/lib/mountController.js";
-import confirmDailog from "@/components/dialog/confirmDialog.vue";
+import confirmDailog from "@/components-v1/common/dialog/confirmDialog.vue";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true, width: "40%" },

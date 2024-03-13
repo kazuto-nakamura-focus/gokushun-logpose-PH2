@@ -5,7 +5,7 @@
 </template>
 <script>
 import Vue from "vue/dist/vue.esm.js";
-import Ph2GraphComponent from "./Ph2GraphComponent.vue";
+import Ph2GraphComponent from "../../components-v1/GrowthModel/graph/Ph2GraphComponent.vue";
 import { MountController } from "@/lib/mountController.js";
 
 export default {
@@ -14,8 +14,8 @@ export default {
       //* モデルID
       modelId: 0,
       instances: [],
-      graphList: []
-      }
+      graphList: [],
+    };
   },
 
   methods: {
@@ -33,10 +33,14 @@ export default {
       shared.setUp(
         instance.$el,
         function (component) {
-          if(isMultiple){
-          component.__vue__.initialize(titlePath, chartOptions, chartData);
+          if (isMultiple) {
+            component.__vue__.initialize(titlePath, chartOptions, chartData);
           } else {
-            component.__vue__.initializeSingle(titlePath, chartOptions, chartData);
+            component.__vue__.initializeSingle(
+              titlePath,
+              chartOptions,
+              chartData
+            );
           }
         }.bind(this),
         function (node) {

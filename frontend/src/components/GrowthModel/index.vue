@@ -1,11 +1,7 @@
 <template>
   <v-app>
     <v-container class="spacing-playground pa-5" fluid>
-      <targetMenu
-        ref="targetMenu"
-        :shared="sharedMenu"
-        :model="isModel"
-      ></targetMenu>
+      <targetMenu ref="targetMenu" :shared="sharedMenu" :model="isModel"></targetMenu>
       <div v-if="bodyStatus">
         <template>
           <v-container>
@@ -19,34 +15,22 @@
                   elevation="3"
                   :key="index"
                   @click="openDialog(button)"
-                >
-                  {{ button.name }}
-                </v-btn>
+                >{{ button.name }}</v-btn>
               </v-col>
             </v-row>
           </v-container>
         </template>
       </div>
-      <ph2GraphContainer
-        ref="gfa"
-        v-show="bodyStatus && selectedMenu.selectedModel.id != 4"
-      ></ph2GraphContainer>
+      <ph2GraphContainer ref="gfa" v-show="bodyStatus && selectedMenu.selectedModel.id != 4"></ph2GraphContainer>
 
-      <div
-        v-if="isFVDisplayed"
-        v-show="bodyStatus && selectedMenu.selectedModel.id == 4"
-      >
+      <div v-if="isFVDisplayed" v-show="bodyStatus && selectedMenu.selectedModel.id == 4">
         <FVActualValueInput ref="refFVActualValueInput" />
       </div>
     </v-container>
 
     <GEActualValueInput ref="refGEActualValueInput" :shared="sharedParam[0]" />
     <ReferenceFValue ref="refReferenceFValue" :shared="sharedParam[1]" />
-    <parmeter-set-dialog
-      ref="refGEParameterSets"
-      :shared="sharedParam[2]"
-      :modelId="growthModel"
-    />
+    <parmeter-set-dialog ref="refGEParameterSets" :shared="sharedParam[2]" :modelId="growthModel" />
 
     <LAActualValueInput
       ref="refLAActualValueInput"
@@ -54,22 +38,14 @@
       :selectedField="selectedField"
       :selectedDevices="selectedDevices"
     />
-    <parmeter-set-dialog
-      ref="refLAParameterSets"
-      :shared="sharedParam[4]"
-      :modelId="leafModel"
-    />
+    <parmeter-set-dialog ref="refLAParameterSets" :shared="sharedParam[4]" :modelId="leafModel" />
     <PEActualValueInput
       ref="refPEActualValueInput"
       :shared="sharedParam[5]"
       :selectedField="selectedField"
       :selectedDevices="selectedDevices"
     />
-    <parmeter-set-dialog
-      ref="refPEParameterSets"
-      :shared="sharedParam[6]"
-      :modelId="photoModel"
-    />
+    <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[6]" :modelId="photoModel" />
   </v-app>
 </template>
 
@@ -77,7 +53,7 @@
 import moment from "moment";
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 
-import ph2GraphContainer from "@/components/GrowthModel/Ph2GraphContainer.vue";
+import ph2GraphContainer from "@/components-v1/GrowthModel/graph/Ph2GraphContainer.vue";
 import allEditButtons from "@/components/TopStageGrowth/hooks/editButtons.json";
 import { DeviceParser } from "@/lib/deviceParser.js";
 import { DialogController, MountController } from "@/lib/mountController.js";
@@ -263,8 +239,10 @@ export default {
         function (dailog) {
           dailog.initialize(selectedData);
         }.bind(this),
-        function () {
-          this.setData();
+        function (status, data) {
+          console.log("sdp");
+          console.log(status);
+          this.setData(data);
         }.bind(this)
       );
     },

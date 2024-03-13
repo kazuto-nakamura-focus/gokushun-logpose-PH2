@@ -11,38 +11,28 @@
                   class="ma-2 white--text"
                   elevation="2"
                   @click="callLoader()"
-                  >センサーデータのロード</v-btn
-                >
+                >センサーデータのロード</v-btn>
               </v-col>
               <v-col align="right">
-                <v-icon
-                  v-if="!isDeleteMode"
-                  @click="add()"
-                  right
-                  icon="mdi-vuetify"
-                  >mdi-plus</v-icon
-                >
+                <v-icon v-if="!isDeleteMode" @click="add()" right icon="mdi-vuetify">mdi-plus</v-icon>
                 <v-icon
                   v-if="!isDeleteMode"
                   right
                   icon="mdi-vuetify"
                   @click="isDeleteMode = !isDeleteMode"
-                  >mdi-trash-can-outline</v-icon
-                >
+                >mdi-trash-can-outline</v-icon>
                 <v-icon
                   v-if="isDeleteMode"
                   right
                   icon="mdi-vuetify"
                   @click="deleteRow(item)"
-                  >mdi-delete-empty</v-icon
-                >
+                >mdi-delete-empty</v-icon>
                 <v-icon
                   v-if="isDeleteMode"
                   right
                   icon="mdi-vuetify"
                   @click="($event) => isDeleteModeTrue()"
-                  >mdi-close</v-icon
-                >
+                >mdi-close</v-icon>
               </v-col>
             </v-row>
             <v-row>
@@ -61,8 +51,7 @@
                   :items-per-page.sync="currentItemsPerPage"
                   @update:page="onPageChange"
                   @update:items-per-page="onItemsPerPageChange"
-                >
-                </v-data-table>
+                ></v-data-table>
                 <v-data-table
                   v-if="isDeleteMode"
                   v-model="selected"
@@ -78,8 +67,7 @@
                   :items-per-page.sync="currentItemsPerPage"
                   @update:page="onPageChange"
                   @update:items-per-page="onItemsPerPageChange"
-                >
-                </v-data-table>
+                ></v-data-table>
               </v-col>
             </v-row>
           </v-container>
@@ -102,7 +90,7 @@ import {
   useDeviceInfoRemove,
 } from "@/api/ManagementScreenTop/MSDevice";
 import MSEditDeviceWrapper from "./MSEditDevice/MSEditDeviceWrapper.vue";
-import confirmDailog from "@/components/dialog/confirmDialog.vue";
+import confirmDailog from "@/components-v1/common/dialog/confirmDialog.vue";
 import LoadingDeviceList from "@/components-v1/DataLoaderDialog/LoadingDeviceList.vue";
 import { DialogController } from "@/lib/mountController.js";
 

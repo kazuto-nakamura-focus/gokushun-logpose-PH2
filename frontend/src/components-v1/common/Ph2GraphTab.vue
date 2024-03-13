@@ -4,20 +4,12 @@
       <v-tabs grow bg-color="teal-accent-1" v-model="tab">
         <v-tab v-for="title in titles" :key="title.id">
           <div style="display: block">
-            <div>
-              {{ title.name }}
-            </div>
-            <div style="font-size: 9pt">
-              {{ title.subname }}
-            </div>
+            <div>{{ title.name }}</div>
+            <div style="font-size: 9pt">{{ title.subname }}</div>
           </div>
         </v-tab>
         <v-tab-item v-for="item in graphList" :key="item.id">
-          <ph-2-graph-component
-            :key="item.id"
-            :target="item"
-            @delete="deleteItem"
-          />
+          <ph-2-graph-component :key="item.id" :target="item" @delete="deleteItem" />
         </v-tab-item>
       </v-tabs>
     </v-card>
@@ -56,7 +48,7 @@ export default {
       };
       this.titles.push(title);
       let item = {
-        id: this.id++, // ID
+        id: this.id, // ID
         title: title.sub, // グラフタイトル
         options: chartOptions, // グラフオプション
         data: chartData, // グラフデータ
@@ -65,6 +57,8 @@ export default {
       };
       this.graphList.push(item);
       this.tab = this.graphList.length - 1;
+      let id = this.id++;
+      return id;
     },
     //* ============================================
     // グラフアイテムの削除

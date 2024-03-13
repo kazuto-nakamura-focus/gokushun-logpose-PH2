@@ -7,11 +7,7 @@
     <div class="modal-mask" v-if="isLoading">
       <div style="align: center">描画中です。</div>
       <div class="loading">
-        <vue-loading
-          type="spin"
-          color="#ff0"
-          :size="{ width: '50px', height: '50px' }"
-        ></vue-loading>
+        <vue-loading type="spin" color="#ff0" :size="{ width: '50px', height: '50px' }"></vue-loading>
       </div>
     </div>
     <wait-dialog ref="wait" />
@@ -24,7 +20,7 @@ import Ph2GraphArea from "@/components-v1/common/Ph2GraphTab.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
 
-import WaitDialog from "@/components/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
 
 export default {
   data() {

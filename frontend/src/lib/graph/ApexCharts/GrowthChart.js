@@ -131,7 +131,7 @@ export class GrowthChart {
     //* Y軸タイトル
     this.data.chartOptions.yaxis.title.text = ytitle;
     //* Y軸の最高値
-    let max = source.YEnd;
+    let max = source.yend;
     //* アノテーション
     let annotations = []
     if ((source.annotations != null) && (source.annotations.length > 0)) {
@@ -177,8 +177,8 @@ export class GrowthChart {
       }
     }
 
-    this.data.chartOptions.yaxis.max = max;
-    this.data.chartOptions.yaxis.min = source.YStart;
+    this.data.chartOptions.yaxis.max = source.yend;
+    this.data.chartOptions.yaxis.min = source.ystart;
     this.data.chartOptions.xaxis.categories = source.category;
   }
 }

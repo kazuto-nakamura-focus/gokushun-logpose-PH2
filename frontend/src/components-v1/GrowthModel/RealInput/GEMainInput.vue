@@ -15,7 +15,8 @@
 
           <v-container>
             <v-card-text>
-              最後{{ inputArg.date }}の累積F値<br />
+              最後{{ inputArg.date }}の累積F値
+              <br />
 
               <p class="font-weight-bold">{{ inputArg.accumulatedFvalue }}</p>
             </v-card-text>
@@ -33,20 +34,13 @@
                   :gridOptions="gridOptions"
                   :defaultColDef="defaultColDef"
                   @cell-clicked="onCellClicked"
-                >
-                </AgGridVue>
+                ></AgGridVue>
               </div>
             </div>
           </v-container>
 
           <div class="GS_ButtonArea">
-            <v-btn
-              color="gray"
-              class="ma-2 black--text"
-              elevation="2"
-              @click="close()"
-              >閉じる</v-btn
-            >
+            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
           </div>
         </v-card>
       </v-dialog>
@@ -172,6 +166,8 @@ export default {
       isDialogEdit: false,
       selectedData: null,
       originSelectedDataFValue: null,
+      // 値が更新されたかどうかのフラグ
+      isUpdated: false,
     };
   },
   beforeMount() {
@@ -194,6 +190,8 @@ export default {
       );
       this.selectedItems = data.menu;
       this.isDialog = true;
+      // 値が更新されたかどうかのフラグ
+      this.isUpdated = true;
       //圃場名
       this.fieldName = this.selectedItems.selectedField.name;
       this.fieldId = this.selectedItems.selectedField.id;
@@ -209,7 +207,7 @@ export default {
       // this.rowData = [...this.rowDataOrigin]
       if (this.gridApi) this.gridApi.refreshCells({ force: true });
       this.isDialog = false;
-      this.shared.onConclude();
+      this.shared.onConclude(this.isUpdated, this.selectedItems);
     },
     save: function () {
       this.isDialog = false;
@@ -361,6 +359,8 @@ export default {
 
       //F値間隔再設定
       this.makeAccumulation(this.rowData);
+      // データが更新されたかどうかのフラグ
+      this.isUpdated = true;
     },
     //実績値入力画面キャンセル
     cancel() {

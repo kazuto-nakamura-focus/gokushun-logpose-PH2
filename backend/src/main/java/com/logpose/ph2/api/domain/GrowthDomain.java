@@ -191,7 +191,8 @@ public class GrowthDomain extends GraphDomain
 // * グラフデータの生成
 			return modelData.toGraphData();
 			}
-		else return null;
+		else
+			return null;
 		}
 
 	// --------------------------------------------------
@@ -225,7 +226,7 @@ public class GrowthDomain extends GraphDomain
 					year, year, data.getValues());
 			this.deviceDayDomain.updateModelData(startDay, deviceId, (short) (year - 1), year,
 					data.getPredictValues());
-			
+
 			}
 		}
 
@@ -303,19 +304,17 @@ public class GrowthDomain extends GraphDomain
 	 *
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
-	 * @return GraphDataDTO
-	 * @throws ParseException 
+	 * @return RealModelGraphDataDTO
 	 */
 	// --------------------------------------------------
 	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
-			throws ParseException
 		{
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectModelDataByType(deviceId, year);
 // * データが存在しない場合 nullを返す
-		if(0 == entites.size()) return null;
-		if(null == entites.get(0).getfValue()) return null;
-		
+		if (0 == entites.size()) return null;
+		if (null == entites.get(0).getfValue()) return null;
+
 		List<Double> values = new ArrayList<>();
 		List<Double> predictValues = new ArrayList<>();
 // * 日付カテゴリ
@@ -331,23 +330,25 @@ public class GrowthDomain extends GraphDomain
 			category.add(sdf.format(entity.getDate()));
 			}
 		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
-		// * 最小値・最大値の設定
+
+// * 値の設定
+		resultData.setValues(values);
+		resultData.setPredictValues(predictValues);
+		resultData.setCategory(category);
+// * アノテーションデータの生成
+		List<EventDaysDTO> annotations = super.getEvent(deviceId, year);
+		resultData.setAnnotations(annotations);
+// * 最小値・最大値の設定
 		String first = category.get(0);
 		String last = category.get(category.size() - 1);
 		resultData.setXStart(first);
 		resultData.setXEnd(last);
-		resultData.setYStart(entites.get(0).getfValue());
-		resultData.setYEnd(entites.get(entites.size() - 1).getfValue());
-		// * 値の設定
-		resultData.setValues(values);
-		resultData.setPredictValues(predictValues);
-		resultData.setCategory(category);
-		// * アノテーションデータの生成
-		List<EventDaysDTO> annotations = super.getEvent(deviceId, year);
-		resultData.setAnnotations(annotations);
-		// * コメント
+		
+		resultData.setYStart((double) 0);
+		resultData.setYEnd(annotations.get(annotations.size() - 1).getValue()+10);
+// * コメント
 		super.setComment(deviceId, year, resultData);
-		// * グラフデータの返却
+// * グラフデータの返却
 		return resultData;
 		}
 
