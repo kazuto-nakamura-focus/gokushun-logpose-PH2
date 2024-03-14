@@ -53,9 +53,7 @@ public class LeafGraphDomain extends GraphDomain
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		List<String> category = new ArrayList<>();
 
-		Double minArea = Double.MAX_VALUE;
 		Double maxArea = Double.MIN_VALUE;
-		Double minCount = Double.MAX_VALUE;
 		Double maxCount = Double.MIN_VALUE;
 
 		List<MeasureDataItem> measureDataList = new ArrayList<>();
@@ -88,24 +86,18 @@ public class LeafGraphDomain extends GraphDomain
 				countModel.getPredictValues().add(entity.getLeafCount());
 				}
 			double area = (null == entity.getCrownLeafArea()) ? 0 : entity.getCrownLeafArea();
-// * 葉面積グラフの最大値・最小値の設定
-			if (minArea > area)
-				minArea = area;
+// * 葉面積グラフの最大値の設定
 			if (maxArea < area)
 				maxArea = area;
-// * 実測値がある場合は葉面積グラフの最大値・最小値をその値も参照する
+// * 実測値がある場合は葉面積グラフの最大値をその値も参照する
 			if (null != entity.getRealArea())
 				{
 				area = entity.getRealArea();
-				if (minArea > area)
-					minArea = area;
 				if (maxArea < area)
 					maxArea = area;
 				}
-// * 葉枚数の最大値・最小値の設定
+// * 葉枚数の最大値の設定
 			double count = (null == entity.getLeafCount()) ? 0 : entity.getLeafCount();
-			if (minCount > count)
-				minCount = count;
 			if (maxCount < count)
 				maxCount = count;
 
@@ -120,7 +112,7 @@ public class LeafGraphDomain extends GraphDomain
 		areaModel.setXStart(first);
 		areaModel.setXEnd(last);
 
-		areaModel.setYStart(minArea);
+		areaModel.setYStart((double) 0);
 		areaModel.setYEnd(maxArea + 10);
 // * 葉面積グラフのコメント設定
 		super.setComment(deviceId, year, areaModel);
@@ -129,7 +121,7 @@ public class LeafGraphDomain extends GraphDomain
 
 		countModel.setXStart(areaModel.getXStart());
 		countModel.setXEnd(areaModel.getXEnd());
-		countModel.setYStart(minCount);
+		countModel.setYStart((double) 0);
 		countModel.setYEnd(maxCount);
 // * 葉枚数グラフのコメント設定
 		super.setComment(deviceId, year, countModel);

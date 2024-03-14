@@ -75,7 +75,7 @@ export class GrowthChart {
         yaxis: {
           labels: {
             formatter: function (val) {
-              return Math.round(val);
+              return Math.round(val * 100) / 100;
             },
           },
           title: {
@@ -189,7 +189,7 @@ export class GrowthChart {
     // * 分割値が10以上の場合は10で割って小数点を四捨五入した後で10倍する
     if (max > 10) {
       max = Math.ceil(max / 10) * 10;
-    } else if (max < 0) {
+    } else {
       // * 分割値が0以下の場合は10をかけて小数点を除いた上で10で割る
       max = Math.ceil(max * 10) / 10;
     }
