@@ -8,7 +8,8 @@
       <input-header ref="titleHeader" />
 
       <v-card-text>
-        最後{{ inputArg.date }}の累積F値<br />
+        最後{{ inputArg.date }}の累積F値
+        <br />
         <p class="font-weight-bold">{{ inputArg.accumulatedFvalue }}</p>
       </v-card-text>
 
@@ -23,17 +24,13 @@
             :gridOptions="gridOptions"
             :defaultColDef="defaultColDef"
             @cell-clicked="onCellClicked"
-          >
-          </AgGridVue>
+          ></AgGridVue>
         </div>
       </div>
 
       <!-- 実績値の日付入力画面 -->
       <v-dialog v-model="pickerStatus" width="400" height="400" permanent>
-        <v-date-picker
-          v-model="picker"
-          @input="achievementValueDataGet"
-        ></v-date-picker>
+        <v-date-picker v-model="picker" @input="achievementValueDataGet"></v-date-picker>
       </v-dialog>
     </v-container>
 
@@ -43,16 +40,9 @@
         class="ma-2 white--text"
         elevation="2"
         @click="achievementValueDataSave()"
-        >保存</v-btn
-      >
+      >保存</v-btn>
 
-      <v-btn
-        color="gray"
-        class="ma-2 black--text"
-        elevation="2"
-        @click="cancel()"
-        >キャンセル</v-btn
-      >
+      <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="cancel()">キャンセル</v-btn>
     </div>
   </v-card>
 </template>
@@ -234,7 +224,7 @@ export default {
       if (null == actualDate) {
         this.picker = moment().format("YYYY-MM-DD");
         // 推定値
-      } else if (actualDate.charAt("(")) {
+      } else if (actualDate.charAt(0) == "(") {
         let dateTmp = actualDate.substring(1, 11);
         this.picker = dateTmp;
         // 実測値

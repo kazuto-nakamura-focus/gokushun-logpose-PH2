@@ -54,28 +54,44 @@ export class HeaderClass {
                 headerName: "生育期名",
                 resizable: true,
                 width: 110,
-                editable: true,
+                editable: (params) =>
+                    params.data.actualDate == null,
+                cellStyle: (params) => {
+                    if (params.data.actualDate != null) return { backgroundColor: "#aaa" };
+                },
             },
             {
                 field: "elStage",
                 headerName: "E-L Stage間隔",
                 resizable: true,
                 width: 90,
-                editable: true,
+                editable: (params) =>
+                    params.data.actualDate == null,
+                cellStyle: (params) => {
+                    if (params.data.actualDate != null) return { backgroundColor: "#aaa" };
+                },
             },
             {
                 field: "intervalF",
                 headerName: "F値間隔",
                 resizable: true,
                 width: 80,
-                editable: true,
+                editable: (params) =>
+                    params.data.actualDate == null,
+                cellStyle: (params) => {
+                    if (params.data.actualDate != null) return { backgroundColor: "#aaa" };
+                },
             },
             {
                 field: "accumulatedF",
                 headerName: "累積F値",
                 resizable: true,
                 width: 80,
-                editable: true,
+                editable: (params) =>
+                    params.data.actualDate == null,
+                cellStyle: (params) => {
+                    if (params.data.actualDate != null) return { backgroundColor: "#aaa" };
+                },
             },
             {
                 field: "color",

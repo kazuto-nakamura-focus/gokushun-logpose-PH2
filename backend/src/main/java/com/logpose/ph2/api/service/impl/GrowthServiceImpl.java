@@ -278,10 +278,11 @@ public class GrowthServiceImpl implements GrowthService
 	 *
 	 * @param id
 	 * @param date
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
-	public FValuesDTO checkFValueByDate(Long id, Date date)
+	public FValuesDTO checkFValueByDate(Long id, String date) throws ParseException
 		{
 		return this.fStageTableDomain.checkFValueByDate(id, date);
 		}

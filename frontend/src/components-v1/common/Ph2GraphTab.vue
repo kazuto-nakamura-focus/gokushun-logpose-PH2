@@ -16,7 +16,7 @@
   </div>
 </template>
 <script>
-import Ph2GraphComponent from "@/components/graph/Ph2GraphComponent.vue";
+import Ph2GraphComponent from "@/components-v1/common/Ph2GraphComponent.vue";
 
 export default {
   //* ============================================

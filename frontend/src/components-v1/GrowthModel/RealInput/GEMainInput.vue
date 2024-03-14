@@ -191,7 +191,7 @@ export default {
       this.selectedItems = data.menu;
       this.isDialog = true;
       // 値が更新されたかどうかのフラグ
-      this.isUpdated = true;
+      this.isUpdated = false;
       //圃場名
       this.fieldName = this.selectedItems.selectedField.name;
       this.fieldId = this.selectedItems.selectedField.id;
@@ -207,7 +207,7 @@ export default {
       // this.rowData = [...this.rowDataOrigin]
       if (this.gridApi) this.gridApi.refreshCells({ force: true });
       this.isDialog = false;
-      this.shared.onConclude(this.isUpdated, this.selectedItems);
+      this.shared.onConclude(this.isUpdated);
     },
     save: function () {
       this.isDialog = false;
@@ -337,6 +337,7 @@ export default {
           alert("実績値の更新を完了しました。");
           this.gridApi.refreshCells({ force: true });
           this.isDialogEdit = false;
+          this.isUpdated = true;
         })
         .catch((error) => {
           //失敗時

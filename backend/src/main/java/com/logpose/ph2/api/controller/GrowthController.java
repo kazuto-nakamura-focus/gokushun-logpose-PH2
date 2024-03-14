@@ -178,7 +178,7 @@ public class GrowthController
 	public ResponseDTO checkdate(HttpServletRequest httpReq,
 			HttpServletResponse res,
 			@RequestParam("id") Long id,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date date)
+			@RequestParam("date") String date)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try

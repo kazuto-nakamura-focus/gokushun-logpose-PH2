@@ -189,41 +189,6 @@ export default {
         }
       }
     },
-    setData: function (dates) {
-      // 送信データ
-      var dataList = [];
-      var key = this.selectedMenu.title;
-      // 選択された各フィールドに対して
-      for (const item of this.selectedField) {
-        //  if(!item.state) continue;
-        // マスターデータから一致するデータを取得
-        var list = this.masterGrouthData[this.selectedMenu.title];
-        for (const master of list) {
-          if (item.title == master.name) {
-            key = key + "_" + item.title;
-            var grData = { label: "", borderColor: "", data: [] };
-            grData.label = item.title;
-            grData.borderColor = master.borderColor;
-            grData.data = master.data;
-            grData.fill = false;
-            grData.type = "line";
-            grData.lineTension = 0.3;
-            dataList.push(grData);
-            break;
-          }
-        }
-      }
-      this.dates = dates;
-      if (this.dates.length > 2) {
-        var graphTitile = "(" + this.dates[0] + "～" + this.dates[1] + ")";
-        this.$refs.gr.updateGraph(
-          key,
-          this.selectedMenu.title,
-          graphTitile,
-          dataList
-        );
-      }
-    },
 
     //************************************
     // ダイアログのオープン
@@ -239,10 +204,9 @@ export default {
         function (dailog) {
           dailog.initialize(selectedData);
         }.bind(this),
-        function (status, data) {
-          console.log("sdp");
-          console.log(status);
-          this.setData(data);
+        function (status) {
+          console.log("ppds");
+          if (status) this.$refs.gfa.setGraphData(this.selectedMenu);
         }.bind(this)
       );
     },

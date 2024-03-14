@@ -18,16 +18,21 @@
               <v-row no-gutters>
                 <v-col :cols="4">
                   <v-card-text>
-                    圃場名<br />
+                    圃場名
+                    <br />
                     <p class="font-weight-bold">{{ fieldName }}</p>
                   </v-card-text>
                 </v-col>
                 <v-col>
                   <v-card-text>
-                    デバイス名<br />
+                    デバイス名
+                    <br />
                     <p class="font-weight-bold">{{ deviceName }}</p>
                   </v-card-text>
                 </v-col>
+              </v-row>
+              <v-row no-gutters>
+                <v-col :cols="12">実績値がある場合は編集できません。</v-col>
               </v-row>
               <div style="height: 250px">
                 <div style="height: 250px; box-sizing: border-box">
@@ -42,38 +47,19 @@
                     :defaultColDef="defaultColDef"
                     @cell-clicked="onButtonClicked"
                     @cellValueChanged="onColumnValueChanged"
-                  >
-                  </AgGridVue>
+                  ></AgGridVue>
                 </div>
               </div>
             </v-container>
             <v-card-actions>
               <v-spacer></v-spacer>
               <div v-if="!isEditMode" class="GS_ButtonArea">
-                <v-btn
-                  color="gray"
-                  class="ma-2 black--text"
-                  elevation="2"
-                  @click="close"
-                  >キャンセル</v-btn
-                >
+                <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
               </div>
               <div v-if="isEditMode" class="GS_ButtonArea">
                 <!-- <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="reset">戻る</v-btn> -->
-                <v-btn
-                  color="primary"
-                  class="ma-2 white--text"
-                  elevation="2"
-                  @click="save"
-                  >保存</v-btn
-                >
-                <v-btn
-                  color="gray"
-                  class="ma-2 black--text"
-                  elevation="2"
-                  @click="close"
-                  >キャンセル</v-btn
-                >
+                <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="save">保存</v-btn>
+                <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
               </div>
             </v-card-actions>
           </v-container>
@@ -152,6 +138,7 @@ export default {
   methods: {
     initialize: function () {
       this.isDialog = true;
+      this.isUpdated = false;
       //圃場名
       this.fieldName = this.$store.getters.selectedField.name;
       this.fieldId = this.$store.getters.selectedField.id;
@@ -164,6 +151,7 @@ export default {
     },
     close: function () {
       this.isDialog = false;
+      this.shared.onConclude(this.isUpdated);
     },
     //gridApi使用設定
     onGridReady: function () {},
@@ -313,6 +301,7 @@ export default {
           if (status != 0) {
             throw new Error(message);
           }
+          this.isUpdated = true;
           alert("更新を完了しました。");
         })
         .catch((error) => {

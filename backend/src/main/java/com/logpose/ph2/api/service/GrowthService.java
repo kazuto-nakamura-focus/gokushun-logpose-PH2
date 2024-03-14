@@ -182,8 +182,9 @@ public interface GrowthService
 	 *
 	 * @param id
 	 * @param date
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public FValuesDTO checkFValueByDate(Long id, Date date);
+	public FValuesDTO checkFValueByDate(Long id, String date) throws ParseException;
 
 	}

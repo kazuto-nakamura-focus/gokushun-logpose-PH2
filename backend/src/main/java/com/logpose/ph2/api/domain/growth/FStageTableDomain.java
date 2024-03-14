@@ -8,6 +8,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
@@ -87,11 +88,13 @@ public class FStageTableDomain
 	 * 日付からF値の情報を得る
 	 *
 	 * @param id
-	 * @param date
+	 * @param dateString
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public FValuesDTO checkFValueByDate(Long id, Date date)
+	public FValuesDTO checkFValueByDate(Long id, String dateString) throws ParseException
 		{
+		Date date = DateTimeUtility.getDateFromString(dateString);
 		FValuesDTO result = new FValuesDTO();
 		
 		Ph2RealGrowthFStageEntity entity = this.ph2RealGrowthFStageMapper.selectByPrimaryKey(id);
