@@ -113,7 +113,7 @@ public class LeafGraphDomain extends GraphDomain
 			category.add(sdf.format(entity.getDate()));
 			}
 // * 実測値のモデルデータ作成
-		this.setMeasuredValues(areaModel.getValues(), areaModel.getMeauredValues(), measureDataList);
+		maxArea = this.setMeasuredValues(areaModel.getValues(), areaModel.getMeauredValues(), measureDataList, maxArea);
 // * 最小値・最大値の設定
 		String first = category.get(0);
 		String last = category.get(category.size() - 1);
@@ -121,7 +121,7 @@ public class LeafGraphDomain extends GraphDomain
 		areaModel.setXEnd(last);
 
 		areaModel.setYStart(minArea);
-		areaModel.setYEnd(maxArea);
+		areaModel.setYEnd(maxArea + 10);
 // * 葉面積グラフのコメント設定
 		super.setComment(deviceId, year, areaModel);
 // * 葉面積グラフの日付カテゴリの設定
@@ -152,8 +152,8 @@ public class LeafGraphDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	private void setMeasuredValues(List<Double> modelDataList, List<Double> measureDataList,
-			List<MeasureDataItem> existData)
+	private double setMeasuredValues(List<Double> modelDataList, List<Double> measureDataList,
+			List<MeasureDataItem> existData, double max)
 		{
 		MeasureDataItem prev = null;
 
@@ -177,12 +177,20 @@ public class LeafGraphDomain extends GraphDomain
 					dayValueDiff = dayValueDiff + diff_per_day;
 					// その日のモデル値
 					double model = modelDataList.get(i);
+					// その日の実測値
+					double value = model + dayValueDiff;
 					// その日の実測値を設定
-					measureDataList.set(i, model + dayValueDiff);
+					measureDataList.set(i, value);
+					// 最大値の設定
+					if(value > max)
+						{
+						max=  value;
+						}
 					}
 				}
 			prev = item;
 			}
+		return max;
 		}
 	}
 

@@ -177,8 +177,22 @@ export class GrowthChart {
       }
     }
 
-    this.data.chartOptions.yaxis.max = source.yend;
-    this.data.chartOptions.yaxis.min = source.ystart;
+    // this.data.chartOptions.yaxis.max = source.yend;
+    this.data.chartOptions.yaxis.min = 0;
     this.data.chartOptions.xaxis.categories = source.category;
+    this.data.chartOptions.yaxis.max = this.setMax(source.yend);
+  }
+  // ======================================================
+  // Y軸のメモリを設定する
+  // ======================================================
+  setMax(max) {
+    // * 分割値が10以上の場合は10で割って小数点を四捨五入した後で10倍する
+    if (max > 10) {
+      max = Math.ceil(max / 10) * 10;
+    } else if (max < 0) {
+      // * 分割値が0以下の場合は10をかけて小数点を除いた上で10で割る
+      max = Math.ceil(max * 10) / 10;
+    }
+    return max;
   }
 }

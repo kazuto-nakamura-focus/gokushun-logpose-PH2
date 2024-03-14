@@ -5,11 +5,9 @@
       <v-dialog v-model="isDialog" width="700" persistent>
         <v-card>
           <v-card-title v-if="title != null">実績値入力</v-card-title>
-          <v-card-text>
-            (PAMで計測した「f」と「g」の値を入力してください。)
-          </v-card-text>
+          <v-card-text>(PAMで計測した「f」と「g」の値を入力してください。)</v-card-text>
           <!-- タイトル部分 -->
-           <input-header ref="titleHeader" />
+          <input-header ref="titleHeader" />
           <!-- 入力部分 -->
           <v-container>
             <div class="text-subtitle-1">イールド値モデルパラメータ</div>
@@ -68,20 +66,8 @@
           </v-container>
 
           <div class="GS_ButtonArea">
-            <v-btn
-              color="primary"
-              class="ma-2 white--text"
-              elevation="2"
-              @click="register()"
-              >保存</v-btn
-            >
-            <v-btn
-              color="gray"
-              class="ma-2 black--text"
-              elevation="2"
-              @click="close()"
-              >閉じる</v-btn
-            >
+            <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="register()">保存</v-btn>
+            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
           </div>
         </v-card>
       </v-dialog>
@@ -125,7 +111,7 @@ export default {
       path: mdiExitToApp,
       menu: false,
       year: 0,
-
+      isUpdated: false,
       selectedDate: null,
 
       // headers: HEADERS,
@@ -154,7 +140,7 @@ export default {
           this.$refs.titleHeader.initialize(data.menu);
         }.bind(this)
       );
-      
+
       //年度
       this.year = this.$store.getters.selectedYear.id;
       // タイトル
@@ -169,6 +155,7 @@ export default {
         id: this.$store.getters.selectedDevice.id,
         name: this.$store.getters.selectedDevice.name,
       };
+      this.isUpdated = false;
       //this.isDialog = true;
 
       //光合成推定実績取得
@@ -183,11 +170,12 @@ export default {
           console.log(error);
         });
     },
-    handleDate(date){
+    handleDate(date) {
       this.date = date;
     },
     close: function () {
       this.isDialog = false;
+      this.shared.onConclude(this.isUpdated);
     },
     register: function () {
       const data = {
@@ -207,6 +195,7 @@ export default {
           const { status, message } = response["data"];
           if (status === 0) {
             alert("登録が完了しました。");
+            this.isUpdated = true;
           } else {
             alert("登録が失敗しました。");
             throw new Error(message);

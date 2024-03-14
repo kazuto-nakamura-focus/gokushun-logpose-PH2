@@ -26,15 +26,11 @@
                   <v-col cols="9">
                     <v-row>
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0"
-                          >実測日</v-subheader
-                        >
+                        <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
                       </v-col>
 
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0"
-                          >新梢数</v-subheader
-                        >
+                        <v-subheader class="ma-0 mt-n5 pa-0">新梢数</v-subheader>
                       </v-col>
 
                       <v-col cols="4"></v-col>
@@ -72,8 +68,7 @@
                           class="ma-0 mt-n12 pl-1 pr-1 white--text"
                           elevation="2"
                           @click="saveNew()"
-                          >保存</v-btn
-                        >
+                        >保存</v-btn>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -85,9 +80,7 @@
 
             <div class="text-subtitle-1 mt-5">葉面積・葉枚数</div>
 
-            <v-subheader class="ma-0 mt-n3 pa-0">
-              (測定タイミング : 萌芽後任意のタイミングで実施してください)
-            </v-subheader>
+            <v-subheader class="ma-0 mt-n3 pa-0">(測定タイミング : 萌芽後任意のタイミングで実施してください)</v-subheader>
 
             <div>
               <v-container
@@ -101,21 +94,15 @@
                   <v-col cols="7">
                     <v-row>
                       <v-col cols="5">
-                        <v-subheader class="ma-0 mt-n5 pa-0"
-                          >実測日</v-subheader
-                        >
+                        <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
                       </v-col>
 
                       <v-col cols="3">
-                        <v-subheader class="ma-0 mt-n5 pa-0"
-                          >新梢あたり葉枚数</v-subheader
-                        >
+                        <v-subheader class="ma-0 mt-n5 pa-0">新梢あたり葉枚数</v-subheader>
                       </v-col>
 
                       <v-col cols="4">
-                        <v-subheader class="ma-0 mt-n5 pa-0"
-                          >平均個葉面積</v-subheader
-                        >
+                        <v-subheader class="ma-0 mt-n5 pa-0">平均個葉面積</v-subheader>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -125,9 +112,7 @@
                   <v-col cols="4">
                     <v-row>
                       <v-col cols="12">
-                        <v-subheader class="ma-0 mt-n5 pa-0"
-                          >実測樹幹葉面積</v-subheader
-                        >
+                        <v-subheader class="ma-0 mt-n5 pa-0">実測樹幹葉面積</v-subheader>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -150,7 +135,7 @@
     
         
     
-                                    v-model.number="leafAreaAreaData.leafAreaADate"></v-text-field> -->
+                        v-model.number="leafAreaAreaData.leafAreaADate"></v-text-field>-->
                       </v-col>
 
                       <v-col cols="3">
@@ -216,8 +201,7 @@
                           class="ma-0 mt-n12 pl-1 pr-1 white--text"
                           elevation="2"
                           @click="saveArea(index)"
-                          >保存</v-btn
-                        >
+                        >保存</v-btn>
                       </v-col>
                     </v-row>
                   </v-col>
@@ -247,13 +231,7 @@
           <div class="GS_ButtonArea">
             <!-- <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="save()">保存</v-btn> -->
 
-            <v-btn
-              color="gray"
-              class="ma-2 black--text"
-              elevation="2"
-              @click="close()"
-              >閉じる</v-btn
-            >
+            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
           </div>
         </v-card>
       </v-dialog>
@@ -295,6 +273,8 @@ export default {
       // params: [],
       path: mdiExitToApp,
       initialized: false,
+      // 更新されたかどうかのフラグ
+      isUpdated: false,
 
       selectedMenu: null,
 
@@ -331,6 +311,7 @@ export default {
     //* ============================================
     initialize: function (data) {
       this.initialized = false;
+      this.isUpdated = false;
       this.leafAreaValueData = {
         leafAreaNDate: "未設定",
         leafAreaNValue: 0,
@@ -475,6 +456,7 @@ export default {
     },
     close: function () {
       this.isDialog = false;
+      this.shared.onConclude(this.isUpdated);
     },
     saveNew: function () {
       console.log("saveNew");
@@ -491,7 +473,7 @@ export default {
           const { status, message } = response["data"];
           if (status === 0) {
             alert("登録が完了しました。");
-            //        this.isDialog = false;
+            this.isUpdated = true;
           } else {
             alert("登録が失敗しました。");
             throw new Error(message);
@@ -524,7 +506,7 @@ export default {
           const { status, message } = response["data"];
           if (status === 0) {
             alert("登録が完了しました。");
-            //  this.isDialog = false;
+            this.isUpdated = true;
           } else {
             alert("登録が失敗しました。");
             throw new Error(message);
