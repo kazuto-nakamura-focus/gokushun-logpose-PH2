@@ -12,6 +12,7 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
+import com.logpose.ph2.api.domain.common.MaxValue;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 
 @Component
@@ -49,8 +50,7 @@ public class PhotoGraphDomain extends GraphDomain
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		Double min = Double.MAX_VALUE;
-		Double max = Double.MIN_VALUE;
+		MaxValue max = new MaxValue();
 		Double prev = null;
 		
 		for (ModelDataEntity entity : entites)
@@ -75,14 +75,7 @@ public class PhotoGraphDomain extends GraphDomain
 				areaModel.getPredictValues().add(value.doubleValue());
 				}
 // * 日付カテゴリの設定
-
-			if (null !=value)
-				{
-				if (min > value.doubleValue())
-					min = value.doubleValue();
-				if (max < value.doubleValue())
-					max = value.doubleValue();
-				}
+			max.setMax(value);
 			}
 // * 最小値・最大値の設定
 		String first = category.get(0);
@@ -90,8 +83,8 @@ public class PhotoGraphDomain extends GraphDomain
 		areaModel
 				.setXStart(first);
 		areaModel.setXEnd(last);
-		areaModel.setYStart(min);
-		areaModel.setYEnd(max);
+		areaModel.setYStart((double) 0);
+		areaModel.setYEnd(max.getMax());
 // * コメント
 		super.setComment(deviceId, year, areaModel);
 

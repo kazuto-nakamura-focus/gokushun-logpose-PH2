@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
+import com.logpose.ph2.api.domain.common.MaxValue;
 import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 
 import lombok.Data;
@@ -53,8 +54,8 @@ public class LeafGraphDomain extends GraphDomain
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		List<String> category = new ArrayList<>();
 
-		Double maxArea = Double.MIN_VALUE;
-		Double maxCount = Double.MIN_VALUE;
+		MaxValue maxArea =  new MaxValue();
+		MaxValue maxCount = new MaxValue();
 
 		List<MeasureDataItem> measureDataList = new ArrayList<>();
 		int index = 0;
@@ -85,27 +86,18 @@ public class LeafGraphDomain extends GraphDomain
 				areaModel.getPredictValues().add(entity.getCrownLeafArea());
 				countModel.getPredictValues().add(entity.getLeafCount());
 				}
-			double area = (null == entity.getCrownLeafArea()) ? 0 : entity.getCrownLeafArea();
 // * 葉面積グラフの最大値の設定
-			if (maxArea < area)
-				maxArea = area;
+				maxArea.setMax(entity.getCrownLeafArea());
 // * 実測値がある場合は葉面積グラフの最大値をその値も参照する
-			if (null != entity.getRealArea())
-				{
-				area = entity.getRealArea();
-				if (maxArea < area)
-					maxArea = area;
-				}
+				maxArea.setMax(entity.getRealArea());
 // * 葉枚数の最大値の設定
-			double count = (null == entity.getLeafCount()) ? 0 : entity.getLeafCount();
-			if (maxCount < count)
-				maxCount = count;
+				maxCount.setMax(entity.getLeafCount());
 
 // * 日付カテゴリの設定
 			category.add(sdf.format(entity.getDate()));
 			}
 // * 実測値のモデルデータ作成
-		maxArea = this.setMeasuredValues(areaModel.getValues(), areaModel.getMeauredValues(), measureDataList, maxArea);
+		this.setMeasuredValues(areaModel.getValues(), areaModel.getMeauredValues(), measureDataList, maxArea);
 // * 最小値・最大値の設定
 		String first = category.get(0);
 		String last = category.get(category.size() - 1);
@@ -113,7 +105,7 @@ public class LeafGraphDomain extends GraphDomain
 		areaModel.setXEnd(last);
 
 		areaModel.setYStart((double) 0);
-		areaModel.setYEnd(maxArea + 10);
+		areaModel.setYEnd(maxArea.getMax());
 // * 葉面積グラフのコメント設定
 		super.setComment(deviceId, year, areaModel);
 // * 葉面積グラフの日付カテゴリの設定
@@ -122,7 +114,7 @@ public class LeafGraphDomain extends GraphDomain
 		countModel.setXStart(areaModel.getXStart());
 		countModel.setXEnd(areaModel.getXEnd());
 		countModel.setYStart((double) 0);
-		countModel.setYEnd(maxCount);
+		countModel.setYEnd(maxCount.getMax());
 // * 葉枚数グラフのコメント設定
 		super.setComment(deviceId, year, countModel);
 // * 葉枚数グラフの日付カテゴリの設定
@@ -144,8 +136,8 @@ public class LeafGraphDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	private double setMeasuredValues(List<Double> modelDataList, List<Double> measureDataList,
-			List<MeasureDataItem> existData, double max)
+	private void setMeasuredValues(List<Double> modelDataList, List<Double> measureDataList,
+			List<MeasureDataItem> existData, MaxValue max)
 		{
 		MeasureDataItem prev = null;
 
@@ -174,15 +166,11 @@ public class LeafGraphDomain extends GraphDomain
 					// その日の実測値を設定
 					measureDataList.set(i, value);
 					// 最大値の設定
-					if(value > max)
-						{
-						max=  value;
-						}
+					max.setMax(value);
 					}
 				}
 			prev = item;
 			}
-		return max;
 		}
 	}
 

@@ -24,6 +24,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetGrowthMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
+import com.logpose.ph2.api.domain.common.MaxValue;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
@@ -317,6 +318,8 @@ public class GrowthDomain extends GraphDomain
 
 		List<Double> values = new ArrayList<>();
 		List<Double> predictValues = new ArrayList<>();
+// * 最大値
+		MaxValue maxValue = new MaxValue();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -328,6 +331,8 @@ public class GrowthDomain extends GraphDomain
 				predictValues.add(entity.getfValue());
 			// * 取得日
 			category.add(sdf.format(entity.getDate()));
+			// * 最大値
+			maxValue.setMax(entity.getfValue());
 			}
 		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
 
@@ -344,8 +349,9 @@ public class GrowthDomain extends GraphDomain
 		resultData.setXStart(first);
 		resultData.setXEnd(last);
 		
+		maxValue.setMax(annotations.get(annotations.size() - 1).getValue()+10);
 		resultData.setYStart((double) 0);
-		resultData.setYEnd(annotations.get(annotations.size() - 1).getValue()+10);
+		resultData.setYEnd(maxValue.getMax());
 // * コメント
 		super.setComment(deviceId, year, resultData);
 // * グラフデータの返却
