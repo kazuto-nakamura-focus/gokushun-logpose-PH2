@@ -69,9 +69,11 @@ public class PhotoGraphDomain extends GraphDomain
 			if (entity.getIsReal())
 				{
 				areaModel.getValues().add(value.doubleValue());
+				areaModel.getPredictValues().add(null);
 				}
 			else
 				{
+				areaModel.getValues().add(null);
 				areaModel.getPredictValues().add(value.doubleValue());
 				}
 // * 日付カテゴリの設定

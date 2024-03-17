@@ -365,7 +365,7 @@ public class DataLoadService
 				this.s6dailyBaseDataGeneratorService.doService(ldc, deviceDays);
 
 				LOG.info("デバイスデータの欠損をマスターデータから補完します。:" + deviceId);
-				this.s7WeatherHistoryImport.importFromMaster(deviceDays);
+				//this.s7WeatherHistoryImport.importFromMaster(deviceDays);
 				LOG.info("デバイスデータの欠損のマスターデータからの補完完了：" + deviceId);
 
 				this.s8modelDataApplyrService.doService(deviceId, deviceDays);

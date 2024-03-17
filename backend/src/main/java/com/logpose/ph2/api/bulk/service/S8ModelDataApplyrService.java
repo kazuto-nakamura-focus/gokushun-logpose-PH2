@@ -46,11 +46,8 @@ public class S8ModelDataApplyrService
 // * 経過日が１で、実データがある場合
 				if (entity.getLapseDay().shortValue() == 1)
 					{
-					if(entity.getHasReal())
-						{
-						LOG.info(year + "年度モデルデータの作成。", deviceId);
-						this.modelDataDomain.doService(deviceId, entity.getYear(), entity.getDate());
-						}
+					LOG.info(year + "年度モデルデータの作成。", deviceId);
+					this.modelDataDomain.doService(deviceId, entity.getYear(), entity.getDate());
 					}
 				}
 			}

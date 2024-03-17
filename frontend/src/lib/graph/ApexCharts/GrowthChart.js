@@ -143,7 +143,7 @@ export class GrowthChart {
         var annotation = {
           y: item.value,
           borderColor: item.color,
-          borderWidth: 2,
+          borderWidth: 1,
           strokeDashArray: 0,
           label: {
             borderColor: item.color,

@@ -174,7 +174,7 @@ public class GrowthDomain extends GraphDomain
 	// -------------------------------------------------
 	public RealModelGraphDataDTO getModelGraphData(
 			Long deviceId, Short year, Date startDate,
-			Ph2ParamsetGrowthEntity param)
+			Ph2ParamsetGrowthEntity param, Ph2ModelDataMapper mapper)
 			throws ParseException
 		{
 // * デバイスID、年度からFStage情報を取得
@@ -188,9 +188,11 @@ public class GrowthDomain extends GraphDomain
 			{
 			GrowthGraphDataModel modelData = new GrowthGraphDataModel();
 			modelData.calculateFvalues(realDayData, param, fstageInfo,
-					this.fstageValues.getSprout());
+					this.fstageValues.getSprout(), mapper);
+// * DBを更新する場合
+			if(null != mapper) return null;
 // * グラフデータの生成
-			return modelData.toGraphData();
+			else return modelData.toGraphData();
 			}
 		else
 			return null;
@@ -216,19 +218,9 @@ public class GrowthDomain extends GraphDomain
 			}
 		// * デバイスID、年度からパラメータセットを取得
 		Ph2ParamsetGrowthEntity param = this.getParmaters(deviceId, year);
-		// * 生育推定モデルデータの取得
-		RealModelGraphDataDTO data = this.getModelGraphData(deviceId, year,
-				startDate, param);
-		if (null != data)
-			{
-			// *モデルデータテーブルに生育推定モデルデータを設定する
-			short startDay = 1;
-			startDay = this.deviceDayDomain.updateModelData(startDay, deviceId,
-					year, year, data.getValues());
-			this.deviceDayDomain.updateModelData(startDay, deviceId, (short) (year - 1), year,
-					data.getPredictValues());
-
-			}
+		// * 生育推定モデルデータの更新
+		this.getModelGraphData(deviceId, year,
+				startDate, param, this.ph2ModelDataMapper);
 		}
 
 	// --------------------------------------------------
@@ -249,7 +241,7 @@ public class GrowthDomain extends GraphDomain
 		Ph2DeviceDayEntity firstDay = this.deviceDayDomain.getFirstDay(deviceId,
 				year);
 		return this.getModelGraphData(deviceId, year, firstDay.getDate(),
-				param);
+				param, null);
 		}
 
 	// --------------------------------------------------
@@ -326,9 +318,15 @@ public class GrowthDomain extends GraphDomain
 		for (ModelDataEntity entity : entites)
 			{
 			if (entity.getIsReal())
+				{
 				values.add(entity.getfValue());
+				predictValues.add(null);
+				}
 			else
+				{
+				values.add(null);
 				predictValues.add(entity.getfValue());
+				}
 			// * 取得日
 			category.add(sdf.format(entity.getDate()));
 			// * 最大値

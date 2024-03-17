@@ -79,12 +79,16 @@ public class LeafGraphDomain extends GraphDomain
 				{
 				areaModel.getValues().add(entity.getCrownLeafArea());
 				countModel.getValues().add(entity.getLeafCount());
+				areaModel.getPredictValues().add(null);
+				countModel.getPredictValues().add(null);
 				}
 // * 予想値の葉枚数と面積の代入
 			else
 				{
 				areaModel.getPredictValues().add(entity.getCrownLeafArea());
 				countModel.getPredictValues().add(entity.getLeafCount());
+				areaModel.getValues().add(null);
+				countModel.getValues().add(null);
 				}
 // * 葉面積グラフの最大値の設定
 				maxArea.setMax(entity.getCrownLeafArea());

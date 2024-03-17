@@ -262,4 +262,17 @@
       )
 		</foreach>
 	</insert>
+	
+  <!-- ************************************************************************** -->
+  <select id="selectByDate" resultMap="BaseResultMap">
+	select
+		*
+	from
+		ph2_weather_daily_master
+	where
+		device_id = #{deviceId}
+	and
+		casted_at = #{castedAt}
+  </select>	
+	
 </mapper>

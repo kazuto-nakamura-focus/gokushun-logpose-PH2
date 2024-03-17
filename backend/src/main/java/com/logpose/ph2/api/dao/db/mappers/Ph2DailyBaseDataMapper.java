@@ -84,7 +84,7 @@ public interface Ph2DailyBaseDataMapper
 
 	long countEffectiveData(@Param("deviceId") Long deviceId, @Param("date") Date date);
 
-	List<ExtendDailyBaseDataEntity> selectOldData(@Param("deviceId") Long deviceId, @Param("year") Short year, @Param("lapseDay") Short lapseDay);
+	List<ExtendDailyBaseDataEntity> selectOldData(@Param("deviceId") Long deviceId, @Param("year") Short year, @Param("lapseDayList") List<Short> lapseDay);
 
 	List<ExtendDailyBaseDataEntity> selectLastYearData(@Param("deviceId") Long deviceId, @Param("year") Short year,
 			@Param("start") Short start, @Param("end") Short end);

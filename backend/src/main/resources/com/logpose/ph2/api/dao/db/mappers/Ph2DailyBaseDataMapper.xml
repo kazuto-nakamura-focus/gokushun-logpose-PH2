@@ -323,24 +323,26 @@
 	<result column="lapse_day" jdbcType="SMALLINT" property="lapseDay" />
     <result column="raw_cdd" jdbcType="DOUBLE" property="rawCdd" />
   </resultMap>
-<!-- ************************************************************************** -->
+	<!-- ************************************************************************** -->
   <select id="selectOldData" resultMap="ExtendResultMap">
-   	select
-   	    dd.lapse_day, bd.day_id, bd.tm, bd.average, bd.cdd, bd.par, bd.sun_time, bd.raw_cdd
-   	 from
-   	 	ph2_device_day dd
+	select
+		dd.lapse_day, bd.day_id, bd.tm, bd.average, bd.cdd, bd.par, bd.sun_time, bd.raw_cdd
+	from
+		ph2_device_day dd
 	join
-   		ph2_daily_base_data bd on dd.id=bd.day_id
-   	where
-   		dd.device_id = #{deviceId}
-   		and
-   		dd.year = #{year}
-   		and
-   		dd.has_real = true
-   		and
-   		dd.lapse_day <![CDATA[<]]> #{lapseDay}
-   		order by dd.lapse_day
-   </select>
+		ph2_daily_base_data bd on dd.id=bd.day_id
+	where
+		dd.device_id = #{deviceId}
+	and
+		dd.year = #{year}
+	and
+		dd.lapse_day in
+		<foreach item="item" collection="lapseDayList" open="("
+			separator="," close=")">
+			#{item}
+		</foreach>
+		order by dd.lapse_day
+	</select>
 <!-- ************************************************************************** -->
    <select id="selectLastYearData" resultMap="ExtendResultMap">
    	select
