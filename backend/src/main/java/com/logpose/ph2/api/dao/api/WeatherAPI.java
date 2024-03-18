@@ -39,7 +39,7 @@ public class WeatherAPI
 		
 // * URLの設定
 		StringBuilder builder = new StringBuilder();
-		builder.append(request.getUrl());
+		builder.append("https://archive-api.open-meteo.com/v1/archive");
 		builder.append("?");
 		builder.append("latitude=").append(request.getLatitude());
 		builder.append("&longitude=").append(request.getLongitude());
