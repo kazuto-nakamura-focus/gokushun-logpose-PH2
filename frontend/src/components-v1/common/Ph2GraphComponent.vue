@@ -83,7 +83,6 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
-      console.log("p");
       //  const realGraph = this.prepareChart("実績");
       //  const measuredGraph = this.prepareChart("実測値");
       //   const predictGraph = this.prepareChart("推定");
@@ -155,11 +154,11 @@ export default {
     // 単一グラフを作成する
     //* ============================================
     initializeSingle() {
-      const graph = this.prepareChart(this.arguments.name);
+      /* const graph = this.prepareChart(this.arguments.name);
       for (const item of this.arguments.data) {
         graph.data.push(item);
       }
-      /*   this.$refs.chart.updateSeries(
+        this.$refs.chart.updateSeries(
         [
           {
             data: graph.data,
@@ -169,7 +168,9 @@ export default {
         true
       );*/
       this.chart.options = this.arguments.options;
-      this.chart.series = [{ name: this.arguments.name, data: graph.data }];
+      this.chart.series = [
+        { name: this.arguments.name, data: this.arguments.data },
+      ];
       this.chartDisplay = true;
     },
     //* ============================================

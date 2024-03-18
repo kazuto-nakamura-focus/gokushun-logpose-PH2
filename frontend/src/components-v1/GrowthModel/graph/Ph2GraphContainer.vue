@@ -64,7 +64,6 @@ export default {
       );
     },
     setData(selectedItems) {
-      console.log("tsd");
       // * グラフがすでに描画済みであるならば、削除する
       if (selectedItems.selectedYear.graphId === undefined) {
         selectedItems.selectedYear.graphId = [];

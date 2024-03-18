@@ -2,11 +2,7 @@
   <v-app>
     <v-container class="spacing-playground pa-5" fluid>
       <!-- ボタン選択エリア -->
-      <targetMenu
-        ref="targetMenu"
-        :shared="sharedMenu"
-        :model="isModel"
-      ></targetMenu>
+      <targetMenu ref="targetMenu" :shared="sharedMenu" :model="isModel"></targetMenu>
       <div v-show="CanShowSublist == true">
         <ButtonSelector
           :titleWidth="100"
@@ -40,15 +36,13 @@
                         v-on="on"
                         v-model="startDate"
                         append-icon="mdi-calendar-blank"
-                      >
-                      </v-text-field>
+                      ></v-text-field>
                     </template>
                     <v-date-picker
                       v-model="startDate"
                       @input="menu1 = false"
                       @change="handleChangeDate()"
-                    >
-                    </v-date-picker>
+                    ></v-date-picker>
                   </v-menu>
                 </v-col>
                 <div class="mt-5">&nbsp;～&nbsp;</div>
@@ -70,15 +64,13 @@
                         v-on="on"
                         v-model="endDate"
                         append-icon="mdi-calendar-blank"
-                      >
-                      </v-text-field>
+                      ></v-text-field>
                     </template>
                     <v-date-picker
                       v-model="endDate"
                       @input="menu2 = false"
                       @change="handleChangeDate()"
-                    >
-                    </v-date-picker>
+                    ></v-date-picker>
                   </v-menu>
                 </v-col>
               </v-row>
@@ -87,7 +79,7 @@
         </div>
       </v-expand-transition>
 
-     <sensorGraphContainer ref="gfa"></sensorGraphContainer>
+      <sensorGraphContainer ref="gfa"></sensorGraphContainer>
     </v-container>
   </v-app>
 </template>
@@ -96,7 +88,7 @@
 import moment from "moment";
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 import ButtonSelector from "@/components/parts/Ph2ButtonSelector.vue";
-import sensorGraphContainer from "@/components/graph/SensorGraphContainer.vue"
+import sensorGraphContainer from "@/components-v1/common/SensorGraphContainer.vue";
 import { MountController } from "@/lib/mountController.js";
 import { useSensoreList /*, useSensoreData*/ } from "@/api/SensorDataAPI.js";
 
@@ -114,14 +106,13 @@ export default {
 
       bodyStatus: false,
       startDate: moment().add(-1, "months").format("YYYY-MM-DD"),
-      endDate:moment().format("YYYY-MM-DD"),
-
+      endDate: moment().format("YYYY-MM-DD"),
     };
   },
   components: {
     targetMenu,
     ButtonSelector,
-    sensorGraphContainer
+    sensorGraphContainer,
   },
   mounted() {
     this.sharedMenu.setUp(
@@ -192,16 +183,28 @@ export default {
     //* -------------------------------------------
     // グラフデータの処理
     //* -------------------------------------------
-    setGraph(){
-      const dateText =  "(" +this.startDate + "～"  + this.endDate + ")";
-      const title = this.selectedItems.selectedField.name + ">"
-          + this.selectedItems.selectedDevice.name + ">"
-          + this.selectedSensor.name + dateText;
-          const std = moment(this.startDate, 'YYYY-MM-DD');
-          const end = moment(this.endDate, 'YYYY-MM-DD');
-          const elapsedDate = end.diff(std, 'days');
-          const type = (elapsedDate > 6) ? 0 :1;
-      this.$refs.gfa.setGraphData(title, this.selectedSensor.contentId, this.selectedSensor.id, this.startDate, this.endDate, type, 12)
+    setGraph() {
+      const dateText = "(" + this.startDate + "～" + this.endDate + ")";
+      const title =
+        this.selectedItems.selectedField.name +
+        ">" +
+        this.selectedItems.selectedDevice.name +
+        ">" +
+        this.selectedSensor.name +
+        dateText;
+      const std = moment(this.startDate, "YYYY-MM-DD");
+      const end = moment(this.endDate, "YYYY-MM-DD");
+      const elapsedDate = end.diff(std, "days");
+      const type = elapsedDate > 6 ? 0 : 1;
+      this.$refs.gfa.setGraphData(
+        title,
+        this.selectedSensor.contentId,
+        this.selectedSensor.id,
+        this.startDate,
+        this.endDate,
+        type,
+        12
+      );
     },
     unset() {
       this.sensorList.length = 0;

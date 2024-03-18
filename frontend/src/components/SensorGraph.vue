@@ -2,11 +2,7 @@
   <v-app>
     <v-container class="spacing-playground pa-5" fluid>
       <!-- ボタン選択エリア -->
-      <targetMenu
-        ref="targetMenu"
-        :shared="sharedMenu"
-        :model="isModel"
-      ></targetMenu>
+      <targetMenu ref="targetMenu" :shared="sharedMenu" :model="isModel"></targetMenu>
       <div v-show="CanShowSublist == true">
         <ButtonSelector
           :titleWidth="100"
@@ -39,15 +35,13 @@
                         v-on="on"
                         v-model="startDate"
                         append-icon="mdi-calendar-blank"
-                      >
-                      </v-text-field>
+                      ></v-text-field>
                     </template>
                     <v-date-picker
                       v-model="startDate"
                       @input="menu1 = false"
                       @change="handleChangeDate()"
-                    >
-                    </v-date-picker>
+                    ></v-date-picker>
                   </v-menu>
                 </v-col>
                 <div class="mt-5">&nbsp;～&nbsp;</div>
@@ -68,20 +62,18 @@
                         v-on="on"
                         v-model="endDate"
                         append-icon="mdi-calendar-blank"
-                      >
-                      </v-text-field>
+                      ></v-text-field>
                     </template>
                     <v-date-picker
                       v-model="endDate"
                       @input="menu2 = false"
                       @change="handleChangeDate()"
-                    >
-                    </v-date-picker>
+                    ></v-date-picker>
                   </v-menu>
                 </v-col>
                 <v-col cols="3">
                   <v-row>
-                    <v-col cols="4"> インターバル </v-col>
+                    <v-col cols="4">インターバル</v-col>
                     <v-col>
                       <v-select
                         v-model="interval"
@@ -111,7 +103,7 @@
 import moment from "moment";
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 import ButtonSelector from "@/components/parts/Ph2ButtonSelector.vue";
-import sensorGraphContainer from "@/components/graph/SensorGraphContainer.vue";
+import sensorGraphContainer from "@/components-v1/common/SensorGraphContainer.vue";
 import { MountController } from "@/lib/mountController.js";
 import { useSensoreList /*, useSensoreData*/ } from "@/api/SensorDataAPI.js";
 
