@@ -3,11 +3,14 @@ package com.logpose.ph2.api.domain.leaf;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
@@ -50,11 +53,16 @@ public class LeafGraphDomain extends GraphDomain
 
 		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
 		RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
+
+// * 前日の日付
+		Calendar cal = Calendar.getInstance();
+		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
+
 // * 日付カテゴリ
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		List<String> category = new ArrayList<>();
 
-		MaxValue maxArea =  new MaxValue();
+		MaxValue maxArea = new MaxValue();
 		MaxValue maxCount = new MaxValue();
 
 		List<MeasureDataItem> measureDataList = new ArrayList<>();
@@ -91,12 +99,17 @@ public class LeafGraphDomain extends GraphDomain
 				countModel.getValues().add(null);
 				}
 // * 葉面積グラフの最大値の設定
-				maxArea.setMax(entity.getCrownLeafArea());
+			maxArea.setMax(entity.getCrownLeafArea());
 // * 実測値がある場合は葉面積グラフの最大値をその値も参照する
-				maxArea.setMax(entity.getRealArea());
+			maxArea.setMax(entity.getRealArea());
 // * 葉枚数の最大値の設定
-				maxCount.setMax(entity.getLeafCount());
-
+			maxCount.setMax(entity.getLeafCount());
+// * タイトルに表示する値
+			if (entity.getDate().getTime() == titlleDate.getTime())
+				{
+				areaModel.setEstimated(entity.getCrownLeafArea());
+				countModel.setEstimated(entity.getLeafCount());
+				}
 // * 日付カテゴリの設定
 			category.add(sdf.format(entity.getDate()));
 			}

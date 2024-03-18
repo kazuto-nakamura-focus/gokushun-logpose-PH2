@@ -190,9 +190,10 @@ public class GrowthDomain extends GraphDomain
 			modelData.calculateFvalues(realDayData, param, fstageInfo,
 					this.fstageValues.getSprout(), mapper);
 // * DBを更新する場合
-			if(null != mapper) return null;
+			if (null != mapper) return null;
 // * グラフデータの生成
-			else return modelData.toGraphData();
+			else
+				return modelData.toGraphData();
 			}
 		else
 			return null;
@@ -308,32 +309,53 @@ public class GrowthDomain extends GraphDomain
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
 
+		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
+
 		List<Double> values = new ArrayList<>();
 		List<Double> predictValues = new ArrayList<>();
 // * 最大値
 		MaxValue maxValue = new MaxValue();
+// * 前日の日付
+		Calendar cal = Calendar.getInstance();
+		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+		boolean prev = entites.get(0).getIsReal();
 		for (ModelDataEntity entity : entites)
 			{
 			if (entity.getIsReal())
 				{
 				values.add(entity.getfValue());
-				predictValues.add(null);
+				if (!prev)
+					{
+					predictValues.add(entity.getfValue());
+					prev = true;
+					}
+				else
+					predictValues.add(null);
 				}
 			else
 				{
-				values.add(null);
 				predictValues.add(entity.getfValue());
+				if (prev)
+					{
+					values.add(entity.getfValue());
+					prev = false;
+					}
+				else
+					values.add(null);
 				}
 			// * 取得日
 			category.add(sdf.format(entity.getDate()));
 			// * 最大値
 			maxValue.setMax(entity.getfValue());
+			// * タイトルに表示する値
+			if (entity.getDate().getTime() == titlleDate.getTime())
+				{
+				resultData.setEstimated(entity.getfValue());
+				}
 			}
-		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
-
 // * 値の設定
 		resultData.setValues(values);
 		resultData.setPredictValues(predictValues);
@@ -346,8 +368,8 @@ public class GrowthDomain extends GraphDomain
 		String last = category.get(category.size() - 1);
 		resultData.setXStart(first);
 		resultData.setXEnd(last);
-		
-		maxValue.setMax(annotations.get(annotations.size() - 1).getValue()+10);
+
+		maxValue.setMax(annotations.get(annotations.size() - 1).getValue() + 10);
 		resultData.setYStart((double) 0);
 		resultData.setYEnd(maxValue.getMax());
 // * コメント

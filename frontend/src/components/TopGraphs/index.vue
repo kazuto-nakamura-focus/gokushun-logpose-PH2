@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-container  fluid>
+    <v-container fluid>
       <ButtonSelector
         :title="modelTitle"
         :data="menuModel"
@@ -8,13 +8,11 @@
         :multiple="false"
       />
       <v-divider />
-    
     </v-container>
   </v-app>
 </template>
 
 <script>
-//mport ph2ModelContainer from "./Ph2ModelContainer.vue";
 import ButtonSelector from "@/components/parts/Ph2ButtonSelector";
 import { useModels } from "@/api/Top";
 
@@ -25,7 +23,7 @@ export default {
       targets: [],
       modelTitle: "モデル",
       selectedModel: 0,
-      refs:[],
+      refs: [],
     };
   },
 
@@ -53,14 +51,15 @@ export default {
       });
   },
   components: {
-  //  ph2ModelContainer,
     ButtonSelector,
   },
   methods: {
-    handleClickModel: function (item, index, active) { 
+    handleClickModel: function (item, index, active) {
       if (active == true) {
         this.selectedModel = item.id;
-        document.getElementById("m"+item.id).__vue__.createTargets(item.id, this.targets);
+        document
+          .getElementById("m" + item.id)
+          .__vue__.createTargets(item.id, this.targets);
       }
     },
   },

@@ -24,4 +24,6 @@ public class RealModelGraphDataDTO extends GraphDataDTO
 	private List<String> category = new ArrayList<>();
 	// * コメント
 	private String comment;
+	// * 本日の推定値
+	private Double estimated;
 	}

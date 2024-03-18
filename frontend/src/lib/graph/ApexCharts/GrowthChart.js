@@ -3,7 +3,7 @@ import moment from "moment";
 
 
 const todayXaxisAnnotation = {
-  x: moment().format("YYYY/MM/DD"),
+  x: new Date().getTime(),
   borderColor: '#FF0000',
   strokeDashArray: 0,
   label: {
@@ -69,6 +69,20 @@ export class GrowthChart {
             color: '#263238'
           },
         },
+        subtitle: {
+          text: undefined,
+          align: 'center',
+          margin: 10,
+          offsetX: 0,
+          offsetY: 30,
+          floating: false,
+          style: {
+            fontSize: '10pt',
+            fontWeight: 'normal',
+            fontFamily: undefined,
+            color: '#FF6666'
+          },
+        },
         fill: {
           colors: ['#1A73E8', '#1A73E8']
         },
@@ -106,7 +120,8 @@ export class GrowthChart {
           }
         },
         annotations: {
-          yaxis: []
+          yaxis: [],
+          xaxis: []
         },
       }
     }
@@ -126,6 +141,12 @@ export class GrowthChart {
     }
     //* タイトル
     this.data.chartOptions.title.text = title;
+    // * サブタイトル
+    if (null != source.estimated) {
+      let yesterday = new moment().add(-1, 'day').format("MM / DD");
+      let value = Math.round(source.estimated * 100) / 100;
+      this.data.chartOptions.subtitle.text = ytitle + " " + value + " ( " + yesterday + " )";
+    }
     //* X軸タイトル
     this.data.chartOptions.xaxis.title.text = xtitle;
     //* Y軸タイトル
@@ -165,19 +186,9 @@ export class GrowthChart {
     } else {
       this.data.chartOptions.annotations.yaxis = [];
     }
-    //選択した年が表示日の年と一致している場合、Todayアノテーション線を表示する。
-    if (year != null) {
-      const today = moment();
-      const todayYear = today.year();
-      if (year == todayYear) {
-        const strToday = today.format("YYYY/MM/DD");
-        todayXaxisAnnotation["x"] = strToday;
-        todayXaxisAnnotation["label"]["text"] = `TODAY（${strToday}）`;
-        this.data.chartOptions.annotations.xaxis = [todayXaxisAnnotation];
-      }
-    }
 
-    // this.data.chartOptions.yaxis.max = source.yend;
+    this.data.chartOptions.annotations.xaxis.push(todayXaxisAnnotation);
+
     this.data.chartOptions.yaxis.min = 0;
     this.data.chartOptions.xaxis.categories = source.category;
     this.data.chartOptions.yaxis.max = this.setMax(source.yend);
