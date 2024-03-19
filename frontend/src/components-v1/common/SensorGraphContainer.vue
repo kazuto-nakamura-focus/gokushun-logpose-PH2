@@ -16,11 +16,11 @@
   
   <script>
 import { SensorChart } from "@/lib/graph/ApexCharts/SensorChart.js";
-import Ph2GraphArea from "@/components-v1/common/Ph2GraphTab.vue";
+import Ph2GraphArea from "@/components-v1/parts/graph/Ph2GraphTab.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
 
-import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 
 export default {
   data() {

@@ -34,7 +34,7 @@
 </template>
     
 <script>
-import Ph2GraphicTool from "@/components-v1/common/Ph2GraphicTool.vue";
+import Ph2GraphicTool from "@/components-v1/parts/graph/Ph2GraphicTool.vue";
 import "@mdi/font/css/materialdesignicons.css";
 import moment from "moment";
 

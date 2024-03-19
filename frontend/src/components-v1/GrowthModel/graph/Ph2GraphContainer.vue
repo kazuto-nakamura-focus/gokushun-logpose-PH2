@@ -10,14 +10,14 @@
   
 <script>
 import { GrowthChart } from "@/lib/graph/ApexCharts/GrowthChart.js";
-import Ph2GraphTabs from "@/components-v1/common/Ph2GraphTab.vue";
+import Ph2GraphTabs from "@/components-v1/parts/graph/Ph2GraphTab.vue";
 
 import {
   useModelData,
   useLeafGraphAreaByParamSet,
   usePhotosynthesisGraphByParamSet,
 } from "@/api/TopStateGrowth";
-import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 
 export default {
   data() {
