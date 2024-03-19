@@ -41,8 +41,8 @@ import moment from "moment";
 export default {
   props: {
     target: {
-      type: Object, // 型がObjectである
-      required: true, // 必須のプロパティである
+      type: Object,
+      required: true,
     },
   },
   components: {

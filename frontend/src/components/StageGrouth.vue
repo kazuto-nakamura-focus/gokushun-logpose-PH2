@@ -88,7 +88,7 @@
 import moment from "moment";
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 import ButtonSelector from "@/components/parts/Ph2ButtonSelector.vue";
-import sensorGraphContainer from "@/components-v1/common/SensorGraphContainer.vue";
+import sensorGraphContainer from "@/components-v1/parts/graph/SensorGraphContainer.vue";
 import { MountController } from "@/lib/mountController.js";
 import { useSensoreList /*, useSensoreData*/ } from "@/api/SensorDataAPI.js";
 

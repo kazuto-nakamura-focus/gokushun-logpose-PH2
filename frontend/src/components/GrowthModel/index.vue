@@ -53,7 +53,7 @@
 import moment from "moment";
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 
-import ph2GraphContainer from "@/components-v1/GrowthModel/graph/Ph2GraphContainer.vue";
+import ph2GraphContainer from "@/components-v1/parts/graph/ModelGraphContainer.vue";
 import allEditButtons from "@/components/TopStageGrowth/hooks/editButtons.json";
 import { DeviceParser } from "@/lib/deviceParser.js";
 import { DialogController, MountController } from "@/lib/mountController.js";
