@@ -9,20 +9,30 @@
           </div>
         </v-tab>
         <v-tab-item v-for="item in graphList" :key="item.id">
-          <ph-2-graph-component :key="item.id" :target="item" @delete="deleteItem" />
+          <ph-2-model-graph v-if="graphType==1" :key="item.id" :target="item" @delete="deleteItem" />
+          <ph-2-sensor-graph
+            v-if="graphType==2"
+            :key="item.id"
+            :target="item"
+            @delete="deleteItem"
+          />
         </v-tab-item>
       </v-tabs>
     </v-card>
   </div>
 </template>
 <script>
-import Ph2GraphComponent from "@/components-v1/parts/graph/Ph2ModelGraph.vue";
+import Ph2ModelGraph from "@/components-v1/parts/graph/Ph2ModelGraph.vue";
+import Ph2SensorGraph from "@/components-v1/parts/graph/Ph2SensorGraph.vue";
 
 export default {
+  props: {
+    graphType: Number,
+  },
   //* ============================================
   // 使用コンポーネントリスト
   //* ============================================
-  components: { Ph2GraphComponent },
+  components: { Ph2ModelGraph, Ph2SensorGraph },
   //* ============================================
   // データ
   //* ============================================

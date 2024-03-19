@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <v-container>
-      <Ph2GraphArea ref="chr" />
+      <Ph2GraphArea graphType="2" ref="chr" />
     </v-container>
 
     <div class="modal-mask" v-if="isLoading">
-      <div style="align: center">描画中です。</div>
+      <div style="text-align: center">描画中です。</div>
       <div class="loading">
         <vue-loading type="spin" color="#ff0" :size="{ width: '50px', height: '50px' }"></vue-loading>
       </div>

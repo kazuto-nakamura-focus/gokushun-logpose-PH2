@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container>
-      <Ph2GraphTabs ref="chr" />
+      <Ph2GraphTabs graphType="1" ref="chr" />
 
       <wait-dialog ref="wait" />
     </v-container>
