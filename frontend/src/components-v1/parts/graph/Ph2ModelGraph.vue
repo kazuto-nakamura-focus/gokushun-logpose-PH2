@@ -49,6 +49,7 @@ import Ph2GraphicTool from "@/components-v1/parts/graph/Ph2GraphicTool.vue";
 import "@mdi/font/css/materialdesignicons.css";
 import moment from "moment";
 import allEditButtons from "@/components-v1/parts/graph/editButtons.json";
+import { DialogController } from "@/lib/mountController.js";
 
 export default {
   props: {
@@ -67,9 +68,14 @@ export default {
       chart: { options: {}, series: [] },
       chartDisplay: false,
       annotationLabel: null,
-      // selectedMenu: this.target.selectedMenu,
-      //  modelId: this.selectedMenu.selectedModel.id,
       editButtons: [],
+      sharedParam: [
+        new DialogController(),
+        new DialogController(),
+        new DialogController(),
+      ],
+      selectedMenu: null,
+      modelId: 0,
     };
   },
   //* ============================================
@@ -88,6 +94,8 @@ export default {
       if (null != this.comment) {
         this.comment = "コメント:" + this.comment;
       }
+      this.selectedMenu = this.target.selectedItems;
+      this.modelId = this.selectedMenu.selectedModel.id;
       // * ボタンの表示
       this.editButtons =
         allEditButtons[this.target.selectedItems.selectedModel.id].buttons;
