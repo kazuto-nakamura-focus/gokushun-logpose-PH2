@@ -194,7 +194,7 @@ export default {
           dailog.initialize(selectedData);
         }.bind(this),
         function (status) {
-          if (status) this.$refs.gfa.setGraphData(this.selectedMenu);
+          if (status) this.$emit("doGraphAction", this.selectedMenu);
         }.bind(this)
       );
     },

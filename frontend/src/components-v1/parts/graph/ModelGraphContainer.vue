@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container>
-      <Ph2GraphTabs graphType="1" ref="chr" />
+      <Ph2GraphTabs graphType="1" ref="chr" @doAction="setData" />
 
       <wait-dialog ref="wait" />
     </v-container>
@@ -23,29 +23,6 @@ export default {
   data() {
     return {
       modelId: 0,
-      //* ============================================
-      //* 選択されたターゲットとグラフの関係
-      //* ============================================
-      DISPLAYED: {
-        map: new Map(), // 表示済みMAP
-        //* --------------------------------------------
-        //* 作成されたグラフの登録
-        //* --------------------------------------------
-        add(selectedItems) {
-          let key =
-            selectedItems.selectedModel.id +
-            "+" +
-            selectedItems.selectedField.id +
-            "+" +
-            selectedItems.selectedDevice.id +
-            "+" +
-            selectedItems.selectedYear.id;
-          this.map.set(key, {
-            items: selectedItems,
-            node: null,
-          });
-        },
-      },
     };
   },
   components: {
@@ -57,6 +34,7 @@ export default {
     //* グラフデータ生成
     //* --------------------------------------------
     setGraphData: function (selectedItems) {
+      console.log("dsd");
       this.$nextTick(
         function () {
           this.setData(selectedItems);
