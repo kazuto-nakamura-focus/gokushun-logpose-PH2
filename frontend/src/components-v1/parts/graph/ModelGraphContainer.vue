@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-container>
-      <Ph2GraphTabs ref="chr" />
+      <Ph2GraphTabs graphType="1" ref="chr" @doAction="setData" />
 
       <wait-dialog ref="wait" />
     </v-container>
@@ -10,42 +10,19 @@
   
 <script>
 import { GrowthChart } from "@/lib/graph/ApexCharts/GrowthChart.js";
-import Ph2GraphTabs from "@/components-v1/common/Ph2GraphTab.vue";
+import Ph2GraphTabs from "@/components-v1/parts/graph/Ph2GraphTab.vue";
 
 import {
   useModelData,
   useLeafGraphAreaByParamSet,
   usePhotosynthesisGraphByParamSet,
 } from "@/api/TopStateGrowth";
-import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 
 export default {
   data() {
     return {
       modelId: 0,
-      //* ============================================
-      //* 選択されたターゲットとグラフの関係
-      //* ============================================
-      DISPLAYED: {
-        map: new Map(), // 表示済みMAP
-        //* --------------------------------------------
-        //* 作成されたグラフの登録
-        //* --------------------------------------------
-        add(selectedItems) {
-          let key =
-            selectedItems.selectedModel.id +
-            "+" +
-            selectedItems.selectedField.id +
-            "+" +
-            selectedItems.selectedDevice.id +
-            "+" +
-            selectedItems.selectedYear.id;
-          this.map.set(key, {
-            items: selectedItems,
-            node: null,
-          });
-        },
-      },
     };
   },
   components: {
@@ -57,6 +34,7 @@ export default {
     //* グラフデータ生成
     //* --------------------------------------------
     setGraphData: function (selectedItems) {
+      console.log("dsd");
       this.$nextTick(
         function () {
           this.setData(selectedItems);
@@ -93,6 +71,7 @@ export default {
         )
           .then((response) => {
             // 成功時
+            console.log("gfd");
             const results = response["data"].data;
             if (results == null) {
               alert("データがありません。");
@@ -114,7 +93,8 @@ export default {
               gc.data.chartOptions,
               results,
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);
@@ -166,7 +146,8 @@ export default {
               gc.data.chartOptions,
               response["data"].data[0],
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);
@@ -186,7 +167,8 @@ export default {
               gc.data.chartOptions,
               response["data"].data[1],
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);
@@ -234,7 +216,8 @@ export default {
               gc.data.chartOptions,
               results,
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);

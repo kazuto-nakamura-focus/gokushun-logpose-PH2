@@ -90,7 +90,7 @@ import {
   useDeviceInfoRemove,
 } from "@/api/ManagementScreenTop/MSDevice";
 import MSEditDeviceWrapper from "./MSEditDevice/MSEditDeviceWrapper.vue";
-import confirmDailog from "@/components-v1/common/dialog/confirmDialog.vue";
+import confirmDailog from "@/components-v1/parts/dialog/confirmDialog";
 import LoadingDeviceList from "@/components-v1/DataLoaderDialog/LoadingDeviceList.vue";
 import { DialogController } from "@/lib/mountController.js";
 

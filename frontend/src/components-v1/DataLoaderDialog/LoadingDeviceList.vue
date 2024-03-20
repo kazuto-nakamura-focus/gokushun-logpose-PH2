@@ -41,7 +41,7 @@ import {
 } from "@/api/ManagementScreenTop/MSDevice";
 import moment from "moment";
 import { DialogController } from "@/lib/mountController.js";
-import confirmDailog from "@/components-v1/common/dialog/confirmDialog.vue";
+import confirmDailog from "@/components-v1/parts/dialog/confirmDialog";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true, width: "40%" },

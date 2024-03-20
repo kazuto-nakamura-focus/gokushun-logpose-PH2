@@ -9,20 +9,36 @@
           </div>
         </v-tab>
         <v-tab-item v-for="item in graphList" :key="item.id">
-          <ph-2-graph-component :key="item.id" :target="item" @delete="deleteItem" />
+          <ph-2-model-graph
+            v-if="graphType==1"
+            :key="item.id"
+            :target="item"
+            @delete="deleteItem"
+            @doGraphAction="doGraphAction"
+          />
+          <ph-2-sensor-graph
+            v-if="graphType==2"
+            :key="item.id"
+            :target="item"
+            @delete="deleteItem"
+          />
         </v-tab-item>
       </v-tabs>
     </v-card>
   </div>
 </template>
 <script>
-import Ph2GraphComponent from "@/components-v1/common/Ph2GraphComponent.vue";
+import Ph2ModelGraph from "@/components-v1/parts/graph/Ph2ModelGraph.vue";
+import Ph2SensorGraph from "@/components-v1/parts/graph/Ph2SensorGraph.vue";
 
 export default {
+  props: {
+    graphType: Number,
+  },
   //* ============================================
   // 使用コンポーネントリスト
   //* ============================================
-  components: { Ph2GraphComponent },
+  components: { Ph2ModelGraph, Ph2SensorGraph },
   //* ============================================
   // データ
   //* ============================================
@@ -39,7 +55,15 @@ export default {
     //* ============================================
     // グラフ追加処理
     //* ============================================
-    addGraph: function (titleObj, chartOptions, chartData, isMultiple, name) {
+    addGraph: function (
+      titleObj,
+      chartOptions,
+      chartData,
+      isMultiple,
+      name,
+      selectedItems
+    ) {
+      console.log("ddd");
       let title = {
         id: this.id,
         name: titleObj.main,
@@ -53,11 +77,18 @@ export default {
         data: chartData, // グラフデータ
         isMultiple: isMultiple, // 単一グラフか複数グラフか
         name: name, // グラフ線の名前
+        selectedItems: selectedItems,
       };
       this.graphList.push(item);
       this.tab = this.graphList.length - 1;
       let id = this.id++;
       return id;
+    },
+    //* ============================================
+    // グラフアクション実行時
+    //* ============================================
+    doGraphAction: function (selectedItems) {
+      this.$emit("doAction", selectedItems);
     },
     //* ============================================
     // グラフアイテムの削除

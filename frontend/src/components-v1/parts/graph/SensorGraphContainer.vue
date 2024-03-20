@@ -1,11 +1,11 @@
 <template>
   <v-app>
     <v-container>
-      <Ph2GraphArea ref="chr" />
+      <Ph2GraphArea graphType="2" ref="chr" />
     </v-container>
 
     <div class="modal-mask" v-if="isLoading">
-      <div style="align: center">描画中です。</div>
+      <div style="text-align: center">描画中です。</div>
       <div class="loading">
         <vue-loading type="spin" color="#ff0" :size="{ width: '50px', height: '50px' }"></vue-loading>
       </div>
@@ -16,11 +16,11 @@
   
   <script>
 import { SensorChart } from "@/lib/graph/ApexCharts/SensorChart.js";
-import Ph2GraphArea from "@/components-v1/common/Ph2GraphTab.vue";
+import Ph2GraphArea from "@/components-v1/parts/graph/Ph2GraphTab.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
 
-import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 
 export default {
   data() {
@@ -111,7 +111,8 @@ export default {
               gc.data.chartOptions,
               data.values,
               false,
-              name
+              name,
+              null
             );
           } else {
             throw new Error(message);

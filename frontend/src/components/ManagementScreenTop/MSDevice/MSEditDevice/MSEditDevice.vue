@@ -159,7 +159,7 @@ import {
 import { AgGridVue } from "ag-grid-vue";
 import moment from "moment-timezone";
 import "moment/locale/ja";
-import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 
 function RemoveCellRenderer() {
   let eGui = document.createElement("div");

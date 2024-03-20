@@ -25,13 +25,12 @@
       {
         "name": "実績値入力",
         "key": "refLAActualValueInput",
-        "type":3
-
+        "type": 1
       },
       {
         "name": "パラメータセット編集",
         "key": "refLAParameterSets",
-        "type": 4
+        "type": 2
       }
     ]
   },
@@ -41,12 +40,12 @@
       {
         "name": "実績値入力",
         "key": "refPEActualValueInput",
-        "type":5
+        "type": 1
       },
       {
         "name": "パラメータセット編集",
         "key": "refPEParameterSets",
-        "type": 6
+        "type": 2
       }
     ]
   },

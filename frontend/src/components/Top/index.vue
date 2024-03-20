@@ -103,7 +103,7 @@ import { MountController } from "@/lib/mountController.js";
 //参照 https://github.com/SSENSE/vue-carousel#development
 import { Carousel, Slide } from "vue-carousel";
 import { useFields } from "@/api/Top";
-import WaitDialog from "@/components-v1/common/dialog/WaitDialog.vue";
+import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 // import unselected from "@/components/parts/menu.vue";
 import SpecificDataAggregation from "./SpecificDataAggregation.vue";
 

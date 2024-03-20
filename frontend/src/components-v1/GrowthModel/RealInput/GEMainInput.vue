@@ -177,12 +177,15 @@ export default {
     };
   },
   mounted() {
+    console.log("fvc");
     this.shared.mount(this);
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
   },
   methods: {
     initialize: function (data) {
+      console.log("fvm");
+
       this.$nextTick(
         function () {
           this.$refs.titleHeader.initialize(data.menu);

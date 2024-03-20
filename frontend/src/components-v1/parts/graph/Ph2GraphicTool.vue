@@ -1,13 +1,5 @@
 <template>
-  <div>
-    <apexchart
-      type="line"
-      width="90%"
-      height="400"
-      :options="options"
-      :series="series"
-    ></apexchart>
-  </div>
+  <apexchart type="line" width="90%" height="400" :options="options" :series="series"></apexchart>
 </template>
 <script>
 import VueApexCharts from "vue-apexcharts";

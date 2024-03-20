@@ -79,7 +79,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import "@/style/ag-theme-gs.css";
 import { HeaderClass } from "@/components-v1/GrowthModel/RealFValueIput/HeaderClass";
 import CellRender from "@/components-v1/GrowthModel/RealFValueIput/CellRender.vue";
-import PickerDialog from "@/components-v1/common/Ph2ColorPicker.vue";
+import PickerDialog from "@/components-v1/parts/picker/Ph2ColorPicker.vue";
 import { useGrowthFAll } from "@/api/TopStateGrowth/GEFValue/index";
 import { useGrowthFDataUpdate } from "@/api/TopStateGrowth/GEActualValueInput/index";
 import { DialogController } from "@/lib/mountController.js";
