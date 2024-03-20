@@ -1,80 +1,47 @@
 <template>
-  <v-app>
-    <v-card elevation-6>
-      <v-container>
-        <v-row>
-          <v-col>
-            <v-btn
-              class="ml-1"
-              v-for="(button, index) in editButtons"
-              depressed
-              color="primary"
-              elevation="3"
-              :key="index"
-              @click="openDialog(button)"
-            >{{ button.name }}</v-btn>
-          </v-col>
-          <v-col align="right">
-            <div>
-              <v-icon @click="handleClose()">mdi-close</v-icon>
-            </div>
-          </v-col>
-        </v-row>
-
-        <v-row style="height: 36px">
-          <v-col align="left" style="display: flex">
-            <div
-              v-if="annotationLabel"
-              style="
+  <v-card elevation-6>
+    <v-container>
+      <v-row>
+        <v-col>
+          <v-btn
+            class="ml-1"
+            v-for="(button, index) in editButtons"
+            depressed
+            color="primary"
+            elevation="3"
+            :key="index"
+            @click="openDialog(button)"
+          >{{ button.name }}</v-btn>
+        </v-col>
+        <v-col align="right">
+          <div>
+            <v-icon @click="handleClose()">mdi-close</v-icon>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row style="height: 36px">
+        <v-col align="left" style="display: flex">
+          <div
+            v-if="annotationLabel"
+            style="
             text-align: left;
               margin-left: 3px;
               padding: 5px;
               font-size: 10pt; font-family:Yu Gothic"
-            >
-              <b>{{ annotationLabel }}</b>
-            </div>
-          </v-col>
-        </v-row>
-        <v-row style="padding-bottom: 20px">
-          <v-col align="left" style="font-size: 10pt; font-family: Yu Gothic;margin-left:6px">
-            <b>{{ comment }}</b>
-          </v-col>
-        </v-row>
-      </v-container>
-      <!-- グラフ表示 -->
-      <ph-2-graphic-tool
-        v-if="chartDisplay == true"
-        :options="graphchart.options"
-        :series="graphchart.series"
-      ></ph-2-graphic-tool>
-    </v-card>
-
-    <div v-if="modelId=1">
-      <GEActualValueInput ref="refGEActualValueInput" :shared="sharedParam[0]" />
-      <ReferenceFValue ref="refReferenceFValue" :shared="sharedParam[1]" />
-      <parmeter-set-dialog ref="refGEParameterSets" :shared="sharedParam[2]" :modelId="modelId" />
-    </div>
-
-    <div v-if="modelId=2">
-      <LAActualValueInput
-        ref="refLAActualValueInput"
-        :shared="sharedParam[0]"
-        :selectedField="selectedMenu.selectedField"
-        :selectedDevices="selectedMenu.selectedDevices"
-      />
-      <parmeter-set-dialog ref="refLAParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
-    </div>
-
-    <div v-if="modelId=3">
-      <PEActualValueInput
-        ref="refPEActualValueInput"
-        :shared="sharedParam[0]"
-        :selectedField="selectedMenu.selectedField"
-        :selectedDevices="selectedMenu.selectedDevices"
-      />
-      <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[1]" :modelId="photoModel" />
-    </div>
-  </v-app>
+          >
+            <b>{{ annotationLabel }}</b>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row style="padding-bottom: 20px">
+        <v-col align="left" style="font-size: 10pt; font-family: Yu Gothic;margin-left:6px">
+          <b>{{ comment }}</b>
+        </v-col>
+      </v-row>
+    </v-container>
+    <!-- グラフ表示 -->
+    <ph-2-graphic-tool v-if="chartDisplay == true" :options="chart.options" :series="chart.series"></ph-2-graphic-tool>
+  </v-card>
 </template>
     
 <script>
@@ -82,7 +49,6 @@ import Ph2GraphicTool from "@/components-v1/parts/graph/Ph2GraphicTool.vue";
 import "@mdi/font/css/materialdesignicons.css";
 import moment from "moment";
 import allEditButtons from "@/components-v1/parts/graph/editButtons.json";
-import { DialogController } from "@/lib/mountController.js";
 
 export default {
   props: {
@@ -97,20 +63,13 @@ export default {
 
   data() {
     return {
-      graphchart: { options: {}, series: [] },
-      options: {},
-      series: [],
-      selectedMenu: this.target.selectedMenu,
-      modelId: this.selectedMenu.selectedModel.id,
       comment: "",
+      chart: { options: {}, series: [] },
       chartDisplay: false,
       annotationLabel: null,
+      // selectedMenu: this.target.selectedMenu,
+      //  modelId: this.selectedMenu.selectedModel.id,
       editButtons: [],
-      sharedParam: [
-        new DialogController(),
-        new DialogController(),
-        new DialogController(),
-      ],
     };
   },
   //* ============================================
@@ -124,14 +83,14 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
-      console.log("Dd");
+      console.log("ss");
       this.comment = this.target.data.comment;
       if (null != this.comment) {
         this.comment = "コメント:" + this.comment;
       }
       // * ボタンの表示
       this.editButtons =
-        allEditButtons[this.target.selectedMenu.selectedModel.id].buttons;
+        allEditButtons[this.target.selectedItems.selectedModel.id].buttons;
       //「実績」値の一覧
       const values = this.target.data?.values;
       //「推定」値の一覧
@@ -153,8 +112,8 @@ export default {
         });
         if (tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
       }
-      this.graphchart.options = this.target.options;
-      this.graphchart.series = [
+      this.chart.options = this.target.options;
+      this.chart.series = [
         {
           name: "実績値",
           data: values,
@@ -171,25 +130,6 @@ export default {
 
       this.chartDisplay = true;
     },
-    //* ============================================
-    // ダイアログのオープン
-    //* ============================================
-    /*  openDialog: function (item) {
-      const selectedData = {
-        title: this.selectedMenu.selectedModel.name,
-        menu: this.selectedMenu,
-        dates: this.dates,
-      };
-      this.sharedParam[item.type].setUp(
-        this.$refs[item.key],
-        function (dailog) {
-          dailog.initialize(selectedData);
-        }.bind(this),
-        function (status) {
-          if (status) this.$refs.gfa.setGraphData(this.selectedMenu);
-        }.bind(this)
-      );
-    },*/
     //* ============================================
     // 閉じる実行
     //* ============================================

@@ -2,6 +2,7 @@
   <v-app>
     <v-container>
       <Ph2GraphTabs graphType="1" ref="chr" />
+
       <wait-dialog ref="wait" />
     </v-container>
   </v-app>
@@ -22,6 +23,29 @@ export default {
   data() {
     return {
       modelId: 0,
+      //* ============================================
+      //* 選択されたターゲットとグラフの関係
+      //* ============================================
+      DISPLAYED: {
+        map: new Map(), // 表示済みMAP
+        //* --------------------------------------------
+        //* 作成されたグラフの登録
+        //* --------------------------------------------
+        add(selectedItems) {
+          let key =
+            selectedItems.selectedModel.id +
+            "+" +
+            selectedItems.selectedField.id +
+            "+" +
+            selectedItems.selectedDevice.id +
+            "+" +
+            selectedItems.selectedYear.id;
+          this.map.set(key, {
+            items: selectedItems,
+            node: null,
+          });
+        },
+      },
     };
   },
   components: {
@@ -69,6 +93,7 @@ export default {
         )
           .then((response) => {
             // 成功時
+            console.log("gfd");
             const results = response["data"].data;
             if (results == null) {
               alert("データがありません。");

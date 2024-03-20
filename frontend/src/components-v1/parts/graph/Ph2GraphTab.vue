@@ -55,7 +55,7 @@ export default {
       chartData,
       isMultiple,
       name,
-      selectedMenu
+      selectedItems
     ) {
       let title = {
         id: this.id,
@@ -70,7 +70,7 @@ export default {
         data: chartData, // グラフデータ
         isMultiple: isMultiple, // 単一グラフか複数グラフか
         name: name, // グラフ線の名前
-        selectedMenu: selectedMenu,
+        selectedItems: selectedItems,
       };
       this.graphList.push(item);
       this.tab = this.graphList.length - 1;
