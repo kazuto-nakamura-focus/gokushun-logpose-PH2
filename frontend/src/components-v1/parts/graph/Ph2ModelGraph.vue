@@ -1,13 +1,25 @@
 <template>
   <v-card elevation-6>
     <v-container>
-      <v-row style="height: 20px">
+      <v-row>
+        <v-col>
+          <v-btn
+            class="ml-1"
+            v-for="(button, index) in editButtons"
+            depressed
+            color="primary"
+            elevation="3"
+            :key="index"
+            @click="openDialog(button)"
+          >{{ button.name }}</v-btn>
+        </v-col>
         <v-col align="right">
           <div>
             <v-icon @click="handleClose()">mdi-close</v-icon>
           </div>
         </v-col>
       </v-row>
+
       <v-row style="height: 36px">
         <v-col align="left" style="display: flex">
           <div
@@ -37,6 +49,7 @@
 import Ph2GraphicTool from "@/components-v1/parts/graph/Ph2GraphicTool.vue";
 import "@mdi/font/css/materialdesignicons.css";
 import moment from "moment";
+import allEditButtons from "@/components/TopStageGrowth/hooks/editButtons.json";
 
 export default {
   props: {
@@ -56,6 +69,7 @@ export default {
       chart: { options: {}, series: [] },
       chartDisplay: false,
       annotationLabel: null,
+      editButtons: [],
     };
   },
   //* ============================================
@@ -69,10 +83,16 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
+      console.log("Dd");
       this.comment = this.arguments.data.comment;
       if (null != this.comment) {
         this.comment = "コメント:" + this.comment;
       }
+      // * ボタンの表示
+      const editButtons =
+        allEditButtons[this.arguments.selectedMenu.selectedModel.id].buttons;
+      this.editButtons.splice(0);
+      this.editButtons.push(...editButtons);
       //「実績」値の一覧
       const values = this.arguments.data?.values;
       //「推定」値の一覧

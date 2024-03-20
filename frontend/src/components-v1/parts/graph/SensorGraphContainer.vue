@@ -111,7 +111,8 @@ export default {
               gc.data.chartOptions,
               data.values,
               false,
-              name
+              name,
+              null
             );
           } else {
             throw new Error(message);

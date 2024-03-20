@@ -49,7 +49,14 @@ export default {
     //* ============================================
     // グラフ追加処理
     //* ============================================
-    addGraph: function (titleObj, chartOptions, chartData, isMultiple, name) {
+    addGraph: function (
+      titleObj,
+      chartOptions,
+      chartData,
+      isMultiple,
+      name,
+      selectedMenu
+    ) {
       let title = {
         id: this.id,
         name: titleObj.main,
@@ -63,6 +70,7 @@ export default {
         data: chartData, // グラフデータ
         isMultiple: isMultiple, // 単一グラフか複数グラフか
         name: name, // グラフ線の名前
+        selectedMenu: selectedMenu,
       };
       this.graphList.push(item);
       this.tab = this.graphList.length - 1;

@@ -114,7 +114,8 @@ export default {
               gc.data.chartOptions,
               results,
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);
@@ -166,7 +167,8 @@ export default {
               gc.data.chartOptions,
               response["data"].data[0],
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);
@@ -186,7 +188,8 @@ export default {
               gc.data.chartOptions,
               response["data"].data[1],
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);
@@ -234,7 +237,8 @@ export default {
               gc.data.chartOptions,
               results,
               true,
-              null
+              null,
+              selectedItems
             );
             // グラフのIDリストに追加し、同じグラフが追加される場合は削除できるようにする。
             selectedItems.selectedYear.graphId.push(graphId);
