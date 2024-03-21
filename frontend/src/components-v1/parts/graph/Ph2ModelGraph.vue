@@ -54,12 +54,7 @@
     </div>
 
     <div v-if="modelId=2">
-      <LAActualValueInput
-        ref="refLAActualValueInput"
-        :shared="sharedParam[0]"
-        :selectedField="selectedMenu.selectedField"
-        :selectedDevices="selectedMenu.selectedDevices"
-      />
+      <LAActualValueInput ref="refLAActualValueInput" :shared="sharedParam[0]" />
       <parmeter-set-dialog ref="refLAParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
     </div>
 
