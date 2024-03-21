@@ -70,7 +70,7 @@
         :selectedField="selectedMenu.selectedField"
         :selectedDevices="selectedMenu.selectedDevices"
       />
-      <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[1]" :modelId="photoModel" />
+      <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
     </div>
   </v-app>
 </template>
