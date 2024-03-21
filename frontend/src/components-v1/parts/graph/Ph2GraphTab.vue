@@ -63,7 +63,6 @@ export default {
       name,
       selectedItems
     ) {
-      console.log("ddd");
       let title = {
         id: this.id,
         name: titleObj.main,

@@ -46,9 +46,10 @@ public interface PhotosynthesisService
 	 *
 	 * @param devieId-デバイスID
 	 * @param date-実績の日付
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public PhotosynthesisValueDTO getRealValues(Long deviceId, Short year, Date date);
+	public PhotosynthesisValueDTO getRealValues(Long deviceId, Short year) throws ParseException;
 	
 	// --------------------------------------------------
 	/**
@@ -69,9 +70,10 @@ public interface PhotosynthesisService
 	 * 光合成推定実績値更新
 	 *
 	 * @param dto-PhotosynthesisValueDTO
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public void setRealValue(PhotosynthesisValueDTO dto);
+	public void setRealValue(PhotosynthesisValueDTO dto) throws ParseException;
 
 
 	// --------------------------------------------------

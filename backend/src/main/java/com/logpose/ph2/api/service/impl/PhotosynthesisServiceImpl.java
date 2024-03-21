@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
+import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoGraphDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
@@ -58,18 +59,20 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	 * 光合成推定実績値取得
 	 *
 	 * @param devieId
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
-	public PhotosynthesisValueDTO getRealValues(Long deviceId, Short year, Date date)
+	public PhotosynthesisValueDTO getRealValues(Long deviceId, Short year) throws ParseException
 		{
 		PhotosynthesisValueDTO result = new PhotosynthesisValueDTO();
 		List<Ph2RealPsAmountEntity> records =
-				this.photoSynthesisDomain.getRealPsAmountEntity(deviceId, year, date);
+				this.photoSynthesisDomain.getRealPsAmountEntity(deviceId, year);
 		if (records.size() > 0)
 			{
 			Ph2RealPsAmountEntity entity = records.get(0);
 			result.setDeviceId(deviceId);
+			result.setDate(DateTimeUtility.getStringFromDate(entity.getDate()));
 			result.setF(entity.getValueF());
 			result.setG(entity.getValueG());
 			}
@@ -82,16 +85,19 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	 *
 	 * @param dto
 	 *            PhotosynthesisValueDTO
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setRealValue(PhotosynthesisValueDTO dto)
+	public void setRealValue(PhotosynthesisValueDTO dto) throws ParseException
 		{
 		Ph2RealPsAmountEntity entity = new Ph2RealPsAmountEntity();
 		entity.setDeviceId(dto.getDeviceId());
 		entity.setValueF(dto.getF());
 		entity.setValueG(dto.getG());
+		entity.setDate(DateTimeUtility.getDateFromString(dto.getDate()));
+		entity.setYear(dto.getYear());
 		entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		this.photoSynthesisDomain.update(entity);

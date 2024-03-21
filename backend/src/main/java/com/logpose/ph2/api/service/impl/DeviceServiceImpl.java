@@ -15,11 +15,13 @@ import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.domain.DashboardDomain;
 import com.logpose.ph2.api.domain.DeviceDomain;
+import com.logpose.ph2.api.domain.DeviceTransitDomain;
 import com.logpose.ph2.api.domain.MasterDomain;
 import com.logpose.ph2.api.domain.SensorDomain;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
 import com.logpose.ph2.api.dto.device.DeviceMastersDTO;
+import com.logpose.ph2.api.dto.device.DeviceTransitInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceUpdateDTO;
 import com.logpose.ph2.api.dto.senseor.SensorUnitReference;
 import com.logpose.ph2.api.service.DeviceService;
@@ -46,7 +48,9 @@ public class DeviceServiceImpl implements DeviceService
 	private DeviceStatusDomain deviceStatusDomain;
 	@Autowired
 	private DashboardDomain dashboardDomain;
-	
+	@Autowired
+	private DeviceTransitDomain deviceTransitDomain;
+
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
@@ -185,6 +189,8 @@ public class DeviceServiceImpl implements DeviceService
 				}
 // * 全データの更新
 			this.deviceStatusDomain.prepareForAllUpdate(locks);
+// * データの転送
+			this.transitParameters(device.getId());
 			}
 		catch (Exception e)
 			{
@@ -219,6 +225,8 @@ public class DeviceServiceImpl implements DeviceService
 			this.sensorDomain.add(dto.getId(), dto.getSensorItems());
 // * 全データの更新
 			this.deviceStatusDomain.prepareForAllUpdate(locks);
+// * データの転送
+			this.transitParameters(device.getId());
 			}
 		catch (Exception e)
 			{
@@ -228,5 +236,21 @@ public class DeviceServiceImpl implements DeviceService
 			{
 			this.deviceStatusDomain.unLockDevices(locks);
 			}
+		}
+
+	// --------------------------------------------------
+	/**
+	 * デバイス情報の引継ぎ
+	 *
+	 * @param dstId 引継ぎ先デバイスID
+	 */
+	// --------------------------------------------------
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void transitParameters(Long deviceId)
+		{
+		DeviceTransitInfoDTO info = this.deviceTransitDomain.getTransitInfo(deviceId);
+		if (null != info)
+			this.deviceTransitDomain.updateRealValues(deviceId, info);
 		}
 	}

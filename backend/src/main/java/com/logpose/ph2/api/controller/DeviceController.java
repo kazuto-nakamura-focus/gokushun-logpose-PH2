@@ -176,4 +176,30 @@ public class DeviceController
 		return as_dto;
 		}
 	
+	// --------------------------------------------------
+	/**
+	 * デバイス情報の引継ぎ
+	 *
+	 * @param dstId 引継ぎ先デバイスID
+	 * @return ResponseDTO (null)
+	 */
+	// --------------------------------------------------
+	@PutMapping("/parameters")
+	public ResponseDTO updateParameters(HttpServletRequest httpReq,
+			@RequestParam("deviceId") Long deviceId)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			this.deviceService.transitParameters(deviceId);
+			as_dto.setSuccess(null);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+	
+	
 	}

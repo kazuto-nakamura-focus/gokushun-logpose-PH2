@@ -1,11 +1,11 @@
 import axios from "@/lib/axiosHooks";
 
 //光合成推定実績取得
-const usePhotosynthesisValuesDetail = (deviceId, date) => {
+const usePhotosynthesisValuesDetail = (deviceId, year) => {
   const config = {
     params: {
       deviceId,
-      date
+      year
     },
   };
   return axios.get("/photosynthesis/values", config);

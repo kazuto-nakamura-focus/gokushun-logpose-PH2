@@ -1,7 +1,5 @@
 package com.logpose.ph2.api.controller;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -83,14 +81,13 @@ public class PhotosynthesisController
 	public ResponseDTO getValues(HttpServletRequest httpReq,
 			HttpServletResponse res,
 			@RequestParam("deviceId") Long deviceId,
-			@RequestParam("year") Short year,
-			@RequestParam("date") Date date)
+			@RequestParam("year") Short year)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
 			PhotosynthesisValueDTO result = this.photosynthesisService
-					.getRealValues(deviceId, year, date);
+					.getRealValues(deviceId, year);
 			as_dto.setSuccess(result);
 			}
 		catch (Exception e)

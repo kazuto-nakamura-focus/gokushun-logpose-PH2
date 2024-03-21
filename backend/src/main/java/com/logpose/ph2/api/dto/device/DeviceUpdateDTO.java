@@ -30,6 +30,8 @@ public class DeviceUpdateDTO extends Label
 	private String opStartShort;
 	// * 運用終了日
 	private String opEndShort;
+	// * 引継ぎフラグ
+	private Boolean transitFlag;
 	
 	private List<SensorUnitUpdate> sensorItems;
 	}

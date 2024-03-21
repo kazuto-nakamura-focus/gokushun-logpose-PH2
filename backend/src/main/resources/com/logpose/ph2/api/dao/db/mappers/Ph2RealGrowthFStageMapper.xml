@@ -150,7 +150,7 @@
       interval_f, accumulated_f, created_at, 
       updated_at, actual_date, color, 
       estimate_date)
-    values (#{id,jdbcType=BIGINT}, #{deviceId,jdbcType=BIGINT}, #{year,jdbcType=SMALLINT}, 
+    values (nextval('ph2_real_growth_f_stage_Seq'), #{deviceId,jdbcType=BIGINT}, #{year,jdbcType=SMALLINT}, 
       #{stageName,jdbcType=VARCHAR}, #{stageStart,jdbcType=SMALLINT}, #{stageEnd,jdbcType=SMALLINT}, 
       #{intervalF,jdbcType=DOUBLE}, #{accumulatedF,jdbcType=DOUBLE}, #{createdAt,jdbcType=TIMESTAMP}, 
       #{updatedAt,jdbcType=TIMESTAMP}, #{actualDate,jdbcType=DATE}, #{color,jdbcType=VARCHAR}, 

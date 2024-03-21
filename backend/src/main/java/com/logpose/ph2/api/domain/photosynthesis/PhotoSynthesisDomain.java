@@ -88,11 +88,11 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 	 * @param devieId
 	 */
 	// --------------------------------------------------
-	public List<Ph2RealPsAmountEntity> getRealPsAmountEntity(Long devieId,
-			Short year, Date date)
+	public List<Ph2RealPsAmountEntity> getRealPsAmountEntity(Long devieId, Short year)
 		{
 		Ph2RealPsAmountEntityExample exm = new Ph2RealPsAmountEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(devieId).andYearEqualTo(year).andDateEqualTo(date);
+		exm.createCriteria().andDeviceIdEqualTo(devieId).andYearEqualTo(year);
+		exm.setOrderByClause("date desc");
 		return this.ph2RealPsAmountMapper.selectByExample(exm);
 		}
 
@@ -106,8 +106,13 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 	public void update(Ph2RealPsAmountEntity entity)
 		{
 		Ph2RealPsAmountEntityExample exm = new Ph2RealPsAmountEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(entity.getDeviceId());
-		this.ph2RealPsAmountMapper.updateByExample(entity, exm);
+		exm.createCriteria().andDeviceIdEqualTo(entity.getDeviceId()).andDateEqualTo(entity.getDate());
+		List<Ph2RealPsAmountEntity> entities = this.ph2RealPsAmountMapper.selectByExample(exm);
+		if(0 < entities.size())
+			{
+			this.ph2RealPsAmountMapper.updateByExample(entity, exm);
+			}
+		else this.ph2RealPsAmountMapper.insert(entity);
 		}
 
 	// --------------------------------------------------

@@ -130,7 +130,6 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
-      console.log("ss");
       this.comment = this.target.data.comment;
       if (null != this.comment) {
         this.comment = "コメント:" + this.comment;

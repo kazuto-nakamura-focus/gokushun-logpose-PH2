@@ -95,11 +95,7 @@ export default {
 
   data() {
     return {
-      selectedItems: {
-        selectedField: this.$store.getters.selectedField,
-        selectedDevice: this.$store.getters.selectedDevice,
-        year: this.$store.getters.selectedYear,
-      },
+      selectedItems: null,
       value: "",
       date: moment().format("YYYY-MM-DD"),
       isDialog: false,
@@ -112,8 +108,6 @@ export default {
       menu: false,
       year: 0,
       isUpdated: false,
-      selectedDate: null,
-
       // headers: HEADERS,
 
       photosynthesisValueData: {
@@ -134,6 +128,7 @@ export default {
   },
   methods: {
     initialize: function (data) {
+      this.selectedItems = data.menu;
       this.$nextTick(
         function () {
           this.$refs.date.initialize(data.menu.selectedYear);
@@ -142,29 +137,26 @@ export default {
       );
 
       //年度
-      this.year = this.$store.getters.selectedYear.id;
+      this.year = this.selectedItems.selectedYear.id;
       // タイトル
       this.title = data.title;
       // 圃場
-      this.field = {
-        id: this.$store.getters.selectedField.id,
-        name: this.$store.getters.selectedField.name,
-      };
+      this.field = this.selectedItems.selectedField;
+
       // デバイス
-      this.device = {
-        id: this.$store.getters.selectedDevice.id,
-        name: this.$store.getters.selectedDevice.name,
-      };
+      this.device = this.selectedItems.selectedDevice;
       this.isUpdated = false;
-      //this.isDialog = true;
 
       //光合成推定実績取得
-      usePhotosynthesisValuesDetail(this.device.id, this.selectedDate)
+      usePhotosynthesisValuesDetail(this.device.id, this.year)
         .then((response) => {
           console.log(response);
           const ps_data = response["data"]["data"];
-          this.photosynthesisValueData.photosynthesisValueF = ps_data.f;
-          this.photosynthesisValueData.photosynthesisValueG = ps_data.g;
+          if (null != ps_data.date) {
+            this.date = ps_data.date;
+            this.photosynthesisValueData.photosynthesisValueF = ps_data.f;
+            this.photosynthesisValueData.photosynthesisValueG = ps_data.g;
+          }
         })
         .catch((error) => {
           console.log(error);
@@ -180,7 +172,8 @@ export default {
     register: function () {
       const data = {
         deviceId: this.device.id,
-        date: this.selectedDate,
+        date: this.date,
+        year: this.year,
         f: this.photosynthesisValueData.photosynthesisValueF,
         g: this.photosynthesisValueData.photosynthesisValueG,
       };
