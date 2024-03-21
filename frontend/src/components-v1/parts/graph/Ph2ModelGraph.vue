@@ -135,6 +135,8 @@ export default {
         this.comment = "コメント:" + this.comment;
       }
       this.selectedMenu = this.target.selectedItems;
+      console.log("selected");
+      console.log(this.selectedMenu);
       this.modelId = this.selectedMenu.selectedModel.id;
       // * ボタンの表示
       this.editButtons =
