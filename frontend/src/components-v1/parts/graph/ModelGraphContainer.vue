@@ -2,7 +2,6 @@
   <v-app>
     <v-container>
       <Ph2GraphTabs graphType="1" ref="chr" @doAction="setData" />
-
       <wait-dialog ref="wait" />
     </v-container>
   </v-app>
@@ -34,7 +33,6 @@ export default {
     //* グラフデータ生成
     //* --------------------------------------------
     setGraphData: function (selectedItems) {
-      console.log("dsd");
       this.$nextTick(
         function () {
           this.setData(selectedItems);
@@ -71,7 +69,6 @@ export default {
         )
           .then((response) => {
             // 成功時
-            console.log("gfd");
             const results = response["data"].data;
             if (results == null) {
               alert("データがありません。");

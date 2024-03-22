@@ -76,5 +76,12 @@ public interface DeviceService
 	 ------------------------------------------------------ */
 	public DeviceMastersDTO getMasters();
 
-
+	// --------------------------------------------------
+	/**
+	 * デバイス情報の引継ぎ
+	 *
+	 * @param deviceId 引継ぎ先デバイスID
+	 */
+	// --------------------------------------------------
+	void transitParameters(Long deviceId);
 	}

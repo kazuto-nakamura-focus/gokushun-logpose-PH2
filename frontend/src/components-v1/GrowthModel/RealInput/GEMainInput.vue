@@ -184,8 +184,6 @@ export default {
   },
   methods: {
     initialize: function (data) {
-      console.log("fvm");
-
       this.$nextTick(
         function () {
           this.$refs.titleHeader.initialize(data.menu);

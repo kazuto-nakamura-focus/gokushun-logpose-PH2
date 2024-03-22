@@ -256,8 +256,6 @@ export default {
   name: "LAActualValueInput",
   props: {
     shared /** MountController */: { required: true },
-    selectedField: Array,
-    selectedDevices: Array,
   },
 
   data() {

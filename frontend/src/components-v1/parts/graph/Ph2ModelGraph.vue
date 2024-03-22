@@ -47,30 +47,20 @@
         :series="chart.series"
       ></ph-2-graphic-tool>
     </v-card>
-    <div v-if="modelId=1">
+    <div v-if="modelId==1">
       <GEActualValueInput ref="refGEActualValueInput" :shared="sharedParam[0]" />
       <ReferenceFValue ref="refReferenceFValue" :shared="sharedParam[1]" />
       <parmeter-set-dialog ref="refGEParameterSets" :shared="sharedParam[2]" :modelId="modelId" />
     </div>
 
-    <div v-if="modelId=2">
-      <LAActualValueInput
-        ref="refLAActualValueInput"
-        :shared="sharedParam[0]"
-        :selectedField="selectedMenu.selectedField"
-        :selectedDevices="selectedMenu.selectedDevices"
-      />
+    <div v-if="modelId==2">
+      <LAActualValueInput ref="refLAActualValueInput" :shared="sharedParam[0]" />
       <parmeter-set-dialog ref="refLAParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
     </div>
 
-    <div v-if="modelId=3">
-      <PEActualValueInput
-        ref="refPEActualValueInput"
-        :shared="sharedParam[0]"
-        :selectedField="selectedMenu.selectedField"
-        :selectedDevices="selectedMenu.selectedDevices"
-      />
-      <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[1]" :modelId="photoModel" />
+    <div v-if="modelId==3">
+      <PEActualValueInput ref="refPEActualValueInput" :shared="sharedParam[0]" />
+      <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
     </div>
   </v-app>
 </template>
@@ -130,12 +120,13 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
-      console.log("ss");
       this.comment = this.target.data.comment;
       if (null != this.comment) {
         this.comment = "コメント:" + this.comment;
       }
       this.selectedMenu = this.target.selectedItems;
+      console.log("selected");
+      console.log(this.selectedMenu);
       this.modelId = this.selectedMenu.selectedModel.id;
       // * ボタンの表示
       this.editButtons =

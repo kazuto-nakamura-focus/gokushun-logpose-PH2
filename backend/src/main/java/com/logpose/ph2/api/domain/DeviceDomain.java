@@ -191,19 +191,5 @@ public class DeviceDomain
 		target.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		}
 
-	// --------------------------------------------------
-	/**
-	 * オブジェクト間の違いをチェックする
-	 *
-	 *@param target Ph2DevicesEntity
-	 *@param dto DeviceUpdateDTO
-	 */
-	// ------------------------------------------------------
-	private boolean compareObject(Object a, Object b)
-		{
-		if ((a == null) && (b != null)) return false;
-		if ((a != null) && (b == null)) return false;
-		if ((a == null) && (b == null)) return true;
-		return a.equals(b);
-		}
+	
 	}

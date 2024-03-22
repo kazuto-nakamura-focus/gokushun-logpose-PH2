@@ -11,6 +11,8 @@ public class PhotosynthesisValueDTO
 	{
 	//* デバイスID
 	private Long deviceId;
+	//* 年度
+	private Short year;
 	//* 実測日
 	private String date;
 	//* f値

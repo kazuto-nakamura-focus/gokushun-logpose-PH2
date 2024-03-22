@@ -10,98 +10,105 @@
         </v-row>
 
         <v-row>
-          <v-col cols="2">
-            <div>デバイス名</div>
+          <v-col cols="6">
+            <div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:10px">デバイス名</div>
+                <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.name"></v-text-field>
+              </div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:10px">圃場</div>
+                <v-select
+                  v-bind:items="useFieldInfoDataList"
+                  dense
+                  outlined
+                  @change="setField"
+                  v-model="deviceInfoData.fieldId"
+                  item-text="name"
+                  item-value="id"
+                  return-object
+                ></v-select>
+              </div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:10px">品種</div>
+                <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.brand"></v-text-field>
+              </div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div
+                  style="width:120px;height:100%;padding-top:14px; font-size:10pt"
+                >Sigfox Device ID</div>
 
-            <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.name"></v-text-field>
-
-            <p></p>
-
-            <div>圃場</div>
-
-            <v-select
-              v-bind:items="useFieldInfoDataList"
-              dense
-              outlined
-              @change="setField"
-              v-model="deviceInfoData.fieldId"
-              item-text="name"
-              item-value="id"
-              return-object
-            ></v-select>
-
-            <div>品種</div>
-
-            <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.brand"></v-text-field>
-
-            <p></p>
-
-            <div>Sigfox Device ID</div>
-
-            <v-text-field
-              dense
-              hide-details="auto"
-              outlined
-              v-model="deviceInfoData.sigFoxDeviceId"
-            ></v-text-field>
-
-            <p></p>
-
-            <div>基準日</div>
-
-            <v-text-field
-              dense
-              hide-details="auto"
-              outlined
-              placeholder="01/01"
-              v-model="deviceInfoData.baseDateShort"
-            ></v-text-field>
-
-            <div>運用開始日</div>
-
-            <v-text-field
-              dense
-              hide-details="auto"
-              outlined
-              placeholder="YYYY/MM/DD"
-              v-model="deviceInfoData.opStartShort"
-            ></v-text-field>
-
-            <div>引継ぎデバイスID</div>
-
-            <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.prevDeviceId"></v-text-field>
-
-            <div>運用終了日</div>
-
-            <v-text-field
-              dense
-              hide-details="auto"
-              outlined
-              placeholder="YYYY/MM/DD"
-              v-model="deviceInfoData.opEndShort"
-            ></v-text-field>
-
-            <div>タイムゾーン</div>
-            <!--<v-select
-              v-model="deviceInfoData.timeZone"
-              :items="timeZone"
-              width="60"
-              item-text="name"
-              item-value="id"
-              dense
-              return-object
-            ></v-select>-->
-            <v-select
-              v-model="deviceInfoData.timeZone"
-              :items="timeZone"
-              width="60"
-              item-text="name"
-              item-value="id"
-              dense
-            ></v-select>
+                <v-text-field
+                  dense
+                  hide-details="auto"
+                  outlined
+                  v-model="deviceInfoData.sigFoxDeviceId"
+                ></v-text-field>
+              </div>
+            </div>
           </v-col>
-
-          <v-col cols="10">
+          <v-col cols="6">
+            <div style="border-left:2px dotted gray;padding-left:10px;" class="deviceSet">
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:10px">基準日</div>
+                <v-text-field
+                  dense
+                  hide-details="auto"
+                  outlined
+                  placeholder="01/01"
+                  v-model="deviceInfoData.baseDateShort"
+                ></v-text-field>
+              </div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:10px">タイムゾーン</div>
+                <v-select
+                  v-model="deviceInfoData.timeZone"
+                  :items="timeZone"
+                  width="60"
+                  item-text="name"
+                  item-value="id"
+                  dense
+                ></v-select>
+              </div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:10px">運用開始日</div>
+                <v-text-field
+                  dense
+                  hide-details="auto"
+                  outlined
+                  placeholder="YYYY/MM/DD"
+                  v-model.trim="deviceInfoData.opStartShort"
+                ></v-text-field>
+              </div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:14px; font-size:10pt">引継ぎデバイスID</div>
+                <div style="width:130px;">
+                  <v-text-field
+                    dense
+                    hide-details="auto"
+                    outlined
+                    v-model.trim="deviceInfoData.prevDeviceId"
+                  ></v-text-field>
+                </div>
+                <div style="width:230px;margin-left:15px">
+                  <v-checkbox v-model="transitFlag" label="更新時実績値の引継ぎ実行"></v-checkbox>
+                </div>
+              </div>
+              <div style=" display: flex;margin-bottom:10px">
+                <div style="width:120px;height:100%;padding-top:10px">運用終了日</div>
+                <v-text-field
+                  dense
+                  hide-details="auto"
+                  outlined
+                  placeholder="YYYY/MM/DD"
+                  v-model="deviceInfoData.opEndShort"
+                ></v-text-field>
+              </div>
+            </div>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12">
             <div>センサー</div>
 
             <div style="height: 325px">
@@ -199,6 +206,7 @@ export default {
     return {
       timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
+      transitFlag: false,
       columnDefs: [
         {
           field: "displayId",
@@ -206,7 +214,7 @@ export default {
           singleClickEdit: true,
           resizable: true,
           editable: true,
-          width: 125,
+          width: 120,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
             values: this.extractKeys(
@@ -474,6 +482,7 @@ export default {
           prevDeviceId: this.deviceInfoData.prevDeviceId,
           opStartShort: this.deviceInfoData.opStartShort,
           opEndShort: this.deviceInfoData.opEndShort,
+          transitFlag: this.transitFlag,
           //センサー情報
           sensorItems: sensorItems,
         };
@@ -612,5 +621,11 @@ export default {
 }
 .unactivateClass {
   background-color: "#aaa";
+}
+.deviceSet {
+}
+.deviceSet .v-input--selection-controls {
+  padding: 0;
+  margin: 0;
 }
 </style>

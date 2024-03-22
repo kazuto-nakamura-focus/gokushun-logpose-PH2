@@ -63,7 +63,6 @@ export default {
       name,
       title
     ) {
-      console.log("#");
       this.isLoading = true;
       this.$nextTick(
         function () {
