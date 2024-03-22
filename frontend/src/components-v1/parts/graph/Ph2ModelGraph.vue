@@ -47,24 +47,19 @@
         :series="chart.series"
       ></ph-2-graphic-tool>
     </v-card>
-    <div v-if="modelId=1">
+    <div v-if="modelId==1">
       <GEActualValueInput ref="refGEActualValueInput" :shared="sharedParam[0]" />
       <ReferenceFValue ref="refReferenceFValue" :shared="sharedParam[1]" />
       <parmeter-set-dialog ref="refGEParameterSets" :shared="sharedParam[2]" :modelId="modelId" />
     </div>
 
-    <div v-if="modelId=2">
+    <div v-if="modelId==2">
       <LAActualValueInput ref="refLAActualValueInput" :shared="sharedParam[0]" />
       <parmeter-set-dialog ref="refLAParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
     </div>
 
-    <div v-if="modelId=3">
-      <PEActualValueInput
-        ref="refPEActualValueInput"
-        :shared="sharedParam[0]"
-        :selectedField="selectedMenu.selectedField"
-        :selectedDevices="selectedMenu.selectedDevices"
-      />
+    <div v-if="modelId==3">
+      <PEActualValueInput ref="refPEActualValueInput" :shared="sharedParam[0]" />
       <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
     </div>
   </v-app>

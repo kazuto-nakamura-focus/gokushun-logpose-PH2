@@ -2,7 +2,6 @@
   <v-app>
     <v-container>
       <Ph2GraphTabs graphType="1" ref="chr" @doAction="setData" />
-
       <wait-dialog ref="wait" />
     </v-container>
   </v-app>

@@ -89,8 +89,6 @@ export default {
   name: "PEActualValueInput",
   props: {
     shared /** MountController */: { required: true },
-    selectedField: Array,
-    selectedDevices: Array,
   },
 
   data() {
