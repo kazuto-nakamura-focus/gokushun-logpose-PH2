@@ -526,4 +526,9 @@
 			or
 			data_status_date is null
 	</select>
+	<!-- ************************************************************************** -->
+    <update id="setAllStatus" >
+      	update ph2_devices
+      	set data_status = data_status | #{status}
+      </update>
 </mapper>

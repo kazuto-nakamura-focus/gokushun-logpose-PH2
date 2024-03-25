@@ -27,8 +27,7 @@ public class WeatherAPI
 	// --------------------------------------------------
 	/**
 	 * Weather APIから過去天気情報を取得する
-	 * @param sigFoxDeviceId
-	 * @param sinceTimeStamp
+	 * @param request
 	 * @return SigFoxMessagesEntity
 	 * @throws InterruptedException 
 	 */

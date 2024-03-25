@@ -70,7 +70,17 @@ public class DeviceStatusDomain
 		{
 		return (device.getDataStatus() & ALL_LOAD_NEEDED) > 0;
 		}
-
+	// --------------------------------------------------
+	/**
+	 *全デバイスに対して全データロードモードを設定する
+	 * @return boolean
+	 */
+	// --------------------------------------------------
+	public void setAllStatusToAllLoaded()
+		{
+		this.ph2DevicesMapper.setAllStatus(ALL_LOAD_NEEDED);
+		}
+	
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスに対してローディング中であることを設定する
