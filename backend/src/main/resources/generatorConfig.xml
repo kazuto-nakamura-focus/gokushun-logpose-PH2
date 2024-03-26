@@ -223,16 +223,17 @@
 			mapperName="Ph2DeviceModelStatusMapper" enableInsert="true"
 			enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 			enableDeleteByPrimaryKey="true" modelType="flat">
-		</table>
+		</table> -->
 	<table tableName="ph2_oauth" domainObjectName="Ph2OauthEntity"
 		mapperName="Ph2OauthMapper" enableInsert="true"
 		enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 		enableDeleteByPrimaryKey="true" modelType="flat">
-	</table>-->
+	</table>
+	<!--
 	<table tableName="ph2_users" domainObjectName="Ph2UsersEntity"
 		mapperName="Ph2UsersMapper" enableInsert="true"
 		enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 		enableDeleteByPrimaryKey="true" modelType="flat">
-	</table> 
+	</table> -->
 	</context>
 </generatorConfiguration>

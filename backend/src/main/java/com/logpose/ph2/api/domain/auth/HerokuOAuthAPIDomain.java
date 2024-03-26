@@ -95,9 +95,9 @@ public class HerokuOAuthAPIDomain
 	 * @return HerokuOauthAccountResponse
 	 */
 	// --------------------------------------------------	
-	public HerokuOauthAccountResponse getUserInfo(String userId)
+	public HerokuOauthAccountResponse getUserInfo(String userId, String code)
 		{
-		return new HerokuAuthAPI().getUserInfo(params.getUserUrl(), userId);
+		return new HerokuAuthAPI().getUserInfo(params.getUserUrl(), userId, code);
 		}
 	// --------------------------------------------------
 	/**

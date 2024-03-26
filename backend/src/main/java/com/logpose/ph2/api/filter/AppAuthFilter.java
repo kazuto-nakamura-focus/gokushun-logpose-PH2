@@ -47,13 +47,16 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-	//	if (request.getServletPath().startsWith("/auth/"))
-		if (request.getServletPath().startsWith("/"))
+		if (request.getServletPath().startsWith("/auth/"))
+	//	if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
 			}
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
+		response.addHeader("Access-Control-Allow-Origin", "*");
+		response.addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
+		response.addHeader("ccess-Control-Allow-Credentials", "true");
 // * Cookieから必要な情報を取り出す
 		String accessToken = null;
 		Long appId = null;
@@ -83,7 +86,8 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
-			response.sendRedirect(this.apiDomain.getHerokuLogin());
+			response.sendError(400, this.apiDomain.getHerokuLogin());
+			//response.sendRedirect(this.apiDomain.getHerokuLogin());
 			return;
 			}
 		try

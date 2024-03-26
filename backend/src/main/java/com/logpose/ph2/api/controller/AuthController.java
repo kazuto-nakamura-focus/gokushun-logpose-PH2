@@ -61,10 +61,11 @@ public class AuthController
 			response.addCookie(new Cookie(CookieMaster.USER_ID, cookieData.getId().toString()));
 			response.addCookie(new Cookie(CookieMaster.NAME, cookieData.getName()));
 // * アプリへリダイレクト
-			response.sendRedirect("/app");
+			response.sendRedirect("http://localhost:8080/");
 			}
 		catch (Exception e)
 			{
+			e.printStackTrace();
 			response.sendError(401, "not authorized -> " + e.getMessage());
 			}
 		}
