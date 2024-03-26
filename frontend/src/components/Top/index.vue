@@ -133,6 +133,8 @@ export default {
 
   mounted: function () {
     this.$refs.wait.start("データ取得中です。しばらくお待ちください。", true);
+    console.log("ws");
+    this.setOAuth();
     //console.log(this.displayOrder);
     useFields()
       .then((response) => {
@@ -166,6 +168,18 @@ export default {
   },
 
   methods: {
+    setOAuth: function () {
+      // 引数に設定があればそれを設定する
+      if (this.$route.query.id !== undefined) {
+        this.$cookies.set("id", this.$route.query.id, 90);
+      }
+      if (this.$route.query.name !== undefined) {
+        this.$cookies.set("name", this.$route.query.name, 90);
+      }
+      if (this.$route.query.at !== undefined) {
+        this.$cookies.set("name", this.$route.query.at, 90);
+      }
+    },
     openModel: function (komoku) {
       if (this.isAggregated) {
         this.$refs.sa.initialize(komoku);

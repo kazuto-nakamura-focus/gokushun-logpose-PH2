@@ -9,7 +9,6 @@ import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
-import com.logpose.ph2.api.master.CookieMaster;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -17,7 +16,6 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
@@ -48,46 +46,28 @@ public class AppAuthFilter implements Filter
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		if (request.getServletPath().startsWith("/auth/"))
-	//	if (request.getServletPath().startsWith("/"))
+		// if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
 			}
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
-		response.addHeader("Access-Control-Allow-Origin", "*");
-		response.addHeader("Access-Control-Allow-Methods","GET, OPTIONS, HEAD, PUT, POST");
-		response.addHeader("ccess-Control-Allow-Credentials", "true");
 // * Cookieから必要な情報を取り出す
+		String authTokenHeader = request.getHeader("Authorization");
 		String accessToken = null;
 		Long appId = null;
-		Cookie[] cookies = request.getCookies();
-		if (null != cookies)
+		String[] cookies = null;
+		if (authTokenHeader != null)
 			{
-			short count = 0;
-			for (int i = 0; i < cookies.length; i++)
-				{
-				Cookie cookie = cookies[i];
-				if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
-					{
-					accessToken = cookie.getValue();
-					count++;
-					}
-				else if (cookie.getName().equals(CookieMaster.USER_ID))
-					{
-					if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
-						{
-						appId = Long.valueOf(cookie.getValue());
-						}
-					count++;
-					}
-				if (count == 2) break;
-				}
+			cookies = authTokenHeader.split(" ");
+			appId = Long.valueOf(cookies[0]);
+			accessToken = cookies[1];
 			}
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
 			response.sendError(400, this.apiDomain.getHerokuLogin());
-			//response.sendRedirect(this.apiDomain.getHerokuLogin());
+			// response.sendRedirect(this.apiDomain.getHerokuLogin());
 			return;
 			}
 		try

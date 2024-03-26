@@ -45,6 +45,17 @@ public class AuthService
 		}
 	// --------------------------------------------------
 	/**
+	 * CookieデータをURLに変換する
+	 * @param AuthCookieDTO
+	 * @return String
+	 */
+	// -------------------------------------------------
+	public String convertToURL(AuthCookieDTO cookie)
+		{
+		return this.herokuOAuthAPIDomain.getOriginURL(cookie);
+		}
+	// --------------------------------------------------
+	/**
 	 * ログインアウト処理を行う
 	 *@param appUserId LogposeユーザーID
 	 */

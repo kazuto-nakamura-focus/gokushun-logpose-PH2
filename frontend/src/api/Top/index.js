@@ -1,13 +1,4 @@
 import axios from "@/lib/axiosHooks";
-axios.interceptors.response.use(
-  (response) => response, // 成功時のresponseはそのまま返す
-  (error) => {
-    console.log(error);
-    window.location.href =
-      "https://id.heroku.com/oauth/authorize?client_id=2faedc8a-eeb0-4956-a93d-0c7c82181bf8&response_type=code&scope=identity&state=shufvel9872";
-
-  }
-);
 // ID001
 // 全圃場サマリーデータ取得
 const useFields = () => {

@@ -16,7 +16,6 @@ import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
 import com.logpose.ph2.api.master.CookieMaster;
 import com.logpose.ph2.api.service.AuthService;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -56,12 +55,10 @@ public class AuthController
 			{
 // * ログインの実行
 			AuthCookieDTO cookieData = this.authService.login(code, antiFoorgeryToken);
-// * Cookieの設定
-			response.addCookie(new Cookie(CookieMaster.ACCESS_TOKEN, cookieData.getAccessToken()));
-			response.addCookie(new Cookie(CookieMaster.USER_ID, cookieData.getId().toString()));
-			response.addCookie(new Cookie(CookieMaster.NAME, cookieData.getName()));
+// * URLの設定
+			String url = this.authService.convertToURL(cookieData);
 // * アプリへリダイレクト
-			response.sendRedirect("http://localhost:8080/");
+			response.sendRedirect(url);
 			}
 		catch (Exception e)
 			{
