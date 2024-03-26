@@ -9,21 +9,21 @@
         <v-col cols="10">
           <v-row>
             <v-col cols="3">
-              <v-subheader class="ma-0 mt-n5 pa-0"> </v-subheader>
+              <v-subheader class="ma-0 mt-n5 pa-0"></v-subheader>
             </v-col>
             <v-col cols="3">
               <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
             </v-col>
             <v-col cols="2">
-              <v-subheader class="ma-0 mt-n5 pa-0"
-                ><small>平均房重（ｇ）</small></v-subheader
-              >
+              <v-subheader class="ma-0 mt-n5 pa-0">
+                <small>平均房重（ｇ）</small>
+              </v-subheader>
             </v-col>
             <v-col cols="2">
               <v-subheader class="ma-0 mt-n5 pa-0">実測着果数</v-subheader>
             </v-col>
             <v-col cols="2">
-              <v-subheader class="ma-0 mt-n5 pa-0"> </v-subheader>
+              <v-subheader class="ma-0 mt-n5 pa-0"></v-subheader>
             </v-col>
           </v-row>
         </v-col>
@@ -67,8 +67,7 @@
               <v-btn
                 class="primary ma-0 mt-n12 pl-1 pr-1"
                 @click="saveUseFruitValueSproutTreatment"
-                >保存</v-btn
-              >
+              >保存</v-btn>
             </v-col>
           </v-row>
         </v-col>
@@ -109,11 +108,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-btn
-                class="primary ma-0 mt-n12 pl-1 pr-1"
-                @click="saveUseFruitValueELStage"
-                >保存</v-btn
-              >
+              <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="saveUseFruitValueELStage">保存</v-btn>
             </v-col>
           </v-row>
         </v-col>
@@ -154,11 +149,7 @@
               ></v-text-field>
             </v-col>
             <v-col cols="2">
-              <v-btn
-                class="primary ma-0 mt-n12 pl-1 pr-1"
-                @click="saveUseFruitValueBagging"
-                >保存</v-btn
-              >
+              <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="saveUseFruitValueBagging">保存</v-btn>
             </v-col>
           </v-row>
         </v-col>
@@ -169,34 +160,34 @@
           <v-subheader></v-subheader>
         </v-col>
         <v-col v-for="title in titles" cols="2" :key="title">
-          <v-subheader>{{ title }} </v-subheader>
+          <v-subheader>{{ title }}</v-subheader>
         </v-col>
       </v-row>
       <v-divider class="divider_top" />
       <v-row>
         <v-col cols="3">
-          <v-subheader>着果負担 </v-subheader>
+          <v-subheader>着果負担</v-subheader>
         </v-col>
         <v-col v-for="burden in burdens" cols="2" :key="burden">
-          <v-subheader>{{ burden }} </v-subheader>
+          <v-subheader>{{ burden }}</v-subheader>
         </v-col>
       </v-row>
       <v-divider class="divider_center" />
       <v-row>
         <v-col cols="3">
-          <v-subheader>積算推定樹冠光合成量あたりの着果量 </v-subheader>
+          <v-subheader>積算推定樹冠光合成量あたりの着果量</v-subheader>
         </v-col>
         <v-col v-for="amount in amounts" cols="2" :key="amount">
-          <v-subheader>{{ amount }} </v-subheader>
+          <v-subheader>{{ amount }}</v-subheader>
         </v-col>
       </v-row>
       <v-divider class="divider_center" />
       <v-row>
         <v-col cols="3">
-          <v-subheader>実測着果数/樹冠葉面積 </v-subheader>
+          <v-subheader>実測着果数/樹冠葉面積</v-subheader>
         </v-col>
         <v-col v-for="count in counts" cols="2" :key="count">
-          <v-subheader>{{ count }} </v-subheader>
+          <v-subheader>{{ count }}</v-subheader>
         </v-col>
       </v-row>
       <v-divider class="divider_bottom" />
@@ -231,7 +222,7 @@ export default {
       devicesId: null, // 選ばれたデバイスID
       year: null, //年度
       deviceName: null,
-      baseDeviceId: 53,
+      baseDeviceId: 1221,
       ids: [],
       titles: [],
       burdens: [],
@@ -401,11 +392,7 @@ export default {
           //成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            this.formatFuitsValues(
-              this.baseDeviceId,
-              "葡萄専心イチノセ2本(新)",
-              data
-            );
+            this.formatFuitsValues(this.baseDeviceId, "葡萄専心イチノセ", data);
             this.getUseFruitValues();
           } else {
             alert("詳細取得ができませんでした。");

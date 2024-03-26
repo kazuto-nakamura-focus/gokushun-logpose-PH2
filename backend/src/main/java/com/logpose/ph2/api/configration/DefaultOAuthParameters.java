@@ -10,6 +10,7 @@ public class DefaultOAuthParameters
 	private String authUrl;
 	private String tokenGrantType;
 	private String refreshTokenGrantType;
-	private String secret;
+	private String cleintId;
+	private String cleintSecret;
 	private String forgery;
 	}

@@ -2,16 +2,6 @@ package com.logpose.ph2.api.filter;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +11,18 @@ import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
 import com.logpose.ph2.api.master.CookieMaster;
 
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.FilterConfig;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 @Component
+// @WebFilter(urlPatterns = { "/api/*", "/"})
 public class AppAuthFilter implements Filter
 	{
 	// ===============================================
@@ -35,14 +36,10 @@ public class AppAuthFilter implements Filter
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
-	public AppAuthFilter()
-		{
-		}
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException
 		{
-		// Do Nothing
 		}
 
 	@Override
@@ -50,7 +47,8 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		if(request.getServletPath().startsWith("/auth/"))
+	//	if (request.getServletPath().startsWith("/auth/"))
+		if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
@@ -60,29 +58,33 @@ public class AppAuthFilter implements Filter
 		String accessToken = null;
 		Long appId = null;
 		Cookie[] cookies = request.getCookies();
-		short count = 0;
-		for (int i = 0; i < cookies.length; i++)
+		if (null != cookies)
 			{
-			Cookie cookie = cookies[i];
-			if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
+			short count = 0;
+			for (int i = 0; i < cookies.length; i++)
 				{
-				accessToken = cookie.getValue();
-				count++;
-				}
-			else if (cookie.getName().equals(CookieMaster.USER_ID))
-				{
-				if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
+				Cookie cookie = cookies[i];
+				if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
 					{
-					appId = Long.valueOf(cookie.getValue());
+					accessToken = cookie.getValue();
+					count++;
 					}
-				count++;
+				else if (cookie.getName().equals(CookieMaster.USER_ID))
+					{
+					if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
+						{
+						appId = Long.valueOf(cookie.getValue());
+						}
+					count++;
+					}
+				if (count == 2) break;
 				}
-			if (count == 2) break;
 			}
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
 			response.sendRedirect(this.apiDomain.getHerokuLogin());
+			return;
 			}
 		try
 			{
@@ -123,7 +125,7 @@ public class AppAuthFilter implements Filter
 			}
 		catch (RuntimeException re)
 			{
-			response.sendRedirect("/login");
+			response.sendRedirect(this.apiDomain.getHerokuLogin());
 			return;
 			}
 		catch (Exception e)

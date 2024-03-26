@@ -33,7 +33,7 @@ public class HerokuOAuthAPIDomain
 	public String getHerokuLogin()
 		{
 		return "https://id.heroku.com/oauth/authorize?client_id=" +
-				params.getSecret()  + "&response_type=code&scope=identity&state=" + params.getForgery();
+				params.getCleintId()  + "&response_type=code&scope=identity&state=" + params.getForgery();
 		}
 	// --------------------------------------------------
 	/**
@@ -48,7 +48,7 @@ public class HerokuOAuthAPIDomain
 		authReq.setUrl(this.params.getUrl());
 		authReq.setGrantType(this.params.getRefreshTokenGrantType());
 		authReq.setRefreshToken(entity.getRefreshToken());
-		authReq.setClienSecret(this.params.getSecret());
+		authReq.setClienSecret(this.params.getCleintSecret());
 		return new HerokuAuthAPI().getRefreshToken(authReq);
 		}
 	// --------------------------------------------------
@@ -64,7 +64,7 @@ public class HerokuOAuthAPIDomain
 		authReq.setUrl(this.params.getUrl());
 		authReq.setGrantType(this.params.getRefreshTokenGrantType());
 		authReq.setCode(entity.getToken());
-		authReq.setClienSecret(this.params.getSecret());
+		authReq.setClienSecret(this.params.getCleintSecret());
 		return new HerokuAuthAPI().getToken(authReq);
 		}
 	// --------------------------------------------------
@@ -85,7 +85,7 @@ public class HerokuOAuthAPIDomain
 		authReq.setUrl(this.params.getUrl());
 		authReq.setGrantType(this.params.getRefreshTokenGrantType());
 		authReq.setCode(code);
-		authReq.setClienSecret(this.params.getSecret());
+		authReq.setClienSecret(this.params.getCleintSecret());
 		return new HerokuAuthAPI().getToken(authReq);
 		}
 	// --------------------------------------------------
