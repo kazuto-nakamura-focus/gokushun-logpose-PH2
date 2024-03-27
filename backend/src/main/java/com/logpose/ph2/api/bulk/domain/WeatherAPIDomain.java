@@ -99,7 +99,7 @@ public class WeatherAPIDomain
 
 			float mint = daily.getTemperature2mMin().get(i);
 			float maxt = daily.getTemperature2mMax().get(i);
-			master.setTm((mint + maxt) / 2 - 10);
+			master.setTm((mint + maxt) / 2);
 			master.setRawCdd((mint + maxt) / 2 - 9.18);
 
 // * その日の時間単位を抽出
