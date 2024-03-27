@@ -315,7 +315,7 @@ public class DailyBaseDataGenerator
 			}
 		entity.setDayId(device.getId());
 		entity.setAverage(sum / count);
-		entity.setTm((min + max) / 2 - 10);
+		entity.setTm((min + max) / 2 );
 		entity.setRawCdd((min + max) / 2 - 9.18);
 		entity.setCdd(0.0);
 		result.setEntity(entity);
