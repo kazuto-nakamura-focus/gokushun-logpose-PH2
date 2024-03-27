@@ -29,6 +29,7 @@ import jakarta.servlet.http.HttpServletResponse;
 @CrossOrigin(
 		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
 		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+		allowedHeaders ="*", exposedHeaders="*",
 		allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api")
@@ -53,6 +54,7 @@ public class TopController
 	@GetMapping("/fields")
 	public ResponseDTO getFields(HttpServletRequest request, HttpServletResponse response)
 		{
+		System.out.println(request.getHeaderNames());
 		StringBuffer url = request.getRequestURL();
 		System.out.println(url);
 		ResponseDTO as_dto = new ResponseDTO();

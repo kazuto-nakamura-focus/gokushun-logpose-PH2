@@ -1,15 +1,11 @@
 package com.logpose.ph2.api.configration;
 
-import java.util.Collections;
-
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.boot.web.servlet.ServletContextInitializer;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import jakarta.servlet.ServletContext;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.SessionTrackingMode;
+import com.logpose.ph2.api.filter.AppAuthFilter;
 
 @Configuration
 public class Configration
@@ -70,15 +66,7 @@ public class Configration
 		return new DefaultWeatherlAPIParameters();
 		}
 
-/*
- * @Bean
- * public AppAuthFilter hogeFilter()
- * {
- * AppAuthFilter bean = new AppAuthFilter();
- * return bean;
- * }
- */
-/*	@Bean
+	@Bean
 	public FilterRegistrationBean<AppAuthFilter> filter()
 		{
 		FilterRegistrationBean<AppAuthFilter> registrationBean = new FilterRegistrationBean<>();
@@ -86,9 +74,9 @@ public class Configration
 		registrationBean.addUrlPatterns("/*");
 
 		return registrationBean;
-		}*/
+		}
 
-	@Bean
+	/*@Bean
 	public ServletContextInitializer servletContextInitializer()
 		{
 
@@ -104,5 +92,5 @@ public class Configration
 				}
 			};
 		return servletContextInitializer;
-		}
+		}*/
 	}
