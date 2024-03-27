@@ -3,12 +3,15 @@ package com.logpose.ph2.api.filter;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.configration.DefaultDomainParameter;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
+import com.logpose.ph2.api.master.CookieMaster;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -16,16 +19,20 @@ import jakarta.servlet.FilterConfig;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 // @WebFilter(urlPatterns = { "/api/*", "/"})
+@Order(100)
 public class AppAuthFilter implements Filter
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	@Autowired
+	private DefaultDomainParameter param;
 	@Autowired
 	private HerokuOAuthLogicDomain logicDomain;
 	@Autowired
@@ -53,16 +60,30 @@ public class AppAuthFilter implements Filter
 			}
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 // * Cookieから必要な情報を取り出す
-		System.out.println(request.getHeaderNames());
-		String authTokenHeader = request.getHeader("Heroku");
 		String accessToken = null;
 		Long appId = null;
-		String[] cookies = null;
-		if (authTokenHeader != null)
+		Cookie[] cookies = request.getCookies();
+		if (null != cookies)
 			{
-			cookies = authTokenHeader.split(" ");
-			appId = Long.valueOf(cookies[0]);
-			accessToken = cookies[1];
+			short count = 0;
+			for (int i = 0; i < cookies.length; i++)
+				{
+				Cookie cookie = cookies[i];
+				if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
+					{
+					accessToken = cookie.getValue();
+					count++;
+					}
+				else if (cookie.getName().equals(CookieMaster.USER_ID))
+					{
+					if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
+						{
+						appId = Long.valueOf(cookie.getValue());
+						}
+					count++;
+					}
+				if (count == 2) break;
+				}
 			}
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
@@ -96,19 +117,25 @@ public class AppAuthFilter implements Filter
 				{
 // * トークンの更新
 				HerokuOauthTokenResponse authRes = this.apiDomain.refreshToken(oauth);
+				accessToken = authRes.getAccessToken();
 				this.logicDomain.upateDB(oauth, authRes);
 				}
 // * チェック期間を超えた場合
 			else if (result == HerokuOAuthLogicDomain.OUT_OF_TERM)
 				{
 				HerokuOauthTokenResponse authRes = this.apiDomain.confirm(oauth);
+				accessToken = authRes.getAccessToken();
 				this.logicDomain.upateDB(oauth, authRes);
 				}
 			else if (result != 0)
 				{
 				throw new RuntimeException("未定義の状態です。");
 				}
-			request.setAttribute("UserId", appId);
+			
+		    Cookie cookie = new Cookie("at", accessToken);
+		    cookie.setDomain(param.getDomain());
+		    response.addCookie(cookie); 
+		    
 			filterChain.doFilter(request, response);
 			}
 		catch (RuntimeException re)

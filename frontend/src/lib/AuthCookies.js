@@ -5,4 +5,7 @@ export class AuthCookies {
     set(name, data, days) {
         Cookies.set(name, data, days);
     }
+    get(name) {
+        return Cookies.get(name);
+    }
 }
