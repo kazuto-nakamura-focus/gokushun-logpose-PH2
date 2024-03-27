@@ -16,7 +16,6 @@ import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
 import com.logpose.ph2.api.master.CookieMaster;
 import com.logpose.ph2.api.service.AuthService;
 
-import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -25,9 +24,11 @@ import jakarta.servlet.http.HttpServletResponse;
  * @since 2024/01/03
  * @version 1.0
  */
-@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000",
-		"https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-				RequestMethod.DELETE }, allowCredentials = "true")
+@CrossOrigin(
+		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
+		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+		allowedHeaders ="*", exposedHeaders="*",
+		allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/auth")
 public class AuthController
@@ -56,15 +57,14 @@ public class AuthController
 			{
 // * ログインの実行
 			AuthCookieDTO cookieData = this.authService.login(code, antiFoorgeryToken);
-// * Cookieの設定
-			response.addCookie(new Cookie(CookieMaster.ACCESS_TOKEN, cookieData.getAccessToken()));
-			response.addCookie(new Cookie(CookieMaster.USER_ID, cookieData.getId().toString()));
-			response.addCookie(new Cookie(CookieMaster.NAME, cookieData.getName()));
+// * URLの設定
+			String url = this.authService.convertToURL(cookieData);
 // * アプリへリダイレクト
-			response.sendRedirect("/app");
+			response.sendRedirect(url);
 			}
 		catch (Exception e)
 			{
+			e.printStackTrace();
 			response.sendError(401, "not authorized -> " + e.getMessage());
 			}
 		}

@@ -3,8 +3,10 @@ package com.logpose.ph2.api.filter;
 import java.io.IOException;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.configration.DefaultDomainParameter;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
@@ -23,11 +25,14 @@ import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 // @WebFilter(urlPatterns = { "/api/*", "/"})
+@Order(100)
 public class AppAuthFilter implements Filter
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	@Autowired
+	private DefaultDomainParameter param;
 	@Autowired
 	private HerokuOAuthLogicDomain logicDomain;
 	@Autowired
@@ -47,8 +52,8 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-	//	if (request.getServletPath().startsWith("/auth/"))
-		if (request.getServletPath().startsWith("/"))
+	if (request.getServletPath().startsWith("/auth/"))
+	//	 if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
@@ -83,7 +88,11 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
-			response.sendRedirect(this.apiDomain.getHerokuLogin());
+			 response.setHeader("Access-Control-Allow-Origin", "*");
+		        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+		        response.setHeader("Access-Control-Max-Age", "3600");
+			response.sendError(400, this.apiDomain.getHerokuLogin());
+			// response.sendRedirect(this.apiDomain.getHerokuLogin());
 			return;
 			}
 		try
@@ -108,19 +117,25 @@ public class AppAuthFilter implements Filter
 				{
 // * トークンの更新
 				HerokuOauthTokenResponse authRes = this.apiDomain.refreshToken(oauth);
+				accessToken = authRes.getAccessToken();
 				this.logicDomain.upateDB(oauth, authRes);
 				}
 // * チェック期間を超えた場合
 			else if (result == HerokuOAuthLogicDomain.OUT_OF_TERM)
 				{
 				HerokuOauthTokenResponse authRes = this.apiDomain.confirm(oauth);
+				accessToken = authRes.getAccessToken();
 				this.logicDomain.upateDB(oauth, authRes);
 				}
 			else if (result != 0)
 				{
 				throw new RuntimeException("未定義の状態です。");
 				}
-			request.setAttribute("UserId", appId);
+			
+		    Cookie cookie = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
+		    cookie.setDomain(param.getDomain());
+		    response.addCookie(cookie); 
+		    
 			filterChain.doFilter(request, response);
 			}
 		catch (RuntimeException re)

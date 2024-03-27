@@ -26,9 +26,11 @@ import com.logpose.ph2.api.service.DataLoadService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000",
-		"https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-				RequestMethod.DELETE }, allowCredentials = "true")
+@CrossOrigin(
+		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
+		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+		allowedHeaders ="*", exposedHeaders="*",
+		allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/bulk")
 public class DeviceDataLoader

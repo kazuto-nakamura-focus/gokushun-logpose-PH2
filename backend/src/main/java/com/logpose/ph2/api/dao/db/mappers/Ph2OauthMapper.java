@@ -76,6 +76,6 @@ public interface Ph2OauthMapper {
 	 * @mbg.generated
 	 */
 	int updateByPrimaryKey(Ph2OauthEntity row);
-	
+
 	List<Ph2OauthEntity> selectByAppId(@Param("appId") Long appId);
 }

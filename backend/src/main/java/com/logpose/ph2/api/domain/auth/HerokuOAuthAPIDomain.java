@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.configration.DefaultOAuthParameters;
+import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
 import com.logpose.ph2.api.dao.api.HerokuAuthAPI;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthAccountResponse;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthRefreshTokenRequest;
@@ -34,6 +35,17 @@ public class HerokuOAuthAPIDomain
 		{
 		return "https://id.heroku.com/oauth/authorize?client_id=" +
 				params.getCleintId()  + "&response_type=code&scope=identity&state=" + params.getForgery();
+		}
+	// --------------------------------------------------
+	/**
+	 * オリジンのURLを返す
+	 * @param AuthCookieDTO
+	 * @return String
+	 */
+	// --------------------------------------------------
+	public String getOriginURL(AuthCookieDTO cookie)
+		{
+		return params.getOriginUrl() + "?" + "id=" + cookie.getId() + "&name=" + cookie.getName() + "&at=" +  cookie.getAccessToken();
 		}
 	// --------------------------------------------------
 	/**
@@ -95,9 +107,9 @@ public class HerokuOAuthAPIDomain
 	 * @return HerokuOauthAccountResponse
 	 */
 	// --------------------------------------------------	
-	public HerokuOauthAccountResponse getUserInfo(String userId)
+	public HerokuOauthAccountResponse getUserInfo(String userId, String code)
 		{
-		return new HerokuAuthAPI().getUserInfo(params.getUserUrl(), userId);
+		return new HerokuAuthAPI().getUserInfo(params.getUserUrl(), userId, code);
 		}
 	// --------------------------------------------------
 	/**

@@ -125,15 +125,24 @@ public class HerokuOAuthLogicDomain
 		exm.createCriteria().andAuthIdEqualTo(newEntity.getUserId());
 		List<Ph2UsersEntity> users = this.ph2UserMapper.selectByExample(exm);
 		Ph2UsersEntity newUser = (0 == users.size()) ? new Ph2UsersEntity() : users.get(0);
+
 // * Userの設定
 		newUser.setAuthId(newEntity.getUserId());
 		newUser.setEmail(user.getEmail());
-		newUser.setUsername(user.getName());
+		if (null == user.getName())
+			{
+			newUser.setUsername(user.getEmail());
+			}
+		else
+			{
+			newUser.setUsername(user.getName());
+			}
 		newUser.setCreatedAt(now);
 		newUser.setUpdatedAt(now);
+		long id = newUser.getId();
 		if (0 == users.size())
 			{
-			this.ph2UserMapper.insert(newUser);
+			id = this.ph2UserMapper.insert(newUser);
 			}
 		else
 			{
@@ -141,7 +150,7 @@ public class HerokuOAuthLogicDomain
 			}
 // * Cookie情報の設定
 		result.setAccessToken(token.getAccessToken());
-		result.setId(newUser.getId());
+		result.setId(id);
 		result.setName(newUser.getUsername());
 		return result;
 		}
@@ -180,7 +189,6 @@ public class HerokuOAuthLogicDomain
 		this.ph2OauthMapper.updateByPrimaryKey(entity);
 		}
 
-	
 	// ===============================================
 	// プライベート関数群
 	// ===============================================

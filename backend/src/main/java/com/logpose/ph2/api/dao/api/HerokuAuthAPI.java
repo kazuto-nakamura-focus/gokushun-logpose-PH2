@@ -1,5 +1,10 @@
 package com.logpose.ph2.api.dao.api;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +46,7 @@ public class HerokuAuthAPI
 		StringBuilder builder = new StringBuilder();
 		builder.append(request.getUrl());
 		builder.append("?");
-		builder.append("grant_type=").append(request.getGrantType());
+		builder.append("grant_type=").append("authorization_code");
 		builder.append("&code=").append(request.getCode());
 		builder.append("&client_secret=").append(request.getClienSecret());
 		
@@ -76,9 +81,9 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	public HerokuOauthAccountResponse getUserInfo(String url, String userId)
+	public HerokuOauthAccountResponse getUserInfo(String url, String userId, String code)
 		{
-		return this.getUserData(url+ "/" + userId);
+		return this.getUserData(url+ "/" + userId, code);
 		}
 	// --------------------------------------------------
 	/**
@@ -129,13 +134,20 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthAccountResponse getUserData(String url)
+	private HerokuOauthAccountResponse getUserData(String url, String code)
 		{
 		ResponseEntity<HerokuOauthAccountResponse> response = null;
+		HttpHeaders headers = new HttpHeaders();
+		Map<String, String> map = new HashMap<>();
+		map.put("Accept", "application/vnd.heroku+json; version=3.webhooks");
+		headers.setAll(map);
+	//	headers.setAccept(Collections.singletonList(new MediaType("application", "vnd.heroku json; version=3")));
+		headers.setBearerAuth(code);
+	    HttpEntity<String> request = new HttpEntity<>(headers);
 // * Get処理の実行
 		try
 			{
-			response = restTemplate.exchange(url, HttpMethod.GET, null, HerokuOauthAccountResponse.class);
+			response = restTemplate.exchange(url, HttpMethod.GET, request, HerokuOauthAccountResponse.class);
 			}
 		catch (Exception e)
 			{

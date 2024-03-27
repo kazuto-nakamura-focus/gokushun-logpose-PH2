@@ -10,21 +10,21 @@ const useFields = () => {
 // 検知データ圃場別取得
 const useSum = (contentId) => {
   const config = {
-    params: {contentId : contentId},
+    params: { contentId: contentId },
   };
   return axios.get("/sum", config); // List<FieldData>
 };
 // モデル選択情報取得
 const useModels = (isModel) => {
   const config = {
-    params: {isModel},
+    params: { isModel },
   };
   return axios.get("/models", config); // List<FieldData>
 };
 // 生データ取得
 const useRawData = (deviceId, startDate, endDate) => {
   const config = {
-    params: {deviceId, startDate, endDate},
+    params: { deviceId, startDate, endDate },
   };
   return axios.get("/rawData", config); // List<FieldData>
 };

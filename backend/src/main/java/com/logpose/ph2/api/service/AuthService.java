@@ -39,9 +39,20 @@ public class AuthService
 // * codeからアクセストークンを得る。
 		HerokuOauthTokenResponse res = this.herokuOAuthAPIDomain.getAccessToken(code, antiFoorgeryToken);
 // * アクセストークンからユーザー情報を取得する。
-		HerokuOauthAccountResponse userInfo = this.herokuOAuthAPIDomain.getUserInfo(res.getUserId());
+		HerokuOauthAccountResponse userInfo = this.herokuOAuthAPIDomain.getUserInfo(res.getUserId(), res.getAccessToken());
 // * Authテーブルにトークン情報を設定する
 		return this.herokuOAuthLogicDomain.registerUser(code, res, userInfo);
+		}
+	// --------------------------------------------------
+	/**
+	 * CookieデータをURLに変換する
+	 * @param AuthCookieDTO
+	 * @return String
+	 */
+	// -------------------------------------------------
+	public String convertToURL(AuthCookieDTO cookie)
+		{
+		return this.herokuOAuthAPIDomain.getOriginURL(cookie);
 		}
 	// --------------------------------------------------
 	/**

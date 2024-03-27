@@ -106,6 +106,7 @@ import { useFields } from "@/api/Top";
 import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 // import unselected from "@/components/parts/menu.vue";
 import SpecificDataAggregation from "./SpecificDataAggregation.vue";
+import { AuthCookies } from "@/lib/AuthCookies.js";
 
 export default {
   data() {
@@ -133,6 +134,7 @@ export default {
 
   mounted: function () {
     this.$refs.wait.start("データ取得中です。しばらくお待ちください。", true);
+    this.setOAuth();
     //console.log(this.displayOrder);
     useFields()
       .then((response) => {
@@ -155,6 +157,8 @@ export default {
         this.openModel(koumoku);
       })
       .catch((error) => {
+        //     window.location.href =
+        //      "https://id.heroku.com/oauth/authorize?client_id=2faedc8a-eeb0-4956-a93d-0c7c82181bf8&response_type=code&scope=identity&state=shufvel9872";
         //失敗時
         console.log(error);
       })
@@ -164,6 +168,21 @@ export default {
   },
 
   methods: {
+    setOAuth: function () {
+      let cookies = new AuthCookies();
+      // 引数に設定があればそれを設定する
+      if (this.$route.query.id !== undefined) {
+        cookies.set("id", this.$route.query.id, 90);
+      }
+      if (this.$route.query.name !== undefined) {
+        cookies.set("name", this.$route.query.name, 90);
+      }
+      if (this.$route.query.at !== undefined) {
+        cookies.set("at", this.$route.query.at, 90);
+      }
+      console.log(this.$route.query.at);
+      console.log(cookies.get("at"));
+    },
     openModel: function (komoku) {
       if (this.isAggregated) {
         this.$refs.sa.initialize(komoku);
@@ -301,3 +320,4 @@ export default {
   box-shadow: 5px 5px 10px 0 rgba(0, 0, 0, 0.5);
 }
 </style>
+@/lib/AuthCookies.js
