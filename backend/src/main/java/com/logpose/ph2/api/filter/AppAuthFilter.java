@@ -52,8 +52,8 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-	//if (request.getServletPath().startsWith("/auth/"))
-		 if (request.getServletPath().startsWith("/"))
+		if (request.getServletPath().startsWith("/auth/"))
+		// if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
@@ -88,9 +88,9 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
-			 response.setHeader("Access-Control-Allow-Origin", "*");
-		        response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-		        response.setHeader("Access-Control-Max-Age", "3600");
+			response.setHeader("Access-Control-Allow-Origin", "*");
+			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+			response.setHeader("Access-Control-Max-Age", "3600");
 			response.sendError(400, this.apiDomain.getHerokuLogin());
 			// response.sendRedirect(this.apiDomain.getHerokuLogin());
 			return;
@@ -131,11 +131,11 @@ public class AppAuthFilter implements Filter
 				{
 				throw new RuntimeException("未定義の状態です。");
 				}
-			
-		    Cookie cookie = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
-		    cookie.setDomain(param.getDomain());
-		    response.addCookie(cookie); 
-		    
+
+			Cookie cookie = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
+			cookie.setDomain(param.getDomain());
+			response.addCookie(cookie);
+
 			filterChain.doFilter(request, response);
 			}
 		catch (RuntimeException re)
