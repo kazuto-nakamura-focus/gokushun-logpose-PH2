@@ -132,7 +132,7 @@ public class AppAuthFilter implements Filter
 				throw new RuntimeException("未定義の状態です。");
 				}
 			
-		    Cookie cookie = new Cookie("at", accessToken);
+		    Cookie cookie = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
 		    cookie.setDomain(param.getDomain());
 		    response.addCookie(cookie); 
 		    

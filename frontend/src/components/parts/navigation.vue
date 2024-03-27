@@ -39,7 +39,7 @@
           <v-list-item-icon>
             <v-icon>mdi-account</v-icon>
           </v-list-item-icon>
-          <v-list-item-title>高橋史成</v-list-item-title>
+          <v-list-item-title width="100%" :title="userName">{{userName}}</v-list-item-title>
         </v-list-item>
       </v-list>
     </v-list>
@@ -56,9 +56,27 @@ export default {
     };
   },
   mounted() {
-    console.log("fgr");
     let cookies = new AuthCookies();
     this.userName = cookies.get("name");
+    if (null == this.userName) {
+      this.setName();
+    }
+  },
+  methods: {
+    setName: function () {
+      this.intervalid1 = setInterval(
+        function () {
+          console.log("cpy");
+          let cookies = new AuthCookies();
+          this.userName = cookies.get("name");
+          if (null != this.userName) {
+            console.log("name " + this.userName);
+            clearInterval(this.intervalid1);
+          }
+        }.bind(this),
+        1000
+      );
+    },
   },
 };
 </script>

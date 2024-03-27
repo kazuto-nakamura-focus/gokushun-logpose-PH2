@@ -24,9 +24,11 @@ import jakarta.servlet.http.HttpServletResponse;
  * @since 2024/01/03
  * @version 1.0
  */
-@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000",
-		"https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
-				RequestMethod.DELETE }, allowCredentials = "true")
+@CrossOrigin(
+		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
+		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+		allowedHeaders ="*", exposedHeaders="*",
+		allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/auth")
 public class AuthController
