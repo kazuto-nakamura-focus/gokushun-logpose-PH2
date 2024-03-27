@@ -179,6 +179,7 @@ export default {
         menu: this.selectedMenu,
         dates: this.dates,
       };
+      console.log("ccc");
       this.sharedParam[item.type].setUp(
         this.$refs[item.key],
         function (dailog) {
