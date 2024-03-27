@@ -126,13 +126,17 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	 *
 	 * @param dto
 	 *            PhotosynthesisParamSetDTO
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateParamSet(PhotosynthesisParamSetDTO dto)
+	public void updateParamSet(PhotosynthesisParamSetDTO dto) throws Exception
 		{
-		this.photoSynthesisDomain.updateParamSet(dto);
+		if (this.photoSynthesisDomain.updateParamSet(dto))
+			{
+			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			}
 		}
 
 	// --------------------------------------------------
@@ -163,7 +167,7 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
 		{
 		this.photoSynthesisDomain.setDefault(deviceId, year, paramId);
-		
+		this.photoSynthesisDomain.updateModelTable(deviceId, year, null);
 		}
 	// --------------------------------------------------
 	/**

@@ -21,8 +21,7 @@
             class="ma-2 white--text"
             elevation="2"
             @click="setDefault"
-            >デフォルトパラメータに設定</v-btn
-          >
+          >デフォルトパラメータに設定</v-btn>
         </v-col>
       </v-row>
 
@@ -108,13 +107,7 @@
     <v-card-actions>
       <v-spacer></v-spacer>
       <div v-if="!isEditMode" class="GS_ButtonArea">
-        <v-btn
-          color="gray"
-          class="ma-2 black--text"
-          elevation="2"
-          @click="close"
-          >キャンセル</v-btn
-        >
+        <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
       </div>
       <div v-if="isEditMode" class="GS_ButtonArea">
         <v-btn
@@ -123,15 +116,8 @@
           elevation="2"
           @click="overwriteSave"
           :disabled="isDisableButtos"
-          >上書き保存</v-btn
-        >
-        <v-btn
-          color="primary"
-          class="ma-2 white--text"
-          elevation="2"
-          @click="aliasSave"
-          >別名保存</v-btn
-        >
+        >上書き保存</v-btn>
+        <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="aliasSave">別名保存</v-btn>
         <v-btn
           color="primary"
           class="ma-2 white--text"
@@ -139,19 +125,12 @@
           v-show="parameterSetList.length > 2"
           @click="deleteParameterSet"
           :disabled="isDisabledDeleteBtn"
-          >削除</v-btn
-        >
+        >削除</v-btn>
       </div>
     </v-card-actions>
     <v-card-actions>
       <div v-if="isEditMode" class="GS_ButtonArea">
-        <v-btn
-          color="gray"
-          class="ma-2 black--text"
-          elevation="2"
-          @click="close"
-          >キャンセル</v-btn
-        >
+        <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
       </div>
     </v-card-actions>
 
@@ -211,6 +190,7 @@ export default {
 
       isShowParameterSetName: false,
       isDisabledDeleteBtn: false,
+      isUpdated: false,
 
       selectedTarget: null,
     };
@@ -291,12 +271,14 @@ export default {
         {},
         this.beforeParameterSetData
       );
+      this.isUpdated = true;
     },
     //*----------------------------
     // 子コンポーネントからの追加実施
     //*----------------------------
     addData(id) {
       this.initialize(id, this.selectedTarget);
+      this.isUpdated = true;
     },
     //*----------------------------
     // パラメータのデフォルト設定を行う
@@ -319,6 +301,7 @@ export default {
                 "対象年度の生育推定パラメータセットのデフォルトに設定されました。"
               );
               this.initParameterList(false);
+              this.isUpdated = true;
             }
           })
           .catch((error) => {
@@ -336,6 +319,7 @@ export default {
                 "対象年度の葉面積推定パラメータセットのデフォルトに設定されました。"
               );
               this.initParameterList(false);
+              this.isUpdated = true;
             }
           })
           .catch((error) => {
@@ -353,6 +337,7 @@ export default {
                 "対象年度の光合成推定パラメータセットのデフォルトに設定されました。"
               );
               this.initParameterList(false);
+              this.isUpdated = true;
             }
           })
           .catch((error) => {
@@ -404,6 +389,7 @@ export default {
             alert("パラメータセットの削除に失敗しました。");
           } else {
             this.$emit("reset");
+            this.isUpdated = true;
           }
         })
         .catch((error) => {
@@ -414,7 +400,7 @@ export default {
     // 閉じるアクション
     //*----------------------------
     close() {
-      this.$emit("close");
+      this.$emit("close", this.isUpdated);
     },
 
     onDisable() {

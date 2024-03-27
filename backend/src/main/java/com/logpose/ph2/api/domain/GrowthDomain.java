@@ -516,13 +516,6 @@ public class GrowthDomain extends GraphDomain
 			paramId = this.addParamSet(null, paramInfo);
 			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
-		// 年度の最初の日を取得
-		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
-		// デバイスがデータを持っている場合
-		if (null != deviceDay)
-			{
-			this.updateModelTable(deviceId, year, deviceDay.getDate());
-			}
 		}
 
 	// --------------------------------------------------
@@ -533,7 +526,7 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public void updateParamSet(GrowthParamSetDTO dto) throws ParseException
+	public boolean updateParamSet(GrowthParamSetDTO dto) throws ParseException
 		{
 		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.GROWTH);
 
@@ -545,11 +538,7 @@ public class GrowthDomain extends GraphDomain
 		entity.setBeforeD(dto.getBd());
 		entity.setBeforeE(dto.getBe());
 		this.ph2ParamsetGrowthMapper.updateByPrimaryKey(entity);
-		// * デフォルト値の更新の場合、モデルテーブルを更新する
-		if (isDeault)
-			{
-			this.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
-			}
+		return isDeault;
 		}
 
 	// --------------------------------------------------

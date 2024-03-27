@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
@@ -177,9 +176,9 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	 * @param LeafParamSetDTO 更新データ
 	 */
 	// --------------------------------------------------
-	public void updateParamSet(LeafParamSetDTO dto)
+	public boolean updateParamSet(LeafParamSetDTO dto)
 		{
-		parameterSetDomain.update(dto, ModelMaster.LEAF);
+		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.LEAF);
 
 		Ph2ParamsetLeafAreaEntity area = this.ph2ParamsetLeafAreaMapper
 				.selectByPrimaryKey(dto.getId());
@@ -195,6 +194,8 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 		count.setValueC(dto.getCountC());
 		count.setValueD(dto.getCountD());
 		this.ph2ParamsetLeafCountMapper.updateByPrimaryKey(count);
+		
+		return isDeault;
 		}
 
 	// --------------------------------------------------
@@ -220,10 +221,6 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.LEAF, deviceId, year,
 				paramId);
-// * 年度の最初の日を取得
-		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
-// * テーブルをデフォルトパラメータで更新
-		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}
 
 	// --------------------------------------------------

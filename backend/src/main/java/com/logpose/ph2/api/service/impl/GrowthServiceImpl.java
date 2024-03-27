@@ -14,6 +14,8 @@ import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.domain.GrowthDomain;
 import com.logpose.ph2.api.domain.growth.FStageTableDomain;
+import com.logpose.ph2.api.domain.leaf.LeafDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
@@ -35,7 +37,11 @@ public class GrowthServiceImpl implements GrowthService
 	@Autowired
 	private GrowthDomain growthDomain;
 	@Autowired
+	private LeafDomain leafDomain;
+	@Autowired
 	private FStageTableDomain fStageTableDomain;
+	@Autowired
+	private PhotoSynthesisDomain photoSynthesisDomain;
 
 	// ===============================================
 	// パブリック関数
@@ -66,13 +72,15 @@ public class GrowthServiceImpl implements GrowthService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void setDefaultParamSet(Long deviceId, Short year, Long paramId)
-			throws ParseException
-		{
-		this.growthDomain.setDefault(deviceId, year, paramId);
-		}
+/*
+ * @Override
+ * @Transactional(rollbackFor = Exception.class)
+ * public void setDefaultParamSet(Long deviceId, Short year, Long paramId)
+ * throws ParseException
+ * {
+ * this.growthDomain.setDefault(deviceId, year, paramId);
+ * }
+ */
 
 	// --------------------------------------------------
 	/**
@@ -187,12 +195,15 @@ public class GrowthServiceImpl implements GrowthService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void setParameter(Long deviceId, Short year, Long paramId) throws ParseException
-		{
-		this.growthDomain.setDefault(deviceId, year, paramId);
-		}
+/*
+ * @Override
+ * @Transactional(rollbackFor = Exception.class)
+ * public void setParameter(Long deviceId, Short year, Long paramId) throws
+ * ParseException
+ * {
+ * this.growthDomain.setDefault(deviceId, year, paramId);
+ * }
+ */
 
 	// --------------------------------------------------
 	/**
@@ -225,6 +236,10 @@ public class GrowthServiceImpl implements GrowthService
 			throws ParseException
 		{
 		this.growthDomain.setDefault(deviceId, year, paramId);
+		this.growthDomain.updateModelTable(deviceId, year, null);
+		this.fStageTableDomain.resetActualDate(deviceId, year);
+		this.leafDomain.updateModelTable(deviceId, year, null);
+		this.photoSynthesisDomain.updateModelTable(deviceId, year, null);
 		}
 
 	// --------------------------------------------------
@@ -239,7 +254,13 @@ public class GrowthServiceImpl implements GrowthService
 	@Transactional(rollbackFor = Exception.class)
 	public void updateParamSet(GrowthParamSetDTO dto) throws ParseException
 		{
-		this.growthDomain.updateParamSet(dto);
+		if (this.growthDomain.updateParamSet(dto))
+			{
+			this.growthDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			this.fStageTableDomain.resetActualDate(dto.getDeviceId(), dto.getYear());
+			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			}
 		}
 
 	// --------------------------------------------------

@@ -8,7 +8,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsFieldEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsWeibullEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
@@ -122,9 +121,9 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 	 * @param PhotosynthesisParamSetDTO 更新データ
 	 */
 	// --------------------------------------------------
-	public void updateParamSet(PhotosynthesisParamSetDTO dto)
+	public boolean updateParamSet(PhotosynthesisParamSetDTO dto)
 		{
-		parameterSetDomain.update(dto, ModelMaster.PHOTO);
+		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.PHOTO);
 
 		Ph2ParamsetPsFieldEntity field = this.ph2ParamsetPsFieldMapper
 				.selectByPrimaryKey(dto.getId());
@@ -140,6 +139,8 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 		weibull.setValueB(dto.getWeibullB());
 		weibull.setValueL(dto.getWeibullL());
 		this.ph2ParamsetPsWeibullMapper.updateByPrimaryKey(weibull);
+		
+		return isDeault;
 		}
 
 	// --------------------------------------------------
@@ -164,7 +165,5 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 			paramId = super.addParamSet(null, paramInfo);
 			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.PHOTO, deviceId, year, paramId);
-		Ph2DeviceDayEntity deviceDay = this.deviceDayDomain.getFirstDay(deviceId, year);
-		this.updateModelTable(deviceId, year, deviceDay.getDate());
 		}
 	}

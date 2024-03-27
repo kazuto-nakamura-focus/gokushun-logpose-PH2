@@ -144,9 +144,10 @@ public interface LeafService
 	 * @param dto
 	 *            LeafParamSetDTO
 	 * @return ResponseDTO (null)
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public void updateParamSet(LeafParamSetDTO dto);
+	public void updateParamSet(LeafParamSetDTO dto) throws ParseException;
 
 	// --------------------------------------------------
 	/**

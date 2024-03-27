@@ -17,6 +17,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.leaf.LeafGraphDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
 import com.logpose.ph2.api.dto.LeafvaluesDTO;
@@ -43,6 +44,8 @@ public class LeafServiceImpl implements LeafService
 	private DefaultLeafCountParameters defaultLeafCountParameters;
 	@Autowired
 	private Ph2DeviceDayMapper ph2DeviceDayMapper;
+	@Autowired
+	private PhotoSynthesisDomain photoSynthesisDomain;
 
 	// ===============================================
 	// パブリック関数
@@ -277,13 +280,18 @@ public class LeafServiceImpl implements LeafService
 	 * @param dto
 	 *            LeafParamSetDTO
 	 * @return ResponseDTO (null)
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateParamSet(LeafParamSetDTO dto)
+	public void updateParamSet(LeafParamSetDTO dto) throws ParseException
 		{
-		this.leafDomain.updateParamSet(dto);
+		if (this.leafDomain.updateParamSet(dto))
+			{
+			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			}
 		}
 
 	// --------------------------------------------------
@@ -308,6 +316,8 @@ public class LeafServiceImpl implements LeafService
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
 		{
 		this.leafDomain.setDefault(deviceId, year, paramId);
+		this.leafDomain.updateModelTable(deviceId, year, null);
+		this.photoSynthesisDomain.updateModelTable(deviceId, year, null);
 		}
 
 	// --------------------------------------------------

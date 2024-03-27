@@ -43,7 +43,7 @@ public interface GrowthService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public void setDefaultParamSet(Long deviceId, Short year, Long paramId) throws ParseException;
+	//public void setDefaultParamSet(Long deviceId, Short year, Long paramId) throws ParseException;
 	// --------------------------------------------------
 	/**
 	 * 生育推定モデルグラフデータ取得
@@ -78,7 +78,7 @@ public interface GrowthService
 	 * @param paramId -パラメータセットID
 	 */
 	// --------------------------------------------------
-	public void setParameter(Long deviceId, Short year, Long paramId) throws ParseException;
+//	public void setParameter(Long deviceId, Short year, Long paramId) throws ParseException;
 	// --------------------------------------------------
 	/**
 	 * 生育推定イベントデータ取得

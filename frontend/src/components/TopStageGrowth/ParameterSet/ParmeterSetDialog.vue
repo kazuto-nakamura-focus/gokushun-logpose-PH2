@@ -17,7 +17,7 @@
             ></toggle-button>
             <v-tabs v-model="tabModel">
               <v-tab href="#tab-1">パラメータセット名</v-tab>
-              <v-tab href="#tab-2" v-show="modelId==1">適用グラフ</v-tab>
+              <!--  <v-tab href="#tab-2" v-show="modelId==1">適用グラフ</v-tab>-->
               <v-tab href="#tab-3">履歴</v-tab>
               <v-tab-item value="tab-1">
                 <v-card-text>
@@ -43,9 +43,7 @@
                 />
               </v-tab-item>-->
               <v-tab-item value="tab-3">
-                <parameter-set-history
-                  ref="refHistory"
-                ></parameter-set-history>
+                <parameter-set-history ref="refHistory"></parameter-set-history>
               </v-tab-item>
             </v-tabs>
           </v-container>
@@ -75,7 +73,7 @@ export default {
       sharedInput: new MountController(),
       tabModel: "tab-1",
       defaultId: null,
-      isEditMode : false,
+      isEditMode: false,
     };
   },
 
@@ -114,12 +112,13 @@ export default {
       )
         .then((response) => {
           this.defaultId = response.data.data;
-          this.$nextTick(
-            function() {
-            this.$refs.refParameterSet.initialize(this.defaultId, this.selectedInfo.menu);
+          this.$nextTick(function () {
+            this.$refs.refParameterSet.initialize(
+              this.defaultId,
+              this.selectedInfo.menu
+            );
             this.$refs.refHistory.initialize(this.defaultId);
-            }
-          );
+          });
         })
         .catch((error) => {
           console.log(error);
@@ -141,8 +140,9 @@ export default {
     //*----------------------------
     // 画面を閉じる
     //*----------------------------
-    close: function () {
+    close: function (status) {
       this.isDialog = false;
+      this.shared.onConclude(status);
     },
   },
 };

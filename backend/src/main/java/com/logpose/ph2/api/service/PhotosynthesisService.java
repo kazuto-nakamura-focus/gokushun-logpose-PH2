@@ -81,9 +81,11 @@ public interface PhotosynthesisService
 	 * 光合成推定パラメータセット更新
 	 *
 	 * @param PhotosynthesisParamSetDTO
+	 * @throws ParseException 
+	 * @throws Exception 
 	 */
 	// --------------------------------------------------
-	public void updateParamSet(PhotosynthesisParamSetDTO dto);
+	public void updateParamSet(PhotosynthesisParamSetDTO dto) throws ParseException, Exception;
 
 	// --------------------------------------------------
 	/**
