@@ -92,9 +92,9 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	public HerokuOauthIdResponse logout(String url, String accessToken)
+	public HerokuOauthIdResponse logout(String url, String appid, String accessToken)
 		{
-		return this.logoutUser(url+ "/" + accessToken);
+		return this.logoutUser(url+ "/" + appid, accessToken);
 		}
 	// --------------------------------------------------
 	/**
@@ -172,13 +172,19 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthIdResponse logoutUser(String url)
+	private HerokuOauthIdResponse logoutUser(String url, String code)
 		{
 		ResponseEntity<HerokuOauthIdResponse> response = null;
+		HttpHeaders headers = new HttpHeaders();
+		Map<String, String> map = new HashMap<>();
+		map.put("Accept", "application/vnd.heroku+json; version=3.webhooks");
+		headers.setAll(map);
+		headers.setBearerAuth(code);
+	    HttpEntity<String> request = new HttpEntity<>(headers);
 // * Get処理の実行
 		try
 			{
-			response = restTemplate.exchange(url, HttpMethod.DELETE, null, HerokuOauthIdResponse.class);
+			response = restTemplate.exchange(url, HttpMethod.DELETE, request, HerokuOauthIdResponse.class);
 			}
 		catch (Exception e)
 			{

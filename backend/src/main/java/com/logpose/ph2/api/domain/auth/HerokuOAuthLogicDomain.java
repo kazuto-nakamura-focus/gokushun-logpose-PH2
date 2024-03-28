@@ -164,11 +164,14 @@ public class HerokuOAuthLogicDomain
 	 * @return アクセストークン
 	 */
 	// --------------------------------------------------
-	public String revokeUser(Long id)
+	@Transactional(rollbackFor = Exception.class)
+	public Ph2OauthEntity revokeUser(Long id)
 		{
 		Ph2UsersEntity usr = this.ph2UserMapper.selectByPrimaryKey(id);
+		Ph2OauthEntity oauth = this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
 		this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
-		return usr.getAuthId();
+
+		return oauth;
 		}
 
 	// --------------------------------------------------

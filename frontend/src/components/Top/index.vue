@@ -157,9 +157,6 @@ export default {
         this.openModel(koumoku);
       })
       .catch((error) => {
-        //     window.location.href =
-        //      "https://id.heroku.com/oauth/authorize?client_id=2faedc8a-eeb0-4956-a93d-0c7c82181bf8&response_type=code&scope=identity&state=shufvel9872";
-        //失敗時
         console.log(error);
       })
       .finally(() => {

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthAccountResponse;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
+import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
 
@@ -23,6 +24,7 @@ public class AuthService
 	private HerokuOAuthAPIDomain herokuOAuthAPIDomain;
 	@Autowired
 	private HerokuOAuthLogicDomain herokuOAuthLogicDomain;
+
 	// ===============================================
 	// パブリック関数
 	// ===============================================
@@ -39,10 +41,12 @@ public class AuthService
 // * codeからアクセストークンを得る。
 		HerokuOauthTokenResponse res = this.herokuOAuthAPIDomain.getAccessToken(code, antiFoorgeryToken);
 // * アクセストークンからユーザー情報を取得する。
-		HerokuOauthAccountResponse userInfo = this.herokuOAuthAPIDomain.getUserInfo(res.getUserId(), res.getAccessToken());
+		HerokuOauthAccountResponse userInfo = this.herokuOAuthAPIDomain.getUserInfo(res.getUserId(),
+				res.getAccessToken());
 // * Authテーブルにトークン情報を設定する
 		return this.herokuOAuthLogicDomain.registerUser(code, res, userInfo);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * CookieデータをURLに変換する
@@ -54,18 +58,20 @@ public class AuthService
 		{
 		return this.herokuOAuthAPIDomain.getOriginURL(cookie);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * ログインアウト処理を行う
 	 *@param appUserId LogposeユーザーID
 	 */
 	// -------------------------------------------------
-	public void logout(String appUserId)
+	public String logout(String appUserId)
 		{
 // * Authテーブルからトークンを削除する。
-	   this.herokuOAuthLogicDomain.revokeUser(Long.valueOf(appUserId));
+		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.revokeUser(Long.valueOf(appUserId));
 // * Herokuからトークンを無効化する
-		this.herokuOAuthAPIDomain.logout(appUserId);
+		this.herokuOAuthAPIDomain.logout(auth.getUserId(), auth.getAccessToken());
+		return this.herokuOAuthAPIDomain.getHerokuLogin();
 		}
-	
+
 	}

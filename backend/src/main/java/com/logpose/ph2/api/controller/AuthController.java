@@ -7,7 +7,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -15,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
+import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.master.CookieMaster;
 import com.logpose.ph2.api.service.AuthService;
 
@@ -81,18 +81,22 @@ public class AuthController
 	 * @throws IOException 
 	 */
 	// --------------------------------------------------
-	@DeleteMapping("/logout")
-	public void login(HttpServletResponse response,
+	@GetMapping("/logout")
+	public ResponseDTO login(HttpServletResponse response,
 			@CookieValue(CookieMaster.USER_ID) String appUserId) throws IOException
 		{
+		ResponseDTO dto = new ResponseDTO();
 		try
 			{
 //* ログアウト処理の実行
-			this.authService.logout(appUserId);
+			String logoutUrl = this.authService.logout(appUserId);
+			dto.setRedirect(logoutUrl);
 			}
 		catch (Exception e)
 			{
-			response.sendError(401, "not authorized -> " + e.getMessage());
+			e.printStackTrace();
+			dto.setError(e);
 			}
+		return dto;
 		}
 	}

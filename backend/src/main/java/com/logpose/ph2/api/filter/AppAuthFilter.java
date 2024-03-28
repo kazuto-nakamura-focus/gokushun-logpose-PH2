@@ -71,14 +71,16 @@ public class AppAuthFilter implements Filter
 		Cookie[] cookies = request.getCookies();
 		if (null != cookies)
 			{
-			short count = 0;
 			for (int i = 0; i < cookies.length; i++)
 				{
 				Cookie cookie = cookies[i];
 				if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
 					{
 					accessToken = cookie.getValue();
-					count++;
+					if ((null == accessToken) || (accessToken.length() == 0))
+						{
+						continue;
+						}
 					}
 				else if (cookie.getName().equals(CookieMaster.USER_ID))
 					{
@@ -86,9 +88,7 @@ public class AppAuthFilter implements Filter
 						{
 						appId = Long.valueOf(cookie.getValue());
 						}
-					count++;
 					}
-				if (count == 2) break;
 				}
 			}
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
@@ -134,9 +134,14 @@ public class AppAuthFilter implements Filter
 				throw new RuntimeException("未定義の状態です。");
 				}
 
-			Cookie cookie = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
-			cookie.setDomain(param.getDomain());
-			response.addCookie(cookie);
+			Cookie atc = AppAuthFilter.getCookie(request, CookieMaster.ACCESS_TOKEN);
+			if (null == atc)
+				atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
+			else
+				atc.setValue(accessToken);
+			atc.setMaxAge(7776000);
+			atc.setDomain(param.getDomain());
+			response.addCookie(atc);
 
 			filterChain.doFilter(request, response);
 			}
@@ -150,6 +155,24 @@ public class AppAuthFilter implements Filter
 			response.sendError(401, "not authorized -> " + e.getMessage());
 			}
 
+		}
+
+	public static Cookie getCookie(HttpServletRequest request, String name)
+		{
+		Cookie target = null;
+		if (request.getCookies() != null)
+			{
+			for (Cookie cookie : request.getCookies())
+				{
+				if (cookie.getName().equals(name))
+					{
+					cookie.setMaxAge(0);
+					target = cookie;
+					}
+				}
+			}
+
+		return target;
 		}
 
 	@Override
