@@ -74,21 +74,7 @@ export default {
   },
   methods: {
     logout: function () {
-      let headers = new Headers();
-
-      headers.append("Content-Type", "application/json");
-      headers.append("Accept", "application/json");
-
-      headers.append("Access-Control-Allow-Origin", "*");
-      headers.append("Access-Control-Allow-Credentials", "true");
-
-      headers.append("GET", "POST", "OPTIONS");
-      fetch("https://gokushun-ph2-it.herokuapp.com/api/auth/logout", {
-        headers: headers,
-        method: "POST",
-        credentials: "include", // クッキーを送信するために必要
-      });
-      //  window.location.href = "https://dashboard.heroku.com/logout";
+      window.location.href = "https://dashboard.heroku.com/logout";
     },
 
     /*  useLogout()
