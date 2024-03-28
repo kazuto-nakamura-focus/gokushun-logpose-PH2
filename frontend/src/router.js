@@ -7,8 +7,8 @@ import GrowthModel from "@/components/GrowthModel";
 //import TopStageGrowthOld from "@/components/TopStageGrouth";
 //import TopStageGrowth from "@/components/TopStageGrowth";
 import RawDataView from "@/components/RawDataView.vue";
-
 import ManagementScreenTop from "@/components/ManagementScreenTop";
+import Login from "@/components-v1/Login.vue";
 
 Vue.use(Router);
 
@@ -21,11 +21,13 @@ export default new Router({
     { path: "/top_growth", name: "growth", component: GrowthModel },
     //      { path: '/login', component: Login },
     // グラフ画面
-      { path: "/top_graphs", name: "graph", component: TopGraphs },
-   // { path: "/top_graphs", name: "graph", component: TopStageGrowthOld },
+    { path: "/top_graphs", name: "graph", component: TopGraphs },
+    // { path: "/top_graphs", name: "graph", component: TopStageGrowthOld },
     // 管理画面
-    { path: "/management_screen_top", name: "management_screen_top", component: ManagementScreenTop},
+    { path: "/management_screen_top", name: "management_screen_top", component: ManagementScreenTop },
     // 生データ画面
     { path: "/top_data", name: "data", component: RawDataView },
+    // ログイン
+    { path: "/login", name: "login", component: Login },
   ],
 });

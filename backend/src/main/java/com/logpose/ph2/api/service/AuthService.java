@@ -10,6 +10,8 @@ import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
 
+import lombok.Getter;
+
 /**
  * ログイン・ログアウトの処理を行う
  *
@@ -21,6 +23,7 @@ public class AuthService
 	// クラスメンバー
 	// ===============================================
 	@Autowired
+	@Getter
 	private HerokuOAuthAPIDomain herokuOAuthAPIDomain;
 	@Autowired
 	private HerokuOAuthLogicDomain herokuOAuthLogicDomain;
