@@ -57,7 +57,6 @@
 
 <script>
 import { AuthCookies } from "@/lib/AuthCookies.js";
-import { useLogout } from "@/api/authAPI";
 
 export default {
   data() {
@@ -74,16 +73,7 @@ export default {
   },
   methods: {
     logout: function () {
-      useLogout()
-        .then((response) => {
-          console.log(response);
-        })
-        .catch((error) => {
-          console.log(error);
-        })
-        .finally(() => {
-          this.$refs.wait.finish();
-        });
+      window.location.href = "/logout";
     },
     setName: function () {
       this.intervalid1 = setInterval(
