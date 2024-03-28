@@ -58,7 +58,7 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-		if (request.getServletPath().startsWith("/auth/"))
+		if (request.getServletPath().startsWith("/api/auth/"))
 		// if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);

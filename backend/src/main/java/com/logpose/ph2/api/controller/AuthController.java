@@ -32,7 +32,7 @@ import jakarta.servlet.http.HttpServletResponse;
 		allowedHeaders ="*", exposedHeaders="*",
 		allowCredentials = "true")
 @RestController
-@RequestMapping(path = "/auth")
+@RequestMapping(path = "/api/auth")
 public class AuthController
 	{
 	// ===============================================

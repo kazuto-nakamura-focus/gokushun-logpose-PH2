@@ -54,8 +54,6 @@ public class TopController
 	@GetMapping("/fields")
 	public ResponseDTO getFields(HttpServletRequest request, HttpServletResponse response)
 		{
-		StringBuffer url = request.getRequestURL();
-		System.out.println(url);
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
