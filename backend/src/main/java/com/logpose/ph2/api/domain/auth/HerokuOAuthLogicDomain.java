@@ -139,13 +139,14 @@ public class HerokuOAuthLogicDomain
 			}
 		newUser.setCreatedAt(now);
 		newUser.setUpdatedAt(now);
-		long id = newUser.getId();
+		long id; 
 		if (0 == users.size())
 			{
 			id = this.ph2UserMapper.insert(newUser);
 			}
 		else
 			{
+			id = newUser.getId();
 			this.ph2UserMapper.updateByPrimaryKey(newUser);
 			}
 // * Cookie情報の設定
