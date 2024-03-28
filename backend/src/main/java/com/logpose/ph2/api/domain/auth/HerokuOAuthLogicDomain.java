@@ -58,13 +58,21 @@ public class HerokuOAuthLogicDomain
 	 * @return チェック結果
 	 */
 	// --------------------------------------------------
-	public int checkUser(String accessToken, Ph2OauthEntity entity)
+	public int checkUser(List<String> accessToken, Ph2OauthEntity entity)
 		{
 // * トークンの確認
-		if (!entity.getAccessToken().equals(accessToken))
+		boolean istc = false;
+		for (String tc : accessToken)
 			{
-			return TOKEN_ERR;
+			if (entity.getAccessToken().equals(tc))
+				{
+				istc = true;
+				break;
+				}
 			}
+		if (!istc)
+			return TOKEN_ERR;
+
 // * 有効期限
 		Date now = new Date();
 		if ((entity.getLoadTime().getTime() + entity.getExpiresIn()) > now.getTime())
@@ -139,7 +147,7 @@ public class HerokuOAuthLogicDomain
 			}
 		newUser.setCreatedAt(now);
 		newUser.setUpdatedAt(now);
-		long id; 
+		long id;
 		if (0 == users.size())
 			{
 			id = this.ph2UserMapper.insert(newUser);
@@ -169,7 +177,7 @@ public class HerokuOAuthLogicDomain
 		{
 		Ph2UsersEntity usr = this.ph2UserMapper.selectByPrimaryKey(id);
 		Ph2OauthEntity oauth = this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
-		this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
+	//	this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
 
 		return oauth;
 		}

@@ -70,8 +70,9 @@ public class AuthService
 // * Authテーブルからトークンを削除する。
 		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.revokeUser(Long.valueOf(appUserId));
 // * Herokuからトークンを無効化する
-		this.herokuOAuthAPIDomain.logout(auth.getUserId(), auth.getAccessToken());
+		this.herokuOAuthAPIDomain.logout(auth.getAccessToken(), auth.getToken());
 		return this.herokuOAuthAPIDomain.getHerokuLogin();
 		}
+
 
 	}

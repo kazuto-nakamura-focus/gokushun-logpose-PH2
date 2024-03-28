@@ -2,6 +2,8 @@ package com.logpose.ph2.api.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -69,6 +71,7 @@ public class AppAuthFilter implements Filter
 		String accessToken = null;
 		Long appId = null;
 		Cookie[] cookies = request.getCookies();
+		List<String> tcs = new ArrayList<>();
 		if (null != cookies)
 			{
 			for (int i = 0; i < cookies.length; i++)
@@ -81,6 +84,7 @@ public class AppAuthFilter implements Filter
 						{
 						continue;
 						}
+					tcs.add(accessToken);
 					}
 				else if (cookie.getName().equals(CookieMaster.USER_ID))
 					{
@@ -103,7 +107,7 @@ public class AppAuthFilter implements Filter
 			Ph2OauthEntity oauth = this.logicDomain.getOauthInfo(appId);
 
 // * トークンのチェック
-			int result = this.logicDomain.checkUser(accessToken, oauth);
+			int result = this.logicDomain.checkUser(tcs, oauth);
 // * ユーザーがいない場合
 			if (result == HerokuOAuthLogicDomain.NO_USER)
 				{
@@ -147,16 +151,33 @@ public class AppAuthFilter implements Filter
 			}
 		catch (RuntimeException re)
 			{
+			AppAuthFilter.clearCookie(request, CookieMaster.ACCESS_TOKEN);
 			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
 		catch (Exception e)
 			{
+			e.printStackTrace();
 			response.sendError(401, "not authorized -> " + e.getMessage());
 			}
 
 		}
 
+	public static void clearCookie(HttpServletRequest request, String name)
+		{
+		Cookie target = null;
+		if (request.getCookies() != null)
+			{
+			for (Cookie cookie : request.getCookies())
+				{
+				if (cookie.getName().equals(name))
+					{
+					cookie.setMaxAge(0);
+					}
+				}
+			}
+		}
+	
 	public static Cookie getCookie(HttpServletRequest request, String name)
 		{
 		Cookie target = null;
