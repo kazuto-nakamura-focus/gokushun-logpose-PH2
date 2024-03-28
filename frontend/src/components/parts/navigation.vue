@@ -57,7 +57,7 @@
 
 <script>
 import { AuthCookies } from "@/lib/AuthCookies.js";
-import { useLogout } from "@/api/authAPI";
+//import { useLogout } from "@/api/authAPI";
 
 export default {
   data() {
@@ -74,7 +74,24 @@ export default {
   },
   methods: {
     logout: function () {
-      useLogout()
+      let headers = new Headers();
+
+      headers.append("Content-Type", "application/json");
+      headers.append("Accept", "application/json");
+
+      headers.append("Access-Control-Allow-Origin", "*");
+      headers.append("Access-Control-Allow-Credentials", "true");
+
+      headers.append("GET", "POST", "OPTIONS");
+      fetch("https://gokushun-ph2-it.herokuapp.com/api/auth/logout", {
+        headers: headers,
+        method: "POST",
+        credentials: "include", // クッキーを送信するために必要
+      });
+      //  window.location.href = "https://dashboard.heroku.com/logout";
+    },
+
+    /*  useLogout()
         .then((response) => {
           console.log(response);
         })
@@ -83,8 +100,8 @@ export default {
         })
         .finally(() => {
           this.$refs.wait.finish();
-        });
-    },
+        });}
+    },*/
     setName: function () {
       this.intervalid1 = setInterval(
         function () {
