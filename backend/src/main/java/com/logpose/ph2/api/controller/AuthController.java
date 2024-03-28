@@ -2,6 +2,8 @@ package com.logpose.ph2.api.controller;
 
 import java.io.IOException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -36,6 +38,8 @@ public class AuthController
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	private static Logger LOG = LogManager.getLogger(AuthController.class);
+
 	@Autowired
 	private AuthService authService;
 
@@ -55,11 +59,13 @@ public class AuthController
 		{
 		try
 			{
+			LOG.info("ログイン処理開始");
 // * ログインの実行
 			AuthCookieDTO cookieData = this.authService.login(code, antiFoorgeryToken);
 // * URLの設定
 			String url = this.authService.convertToURL(cookieData);
 // * アプリへリダイレクト
+			LOG.info("リダイレクト:" + url);
 			response.sendRedirect(url);
 			}
 		catch (Exception e)
