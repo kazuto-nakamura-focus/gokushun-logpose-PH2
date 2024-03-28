@@ -1,5 +1,4 @@
 import Axios from "axios";
-import { AuthCookies } from "@/lib/AuthCookies.js";
 import { axiosEnvConfig } from "@/config/envConfig";
 
 const axios = Axios.create({
@@ -20,9 +19,6 @@ axios.interceptors.response.use(
   (response) => {
     const { status, message } = response["data"];
     if (status == -1) {
-      let cookie = new AuthCookies();
-      cookie.remove("id");
-      cookie.remove("at");
       window.location.href = message;
     }
     return response;

@@ -138,11 +138,7 @@ public class AppAuthFilter implements Filter
 				throw new RuntimeException("未定義の状態です。");
 				}
 
-			Cookie atc = AppAuthFilter.getCookie(request, CookieMaster.ACCESS_TOKEN);
-			if (null == atc)
-				atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
-			else
-				atc.setValue(accessToken);
+			Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
 			atc.setMaxAge(7776000);
 			atc.setDomain(param.getDomain());
 			response.addCookie(atc);
@@ -151,7 +147,7 @@ public class AppAuthFilter implements Filter
 			}
 		catch (RuntimeException re)
 			{
-			AppAuthFilter.clearCookie(request, CookieMaster.ACCESS_TOKEN);
+			AppAuthFilter.clearCookie(request, CookieMaster.ACCESS_TOKEN, param.getDomain());
 			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
@@ -163,13 +159,13 @@ public class AppAuthFilter implements Filter
 
 		}
 
-	public static void clearCookie(HttpServletRequest request, String name)
+	public static void clearCookie(HttpServletRequest request, String name, String domain)
 		{
-		Cookie target = null;
 		if (request.getCookies() != null)
 			{
 			for (Cookie cookie : request.getCookies())
 				{
+				cookie.setDomain(domain);
 				if (cookie.getName().equals(name))
 					{
 					cookie.setMaxAge(0);
