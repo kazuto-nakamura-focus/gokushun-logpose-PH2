@@ -1,16 +1,20 @@
 package com.logpose.ph2.api.filter;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.logpose.ph2.api.configration.DefaultDomainParameter;
+import com.logpose.ph2.api.configration.DefaultOAuthParameters;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
+import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.master.CookieMaster;
 
 import jakarta.servlet.Filter;
@@ -34,6 +38,8 @@ public class AppAuthFilter implements Filter
 	@Autowired
 	private DefaultDomainParameter param;
 	@Autowired
+	private DefaultOAuthParameters oAuthParameters;
+	@Autowired
 	private HerokuOAuthLogicDomain logicDomain;
 	@Autowired
 	private HerokuOAuthAPIDomain apiDomain;
@@ -52,8 +58,8 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
-//		if (request.getServletPath().startsWith("/auth/"))
-		 if (request.getServletPath().startsWith("/"))
+		if (request.getServletPath().startsWith("/auth/"))
+		// if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
@@ -88,11 +94,7 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
-			response.setHeader("Access-Control-Allow-Origin", "*");
-			response.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-			response.setHeader("Access-Control-Max-Age", "3600");
-			response.sendError(400, this.apiDomain.getHerokuLogin());
-			// response.sendRedirect(this.apiDomain.getHerokuLogin());
+			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
 		try
@@ -140,7 +142,7 @@ public class AppAuthFilter implements Filter
 			}
 		catch (RuntimeException re)
 			{
-			response.sendRedirect(this.apiDomain.getHerokuLogin());
+			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
 		catch (Exception e)
@@ -155,4 +157,26 @@ public class AppAuthFilter implements Filter
 		{
 		}
 
+	private void sendRedirect(HttpServletResponse response, String url) throws IOException
+		{
+		response.setStatus(HttpServletResponse.SC_OK);
+		response.addHeader("Access-Control-Allow-Origin", oAuthParameters.getOriginUrl());
+		response.addHeader("Access-Control-Allow-Credentials", "true");
+		response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
+		response.addHeader("Access-Control-Allow-Headers",
+				"X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
+		response.addHeader("Access-Control-Max-Age", "1728000");
+		ResponseDTO mssg = new ResponseDTO();
+		mssg.setRedirect(url);
+
+		ObjectMapper mapper = new ObjectMapper();
+		String jsonData = mapper.writeValueAsString(mssg);
+
+		PrintWriter out = response.getWriter();
+		response.setContentType("application/json");
+		response.setCharacterEncoding("UTF-8");
+		out.print(jsonData);
+		out.flush();
+		out.close();
+		}
 	}

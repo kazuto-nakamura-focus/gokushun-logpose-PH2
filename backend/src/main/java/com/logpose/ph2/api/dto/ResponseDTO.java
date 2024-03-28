@@ -36,4 +36,11 @@ public class ResponseDTO
 		// TODO
 		error.printStackTrace();
 		}
+	
+	public void setRedirect(String url)
+		{
+		this.setMessage(url);
+		this.setData(null);
+		this.setStatus(-1);
+		}
 	}
