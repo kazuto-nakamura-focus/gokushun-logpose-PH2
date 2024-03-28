@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthAccountResponse;
-import com.logpose.ph2.api.dao.api.entity.HerokuOauthIdResponse;
+import com.logpose.ph2.api.dao.api.entity.HerokuOauthLogoutResponse;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthRefreshTokenRequest;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenRequest;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
@@ -92,9 +92,9 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	public HerokuOauthIdResponse logout(String url, String accessToken, String token)
+	public HerokuOauthLogoutResponse logout(String url, String accessToken, String token, String secret)
 		{
-		return this.logoutUser("https://api.heroku.com/oauth/authorizations/" +  accessToken, token);
+		return this.logoutUser("https://id.heroku.com/oauth/token/" +  token, token, secret);
 		}
 	// --------------------------------------------------
 	/**
@@ -172,19 +172,19 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthIdResponse logoutUser(String url, String token)
+	private HerokuOauthLogoutResponse logoutUser(String url, String token, String secret)
 		{
-		ResponseEntity<HerokuOauthIdResponse> response = null;
+		ResponseEntity<HerokuOauthLogoutResponse> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		Map<String, String> map = new HashMap<>();
 		map.put("Accept", "application/vnd.heroku+json; version=3.webhooks");
 		headers.setAll(map);
-		headers.setBearerAuth(token);
+		headers.setBearerAuth(secret);
 	    HttpEntity<String> request = new HttpEntity<>(headers);
 // * Get処理の実行
 		try
 			{
-			response = restTemplate.exchange(url, HttpMethod.DELETE, request, HerokuOauthIdResponse.class);
+			response = restTemplate.exchange(url, HttpMethod.DELETE, request, HerokuOauthLogoutResponse.class);
 			}
 		catch (Exception e)
 			{
