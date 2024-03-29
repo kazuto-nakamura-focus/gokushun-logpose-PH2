@@ -92,9 +92,9 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	public HerokuOauthLogoutResponse logout(String url, String accessToken, String token, String secret)
+	public HerokuOauthLogoutResponse logout(String url, String clientId, String token)
 		{
-		return this.logoutUser("https://id.heroku.com/oauth/token/" +  token, token, secret);
+		return this.logoutUser(url + "/" + clientId, token);
 		}
 	// --------------------------------------------------
 	/**
@@ -172,14 +172,15 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthLogoutResponse logoutUser(String url, String token, String secret)
+	private HerokuOauthLogoutResponse logoutUser(String url, String token)
 		{
 		ResponseEntity<HerokuOauthLogoutResponse> response = null;
 		HttpHeaders headers = new HttpHeaders();
 		Map<String, String> map = new HashMap<>();
-		map.put("Accept", "application/vnd.heroku+json; version=3.webhooks");
+		map.put("Content-Type", "application/json");
+		map.put("Accept", "application/vnd.heroku+json; version=3");
 		headers.setAll(map);
-		headers.setBearerAuth(secret);
+		headers.setBearerAuth(token);
 	    HttpEntity<String> request = new HttpEntity<>(headers);
 // * Get処理の実行
 		try

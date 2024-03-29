@@ -75,7 +75,7 @@ public class HerokuOAuthLogicDomain
 
 // * 有効期限
 		Date now = new Date();
-		if ((entity.getLoadTime().getTime() + entity.getExpiresIn()) > now.getTime())
+		if ((entity.getLoadTime().getTime() + entity.getExpiresIn()*1000) < now.getTime())
 			{
 			return OUT_OF_TIME;
 			}

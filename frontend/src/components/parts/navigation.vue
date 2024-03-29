@@ -57,6 +57,7 @@
 
 <script>
 import { AuthCookies } from "@/lib/AuthCookies.js";
+import { useLogout } from "@/api/authAPI";
 
 export default {
   data() {
@@ -73,7 +74,27 @@ export default {
   },
   methods: {
     logout: function () {
-      window.location.href = "/logout";
+      document.cookie =
+        "heroku-session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "heroku-nav-data=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "heroku-session-affinity=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "heroku.session=session_removed; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie =
+        "heroku.session.sig=session_removed; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+
+      useLogout()
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {
+          this.$refs.wait.finish();
+        });
     },
     setName: function () {
       this.intervalid1 = setInterval(

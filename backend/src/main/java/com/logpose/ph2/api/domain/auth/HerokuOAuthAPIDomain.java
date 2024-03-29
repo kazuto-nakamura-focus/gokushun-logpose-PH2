@@ -117,8 +117,8 @@ public class HerokuOAuthAPIDomain
 	 * @param userId
 	 */
 	// --------------------------------------------------
-	public void logout(String accssToken, String token)
+	public void logout(String clientId, String token)
 		{
-		new HerokuAuthAPI().logout(params.getAuthUrl(), accssToken, token, token);
+		new HerokuAuthAPI().logout(params.getLogoutUrl(), clientId, token);
 		}
 	}
