@@ -124,12 +124,12 @@ public class AppAuthFilter implements Filter
 				throw new RuntimeException("ユーザーではありません。");
 				}
 // * トークンが無い場合
-			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
-				{
-				throw new RuntimeException("不正なアクセスです。");
-				}
+//			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
+//				{
+//				throw new RuntimeException("不正なアクセスです。");
+//				}
 // * トークンが期限切れの場合
-			else if (result == HerokuOAuthLogicDomain.OUT_OF_TIME)
+			else if ((result == HerokuOAuthLogicDomain.OUT_OF_TIME)||(result == HerokuOAuthLogicDomain.TOKEN_ERR))
 				{
 // * トークンの更新
 				HerokuOauthTokenResponse authRes = this.apiDomain.refreshToken(oauth);
@@ -143,10 +143,10 @@ public class AppAuthFilter implements Filter
 				accessToken = authRes.getAccessToken();
 				this.logicDomain.upateDB(oauth, authRes);
 				}
-			else if (result != 0)
+	/*		else if (result != 0)
 				{
 				throw new RuntimeException("未定義の状態です。");
-				}
+				}*/
 
 			Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
 			atc.setMaxAge(7776000);

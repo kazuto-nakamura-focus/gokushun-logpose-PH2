@@ -41,15 +41,6 @@
           </v-list-item-icon>
           <v-list-item-title width="100%" :title="userName">{{userName}}</v-list-item-title>
         </v-list-item>
-        <v-list-item>
-          <div style="display: flex;justify-content: right;">
-            <div>
-              <button v-on:click="logout">
-                <u>ログアウト</u>
-              </button>
-            </div>
-          </div>
-        </v-list-item>
       </v-list>
     </v-list>
   </div>

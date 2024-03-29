@@ -177,8 +177,6 @@ export default {
       if (this.$route.query.at !== undefined) {
         cookies.set("at", this.$route.query.at, 90);
       }
-      console.log(this.$route.query.at);
-      console.log(cookies.get("at"));
     },
     openModel: function (komoku) {
       if (this.isAggregated) {
