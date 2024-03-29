@@ -83,18 +83,16 @@ public class AuthController
 	public ResponseDTO login(HttpServletResponse response,
 			@CookieValue(CookieMaster.USER_ID) String appUserId) throws IOException
 		{
-
 		ResponseDTO dto = new ResponseDTO();
 		try
 			{
 // * ログアウト処理の実行
 			 this.authService.logout(appUserId);
-			 dto.setRedirect(this.authService.getHerokuOAuthAPIDomain().getHerokuLogin());
+			 dto.setSuccess(null);
 			}
 		catch (Exception e)
 			{
-			e.printStackTrace();
-			dto.setRedirect(this.authService.getHerokuOAuthAPIDomain().getHerokuLogin());
+			dto.setError(e);
 			}
 		return dto;
 		}

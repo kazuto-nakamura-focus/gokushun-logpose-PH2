@@ -173,13 +173,12 @@ public class HerokuOAuthLogicDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public Ph2OauthEntity revokeUser(Long id)
+	public Ph2OauthEntity getUser(Long id)
 		{
 		Ph2UsersEntity usr = this.ph2UserMapper.selectByPrimaryKey(id);
-		Ph2OauthEntity oauth = this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
-//		this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
-
-		return oauth;
+	    return this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
+	//	this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
+	//	return oauth;
 		}
 
 	// --------------------------------------------------

@@ -1,11 +1,5 @@
 package com.logpose.ph2.api.service;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpDelete;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,49 +71,8 @@ public class AuthService
 	public void logout(String appUserId)
 		{
 // * Authテーブルからトークンを削除する。
-		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.revokeUser(Long.valueOf(appUserId));
-// * Herokuからトークンを無効化する
-//		this.herokuOAuthAPIDomain.logout(auth.getUserId(), auth.getToken());
-//		return this.herokuOAuthAPIDomain.getHerokuLogin();
-		this.logoutFromHeroku(auth);
+		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.getUser(Long.valueOf(appUserId));
+		this.herokuOAuthAPIDomain.logout(auth);
 		}
-	public  void logoutFromHeroku(Ph2OauthEntity auth)
-		{
-		String herokuLogoutUrl = "https://api.heroku.com/logout"; // Herokuログアウトのエンドポイント
-
-		// HttpClientのインスタンスを生成
-		HttpClient httpClient = HttpClients.createDefault();
-
-		// HTTP DELETEリクエストを作成
-		HttpDelete httpDelete = new HttpDelete(herokuLogoutUrl);
-
-		// リクエストヘッダーに必要な情報を追加（例：認証トークン）
-		httpDelete.setHeader("Accept", "application/vnd.heroku+json; version=3");
-		httpDelete.setHeader("Authorization", "Bearer " +auth.getToken()); // アクセストークンを適切な値に置き換える
-
-		try
-			{
-			// HTTPリクエストを実行し、レスポンスを取得
-			HttpResponse response = httpClient.execute(httpDelete);
-
-			// レスポンスのステータスコードを取得
-			int statusCode = response.getStatusLine().getStatusCode();
-
-			// レスポンスの内容を表示
-			System.out.println("Herokuログアウトリクエストのレスポンスコード: " + statusCode);
-
-			// レスポンスのエンティティを取得し、内容を表示
-			HttpEntity entity = response.getEntity();
-			if (entity != null)
-				{
-				String responseBody = EntityUtils.toString(entity);
-				System.out.println("Herokuログアウトリクエストのレスポンスボディ: " + responseBody);
-				}
-			}
-		catch (Exception e)
-			{
-			e.printStackTrace();
-			}
-		}
-
+	
 	}

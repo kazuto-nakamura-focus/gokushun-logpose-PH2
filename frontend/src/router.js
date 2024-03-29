@@ -8,6 +8,7 @@ import GrowthModel from "@/components/GrowthModel";
 //import TopStageGrowth from "@/components/TopStageGrowth";
 import RawDataView from "@/components/RawDataView.vue";
 import ManagementScreenTop from "@/components/ManagementScreenTop";
+import logout from "@/components-v1/logout.vue"
 
 Vue.use(Router);
 
@@ -26,6 +27,7 @@ export default new Router({
     { path: "/management_screen_top", name: "management_screen_top", component: ManagementScreenTop },
     // 生データ画面
     { path: "/top_data", name: "data", component: RawDataView },
-
+    // 生データ画面
+    { path: "/logout", name: "logout", component: logout },
   ],
 });

@@ -1,11 +1,16 @@
 import Axios from "axios";
 import { axiosEnvConfig } from "@/config/envConfig";
+import { AuthCookies } from "@/lib/AuthCookies.js";
 
 const axios = Axios.create({
   baseURL: axiosEnvConfig.baseUrl,
   withCredentials: true,
 });
 axios.interceptors.request.use(config => {
+  let cookie = new AuthCookies();
+  if (null == cookie.get("at")) {
+    window.location.href = "/logout"
+  }
   config.headers = {
     "Content-Type": "application/json",
     //   "X-Requested-With": "XMLHttpRequest",

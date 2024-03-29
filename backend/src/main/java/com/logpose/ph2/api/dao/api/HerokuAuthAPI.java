@@ -15,6 +15,7 @@ import com.logpose.ph2.api.dao.api.entity.HerokuOauthLogoutResponse;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthRefreshTokenRequest;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenRequest;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
+import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 
 import lombok.Data;
 
@@ -92,11 +93,11 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	public HerokuOauthLogoutResponse logout(String url, String clientId, String token)
+	public HerokuOauthLogoutResponse logout(String url, Ph2OauthEntity  auth, String apikey)
 		{
-		return this.logoutUser(url + "/" + clientId, token);
+		return this.logoutUser("https://api.heroku.com/oauth/authorizations/" + auth.getUserId(), apikey);
 		}
-	// --------------------------------------------------
+	// --------------------------------------------------s
 	/**
 	 * Heroku OAuth APIからトークンデータを取得するs
 	 * @param url
@@ -172,7 +173,7 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthLogoutResponse logoutUser(String url, String token)
+	private HerokuOauthLogoutResponse logoutUser(String url, String apikey)
 		{
 		ResponseEntity<HerokuOauthLogoutResponse> response = null;
 		HttpHeaders headers = new HttpHeaders();
@@ -180,7 +181,7 @@ public class HerokuAuthAPI
 		map.put("Content-Type", "application/json");
 		map.put("Accept", "application/vnd.heroku+json; version=3");
 		headers.setAll(map);
-		headers.setBearerAuth(token);
+		headers.setBearerAuth("f7806d85-7fdc-4c6b-bc1c-d1bb08fd939f");
 	    HttpEntity<String> request = new HttpEntity<>(headers);
 // * Get処理の実行
 		try

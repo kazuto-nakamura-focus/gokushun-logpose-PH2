@@ -117,8 +117,8 @@ public class HerokuOAuthAPIDomain
 	 * @param userId
 	 */
 	// --------------------------------------------------
-	public void logout(String clientId, String token)
+	public void logout(Ph2OauthEntity auth)
 		{
-		new HerokuAuthAPI().logout(params.getLogoutUrl(), clientId, token);
+		new HerokuAuthAPI().logout(params.getUrl(), auth, params.getCleintId() + " " +params.getCleintSecret() );
 		}
 	}
