@@ -68,14 +68,11 @@ public class AuthService
 	 *@param appUserId LogposeユーザーID
 	 */
 	// -------------------------------------------------
-	public String logout(String appUserId)
+	public void logout(String appUserId)
 		{
 // * Authテーブルからトークンを削除する。
-		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.revokeUser(Long.valueOf(appUserId));
-// * Herokuからトークンを無効化する
-		this.herokuOAuthAPIDomain.logout(auth.getAccessToken(), auth.getToken());
-		return this.herokuOAuthAPIDomain.getHerokuLogin();
+		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.getUser(Long.valueOf(appUserId));
+		this.herokuOAuthAPIDomain.logout(auth);
 		}
-
-
+	
 	}

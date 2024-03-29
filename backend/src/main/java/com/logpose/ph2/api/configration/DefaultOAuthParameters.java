@@ -14,4 +14,5 @@ public class DefaultOAuthParameters
 	private String cleintSecret;
 	private String forgery;
 	private String originUrl;
+	private String logoutUrl;
 	}

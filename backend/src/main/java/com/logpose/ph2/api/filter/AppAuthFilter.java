@@ -77,20 +77,30 @@ public class AppAuthFilter implements Filter
 			for (int i = 0; i < cookies.length; i++)
 				{
 				Cookie cookie = cookies[i];
-				if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
+				if(null !=cookie.getPath() )
 					{
-					accessToken = cookie.getValue();
-					if ((null == accessToken) || (accessToken.length() == 0))
-						{
-						continue;
-						}
-					tcs.add(accessToken);
+					if(!cookie.getPath().equals("/")) continue;
 					}
-				else if (cookie.getName().equals(CookieMaster.USER_ID))
+				if (null == accessToken)
 					{
-					if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
+					if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
 						{
-						appId = Long.valueOf(cookie.getValue());
+						accessToken = cookie.getValue();
+						if ((null == accessToken) || (accessToken.length() == 0))
+							{
+							continue;
+							}
+						tcs.add(accessToken);
+						}
+					}
+				if (null == appId)
+					{
+					if (cookie.getName().equals(CookieMaster.USER_ID))
+						{
+						if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
+							{
+							appId = Long.valueOf(cookie.getValue());
+							}
 						}
 					}
 				}
@@ -140,6 +150,7 @@ public class AppAuthFilter implements Filter
 
 			Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
 			atc.setMaxAge(7776000);
+			atc.setPath("/");
 			atc.setDomain(param.getDomain());
 			response.addCookie(atc);
 
@@ -147,7 +158,7 @@ public class AppAuthFilter implements Filter
 			}
 		catch (RuntimeException re)
 			{
-			AppAuthFilter.clearCookie(request, CookieMaster.ACCESS_TOKEN, param.getDomain());
+			AppAuthFilter.clearCookie(response, CookieMaster.ACCESS_TOKEN, param.getDomain());
 			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
@@ -159,21 +170,15 @@ public class AppAuthFilter implements Filter
 
 		}
 
-	public static void clearCookie(HttpServletRequest request, String name, String domain)
+	public static void clearCookie(HttpServletResponse response, String name, String domain)
 		{
-		if (request.getCookies() != null)
-			{
-			for (Cookie cookie : request.getCookies())
-				{
-				cookie.setDomain(domain);
-				if (cookie.getName().equals(name))
-					{
-					cookie.setMaxAge(0);
-					}
-				}
-			}
+		Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, null);
+		atc.setMaxAge(0);
+		atc.setPath("/");
+		atc.setDomain(domain);
+		response.addCookie(atc);
 		}
-	
+
 	public static Cookie getCookie(HttpServletRequest request, String name)
 		{
 		Cookie target = null;

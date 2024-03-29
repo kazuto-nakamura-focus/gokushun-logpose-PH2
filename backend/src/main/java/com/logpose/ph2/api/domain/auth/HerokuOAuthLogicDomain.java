@@ -75,7 +75,7 @@ public class HerokuOAuthLogicDomain
 
 // * 有効期限
 		Date now = new Date();
-		if ((entity.getLoadTime().getTime() + entity.getExpiresIn()) > now.getTime())
+		if ((entity.getLoadTime().getTime() + entity.getExpiresIn()*1000) < now.getTime())
 			{
 			return OUT_OF_TIME;
 			}
@@ -173,13 +173,12 @@ public class HerokuOAuthLogicDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public Ph2OauthEntity revokeUser(Long id)
+	public Ph2OauthEntity getUser(Long id)
 		{
 		Ph2UsersEntity usr = this.ph2UserMapper.selectByPrimaryKey(id);
-		Ph2OauthEntity oauth = this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
-//		this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
-
-		return oauth;
+	    return this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
+	//	this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
+	//	return oauth;
 		}
 
 	// --------------------------------------------------

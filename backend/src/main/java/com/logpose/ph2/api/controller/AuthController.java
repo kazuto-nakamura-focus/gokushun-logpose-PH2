@@ -26,11 +26,9 @@ import jakarta.servlet.http.HttpServletResponse;
  * @since 2024/01/03
  * @version 1.0
  */
-@CrossOrigin(
-		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
-		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
-		allowedHeaders ="*", exposedHeaders="*",
-		allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000",
+		"https://gokushun-ph2-it.herokuapp.com" }, methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
+				RequestMethod.DELETE }, allowedHeaders = "*", exposedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/auth")
 public class AuthController
@@ -85,18 +83,16 @@ public class AuthController
 	public ResponseDTO login(HttpServletResponse response,
 			@CookieValue(CookieMaster.USER_ID) String appUserId) throws IOException
 		{
-		
 		ResponseDTO dto = new ResponseDTO();
 		try
 			{
-//* ログアウト処理の実行
-			String logoutUrl = this.authService.logout(appUserId);
-			dto.setRedirect(logoutUrl);
+// * ログアウト処理の実行
+			 this.authService.logout(appUserId);
+			 dto.setSuccess(null);
 			}
 		catch (Exception e)
 			{
-			e.printStackTrace();
-			dto.setRedirect(this.authService.getHerokuOAuthAPIDomain().getHerokuLogin());
+			dto.setError(e);
 			}
 		return dto;
 		}

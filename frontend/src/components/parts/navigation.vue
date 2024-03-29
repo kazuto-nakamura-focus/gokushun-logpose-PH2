@@ -73,7 +73,11 @@ export default {
   },
   methods: {
     logout: function () {
-      window.location.href = "/logout";
+      let cookies = new AuthCookies();
+      cookies.remove("name");
+      cookies.remove("id");
+      cookies.remove("at");
+      this.$router.push("logout");
     },
     setName: function () {
       this.intervalid1 = setInterval(
