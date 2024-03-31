@@ -108,6 +108,7 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
+			
 			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
@@ -123,11 +124,11 @@ public class AppAuthFilter implements Filter
 				{
 				throw new RuntimeException("ユーザーではありません。");
 				}
-// * トークンが無い場合
-//			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
-//				{
-//				throw new RuntimeException("不正なアクセスです。");
-//				}
+// * トークンが違っている場合
+			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
+				{
+				throw new RuntimeException("不正なアクセスです。");
+				}
 // * トークンが期限切れの場合
 			else if ((result == HerokuOAuthLogicDomain.OUT_OF_TIME)||(result == HerokuOAuthLogicDomain.TOKEN_ERR))
 				{
@@ -216,6 +217,7 @@ public class AppAuthFilter implements Filter
 
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonData = mapper.writeValueAsString(mssg);
+		
 
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");

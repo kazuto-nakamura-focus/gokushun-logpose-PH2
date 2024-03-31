@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class DefaultOAuthParameters
 	{
+	private String apiKey;
 	private String url;
 	private String userUrl;
 	private String authUrl;

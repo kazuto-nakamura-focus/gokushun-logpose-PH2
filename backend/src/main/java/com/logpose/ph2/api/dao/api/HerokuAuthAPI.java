@@ -12,12 +12,10 @@ import org.springframework.web.client.RestTemplate;
 
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthAccountResponse;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthLogoutResponse;
-import com.logpose.ph2.api.dao.api.entity.HerokuOauthRefreshTokenRequest;
-import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenRequest;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
-import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 
 import lombok.Data;
+import lombok.Setter;
 
 /**
  * Heroku OAuth APIをコールする
@@ -29,105 +27,94 @@ public class HerokuAuthAPI
 	// クラスメンバー
 	// ===============================================
 	private RestTemplate restTemplate = new RestTemplate();
+	private HttpEntity<String> request = null;
+	@Setter
+	private String url;
+	private StringBuilder builder = new StringBuilder();
 
 	// ===============================================
 	// 公開関数群
 	// ===============================================
 	// --------------------------------------------------
 	/**
-	 * Herokuとトークンを交換する
-	 * @param request
-	 * @return SigFoxMessagesEntity
-	 * @throws InterruptedException 
+	 * ヘッダーを作成する
+	 * @param authorization
 	 */
-	// -------------------------------------------------
-	public HerokuOauthTokenResponse getToken(HerokuOauthTokenRequest request)
-		{		
-// * URLの設定
-		StringBuilder builder = new StringBuilder();
-		builder.append(request.getUrl());
-		builder.append("?");
-		builder.append("grant_type=").append("authorization_code");
-		builder.append("&code=").append(request.getCode());
-		builder.append("&client_secret=").append(request.getClienSecret());
-		
-// * 問合せの実行
-		return this.getData(builder.toString());
-		}
 	// --------------------------------------------------
-	/**
-	 * Herokuとリフレッシュトークンを交換する
-	 * @param request
-	 * @return SigFoxMessagesEntity
-	 * @throws InterruptedException 
-	 */
-	// -------------------------------------------------
-	public HerokuOauthTokenResponse getRefreshToken(HerokuOauthRefreshTokenRequest request)
-		{		
-// * URLの設定
-		StringBuilder builder = new StringBuilder();
-		builder.append(request.getUrl());
-		builder.append("?");
-		builder.append("grant_type=").append(request.getGrantType());
-		builder.append("&refresh_token=").append(request.getRefreshToken());
-		builder.append("&client_secret=").append(request.getClienSecret());
-		
-// * 問合せの実行
-		return this.getData(builder.toString());
-		}
-	// --------------------------------------------------
-	/**
-	 * User情報を得る
-	 * @param userId
-	 * @return HerokuOauthAccountResponse
-	 */
-	// -------------------------------------------------
-	public HerokuOauthAccountResponse getUserInfo(String url, String userId, String code)
+	public void createHeaders(String authorization)
 		{
-		return this.getUserData(url+ "/" + userId, code);
+		HttpHeaders headers = new HttpHeaders();
+		Map<String, String> map = new HashMap<>();
+		map.put("Content-Type", "application/json");
+		map.put("Accept", "application/vnd.heroku+json; version=3.webhook");
+		headers.setAll(map);
+		if (null != authorization) headers.setBearerAuth(authorization);
+		this.request = new HttpEntity<>(headers);
+		}
+
+	// --------------------------------------------------
+	/**
+	 * パスを追加する
+	 * @param name パス名
+	 */
+	// --------------------------------------------------
+	public void addPath(String path)
+		{
+		this.url = this.url + "/" + path;
 		}
 	// --------------------------------------------------
 	/**
-	 * ログアウト処理をコールする
-	 * @param accessToken
-	 * @return HerokuOauthAccountResponse
+	 * パスを生成する
 	 */
-	// -------------------------------------------------
-	public HerokuOauthLogoutResponse logout(String url, Ph2OauthEntity  auth, String apikey)
+	// --------------------------------------------------
+	public void createQuery()
 		{
-		return this.logoutUser("https://api.heroku.com/oauth/authorizations/" + auth.getUserId(), apikey);
+		if (this.builder.length() > 0)
+			{
+			this.url = this.url + "?" + this.builder.toString();
+			}
 		}
-	// --------------------------------------------------s
+	// --------------------------------------------------
+	/**
+	 * 引数を追加する
+	 * @param name パラメータ名
+	 * @param value パラメータの値
+	 */
+	// --------------------------------------------------
+	public void addParameter(String name, String value)
+		{
+		if(this.builder.length() > 0) this.builder.append('&');
+		this.builder.append(name).append('=').append(value);
+		}
+	// --------------------------------------------------
 	/**
 	 * Heroku OAuth APIからトークンデータを取得するs
 	 * @param url
 	 * @return HerokuOauthTokenResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthTokenResponse getData(String url)
+	public HerokuOauthTokenResponse getData()
 		{
-		ResponseEntity<HerokuOauthTokenResponse> response = null;
-// * Get処理の実行
 		try
 			{
-			response = restTemplate.exchange(url, HttpMethod.POST, null, HerokuOauthTokenResponse.class);
+			ResponseEntity<HerokuOauthTokenResponse> response = restTemplate.exchange(url, HttpMethod.POST, request,
+					HerokuOauthTokenResponse.class);
+			HttpStatusCode statusCode = response.getStatusCode();
+			if (statusCode.is2xxSuccessful())
+				{
+				return response.getBody();
+				}
+			else
+				{
+				throw new RuntimeException(response.getBody().toString());
+				}
 			}
 		catch (Exception e)
 			{
 			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
 			}
-
-// * 戻り値のチェックと返却
-		HttpStatusCode statusCode = response.getStatusCode();
-		if (statusCode.is2xxSuccessful())
-			{
-			return response.getBody();
-			}
-		else
-			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。");
-			}
 		}
+
 	// --------------------------------------------------
 	/**
 	 * Heroku OAuth APIからユーザーデータを取得する
@@ -135,37 +122,28 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthAccountResponse getUserData(String url, String code)
+	public HerokuOauthAccountResponse getUserData()
 		{
-		ResponseEntity<HerokuOauthAccountResponse> response = null;
-		HttpHeaders headers = new HttpHeaders();
-		Map<String, String> map = new HashMap<>();
-		map.put("Accept", "application/vnd.heroku+json; version=3.webhooks");
-		headers.setAll(map);
-	//	headers.setAccept(Collections.singletonList(new MediaType("application", "vnd.heroku json; version=3")));
-		headers.setBearerAuth(code);
-	    HttpEntity<String> request = new HttpEntity<>(headers);
-// * Get処理の実行
 		try
 			{
-			response = restTemplate.exchange(url, HttpMethod.GET, request, HerokuOauthAccountResponse.class);
+			ResponseEntity<HerokuOauthAccountResponse> response = restTemplate.exchange(url, HttpMethod.GET, request,
+					HerokuOauthAccountResponse.class);
+			HttpStatusCode statusCode = response.getStatusCode();
+			if (statusCode.is2xxSuccessful())
+				{
+				return response.getBody();
+				}
+			else
+				{
+				throw new RuntimeException(response.getBody().toString());
+				}
 			}
 		catch (Exception e)
 			{
 			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
 			}
-
-// * 戻り値のチェックと返却
-		HttpStatusCode statusCode = response.getStatusCode();
-		if (statusCode.is2xxSuccessful())
-			{
-			return response.getBody();
-			}
-		else
-			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。");
-			}
 		}
+
 	// --------------------------------------------------
 	/**
 	 * ログアウト処理をコールする
@@ -173,35 +151,25 @@ public class HerokuAuthAPI
 	 * @return HerokuOauthAccountResponse
 	 */
 	// -------------------------------------------------
-	private HerokuOauthLogoutResponse logoutUser(String url, String apikey)
+	public HerokuOauthLogoutResponse logoutUser()
 		{
-		ResponseEntity<HerokuOauthLogoutResponse> response = null;
-		HttpHeaders headers = new HttpHeaders();
-		Map<String, String> map = new HashMap<>();
-		map.put("Content-Type", "application/json");
-		map.put("Accept", "application/vnd.heroku+json; version=3");
-		headers.setAll(map);
-		headers.setBearerAuth("f7806d85-7fdc-4c6b-bc1c-d1bb08fd939f");
-	    HttpEntity<String> request = new HttpEntity<>(headers);
-// * Get処理の実行
 		try
 			{
-			response = restTemplate.exchange(url, HttpMethod.DELETE, request, HerokuOauthLogoutResponse.class);
+			ResponseEntity<HerokuOauthLogoutResponse> response = restTemplate.exchange(url, HttpMethod.DELETE, request,
+					HerokuOauthLogoutResponse.class);
+			HttpStatusCode statusCode = response.getStatusCode();
+			if (statusCode.is2xxSuccessful())
+				{
+				return response.getBody();
+				}
+			else
+				{
+				throw new RuntimeException(response.getBody().toString());
+				}
 			}
 		catch (Exception e)
 			{
 			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
-			}
-
-// * 戻り値のチェックと返却
-		HttpStatusCode statusCode = response.getStatusCode();
-		if (statusCode.is2xxSuccessful())
-			{
-			return response.getBody();
-			}
-		else
-			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。");
 			}
 		}
 	}

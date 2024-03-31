@@ -41,6 +41,15 @@
           </v-list-item-icon>
           <v-list-item-title width="100%" :title="userName">{{userName}}</v-list-item-title>
         </v-list-item>
+        <v-list-item>
+          <div style="display: flex;justify-content: right;">
+            <div>
+              <button v-on:click="logout">
+                <u>ログアウト</u>
+              </button>
+            </div>
+          </div>
+        </v-list-item>
       </v-list>
     </v-list>
   </div>
@@ -48,6 +57,7 @@
 
 <script>
 import { AuthCookies } from "@/lib/AuthCookies.js";
+import { useLogout } from "@/api/authAPI";
 
 export default {
   data() {
@@ -64,11 +74,14 @@ export default {
   },
   methods: {
     logout: function () {
-      let cookies = new AuthCookies();
-      cookies.remove("name");
-      cookies.remove("id");
-      cookies.remove("at");
-      this.$router.push("logout");
+      useLogout()
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+        .finally(() => {});
     },
     setName: function () {
       this.intervalid1 = setInterval(

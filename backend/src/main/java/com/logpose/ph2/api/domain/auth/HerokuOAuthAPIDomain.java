@@ -7,8 +7,6 @@ import com.logpose.ph2.api.configration.DefaultOAuthParameters;
 import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
 import com.logpose.ph2.api.dao.api.HerokuAuthAPI;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthAccountResponse;
-import com.logpose.ph2.api.dao.api.entity.HerokuOauthRefreshTokenRequest;
-import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenRequest;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 
@@ -49,38 +47,6 @@ public class HerokuOAuthAPIDomain
 		}
 	// --------------------------------------------------
 	/**
-	 * リフレッシュトークンを取得する
-	 * @param entity トークン情報
-	 * @return HerokuOauthTokenResponse
-	 */
-	// --------------------------------------------------
-	public HerokuOauthTokenResponse refreshToken(Ph2OauthEntity entity)
-		{
-		HerokuOauthRefreshTokenRequest authReq = new HerokuOauthRefreshTokenRequest();
-		authReq.setUrl(this.params.getUrl());
-		authReq.setGrantType(this.params.getRefreshTokenGrantType());
-		authReq.setRefreshToken(entity.getRefreshToken());
-		authReq.setClienSecret(this.params.getCleintSecret());
-		return new HerokuAuthAPI().getRefreshToken(authReq);
-		}
-	// --------------------------------------------------
-	/**
-	 * トークンの再取得を実行する
-	 * @param entity トークン情報
-	 * @param HerokuOauthTokenResponse
-	 */
-	// --------------------------------------------------
-	public HerokuOauthTokenResponse confirm(Ph2OauthEntity entity)
-		{
-		HerokuOauthTokenRequest authReq = new HerokuOauthTokenRequest();
-		authReq.setUrl(this.params.getUrl());
-		authReq.setGrantType(this.params.getRefreshTokenGrantType());
-		authReq.setCode(entity.getToken());
-		authReq.setClienSecret(this.params.getCleintSecret());
-		return new HerokuAuthAPI().getToken(authReq);
-		}
-	// --------------------------------------------------
-	/**
 	 * コードからアクセストークンを取得する
 	 * @param code
 	 * @param antiFoorgeryToken 
@@ -93,32 +59,80 @@ public class HerokuOAuthAPIDomain
 			{
 			throw new RuntimeException("不正なドメインからのアクセスです");
 			}
-		HerokuOauthTokenRequest authReq = new HerokuOauthTokenRequest();
-		authReq.setUrl(this.params.getUrl());
-		authReq.setGrantType(this.params.getRefreshTokenGrantType());
-		authReq.setCode(code);
-		authReq.setClienSecret(this.params.getCleintSecret());
-		return new HerokuAuthAPI().getToken(authReq);
+		HerokuAuthAPI api = new HerokuAuthAPI();
+		api.setUrl(this.params.getUrl());
+		api.addParameter("grant_type", "authorization_code");
+		api.addParameter("code", code);
+		api.addParameter("client_secret", this.params.getCleintSecret());
+		api.createQuery();
+		return api.getData();
 		}
 	// --------------------------------------------------
 	/**
 	 * ユーザーIDからユーザー情報を取得する
-	 * @param userId
+	 * @param userId アカウントID
+	 * @param accessToken アクセストークン
 	 * @return HerokuOauthAccountResponse
 	 */
 	// --------------------------------------------------	
-	public HerokuOauthAccountResponse getUserInfo(String userId, String code)
+	public HerokuOauthAccountResponse getUserInfo(String userId, String accessToken)
 		{
-		return new HerokuAuthAPI().getUserInfo(params.getUserUrl(), userId, code);
+		HerokuAuthAPI api = new HerokuAuthAPI();
+		api.setUrl(params.getUserUrl());
+		api.addPath(userId);
+		api.createQuery();
+		api.createHeaders(accessToken);
+		return api.getUserData();
 		}
+	// --------------------------------------------------
+	/**
+	 * リフレッシュトークンを取得する
+	 * @param entity トークン情報
+	 * @return HerokuOauthTokenResponse
+	 */
+	// --------------------------------------------------
+	public HerokuOauthTokenResponse refreshToken(Ph2OauthEntity entity)
+		{
+		HerokuAuthAPI api = new HerokuAuthAPI();
+		api.setUrl(this.params.getUrl());
+		api.addParameter("grant_type", this.params.getRefreshTokenGrantType());
+		api.addParameter("refresh_token", entity.getRefreshToken());
+		api.addParameter("client_secret", this.params.getCleintSecret());
+		api.createQuery();
+		return api.getData();
+		}
+	// --------------------------------------------------
+	/**
+	 * トークンの再取得を実行する
+	 * @param entity トークン情報
+	 * @param HerokuOauthTokenResponse
+	 */
+	// --------------------------------------------------
+	public HerokuOauthTokenResponse confirm(Ph2OauthEntity entity)
+		{
+		HerokuAuthAPI api = new HerokuAuthAPI();
+		api.setUrl(this.params.getUrl());
+		api.addParameter("grant_type", this.params.getRefreshTokenGrantType());
+		api.addParameter("refresh_token", entity.getRefreshToken());
+		api.addParameter("client_secret", this.params.getCleintSecret());
+		api.createQuery();
+		return api.getData();
+		}
+
+
 	// --------------------------------------------------
 	/**
 	 * アクセストークンを無効にする
 	 * @param userId
 	 */
 	// --------------------------------------------------
-	public void logout(Ph2OauthEntity auth)
+	public void logout(String token, String accessToken)
 		{
-		new HerokuAuthAPI().logout(params.getUrl(), auth, params.getCleintId() + " " +params.getCleintSecret() );
+		HerokuAuthAPI api = new HerokuAuthAPI();
+		api.setUrl("https://api.heroku.com/oauth/tokens");
+		api.addPath(accessToken);
+		api.createQuery();
+		api.createHeaders(this.params.getApiKey());
+		api.logoutUser();
 		}
 	}
