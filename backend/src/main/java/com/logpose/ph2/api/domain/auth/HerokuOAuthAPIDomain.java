@@ -32,8 +32,9 @@ public class HerokuOAuthAPIDomain
 	public String getHerokuLogin()
 		{
 		return "https://id.heroku.com/oauth/authorize?client_id=" +
-				params.getCleintId()  + "&response_type=code&scope=identity&state=" + params.getForgery();
+				params.getCleintId() + "&response_type=code&scope=identity&state=" + params.getForgery();
 		}
+
 	// --------------------------------------------------
 	/**
 	 * オリジンのURLを返す
@@ -43,8 +44,10 @@ public class HerokuOAuthAPIDomain
 	// --------------------------------------------------
 	public String getOriginURL(AuthCookieDTO cookie)
 		{
-		return params.getOriginUrl() + "?" + "id=" + cookie.getId() + "&name=" + cookie.getName() + "&at=" +  cookie.getAccessToken();
+		return params.getOriginUrl() + "?" + "id=" + cookie.getId() + "&name=" + cookie.getName() + "&at="
+				+ cookie.getAccessToken();
 		}
+
 	// --------------------------------------------------
 	/**
 	 * コードからアクセストークンを取得する
@@ -55,7 +58,7 @@ public class HerokuOAuthAPIDomain
 	// --------------------------------------------------
 	public HerokuOauthTokenResponse getAccessToken(String code, String antiFoorgeryToken)
 		{
-		if(!antiFoorgeryToken.equals(this.params.getForgery()))
+		if (!antiFoorgeryToken.equals(this.params.getForgery()))
 			{
 			throw new RuntimeException("不正なドメインからのアクセスです");
 			}
@@ -67,6 +70,7 @@ public class HerokuOAuthAPIDomain
 		api.createQuery();
 		return api.getData();
 		}
+
 	// --------------------------------------------------
 	/**
 	 * ユーザーIDからユーザー情報を取得する
@@ -74,7 +78,7 @@ public class HerokuOAuthAPIDomain
 	 * @param accessToken アクセストークン
 	 * @return HerokuOauthAccountResponse
 	 */
-	// --------------------------------------------------	
+	// --------------------------------------------------
 	public HerokuOauthAccountResponse getUserInfo(String userId, String accessToken)
 		{
 		HerokuAuthAPI api = new HerokuAuthAPI();
@@ -84,6 +88,7 @@ public class HerokuOAuthAPIDomain
 		api.createHeaders(accessToken);
 		return api.getUserData();
 		}
+
 	// --------------------------------------------------
 	/**
 	 * リフレッシュトークンを取得する
@@ -101,6 +106,7 @@ public class HerokuOAuthAPIDomain
 		api.createQuery();
 		return api.getData();
 		}
+
 	// --------------------------------------------------
 	/**
 	 * トークンの再取得を実行する
@@ -118,7 +124,6 @@ public class HerokuOAuthAPIDomain
 		api.createQuery();
 		return api.getData();
 		}
-
 
 	// --------------------------------------------------
 	/**

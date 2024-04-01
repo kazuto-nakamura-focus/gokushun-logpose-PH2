@@ -9,6 +9,10 @@ export class AuthCookies {
     get(name) {
         return Cookies.get(name);
     }
+    removeByPath(name, path) {
+        Cookies.remove(name, { path: path });
+
+    }
     remove(name) {
         Cookies.remove(name);
     }

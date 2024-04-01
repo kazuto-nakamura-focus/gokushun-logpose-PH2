@@ -1,10 +1,13 @@
 import axios from "@/lib/axiosHooks";
+import { AuthCookies } from "@/lib/AuthCookies.js";
 
 //デバイス一覧取得
 const useDeviceList = () => {
   const config = {
     params: {},
   };
+  let cookies = new AuthCookies();
+  cookies.removeByPath("at", "/api/device");
   return axios.get("/device/list", config);
 };
 

@@ -1,8 +1,15 @@
 package com.logpose.ph2.api.configration;
 
+import java.util.Collections;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.boot.web.servlet.ServletContextInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.SessionTrackingMode;
 
 @Configuration
 public class Configration
@@ -79,7 +86,7 @@ public class Configration
 		return registrationBean;
 		}*/
 
-	/*@Bean
+@Bean
 	public ServletContextInitializer servletContextInitializer()
 		{
 
@@ -88,12 +95,12 @@ public class Configration
 			@Override
 			public void onStartup(ServletContext servletContext) throws ServletException
 				{
-				servletContext.getSessionCookieConfig().setHttpOnly(true);
+			servletContext.getSessionCookieConfig().setHttpOnly(false);
 				servletContext.getSessionCookieConfig().setSecure(true);
 				servletContext.setSessionTrackingModes(
 						Collections.singleton(SessionTrackingMode.COOKIE));
 				}
 			};
 		return servletContextInitializer;
-		}*/
+		}
 	}

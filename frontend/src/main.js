@@ -6,7 +6,7 @@ import store from './store'
 import ToggleButton from 'vue-js-toggle-button'
 import VuejsDialog from 'vuejs-dialog'
 import DatePicker from 'vue2-datepicker'
-import VueCookie from 'vue-cookie';
+//import VueCookie from 'vue-cookie';
 import 'vue2-datepicker/index.css'
 
 Vue.config.productionTip = false
@@ -24,4 +24,4 @@ new Vue({
 Vue.use(ToggleButton);
 Vue.use(VuejsDialog);
 Vue.use(DatePicker);
-Vue.use(VueCookie);
+//Vue.use(VueCookie);
