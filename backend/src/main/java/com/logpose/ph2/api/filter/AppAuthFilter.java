@@ -2,8 +2,6 @@ package com.logpose.ph2.api.filter;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -28,7 +26,6 @@ import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
 
 @Component
 // @WebFilter(urlPatterns = { "/api/*", "/"})
@@ -70,38 +67,30 @@ public class AppAuthFilter implements Filter
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 // * Cookieから必要な情報を取り出す
 		String accessToken = null;
-		Long appId = null;
+		String appId = null;
 		Cookie[] cookies = request.getCookies();
-		List<String> tcs = new ArrayList<>();
 		if (null != cookies)
 			{
 			for (int i = 0; i < cookies.length; i++)
 				{
 				Cookie cookie = cookies[i];
-				if(null !=cookie.getPath() )
+				// * Cookieのパスが違う場合は無視
+				if ((null != cookie.getPath()) && (!cookie.getPath().equals("/")))
 					{
-					if(!cookie.getPath().equals("/")) continue;
+					continue;
 					}
 				if (null == accessToken)
 					{
 					if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
 						{
 						accessToken = cookie.getValue();
-						if ((null == accessToken) || (accessToken.length() == 0))
-							{
-							continue;
-							}
-						tcs.add(accessToken);
 						}
 					}
 				if (null == appId)
 					{
 					if (cookie.getName().equals(CookieMaster.USER_ID))
 						{
-						if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
-							{
-							appId = Long.valueOf(cookie.getValue());
-							}
+						appId = cookie.getValue();
 						}
 					}
 				}
@@ -109,7 +98,6 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
-			
 			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
@@ -117,38 +105,38 @@ public class AppAuthFilter implements Filter
 			{
 // * トークン情報の取得
 			Ph2OauthEntity oauth = this.logicDomain.getOauthInfo(appId);
-
-// * トークンのチェック
-			int result = this.logicDomain.checkUser(tcs, oauth);
-// * ユーザーがいない場合
-			if (result == HerokuOAuthLogicDomain.NO_USER)
+			try
 				{
-				throw new RuntimeException("ユーザーではありません。");
+				oauth = this.logicDomain.getOauthInfo(appId);
+// * ユーザーがいない場合
+				if(null == oauth) throw new RuntimeException("ユーザーではありません。");
 				}
+			catch (Exception e)
+				{
+				this.sendRedirect(response, this.apiDomain.getHerokuLogin());
+				return;
+				}
+// * トークンのチェック
+			int result = this.logicDomain.checkUser(accessToken, oauth);
 // * トークンが違っている場合
-/*			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
+			if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
 				{
 				throw new RuntimeException("不正なアクセスです。");
-				}*/
+				}
+			// * ログアウト中
+			 if (result == HerokuOAuthLogicDomain.IN_LOGOUT)
+				 {
+				 this.sendRedirect(response, "http://localhost:8080/logout.html");
+				 return;
+				 }
 // * トークンが期限切れの場合
-			else if ((result == HerokuOAuthLogicDomain.OUT_OF_TIME)||(result == HerokuOAuthLogicDomain.TOKEN_ERR))
+			 if (result == HerokuOAuthLogicDomain.OUT_OF_TIME)
 				{
 // * トークンの更新
 				HerokuOauthTokenResponse authRes = this.apiDomain.refreshToken(oauth);
 				accessToken = authRes.getAccessToken();
 				this.logicDomain.upateDB(oauth, authRes);
 				}
-// * チェック期間を超えた場合
-			else if (result == HerokuOAuthLogicDomain.OUT_OF_TERM)
-				{
-				HerokuOauthTokenResponse authRes = this.apiDomain.confirm(oauth);
-				accessToken = authRes.getAccessToken();
-				this.logicDomain.upateDB(oauth, authRes);
-				}
-	/*		else if (result != 0)
-				{
-				throw new RuntimeException("未定義の状態です。");
-				}*/
 
 			Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
 			atc.setMaxAge(7776000);
@@ -218,7 +206,6 @@ public class AppAuthFilter implements Filter
 
 		ObjectMapper mapper = new ObjectMapper();
 		String jsonData = mapper.writeValueAsString(mssg);
-		
 
 		PrintWriter out = response.getWriter();
 		response.setContentType("application/json");

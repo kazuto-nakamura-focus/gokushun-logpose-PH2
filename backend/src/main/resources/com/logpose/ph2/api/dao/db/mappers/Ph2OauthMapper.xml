@@ -308,7 +308,8 @@
  		o.load_time as load_time,
  		o.expires_in as expires_in,
  		o.refresh_token as refresh_token,
- 		o.access_token as access_token
+ 		o.access_token as access_token,
+ 		o.is_effective as is_effective
  	from
  		ph2_users u
  	join 
