@@ -11,7 +11,8 @@ axios.interceptors.response.use(
   (response) => {
     const { status, message } = response["data"];
     if (status == -1) {
-      window.location.replace(message);
+      console.log(message);
+      window.location.replace("/logout.html");
     }
     return response;
   },
