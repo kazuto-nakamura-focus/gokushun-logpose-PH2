@@ -29,6 +29,7 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+
 @Component
 // @WebFilter(urlPatterns = { "/api/*", "/"})
 @Order(100)
@@ -125,10 +126,10 @@ public class AppAuthFilter implements Filter
 				throw new RuntimeException("ユーザーではありません。");
 				}
 // * トークンが違っている場合
-			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
+/*			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
 				{
 				throw new RuntimeException("不正なアクセスです。");
-				}
+				}*/
 // * トークンが期限切れの場合
 			else if ((result == HerokuOAuthLogicDomain.OUT_OF_TIME)||(result == HerokuOAuthLogicDomain.TOKEN_ERR))
 				{

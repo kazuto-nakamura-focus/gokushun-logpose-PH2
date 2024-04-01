@@ -80,10 +80,10 @@ public class HerokuOAuthLogicDomain
 			return OUT_OF_TIME;
 			}
 // * チェック時刻
-		if (entity.getCheckTime().getTime() + DIFF < now.getTime())
+	/*	if (entity.getCheckTime().getTime() + DIFF < now.getTime())
 			{
 			return OUT_OF_TERM;
-			}
+			}*/
 		return 0;
 		}
 
@@ -117,7 +117,7 @@ public class HerokuOAuthLogicDomain
 			}
 // * Ph2OauthEntityの設定
 		this.setPh2OauthEntity(token, newEntity);
-		newEntity.setCheckTime(now);
+		//newEntity.setCheckTime(now);
 		newEntity.setLoadTime(now);
 		newEntity.setToken(code);
 		if (null == entity)

@@ -426,78 +426,6 @@ public class Ph2OauthEntityExample {
 			return (Criteria) this;
 			}
 
-		public Criteria andCheckTimeIsNull()
-			{
-			addCriterion("check_time is null");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeIsNotNull()
-			{
-			addCriterion("check_time is not null");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeEqualTo(Date value)
-			{
-			addCriterion("check_time =", value, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeNotEqualTo(Date value)
-			{
-			addCriterion("check_time <>", value, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeGreaterThan(Date value)
-			{
-			addCriterion("check_time >", value, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeGreaterThanOrEqualTo(Date value)
-			{
-			addCriterion("check_time >=", value, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeLessThan(Date value)
-			{
-			addCriterion("check_time <", value, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeLessThanOrEqualTo(Date value)
-			{
-			addCriterion("check_time <=", value, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeIn(List<Date> values)
-			{
-			addCriterion("check_time in", values, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeNotIn(List<Date> values)
-			{
-			addCriterion("check_time not in", values, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeBetween(Date value1, Date value2)
-			{
-			addCriterion("check_time between", value1, value2, "checkTime");
-			return (Criteria) this;
-			}
-
-		public Criteria andCheckTimeNotBetween(Date value1, Date value2)
-			{
-			addCriterion("check_time not between", value1, value2, "checkTime");
-			return (Criteria) this;
-			}
-
 		public Criteria andExpiresInIsNull()
 			{
 			addCriterion("expires_in is null");
@@ -735,6 +663,78 @@ public class Ph2OauthEntityExample {
 		public Criteria andAccessTokenNotBetween(String value1, String value2)
 			{
 			addCriterion("access_token not between", value1, value2, "accessToken");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveIsNull()
+			{
+			addCriterion("is_effective is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveIsNotNull()
+			{
+			addCriterion("is_effective is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveEqualTo(Boolean value)
+			{
+			addCriterion("is_effective =", value, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveNotEqualTo(Boolean value)
+			{
+			addCriterion("is_effective <>", value, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveGreaterThan(Boolean value)
+			{
+			addCriterion("is_effective >", value, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveGreaterThanOrEqualTo(Boolean value)
+			{
+			addCriterion("is_effective >=", value, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveLessThan(Boolean value)
+			{
+			addCriterion("is_effective <", value, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveLessThanOrEqualTo(Boolean value)
+			{
+			addCriterion("is_effective <=", value, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveIn(List<Boolean> values)
+			{
+			addCriterion("is_effective in", values, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveNotIn(List<Boolean> values)
+			{
+			addCriterion("is_effective not in", values, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveBetween(Boolean value1, Boolean value2)
+			{
+			addCriterion("is_effective between", value1, value2, "isEffective");
+			return (Criteria) this;
+			}
+
+		public Criteria andIsEffectiveNotBetween(Boolean value1, Boolean value2)
+			{
+			addCriterion("is_effective not between", value1, value2, "isEffective");
 			return (Criteria) this;
 			}
 		}
