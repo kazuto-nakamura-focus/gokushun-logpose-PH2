@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.logpose.ph2.api.configration.DefaultOAuthParameters;
 import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
+import com.logpose.ph2.api.domain.auth.RedirectDomain;
+import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.master.CookieMaster;
 import com.logpose.ph2.api.service.AuthService;
 
@@ -42,8 +43,8 @@ public class AuthController
 	private AuthService authService;
 
 	@Autowired
-	private DefaultOAuthParameters oAuthParameters;
-	
+	private RedirectDomain redirectDomain;
+
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
@@ -83,16 +84,14 @@ public class AuthController
 	 */
 	// --------------------------------------------------
 	@GetMapping("/logout")
-	public void login(HttpServletResponse response,
-			// public ResponseDTO login(HttpServletResponse response,
-
-			@CookieValue(CookieMaster.USER_ID) String appUserId) throws IOException
+	public ResponseDTO login(HttpServletResponse response,
+			@CookieValue(CookieMaster.USER_ID) String useId) throws IOException
 		{
-// ResponseDTO dto = new ResponseDTO();
+		ResponseDTO dto = new ResponseDTO();
 		try
 			{
 // * ログアウト処理の実行
-			this.authService.logout(appUserId);
+			this.authService.logout(useId);
 			}
 		catch (Exception e)
 			{
@@ -100,16 +99,8 @@ public class AuthController
 			}
 		finally
 			{
-			response.setStatus(HttpServletResponse.SC_OK);
-			response.getHeaders("Access-Control-Allow-Origin").clear();
-			response.setHeader("Access-Control-Allow-Origin", "http://localhost:8080");
-			response.setHeader("Access-Control-Allow-Credentials", "true");
-			response.setHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
-			response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Origin,X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
-			response.setHeader("Access-Control-Max-Age", "1728000");
-			response.sendRedirect(this.authService.getHerokuOAuthAPIDomain().getHerokuLogin());
-			// dto.setRedirect(this.authService.getHerokuOAuthAPIDomain().getHerokuLogin());
+			dto = this.redirectDomain.sendRedirect(response, useId, dto);
 			}
-		// return dto;
+		return dto;
 		}
 	}

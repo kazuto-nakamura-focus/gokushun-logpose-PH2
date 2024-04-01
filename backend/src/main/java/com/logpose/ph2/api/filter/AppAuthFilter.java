@@ -1,22 +1,17 @@
 package com.logpose.ph2.api.filter;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.logpose.ph2.api.configration.DefaultDomainParameter;
 import com.logpose.ph2.api.configration.DefaultOAuthParameters;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
-import com.logpose.ph2.api.dto.ResponseDTO;
+import com.logpose.ph2.api.domain.auth.RedirectDomain;
 import com.logpose.ph2.api.master.CookieMaster;
 
 import jakarta.servlet.Filter;
@@ -38,7 +33,7 @@ public class AppAuthFilter implements Filter
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private DefaultDomainParameter param;
+	private RedirectDomain redirectDomain;
 	@Autowired
 	private DefaultOAuthParameters oAuthParameters;
 	@Autowired
@@ -60,47 +55,41 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
+
+// * 認証パスの場合は無視
 		if (request.getServletPath().startsWith("/api/auth/"))
-		// if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
 			}
+
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 // * Cookieから必要な情報を取り出す
 		String accessToken = null;
-		Long appId = null;
+		String appId = null;
 		Cookie[] cookies = request.getCookies();
-		List<String> tcs = new ArrayList<>();
 		if (null != cookies)
 			{
 			for (int i = 0; i < cookies.length; i++)
 				{
 				Cookie cookie = cookies[i];
-				if(null !=cookie.getPath() )
+// * Cookieのパスが違う場合は無視
+				if ((null == cookie.getPath()) || (!cookie.getPath().equals("/")))
 					{
-					if(!cookie.getPath().equals("/")) continue;
+					continue;
 					}
 				if (null == accessToken)
 					{
 					if (cookie.getName().equals(CookieMaster.ACCESS_TOKEN))
 						{
 						accessToken = cookie.getValue();
-						if ((null == accessToken) || (accessToken.length() == 0))
-							{
-							continue;
-							}
-						tcs.add(accessToken);
 						}
 					}
 				if (null == appId)
 					{
 					if (cookie.getName().equals(CookieMaster.USER_ID))
 						{
-						if ((null != cookie.getValue()) && (cookie.getValue().length() > 0))
-							{
-							appId = Long.valueOf(cookie.getValue());
-							}
+						appId = cookie.getValue();
 						}
 					}
 				}
@@ -108,59 +97,53 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (null == accessToken))
 			{
-			
-			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
+			this.redirectDomain.sendRedirect(response, this.apiDomain.getHerokuLogin(), null);
 			return;
 			}
+
+// * トークン情報の取得
+		Ph2OauthEntity oauth;
 		try
 			{
-// * トークン情報の取得
-			Ph2OauthEntity oauth = this.logicDomain.getOauthInfo(appId);
+			oauth = this.logicDomain.getOauthInfo(appId);
+			if(null == oauth) throw new RuntimeException("ユーザーではありません。");
+			}
+		catch (Exception e)
+			{
+			this.redirectDomain.sendRedirect(response, this.apiDomain.getHerokuLogin(), null);
+			return;
+			}
 
+		try
+			{
 // * トークンのチェック
-			int result = this.logicDomain.checkUser(tcs, oauth);
-// * ユーザーがいない場合
-			if (result == HerokuOAuthLogicDomain.NO_USER)
-				{
-				throw new RuntimeException("ユーザーではありません。");
-				}
+			int result = this.logicDomain.checkUser(accessToken, oauth);
 // * トークンが違っている場合
-			else if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
+			 if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
 				{
 				throw new RuntimeException("不正なアクセスです。");
 				}
+// * ログアウト中
+			 if (result == HerokuOAuthLogicDomain.IN_LOGOUT)
+				 {
+				 throw new RuntimeException("ログアウト中");
+				 }
 // * トークンが期限切れの場合
-			else if ((result == HerokuOAuthLogicDomain.OUT_OF_TIME)||(result == HerokuOAuthLogicDomain.TOKEN_ERR))
+			else if ((result == HerokuOAuthLogicDomain.OUT_OF_TIME))
 				{
 // * トークンの更新
 				HerokuOauthTokenResponse authRes = this.apiDomain.refreshToken(oauth);
 				accessToken = authRes.getAccessToken();
 				this.logicDomain.upateDB(oauth, authRes);
+// * Cookieの更新
+				this.redirectDomain.setTokenCookie(response, CookieMaster.ACCESS_TOKEN);
 				}
-// * チェック期間を超えた場合
-			else if (result == HerokuOAuthLogicDomain.OUT_OF_TERM)
-				{
-				HerokuOauthTokenResponse authRes = this.apiDomain.confirm(oauth);
-				accessToken = authRes.getAccessToken();
-				this.logicDomain.upateDB(oauth, authRes);
-				}
-	/*		else if (result != 0)
-				{
-				throw new RuntimeException("未定義の状態です。");
-				}*/
-
-			Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
-			atc.setMaxAge(7776000);
-			atc.setPath("/");
-			atc.setDomain(param.getDomain());
-			response.addCookie(atc);
-
+// * 正常時の呼び出し実行
 			filterChain.doFilter(request, response);
 			}
 		catch (RuntimeException re)
 			{
-			AppAuthFilter.clearCookie(response, CookieMaster.ACCESS_TOKEN, param.getDomain());
-			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
+			this.redirectDomain.sendRedirect(response, this.apiDomain.getHerokuLogin(), null);
 			return;
 			}
 		catch (Exception e)
@@ -171,59 +154,9 @@ public class AppAuthFilter implements Filter
 
 		}
 
-	public static void clearCookie(HttpServletResponse response, String name, String domain)
-		{
-		Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, null);
-		atc.setMaxAge(0);
-		atc.setPath("/");
-		atc.setDomain(domain);
-		response.addCookie(atc);
-		}
-
-	public static Cookie getCookie(HttpServletRequest request, String name)
-		{
-		Cookie target = null;
-		if (request.getCookies() != null)
-			{
-			for (Cookie cookie : request.getCookies())
-				{
-				if (cookie.getName().equals(name))
-					{
-					cookie.setMaxAge(0);
-					target = cookie;
-					}
-				}
-			}
-
-		return target;
-		}
-
 	@Override
 	public void destroy()
 		{
 		}
 
-	private void sendRedirect(HttpServletResponse response, String url) throws IOException
-		{
-		response.setStatus(HttpServletResponse.SC_OK);
-		response.addHeader("Access-Control-Allow-Origin", oAuthParameters.getOriginUrl());
-		response.addHeader("Access-Control-Allow-Credentials", "true");
-		response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
-		response.addHeader("Access-Control-Allow-Headers",
-				"X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
-		response.addHeader("Access-Control-Max-Age", "1728000");
-		ResponseDTO mssg = new ResponseDTO();
-		mssg.setRedirect(url);
-
-		ObjectMapper mapper = new ObjectMapper();
-		String jsonData = mapper.writeValueAsString(mssg);
-		
-
-		PrintWriter out = response.getWriter();
-		response.setContentType("application/json");
-		response.setCharacterEncoding("UTF-8");
-		out.print(jsonData);
-		out.flush();
-		out.close();
-		}
 	}

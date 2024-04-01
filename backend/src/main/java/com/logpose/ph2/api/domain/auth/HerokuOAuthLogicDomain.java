@@ -28,7 +28,7 @@ public class HerokuOAuthLogicDomain
 	public static final int NO_USER = -1;
 	public static final int TOKEN_ERR = -2;
 	public static final int OUT_OF_TIME = 1;
-	public static final int OUT_OF_TERM = 2;
+	public static final int IN_LOGOUT = 2;
 	public static final long DIFF = 1000 * 60 * 15;
 	@Autowired
 	private Ph2OauthMapper ph2OauthMapper;
@@ -45,8 +45,10 @@ public class HerokuOAuthLogicDomain
 	 * @return Ph2OauthEntity トークン情報
 	 */
 	// --------------------------------------------------
-	public Ph2OauthEntity getOauthInfo(Long appId)
+	public Ph2OauthEntity getOauthInfo(String appIdString)
 		{
+		if(null == appIdString) return null;
+		long appId = Long.valueOf(appIdString);
 		return this.ph2OauthMapper.selectByAppId(appId).get(0);
 		}
 
@@ -58,31 +60,23 @@ public class HerokuOAuthLogicDomain
 	 * @return チェック結果
 	 */
 	// --------------------------------------------------
-	public int checkUser(List<String> accessToken, Ph2OauthEntity entity)
+	public int checkUser(String accessToken, Ph2OauthEntity entity)
 		{
 // * トークンの確認
-		boolean istc = false;
-		for (String tc : accessToken)
+		if(!entity.getAccessToken().equals(accessToken) )
 			{
-			if (entity.getAccessToken().equals(tc))
-				{
-				istc = true;
-				break;
-				}
-			}
-		if (!istc)
 			return TOKEN_ERR;
-
+			}
 // * 有効期限
 		Date now = new Date();
 		if ((entity.getLoadTime().getTime() + entity.getExpiresIn()*1000) < now.getTime())
 			{
 			return OUT_OF_TIME;
 			}
-// * チェック時刻
-		if (entity.getCheckTime().getTime() + DIFF < now.getTime())
+// * ログアウト
+		if(!entity.getIsEffective())
 			{
-			return OUT_OF_TERM;
+			return IN_LOGOUT;
 			}
 		return 0;
 		}
@@ -117,9 +111,10 @@ public class HerokuOAuthLogicDomain
 			}
 // * Ph2OauthEntityの設定
 		this.setPh2OauthEntity(token, newEntity);
-		newEntity.setCheckTime(now);
 		newEntity.setLoadTime(now);
 		newEntity.setToken(code);
+// * ログインの設定
+		newEntity.setIsEffective(true);
 		if (null == entity)
 			{
 			this.ph2OauthMapper.insert(newEntity);
@@ -166,19 +161,20 @@ public class HerokuOAuthLogicDomain
 
 	// --------------------------------------------------
 	/**
-	 * ユーザ―のトークン情報を削除する
+	 * ユーザ―のトークン情報を無効にする
 	 * 
 	 * @param id ユーザーID
-	 * @return アクセストークン
+	 * @return ユーザ―情報
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public Ph2OauthEntity getUser(Long id)
+	public Ph2OauthEntity logout(Long id)
 		{
 		Ph2UsersEntity usr = this.ph2UserMapper.selectByPrimaryKey(id);
-	    return this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
-	//	this.ph2OauthMapper.deleteByPrimaryKey(usr.getAuthId());
-	//	return oauth;
+		Ph2OauthEntity oauth =  this.ph2OauthMapper.selectByPrimaryKey(usr.getAuthId());
+		oauth.setIsEffective(false);
+		this.ph2OauthMapper.updateByPrimaryKey(oauth);
+		return oauth;
 		}
 
 	// --------------------------------------------------

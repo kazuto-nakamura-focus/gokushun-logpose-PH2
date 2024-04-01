@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthAccountResponse;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
-import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthAPIDomain;
 import com.logpose.ph2.api.domain.auth.HerokuOAuthLogicDomain;
 
@@ -65,15 +64,12 @@ public class AuthService
 	// --------------------------------------------------
 	/**
 	 * ログインアウト処理を行う
-	 *@param appUserId LogposeユーザーID
+	 *@param useId LogposeユーザーID
 	 */
 	// -------------------------------------------------
-	public void logout(String appUserId)
+	public void logout(String useId)
 		{
-// * Authテーブルからトークンを削除する。
-		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.getUser(Long.valueOf(appUserId));
-		HerokuOauthTokenResponse authRes = this.herokuOAuthAPIDomain.refreshToken(auth);
-		this.herokuOAuthAPIDomain.logout(auth.getToken(), authRes.getAccessToken());
+		this.herokuOAuthLogicDomain.logout(Long.valueOf(useId));
 		}
 	
 	}
