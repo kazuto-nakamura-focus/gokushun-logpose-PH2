@@ -74,7 +74,8 @@ export default {
   },
   methods: {
     logout: function () {
-      window.location.href = "https://dashboard.heroku.com/logout";
+       window.location.href = "https://dashboard.heroku.com/logout";
+      //window.location.href = "http://localhost:9000/api/auth/logout";
     },
 
     /*  useLogout()

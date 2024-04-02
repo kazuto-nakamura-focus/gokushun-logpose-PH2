@@ -20,10 +20,10 @@ public class AuthService
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	@Autowired
-	private HerokuOAuthAPIDomain herokuOAuthAPIDomain;
-	@Autowired
-	private HerokuOAuthLogicDomain herokuOAuthLogicDomain;
+//	@Autowired
+//	private HerokuOAuthAPIDomain herokuOAuthAPIDomain;
+////	@Autowired
+////	private HerokuOAuthLogicDomain herokuOAuthLogicDomain;
 
 	// ===============================================
 	// パブリック関数
@@ -36,16 +36,16 @@ public class AuthService
 	 * @return AuthCookieDTO
 	 */
 	// -------------------------------------------------
-	public AuthCookieDTO login(String code, String antiFoorgeryToken)
-		{
-// * codeからアクセストークンを得る。
-		HerokuOauthTokenResponse res = this.herokuOAuthAPIDomain.getAccessToken(code, antiFoorgeryToken);
-// * アクセストークンからユーザー情報を取得する。
-		HerokuOauthAccountResponse userInfo = this.herokuOAuthAPIDomain.getUserInfo(res.getUserId(),
-				res.getAccessToken());
-// * Authテーブルにトークン情報を設定する
-		return this.herokuOAuthLogicDomain.registerUser(code, res, userInfo);
-		}
+//	public AuthCookieDTO login(String code, String antiFoorgeryToken)
+//		{
+//// * codeからアクセストークンを得る。
+//		HerokuOauthTokenResponse res = this.herokuOAuthAPIDomain.getAccessToken(code, antiFoorgeryToken);
+//// * アクセストークンからユーザー情報を取得する。
+//		HerokuOauthAccountResponse userInfo = this.herokuOAuthAPIDomain.getUserInfo(res.getUserId(),
+//				res.getAccessToken());
+//// * Authテーブルにトークン情報を設定する
+//		return this.herokuOAuthLogicDomain.registerUser(code, res, userInfo);
+//		}
 
 	// --------------------------------------------------
 	/**
@@ -54,10 +54,10 @@ public class AuthService
 	 * @return String
 	 */
 	// -------------------------------------------------
-	public String convertToURL(AuthCookieDTO cookie)
-		{
-		return this.herokuOAuthAPIDomain.getOriginURL(cookie);
-		}
+//	public String convertToURL(AuthCookieDTO cookie)
+//		{
+//		return this.herokuOAuthAPIDomain.getOriginURL(cookie);
+//		}
 
 	// --------------------------------------------------
 	/**
@@ -65,14 +65,14 @@ public class AuthService
 	 *@param appUserId LogposeユーザーID
 	 */
 	// -------------------------------------------------
-	public String logout(String appUserId)
-		{
-// * Authテーブルからトークンを削除する。
-		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.revokeUser(Long.valueOf(appUserId));
-// * Herokuからトークンを無効化する
-		this.herokuOAuthAPIDomain.logout(auth.getAccessToken(), auth.getToken());
-		return this.herokuOAuthAPIDomain.getHerokuLogin();
-		}
-
-
+//	public String logout(String appUserId)
+//		{
+//// * Authテーブルからトークンを削除する。
+//		Ph2OauthEntity auth = this.herokuOAuthLogicDomain.revokeUser(Long.valueOf(appUserId));
+//// * Herokuからトークンを無効化する
+//		this.herokuOAuthAPIDomain.logout(auth.getAccessToken(), auth.getToken());
+//		return this.herokuOAuthAPIDomain.getHerokuLogin();
+//		}
+//
+//
 	}
