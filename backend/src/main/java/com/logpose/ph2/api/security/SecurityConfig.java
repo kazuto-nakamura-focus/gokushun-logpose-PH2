@@ -26,6 +26,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import java.io.IOException;
@@ -51,10 +52,10 @@ public class SecurityConfig {
     private JwtAuthorizationFilter jwtAuthorizationFilter;
 
 
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
+//    @Bean
+//    public PasswordEncoder passwordEncoder() {
+//        return new BCryptPasswordEncoder();
+//    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -65,25 +66,36 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((requests) ->
+                        //認証なしで接続できるURLの設定
                         requests
                                 .requestMatchers("/api/auth/**").permitAll()
                                 .anyRequest().authenticated()
                 )
 //                .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-//                .oauth2ResourceServer(configure -> configure.jwt(Customizer.withDefaults()));
-//                .oauth2Login(Customizer.withDefaults());
+                //OAuth2ログイン設定
                 .oauth2Login(configure ->
                                 configure
                                         .authorizationEndpoint(config -> config
                                                 .authorizationRequestRepository(httpCookieOauth2AuthorizationRequestRepository)
+                                                //OAuth2ログインURI変更
+                                                //デフォルトURL：{baseUrl}/oauth/authorization
+                                                //ログインURL：{baseUrl}/api/oauth2/authorization/heroku?redirect_uri={frontendのredirectUrl}&mode=login
+                                                //ログアウトURL：{baseUrl}/api/oauth2/authorization/heroku?redirect_uri={frontendのredirectUrl}&mode=unlink
+                                                //※ログアウトURLに接続する場合、下記のログアウト設定で設定したURLにリダイレクトするように、customOAuth2UserService経由でoauth2AuthenticationSuccessHandlerで処理
                                                 .baseUri("/api/oauth2/authorization"))
                                         .userInfoEndpoint(config -> config.userService(customOAuth2UserService))
+                                        //ログイン成功時のHandler
                                         .successHandler(oauth2AuthenticationSuccessHandler)
+                                        //ログイン失敗時のHandler
                                         .failureHandler(oauth2AuthenticationFailureHandler)
+                                        //OAuth2プロバイダーの認証後にコールバックするURLを変更
+                                        //デフォルト：/login/oauth2/code/*
                                         .loginProcessingUrl("/api/login/oauth2/code/*")
                 )
+                //ログアウト設定
                 .logout(configure ->
                         configure
+                                //フロントエンドとバックエンドのセッションを切るURLを変更
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
                                 .deleteCookies("JSESSIONID")
                                 .invalidateHttpSession(true)
@@ -94,7 +106,7 @@ public class SecurityConfig {
 //                        exceptionHandling.authenticationEntryPoint(new Http401AuthenticationEntryPoint())
 //                );
 
-//        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 
@@ -102,7 +114,6 @@ public class SecurityConfig {
 
         @Override
         public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-//            LOG.info("Commence:"+request.getRequestURI());
             response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "認証が必要です");
         }
     }

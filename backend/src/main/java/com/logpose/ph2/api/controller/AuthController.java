@@ -64,83 +64,22 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
-
-    // ===============================================
-    // パブリック関数群
-    // ===============================================
-    // --------------------------------------------------
-
     /**
-     * herokuからのコールバックの受付
-     *
-     * @throws IOException
+     * 認証状態を返すAPI
+     * @param userDetails
+     * @return
      */
-    // --------------------------------------------------
-    @GetMapping("/callback")
-    public ResponseEntity handleCallback(@RequestParam("code") String code) throws IOException {
-        try {
-            RestTemplate restTemplate = new RestTemplate();
-
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-
-            MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-            map.add("grant_type", "authorization_code");
-            map.add("client_id", clientId);
-            map.add("client_secret", clientSecret);
-            map.add("code", code);
-            map.add("redirect_uri", redirectUri);
-
-            HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(map, headers);
-
-            ResponseEntity<String> response = restTemplate.postForEntity(tokenUri, request, String.class);
-
-            LOG.info(response.toString());
-
-//            OAuth2AuthenticationToken authToken = new OAuth2AuthenticationToken(code);
-//            LOG.info("authToken:" + authToken.toString());
-//
-//            Authentication authentication = this.authenticationManager.authenticate(authToken);
-//            LOG.info("authentication:" + authentication.toString());
-
-            return ResponseEntity.status(HttpStatus.FOUND)
-                    .header("Location", redirectUri)
-                    .build();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-    }
-//    // --------------------------------------------------
-//
-//    /**
-//     * herokuからのログアウト
-//     *
-//     * @throws IOException
-//     */
-//    // --------------------------------------------------
-//    @GetMapping("/logout")
-//    public ResponseDTO logout(HttpServletRequest request) throws IOException, ServletException {
-//        request.logout();
-//        HttpSession session = request.getSession(true);
-//        session.invalidate();
-//        ResponseDTO dto = new ResponseDTO();
-//        dto.setSuccess(null);
-//        return dto;
-
-//        String redirectUrl = String.format("%s?client_id=%s&response_type=code&redirect_uri=%s", authorizationUri, clientId, redirectUri);
-
-//        return ResponseEntity.status(HttpStatus.FOUND)
-//                .header("Location", redirectUrl)
-//                .build();
-//    }
-
     @GetMapping("/session/check")
     public boolean checkSession(@AuthenticationPrincipal UserDetails userDetails) {
         boolean result = (userDetails != null);
         return result;
     }
 
+    /**
+     * 認証後、利用者情報を取得するAPI
+     * @param userDetails
+     * @return
+     */
     @GetMapping("/user")
     public ResponseDTO getUser(@AuthenticationPrincipal UserDetails userDetails){
         ResponseDTO dto = new ResponseDTO();

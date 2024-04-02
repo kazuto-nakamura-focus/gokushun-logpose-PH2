@@ -1,11 +1,13 @@
 import axios from "@/lib/axiosHooks";
 
 //モデル選択情報取得
-const useModels = () => {
-  const config = {
-    params: {},
-  };
-  return axios.get("/models", config);
+const useSessionCheck = () => {
+  return axios.get("/auth/session/check");
 };
 
-export { useModels };
+const useGetUser = () => {
+  return axios.get("/auth/user");
+};
+
+
+export { useSessionCheck, useGetUser };

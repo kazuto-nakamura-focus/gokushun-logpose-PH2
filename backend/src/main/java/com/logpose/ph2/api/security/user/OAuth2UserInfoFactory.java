@@ -12,7 +12,7 @@ public class OAuth2UserInfoFactory {
     public static OAuth2UserInfo getOAuth2UserInfo(String registrationId,
                                                    String accessToken,
                                                    Map<String, Object> attributes) {
-        LOG.info("getOAuth2UserInfo");
+        LOG.info("getOAuth2UserInfo:{}", accessToken);
 
         if (OAuth2Provider.HEROKU.getRegistrationId().equals(registrationId)) {
             return new HerokuOAuth2UserInfo(accessToken, attributes);

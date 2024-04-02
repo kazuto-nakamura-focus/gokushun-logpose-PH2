@@ -96,10 +96,9 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     .build().toUriString();
 
         } else if ("unlink".equalsIgnoreCase(mode)) {
-
-            LOG.info("unlink getOAuth2UserPrincipal:{}", principal);
             String accessToken = principal.getUserInfo().getAccessToken();
             OAuth2Provider provider = principal.getUserInfo().getProvider();
+            LOG.info("accessToken:"+accessToken);
 
             // TODO: DB 削除
             // TODO: リフレッシュトークン削除
