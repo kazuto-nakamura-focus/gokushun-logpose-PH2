@@ -6,6 +6,6 @@ import lombok.Data;
 public class AuthCookieDTO
 	{
 	private String accessToken;
-	private Long id;
+	private String authId;
 	private String name;
 	}

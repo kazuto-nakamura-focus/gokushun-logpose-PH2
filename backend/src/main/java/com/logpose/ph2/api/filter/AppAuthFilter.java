@@ -8,7 +8,6 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.logpose.ph2.api.configration.DefaultDomainParameter;
 import com.logpose.ph2.api.configration.DefaultOAuthParameters;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2OauthEntity;
@@ -36,9 +35,7 @@ public class AppAuthFilter implements Filter
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private DefaultDomainParameter param;
-	@Autowired
-	private DefaultOAuthParameters oAuthParameters;
+	private DefaultOAuthParameters params;
 	@Autowired
 	private HerokuOAuthLogicDomain logicDomain;
 	@Autowired
@@ -58,6 +55,7 @@ public class AppAuthFilter implements Filter
 			throws IOException, ServletException
 		{
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
+		System.out.println(request.getServletPath());
 		if (request.getServletPath().startsWith("/api/auth/"))
 		// if (request.getServletPath().startsWith("/"))
 			{
@@ -96,7 +94,7 @@ public class AppAuthFilter implements Filter
 				}
 			}
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
-		if ((null == appId) || (null == accessToken))
+		if ((null == appId) || (0 == appId.length()) || (null == accessToken) || (0 == accessToken.length()))
 			{
 			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
@@ -109,28 +107,30 @@ public class AppAuthFilter implements Filter
 				{
 				oauth = this.logicDomain.getOauthInfo(appId);
 // * ユーザーがいない場合
-				if(null == oauth) throw new RuntimeException("ユーザーではありません。");
+				if (null == oauth) throw new RuntimeException("ユーザーではありません。");
 				}
 			catch (Exception e)
 				{
 				this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 				return;
 				}
+// * リモートアドレスの取得
+			String remoteAddr = this.logicDomain.getRemoteIP(request);
 // * トークンのチェック
-			int result = this.logicDomain.checkUser(accessToken, oauth);
+			int result = this.logicDomain.checkUser(accessToken, remoteAddr, oauth);
 // * トークンが違っている場合
 			if (result == HerokuOAuthLogicDomain.TOKEN_ERR)
 				{
 				throw new RuntimeException("不正なアクセスです。");
 				}
 			// * ログアウト中
-			 if (result == HerokuOAuthLogicDomain.IN_LOGOUT)
-				 {
-				 this.sendRedirect(response, "http://localhost:8080/logout.html");
-				 return;
-				 }
+			if (result == HerokuOAuthLogicDomain.IN_LOGOUT)
+				{
+				this.sendRedirect(response, "http://localhost:8080/logout.html");
+				return;
+				}
 // * トークンが期限切れの場合
-			 if (result == HerokuOAuthLogicDomain.OUT_OF_TIME)
+			if (result == HerokuOAuthLogicDomain.OUT_OF_TIME)
 				{
 // * トークンの更新
 				HerokuOauthTokenResponse authRes = this.apiDomain.refreshToken(oauth);
@@ -141,14 +141,14 @@ public class AppAuthFilter implements Filter
 			Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, accessToken);
 			atc.setMaxAge(7776000);
 			atc.setPath("/");
-			atc.setDomain(param.getDomain());
+			atc.setDomain(this.params.getDomain());
 			response.addCookie(atc);
 
 			filterChain.doFilter(request, response);
 			}
 		catch (RuntimeException re)
 			{
-			AppAuthFilter.clearCookie(response, CookieMaster.ACCESS_TOKEN, param.getDomain());
+			AppAuthFilter.clearCookie(response, CookieMaster.ACCESS_TOKEN, params.getDomain());
 			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
 			return;
 			}
@@ -195,12 +195,13 @@ public class AppAuthFilter implements Filter
 	private void sendRedirect(HttpServletResponse response, String url) throws IOException
 		{
 		response.setStatus(HttpServletResponse.SC_OK);
-		response.addHeader("Access-Control-Allow-Origin", oAuthParameters.getOriginUrl());
+		response.addHeader("Access-Control-Allow-Origin", params.getOriginUrl());
 		response.addHeader("Access-Control-Allow-Credentials", "true");
 		response.addHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS, PUT, DELETE, HEAD");
 		response.addHeader("Access-Control-Allow-Headers",
 				"X-PINGOTHER, Origin, X-Requested-With, Content-Type, Accept");
 		response.addHeader("Access-Control-Max-Age", "1728000");
+
 		ResponseDTO mssg = new ResponseDTO();
 		mssg.setRedirect(url);
 

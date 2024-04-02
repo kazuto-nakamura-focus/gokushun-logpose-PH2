@@ -14,70 +14,63 @@ import jakarta.servlet.SessionTrackingMode;
 @Configuration
 public class Configration
 	{
-	
 	@Bean
 	@ConfigurationProperties(prefix = "oauth")
-	public DefaultOAuthParameters configDefaultOAuthParameters()
+    DefaultOAuthParameters configDefaultOAuthParameters()
 		{
 		return new DefaultOAuthParameters();
 		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "paramset.default.growth")
-	public DefaultGrowthParameters configUrl()
+	DefaultGrowthParameters configUrl()
 		{
 		return new DefaultGrowthParameters();
 		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "paramset.default.fstage")
-	public DefaultFtageValues configFStage()
+	DefaultFtageValues configFStage()
 		{
 		return new DefaultFtageValues();
 		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "paramset.default.leafarea.area")
-	public DefaultLeafAreaParameters configLeafAreaParameters()
+	DefaultLeafAreaParameters configLeafAreaParameters()
 		{
 		return new DefaultLeafAreaParameters();
 		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "paramset.default.leafarea.count")
-	public DefaultLeafCountParameters configLeafCountParameters()
+	DefaultLeafCountParameters configLeafCountParameters()
 		{
 		return new DefaultLeafCountParameters();
 		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "paramset.default.ps")
-	public DefaultPsParameters configLeafPsParameters()
+	DefaultPsParameters configLeafPsParameters()
 		{
 		return new DefaultPsParameters();
 		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "sigfox")
-	public DefaultSigFoxParameters configDefaultSigFoxParameters()
+	DefaultSigFoxParameters configDefaultSigFoxParameters()
 		{
 		return new DefaultSigFoxParameters();
 		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "weather.query")
-	public DefaultWeatherlAPIParameters configDefaultWeatherlAPIParameters()
+	DefaultWeatherlAPIParameters configDefaultWeatherlAPIParameters()
 		{
 		return new DefaultWeatherlAPIParameters();
 		}
-	@Bean
-	@ConfigurationProperties(prefix = "cors")
-	public DefaultDomainParameter configDefaultDomainParameter()
-		{
-		return new DefaultDomainParameter();
-		}
 	/*@Bean
-	public FilterRegistrationBean<AppAuthFilter> filter()
+	FilterRegistrationBean<AppAuthFilter> filter()
 		{
 		FilterRegistrationBean<AppAuthFilter> registrationBean = new FilterRegistrationBean<>();
 		registrationBean.setFilter(new AppAuthFilter(logicDomain, apiDomain));
@@ -87,7 +80,7 @@ public class Configration
 		}*/
 
 @Bean
-	public ServletContextInitializer servletContextInitializer()
+	ServletContextInitializer servletContextInitializer()
 		{
 
 		ServletContextInitializer servletContextInitializer = new ServletContextInitializer()

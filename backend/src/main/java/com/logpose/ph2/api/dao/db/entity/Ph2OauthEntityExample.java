@@ -186,87 +186,255 @@ public class Ph2OauthEntityExample {
 			criteria.add(new Criterion(condition, value1, value2));
 			}
 
-		public Criteria andUserIdIsNull()
+		public Criteria andIdIsNull()
 			{
-			addCriterion("user_id is null");
+			addCriterion("id is null");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdIsNotNull()
+		public Criteria andIdIsNotNull()
 			{
-			addCriterion("user_id is not null");
+			addCriterion("id is not null");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdEqualTo(String value)
+		public Criteria andIdEqualTo(String value)
 			{
-			addCriterion("user_id =", value, "userId");
+			addCriterion("id =", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdNotEqualTo(String value)
+		public Criteria andIdNotEqualTo(String value)
 			{
-			addCriterion("user_id <>", value, "userId");
+			addCriterion("id <>", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdGreaterThan(String value)
+		public Criteria andIdGreaterThan(String value)
 			{
-			addCriterion("user_id >", value, "userId");
+			addCriterion("id >", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdGreaterThanOrEqualTo(String value)
+		public Criteria andIdGreaterThanOrEqualTo(String value)
 			{
-			addCriterion("user_id >=", value, "userId");
+			addCriterion("id >=", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdLessThan(String value)
+		public Criteria andIdLessThan(String value)
 			{
-			addCriterion("user_id <", value, "userId");
+			addCriterion("id <", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdLessThanOrEqualTo(String value)
+		public Criteria andIdLessThanOrEqualTo(String value)
 			{
-			addCriterion("user_id <=", value, "userId");
+			addCriterion("id <=", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdLike(String value)
+		public Criteria andIdLike(String value)
 			{
-			addCriterion("user_id like", value, "userId");
+			addCriterion("id like", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdNotLike(String value)
+		public Criteria andIdNotLike(String value)
 			{
-			addCriterion("user_id not like", value, "userId");
+			addCriterion("id not like", value, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdIn(List<String> values)
+		public Criteria andIdIn(List<String> values)
 			{
-			addCriterion("user_id in", values, "userId");
+			addCriterion("id in", values, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdNotIn(List<String> values)
+		public Criteria andIdNotIn(List<String> values)
 			{
-			addCriterion("user_id not in", values, "userId");
+			addCriterion("id not in", values, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdBetween(String value1, String value2)
+		public Criteria andIdBetween(String value1, String value2)
 			{
-			addCriterion("user_id between", value1, value2, "userId");
+			addCriterion("id between", value1, value2, "id");
 			return (Criteria) this;
 			}
 
-		public Criteria andUserIdNotBetween(String value1, String value2)
+		public Criteria andIdNotBetween(String value1, String value2)
 			{
-			addCriterion("user_id not between", value1, value2, "userId");
+			addCriterion("id not between", value1, value2, "id");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdIsNull()
+			{
+			addCriterion("client_id is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdIsNotNull()
+			{
+			addCriterion("client_id is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdEqualTo(String value)
+			{
+			addCriterion("client_id =", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdNotEqualTo(String value)
+			{
+			addCriterion("client_id <>", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdGreaterThan(String value)
+			{
+			addCriterion("client_id >", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdGreaterThanOrEqualTo(String value)
+			{
+			addCriterion("client_id >=", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdLessThan(String value)
+			{
+			addCriterion("client_id <", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdLessThanOrEqualTo(String value)
+			{
+			addCriterion("client_id <=", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdLike(String value)
+			{
+			addCriterion("client_id like", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdNotLike(String value)
+			{
+			addCriterion("client_id not like", value, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdIn(List<String> values)
+			{
+			addCriterion("client_id in", values, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdNotIn(List<String> values)
+			{
+			addCriterion("client_id not in", values, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdBetween(String value1, String value2)
+			{
+			addCriterion("client_id between", value1, value2, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andClientIdNotBetween(String value1, String value2)
+			{
+			addCriterion("client_id not between", value1, value2, "clientId");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrIsNull()
+			{
+			addCriterion("remote_addr is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrIsNotNull()
+			{
+			addCriterion("remote_addr is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrEqualTo(String value)
+			{
+			addCriterion("remote_addr =", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrNotEqualTo(String value)
+			{
+			addCriterion("remote_addr <>", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrGreaterThan(String value)
+			{
+			addCriterion("remote_addr >", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrGreaterThanOrEqualTo(String value)
+			{
+			addCriterion("remote_addr >=", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrLessThan(String value)
+			{
+			addCriterion("remote_addr <", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrLessThanOrEqualTo(String value)
+			{
+			addCriterion("remote_addr <=", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrLike(String value)
+			{
+			addCriterion("remote_addr like", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrNotLike(String value)
+			{
+			addCriterion("remote_addr not like", value, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrIn(List<String> values)
+			{
+			addCriterion("remote_addr in", values, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrNotIn(List<String> values)
+			{
+			addCriterion("remote_addr not in", values, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrBetween(String value1, String value2)
+			{
+			addCriterion("remote_addr between", value1, value2, "remoteAddr");
+			return (Criteria) this;
+			}
+
+		public Criteria andRemoteAddrNotBetween(String value1, String value2)
+			{
+			addCriterion("remote_addr not between", value1, value2, "remoteAddr");
 			return (Criteria) this;
 			}
 

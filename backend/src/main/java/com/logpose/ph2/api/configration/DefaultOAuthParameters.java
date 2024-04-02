@@ -16,4 +16,13 @@ public class DefaultOAuthParameters
 	private String forgery;
 	private String originUrl;
 	private String logoutUrl;
+	
+	private String domain;
+	private String createAuthUrl;
+
+	public String getAuthrizeURL()
+		{
+		return this.createAuthUrl + "?client_id=" + this.cleintId 
+				+ "&response_type=code&scope=identity&state=" + this.forgery;
+		}
 	}

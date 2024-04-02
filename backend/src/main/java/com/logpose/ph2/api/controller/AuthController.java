@@ -15,10 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.configration.DefaultOAuthParameters;
 import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
+import com.logpose.ph2.api.domain.AuthCookieModel;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.master.CookieMaster;
 import com.logpose.ph2.api.service.AuthService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 /**
@@ -41,13 +44,73 @@ public class AuthController
 
 	@Autowired
 	private AuthService authService;
-
-	@Autowired
-	private DefaultOAuthParameters oAuthParameters;
 	
+	@Autowired
+	private DefaultOAuthParameters params;
+
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
+	// --------------------------------------------------
+	/**
+	 * Login受付
+	 * @throws IOException 
+	 */
+	// --------------------------------------------------
+	@GetMapping("/login")
+	public void login(HttpServletResponse response)
+		{
+		Cookie atc = new Cookie("heroku_session_nonce", null);
+		atc.setMaxAge(0);
+		atc.setPath("/");
+		atc.setDomain("heroku.com");
+		response.addCookie(atc);
+		atc = new Cookie("heroku_session", null);
+		atc.setMaxAge(0);
+		atc.setPath("/");
+		atc.setDomain("heroku.com");
+		response.addCookie(atc);
+		atc = new Cookie("heroku_user_session", null);
+		atc.setMaxAge(0);
+		atc.setPath("/");
+		atc.setDomain("heroku.com");
+		response.addCookie(atc);
+		atc = new Cookie("identity-session", null);
+		atc.setMaxAge(0);
+		atc.setPath("/");
+		atc.setDomain("id.heroku.com");
+		response.addCookie(atc);
+		/*
+		 * atc = new Cookie("OptanonAlertBoxClosed", null);
+		 * atc.setMaxAge(0);
+		 * atc.setPath("/");
+		 * atc.setDomain("id.heroku.com");
+		 * response.addCookie(atc);
+		 */
+		/*
+		 * atc = new Cookie("OptanonConsent", null);
+		 * atc.setMaxAge(0);
+		 * atc.setPath("/");
+		 * atc.setDomain("id.heroku.com");
+		 * response.addCookie(atc);
+		 */
+		atc = new Cookie("_ga", null);
+		atc.setMaxAge(0);
+		atc.setPath("/");
+		atc.setDomain("heroku.com");
+		response.addCookie(atc);
+
+		try
+			{
+			response.sendRedirect(this.params.getAuthrizeURL());
+			}
+		catch (IOException e)
+			{
+			e.printStackTrace();
+			}
+
+		}
+
 	// --------------------------------------------------
 	/**
 	 * herokuからのコールバックの受付
@@ -55,20 +118,19 @@ public class AuthController
 	 */
 	// --------------------------------------------------
 	@GetMapping("/callback")
-	public void login(HttpServletResponse response,
+	public void login(HttpServletResponse response, HttpServletRequest request,
 			@RequestParam("code") String code,
-			@RequestParam("state") String antiFoorgeryToken) throws IOException
+			@RequestParam("state") String forgeryToekn) throws IOException
 		{
 		try
 			{
 			LOG.info("ログイン処理開始");
 // * ログインの実行
-			AuthCookieDTO cookieData = this.authService.login(code, antiFoorgeryToken);
-// * URLの設定
-			String url = this.authService.convertToURL(cookieData);
-// * アプリへリダイレクト
-			LOG.info("リダイレクト:" + url);
-			response.sendRedirect(url);
+			AuthCookieDTO cookieData = this.authService.login(request, code, forgeryToekn);
+// * Cookieに設定する
+			AuthCookieModel cookieModel = new AuthCookieModel(this.params.getDomain());
+			cookieModel.setInitilalToken(response, cookieData);
+			response.sendRedirect(this.params.getOriginUrl());
 			}
 		catch (Exception e)
 			{

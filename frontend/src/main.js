@@ -6,22 +6,27 @@ import store from './store'
 import ToggleButton from 'vue-js-toggle-button'
 import VuejsDialog from 'vuejs-dialog'
 import DatePicker from 'vue2-datepicker'
-//import VueCookie from 'vue-cookie';
 import 'vue2-datepicker/index.css'
+import { AuthCookies } from "@/lib/AuthCookies.js";
 
 Vue.config.productionTip = false
 
-new Vue({
-  router,
-  vuetify,
-  options: {
-    customProperties: true
-  },
-  store,
-  render: h => h(App)
-}).$mount('#app')
+let cookies = new AuthCookies();
+if (null == cookies.get("at")) {
+  window.location.replace("/login.html");
+}
+else {
+  new Vue({
+    router,
+    vuetify,
+    options: {
+      customProperties: true
+    },
+    store,
+    render: h => h(App)
+  }).$mount('#app')
 
-Vue.use(ToggleButton);
-Vue.use(VuejsDialog);
-Vue.use(DatePicker);
-//Vue.use(VueCookie);
+  Vue.use(ToggleButton);
+  Vue.use(VuejsDialog);
+  Vue.use(DatePicker);
+}

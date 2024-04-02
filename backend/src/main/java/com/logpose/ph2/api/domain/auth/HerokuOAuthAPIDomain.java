@@ -44,7 +44,7 @@ public class HerokuOAuthAPIDomain
 	// --------------------------------------------------
 	public String getOriginURL(AuthCookieDTO cookie)
 		{
-		return params.getOriginUrl() + "?" + "id=" + cookie.getId() + "&name=" + cookie.getName() + "&at="
+		return params.getOriginUrl() + "?" + "id=" + cookie.getAuthId() + "&name=" + cookie.getName() + "&at="
 				+ cookie.getAccessToken();
 		}
 
