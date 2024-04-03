@@ -20,17 +20,17 @@ const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profil
 //const batchProcess = spawn("java", ["-jar", BATCH_JAR_PATH, "--spring.profiles.active=prd", "-", "true", "-"]);
 
 //バックエンド起動時のコールバック関数登録
-// backendProcess.stdout.on("data", (data) => {
-//   console.log(`Backend Process:${data}`);
-// });
+backendProcess.stdout.on("data", (data) => {
+  console.log(`Backend Process:${data}`);
+});
 
-// backendProcess.stderr.on("data", (data) => {
-//   console.log(`Backend Error:${data}`);
-// });
+backendProcess.stderr.on("data", (data) => {
+  console.log(`Backend Error:${data}`);
+});
 
-// backendProcess.on("close", (code) => {
-//   console.log(`Backend process exited with code ${code}`);
-// });
+backendProcess.on("close", (code) => {
+  console.log(`Backend process exited with code ${code}`);
+});
 
 
 //パスに/apiが付くURLは、バックエンドURLに設定
