@@ -12,7 +12,7 @@ axios.interceptors.response.use(
     const { status, message } = response["data"];
     if (status == -1) {
       console.log(message);
-      window.location.replace("/login.html");
+      window.location.replace(message);
     }
     return response;
   },

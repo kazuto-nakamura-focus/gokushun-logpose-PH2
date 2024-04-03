@@ -86,7 +86,6 @@ export default {
     setName: function () {
       this.intervalid1 = setInterval(
         function () {
-          console.log("cpy");
           let cookies = new AuthCookies();
           this.userName = cookies.get("name");
           if (null != this.userName) {

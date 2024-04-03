@@ -169,24 +169,6 @@ public class AppAuthFilter implements Filter
 		response.addCookie(atc);
 		}
 
-	public static Cookie getCookie(HttpServletRequest request, String name)
-		{
-		Cookie target = null;
-		if (request.getCookies() != null)
-			{
-			for (Cookie cookie : request.getCookies())
-				{
-				if (cookie.getName().equals(name))
-					{
-					cookie.setMaxAge(0);
-					target = cookie;
-					}
-				}
-			}
-
-		return target;
-		}
-
 	@Override
 	public void destroy()
 		{

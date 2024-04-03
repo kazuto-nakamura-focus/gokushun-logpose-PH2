@@ -60,33 +60,38 @@ public class AuthController
 	@GetMapping("/login")
 	public void login(HttpServletResponse response)
 		{
-		Cookie atc = new Cookie("heroku_session_nonce", null);
-		atc.setMaxAge(0);
+		Cookie atc = new Cookie("heroku_session_nonce", "x");
+		atc.setMaxAge(1000);
 		atc.setPath("/");
 		atc.setDomain("heroku.com");
 		response.addCookie(atc);
-		atc = new Cookie("heroku_session", null);
-		atc.setMaxAge(0);
+		atc = new Cookie("heroku_session",  "1");
+		atc.setMaxAge(1000);
 		atc.setPath("/");
 		atc.setDomain("heroku.com");
 		response.addCookie(atc);
-		atc = new Cookie("heroku_user_session", null);
-		atc.setMaxAge(0);
+		atc = new Cookie("heroku_user_session",  "x");
+		atc.setMaxAge(1000);
 		atc.setPath("/");
 		atc.setDomain("heroku.com");
 		response.addCookie(atc);
-		atc = new Cookie("identity-session", null);
-		atc.setMaxAge(0);
+		atc = new Cookie("identity-session",  "x");
+		atc.setMaxAge(1000);
 		atc.setPath("/");
 		atc.setDomain("id.heroku.com");
 		response.addCookie(atc);
-		/*
-		 * atc = new Cookie("OptanonAlertBoxClosed", null);
-		 * atc.setMaxAge(0);
-		 * atc.setPath("/");
-		 * atc.setDomain("id.heroku.com");
-		 * response.addCookie(atc);
-		 */
+		
+	
+		 atc = new Cookie("OptanonAlertBoxClosed", "2024-04-01T05:13:11.372Z");
+		 atc.setMaxAge(10000);
+		  atc.setPath("/");
+		  atc.setDomain("heroku.com");
+		 response.addCookie(atc);
+		 atc = new Cookie("OptanonConsent", "xxxx");
+		 atc.setMaxAge(10000);
+		  atc.setPath("/");
+		  atc.setDomain("heroku.com");
+		 response.addCookie(atc);
 		/*
 		 * atc = new Cookie("OptanonConsent", null);
 		 * atc.setMaxAge(0);
@@ -94,14 +99,20 @@ public class AuthController
 		 * atc.setDomain("id.heroku.com");
 		 * response.addCookie(atc);
 		 */
-		atc = new Cookie("_ga", null);
+		atc = new Cookie("_ga", "GA1.2.159801707.1711948391");
 		atc.setMaxAge(0);
 		atc.setPath("/");
 		atc.setDomain("heroku.com");
 		response.addCookie(atc);
+		 atc = new Cookie("_ga_62RHPFWB9M", "_ga_62RHPFWB9M");
+		 atc.setMaxAge(10000);
+		  atc.setPath("/");
+		  atc.setDomain("heroku.com");
+		 response.addCookie(atc);
 
 		try
 			{
+// * Herokuへリダイレクトする
 			response.sendRedirect(this.params.getAuthrizeURL());
 			}
 		catch (IOException e)
@@ -130,6 +141,7 @@ public class AuthController
 // * Cookieに設定する
 			AuthCookieModel cookieModel = new AuthCookieModel(this.params.getDomain());
 			cookieModel.setInitilalToken(response, cookieData);
+// * Logposeトップ画面へ遷移する
 			response.sendRedirect(this.params.getOriginUrl());
 			}
 		catch (Exception e)
@@ -147,8 +159,6 @@ public class AuthController
 	// --------------------------------------------------
 	@GetMapping("/logout")
 	public ResponseDTO login(HttpServletResponse response,
-			// public ResponseDTO login(HttpServletResponse response,
-
 			@CookieValue(CookieMaster.USER_ID) String appUserId) throws IOException
 		{
 		ResponseDTO dto = new ResponseDTO();
@@ -164,7 +174,7 @@ public class AuthController
 		finally
 			{
 			}
-		dto.setRedirect("http://localhost:8080/logout.html");
+		dto.setRedirect("/logout.html");
 		return dto;
 		}
 	}
