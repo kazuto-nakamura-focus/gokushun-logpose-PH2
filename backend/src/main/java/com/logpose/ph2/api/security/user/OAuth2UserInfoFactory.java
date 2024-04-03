@@ -1,7 +1,6 @@
 package com.logpose.ph2.api.security.user;
 
 import com.logpose.ph2.api.security.exception.OAuth2AuthenticationProcessingException;
-import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -93,7 +93,11 @@ export default {
       })
       .then((user) => {
         if (user == null) throw Error("Not exists user");
-        const name = user["name"];
+        
+        let name = user["name"];
+        if(name == null){
+          name = user["email"];
+        }
         this.userName = name;
       })
       .catch((error) => {
