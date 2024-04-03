@@ -57,7 +57,6 @@ public class AppAuthFilter implements Filter
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		System.out.println(request.getServletPath());
 		if (request.getServletPath().startsWith("/api/auth/"))
-		// if (request.getServletPath().startsWith("/"))
 			{
 			filterChain.doFilter(servletRequest, servletResponse);
 			return;
@@ -96,7 +95,7 @@ public class AppAuthFilter implements Filter
 // * Cookieに必要な情報が無い場合、ログイン画面へリダイレクトして終了
 		if ((null == appId) || (0 == appId.length()) || (null == accessToken) || (0 == accessToken.length()))
 			{
-			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
+			this.sendRedirect(response, this.params.getAuthrizeURL());
 			return;
 			}
 		try
@@ -111,7 +110,7 @@ public class AppAuthFilter implements Filter
 				}
 			catch (Exception e)
 				{
-				this.sendRedirect(response, this.apiDomain.getHerokuLogin());
+				this.sendRedirect(response, this.params.getAuthrizeURL());
 				return;
 				}
 // * リモートアドレスの取得
@@ -126,7 +125,7 @@ public class AppAuthFilter implements Filter
 			// * ログアウト中
 			if (result == HerokuOAuthLogicDomain.IN_LOGOUT)
 				{
-				this.sendRedirect(response, "http://localhost:8080/logout.html");
+				this.sendRedirect(response, "/logout.html");
 				return;
 				}
 // * トークンが期限切れの場合
@@ -148,8 +147,7 @@ public class AppAuthFilter implements Filter
 			}
 		catch (RuntimeException re)
 			{
-			AppAuthFilter.clearCookie(response, CookieMaster.ACCESS_TOKEN, params.getDomain());
-			this.sendRedirect(response, this.apiDomain.getHerokuLogin());
+			this.sendRedirect(response, this.params.getAuthrizeURL());
 			return;
 			}
 		catch (Exception e)
@@ -158,15 +156,6 @@ public class AppAuthFilter implements Filter
 			response.sendError(401, "not authorized -> " + e.getMessage());
 			}
 
-		}
-
-	public static void clearCookie(HttpServletResponse response, String name, String domain)
-		{
-		Cookie atc = new Cookie(CookieMaster.ACCESS_TOKEN, null);
-		atc.setMaxAge(0);
-		atc.setPath("/");
-		atc.setDomain(domain);
-		response.addCookie(atc);
 		}
 
 	@Override

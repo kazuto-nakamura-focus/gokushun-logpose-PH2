@@ -25,4 +25,6 @@ public class DefaultOAuthParameters
 		return this.createAuthUrl + "?client_id=" + this.cleintId 
 				+ "&response_type=code&scope=identity&state=" + this.forgery;
 		}
+	
+	
 	}

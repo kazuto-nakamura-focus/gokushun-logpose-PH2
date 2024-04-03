@@ -55,19 +55,6 @@ public class AuthService
 // * Authテーブルにトークン情報を設定する
 		return this.herokuOAuthLogicDomain.registerUser(code, res, userInfo, remoteAdder);
 		}
-
-	// --------------------------------------------------
-	/**
-	 * CookieデータをURLに変換する
-	 * @param AuthCookieDTO
-	 * @return String
-	 */
-	// -------------------------------------------------
-	public String convertToURL(AuthCookieDTO cookie)
-		{
-		return this.herokuOAuthAPIDomain.getOriginURL(cookie);
-		}
-
 	// --------------------------------------------------
 	/**
 	 * ログインアウト処理を行う

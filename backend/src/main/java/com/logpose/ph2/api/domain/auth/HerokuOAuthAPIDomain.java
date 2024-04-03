@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.configration.DefaultOAuthParameters;
-import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
 import com.logpose.ph2.api.dao.api.HerokuAuthAPI;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthAccountResponse;
 import com.logpose.ph2.api.dao.api.entity.HerokuOauthTokenResponse;
@@ -22,32 +21,6 @@ public class HerokuOAuthAPIDomain
 	// ===============================================
 	// パブリック関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * HerokuのLogin URLを返す
-	 * @param code
-	 * @return HerokuOauthTokenResponse
-	 */
-	// --------------------------------------------------
-	public String getHerokuLogin()
-		{
-		return "https://id.heroku.com/oauth/authorize?client_id=" +
-				params.getCleintId() + "&response_type=code&scope=identity&state=" + params.getForgery();
-		}
-
-	// --------------------------------------------------
-	/**
-	 * オリジンのURLを返す
-	 * @param AuthCookieDTO
-	 * @return String
-	 */
-	// --------------------------------------------------
-	public String getOriginURL(AuthCookieDTO cookie)
-		{
-		return params.getOriginUrl() + "?" + "id=" + cookie.getAuthId() + "&name=" + cookie.getName() + "&at="
-				+ cookie.getAccessToken();
-		}
-
 	// --------------------------------------------------
 	/**
 	 * コードからアクセストークンを取得する
