@@ -64,8 +64,12 @@ router.beforeEach((to, from, next) => {
         console.log(path.includes("/login"), isLoggedIn);
         
         
-        if(!isLoggedIn && path.includes("/login")){
-          next();
+        if(path.includes("/login")){
+          if(!isLoggedIn){
+            next();
+          }else{
+            next("/");
+          }
         }else if (!isLoggedIn) {
           next('/login');
         } else {
