@@ -1,14 +1,7 @@
 package com.logpose.ph2.api.security;
 
-import com.logpose.ph2.api.security.jwt.JwtAuthorizationFilter;
-import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
-import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
-import com.logpose.ph2.api.security.oauth2.service.CustomOAuth2UserService;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import java.io.IOException;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,17 +12,23 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.client.web.DefaultOAuth2AuthorizationRequestResolver;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.io.IOException;
+import com.logpose.ph2.api.security.jwt.JwtAuthorizationFilter;
+import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.logpose.ph2.api.security.oauth2.service.CustomOAuth2UserService;
+
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Configuration
@@ -68,7 +67,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests((requests) ->
                         //認証なしで接続できるURLの設定
                         requests
-                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers("/api/auth/**", "/api/bulk/update").permitAll()
                                 .anyRequest().authenticated()
                 )
 //                .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -107,6 +106,7 @@ public class SecurityConfig {
 //                );
 
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+        http.addFilterBefore(new AllowCurlRequestsFilter(), AuthorizationFilter.class);
         return http.build();
     }
 
