@@ -1,102 +1,97 @@
 package com.logpose.ph2.api.controller;
 
-import java.io.IOException;
-
+import com.logpose.ph2.api.dto.FieldInfoDTO;
+import com.logpose.ph2.api.dto.ResponseDTO;
+import com.logpose.ph2.api.security.oauth2.service.OAuth2UserPrincipal;
+import com.logpose.ph2.api.security.user.OAuth2UserInfo;
+import com.logpose.ph2.api.service.AuthService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.*;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 
-import com.logpose.ph2.api.controller.dto.AuthCookieDTO;
-import com.logpose.ph2.api.dto.ResponseDTO;
-import com.logpose.ph2.api.master.CookieMaster;
-import com.logpose.ph2.api.service.AuthService;
+import java.io.IOException;
+import java.util.List;
 
-import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * ログイン・ログアウトのコールバック
- * 
- * @since 2024/01/03
+ *
  * @version 1.0
+ * @since 2024/01/03
  */
 @CrossOrigin(
-		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
-		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
-		allowedHeaders ="*", exposedHeaders="*",
-		allowCredentials = "true")
+        origins = {"http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com"},
+        methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
+        allowedHeaders = "*", exposedHeaders = "*",
+        allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/auth")
-public class AuthController
-	{
-	// ===============================================
-	// クラスメンバー
-	// ===============================================
-	private static Logger LOG = LogManager.getLogger(AuthController.class);
+public class AuthController {
+    // ===============================================
+    // クラスメンバー
+    // ===============================================
+    private static Logger LOG = LogManager.getLogger(AuthController.class);
 
-	@Autowired
-	private AuthService authService;
+    @Value("${spring.security.oauth2.client.registration.heroku.client-id}")
+    private String clientId;
 
-	// ===============================================
-	// パブリック関数群
-	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * herokuからのコールバックの受付
-	 * @throws IOException 
-	 */
-	// --------------------------------------------------
-	@GetMapping("/callback")
-	public void login(HttpServletResponse response,
-			@RequestParam("code") String code,
-			@RequestParam("state") String antiFoorgeryToken) throws IOException
-		{
-		try
-			{
-			LOG.info("ログイン処理開始");
-// * ログインの実行
-			AuthCookieDTO cookieData = this.authService.login(code, antiFoorgeryToken);
-// * URLの設定
-			String url = this.authService.convertToURL(cookieData);
-// * アプリへリダイレクト
-			LOG.info("リダイレクト:" + url);
-			response.sendRedirect(url);
-			}
-		catch (Exception e)
-			{
-			e.printStackTrace();
-			response.sendError(401, "not authorized -> " + e.getMessage());
-			}
-		}
+    @Value("${spring.security.oauth2.client.registration.heroku.client-secret}")
+    private String clientSecret;
 
-	// --------------------------------------------------
-	/**
-	 * herokuからのログアウト
-	 * @throws IOException 
-	 */
-	// --------------------------------------------------
-	@GetMapping("/logout")
-	public ResponseDTO login(HttpServletResponse response,
-			@CookieValue(CookieMaster.USER_ID) String appUserId) throws IOException
-		{
-		ResponseDTO dto = new ResponseDTO();
-		try
-			{
-//* ログアウト処理の実行
-			String logoutUrl = this.authService.logout(appUserId);
-			dto.setRedirect(logoutUrl);
-			}
-		catch (Exception e)
-			{
-			e.printStackTrace();
-			dto.setError(e);
-			}
-		return dto;
-		}
-	}
+    @Value("${spring.security.oauth2.client.registration.heroku.redirect-uri}")
+    private String redirectUri;
+
+    @Value("${spring.security.oauth2.client.provider.heroku.token-uri}")
+    private String tokenUri;
+
+    @Value(("${spring.security.oauth2.client.provider.heroku.authorization-uri}"))
+    private String authorizationUri;
+
+    @Autowired
+    private AuthService authService;
+
+    /**
+     * 認証状態を返すAPI
+     * @param userDetails
+     * @return
+     */
+    @GetMapping("/session/check")
+    public boolean checkSession(@AuthenticationPrincipal UserDetails userDetails) {
+        boolean result = (userDetails != null);
+        return result;
+    }
+
+    /**
+     * 認証後、利用者情報を取得するAPI
+     * @param userDetails
+     * @return
+     */
+    @GetMapping("/user")
+    public ResponseDTO getUser(@AuthenticationPrincipal UserDetails userDetails){
+        ResponseDTO dto = new ResponseDTO();
+        try {
+            if(userDetails instanceof OAuth2UserPrincipal){
+                OAuth2UserPrincipal principal = (OAuth2UserPrincipal)userDetails;
+                OAuth2UserInfo userInfo = principal.getUserInfo();
+                dto.setSuccess(userInfo);
+            }
+        }catch(Exception e) {
+            dto.setError(e);
+        }
+        return dto;
+    }
+}

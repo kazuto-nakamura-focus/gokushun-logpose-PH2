@@ -8,12 +8,12 @@ import org.springframework.context.annotation.Configuration;
 public class Configration
 	{
 	
-	@Bean
-	@ConfigurationProperties(prefix = "oauth")
-	public DefaultOAuthParameters configDefaultOAuthParameters()
-		{
-		return new DefaultOAuthParameters();
-		}
+//	@Bean
+//	@ConfigurationProperties(prefix = "oauth")
+//	public DefaultOAuthParameters configDefaultOAuthParameters()
+//		{
+//		return new DefaultOAuthParameters();
+//		}
 
 	@Bean
 	@ConfigurationProperties(prefix = "paramset.default.growth")
@@ -63,12 +63,12 @@ public class Configration
 		{
 		return new DefaultWeatherlAPIParameters();
 		}
-	@Bean
-	@ConfigurationProperties(prefix = "cors")
-	public DefaultDomainParameter configDefaultDomainParameter()
-		{
-		return new DefaultDomainParameter();
-		}
+//	@Bean
+//	@ConfigurationProperties(prefix = "cors")
+//	public DefaultDomainParameter configDefaultDomainParameter()
+//		{
+//		return new DefaultDomainParameter();
+//		}
 	/*@Bean
 	public FilterRegistrationBean<AppAuthFilter> filter()
 		{
