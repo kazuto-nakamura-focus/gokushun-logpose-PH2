@@ -222,6 +222,6 @@
     		ph2_wheather_code_master on ph2_wheather_forecast.code = ph2_wheather_code_master.code
     	where
     		ph2_wheather_forecast.device_id = #{deviceId}
-    		order by date desc
+    		order by date asc
   	</select>
 </mapper>

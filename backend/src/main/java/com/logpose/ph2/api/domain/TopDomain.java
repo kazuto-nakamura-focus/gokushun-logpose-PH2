@@ -103,9 +103,19 @@ public class TopDomain
 						}
 					};
 				}
-// * 気象情報の取得cd 
-			List<DashboardForecast> weather = this.ph2WeatherForecastMapper.selectWithText(item.getDeviceId());
-			item.setForecastList(weather);
+// * 気象情報の取得
+			List<DashboardForecast> tmp = this.ph2WeatherForecastMapper.selectWithText(item.getDeviceId());
+			List<DashboardForecast> wheather = new ArrayList<>();
+			if(tmp.size() > 0)
+				{
+				wheather.add(tmp.get(tmp.size()-1));
+				for(int i=0;i<tmp.size()-1;i++)
+					{
+					wheather.add(tmp.get(i));
+					}
+				}
+
+			item.setForecastList(wheather);
 			}
 		
 		return devices;
