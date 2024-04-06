@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import { useSessionCheck } from '@/api/Auth/auth';
 
 Vue.use(Vuex)
 
@@ -19,7 +20,10 @@ export default new Vuex.Store({
     login: {
       userId: 2,
       userName: null,
-    }
+    },
+    
+    isLoggedIn: false,
+    isLoading: true,
   },
   getters: {
     selectedField: state => state.selectedField,
@@ -61,9 +65,37 @@ export default new Vuex.Store({
       else {
         state.selectedData.selectedYears.splice(state.selectedData.selectedYears.indexOf(sourceYears.data), 1);
       }
-    }
+    },
+    // ログイン状態変更
+    setLoggedIn(state, status) {
+      state.isLoggedIn = status;
+    },
+    // セッション読込状態変更
+    setLoading(state, status) {
+      state.isLoading = status;
+    },
   },
   actions: {
+    //セッションチェック
+    //セッションチェック用APIを利用して、ステータス設定する。
+    checkSession({ commit }) {
+      return new Promise((resolve, reject) => {
+        useSessionCheck()
+          .then((response) => {
+            const isLoggedIn = response["data"];
+            console.log("isLoggedIn", isLoggedIn);
+            commit("setLoggedIn", isLoggedIn);
+            commit("setLoading", false);
+            resolve(isLoggedIn);
+          })
+          .catch((error) => {
+            console.log(error);
+            commit("setLoggedIn", false);
+            commit("setLoading", false);
+            reject(error);
+          })
+      });
+    },
     changeSelectedField({ commit }, val) {
       commit("setSelectedField", val);
     },

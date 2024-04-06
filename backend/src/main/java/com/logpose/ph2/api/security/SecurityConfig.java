@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.security;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +29,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.web.cors.CorsConfiguration;
 
 @RequiredArgsConstructor
 @Configuration
@@ -58,7 +60,14 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(AbstractHttpConfigurer::disable)
+                .cors(cors -> cors.configurationSource(request -> {
+                    CorsConfiguration config = new CorsConfiguration();
+                    config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com"));
+                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
+                    config.setAllowedHeaders(List.of("*"));
+                    config.setAllowCredentials(true);
+                    return config;
+                }))
                 .csrf(AbstractHttpConfigurer::disable)
                 .headers(headersConfigurer -> headersConfigurer.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable))
                 .formLogin(AbstractHttpConfigurer::disable)
