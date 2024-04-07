@@ -14,7 +14,7 @@
               v-bind:background-color="bgcolor"
               v-model.trim="fieldInfoData.name"
             ></v-text-field>
-            <p v-if="!isFieldNameNotNull" class="error">圃場名の入力は必須です。</p>
+            <p v-if="!isFieldNameNotNull" class="error">{{this.fieldError}}</p>
           </v-col>
           <v-col cols="6" align="right">
             <div v-if="!isAddMode">
@@ -59,6 +59,7 @@
                       v-model.trim="mapHandler.latitude"
                       v-bind:background-color="bgcolor"
                     ></v-text-field>
+                    <p v-if="!checkLatitude" class="error">{{this.latitudeError}}</p>
                   </div>
                   <div>
                     <v-text-field
@@ -71,6 +72,7 @@
                       :readonly="!isEditMode"
                       v-model.trim="mapHandler.longitude"
                     ></v-text-field>
+                    <p v-if="!checkLongitude" class="error">{{this.longitudeError}}</p>
                   </div>
                 </div>
               </div>
@@ -80,7 +82,7 @@
           <v-col cols="1"></v-col>
           <v-col cols="5">
             <v-row>
-              <v-col :cols="!isEditMode ? 12 : 9">
+              <v-col cols="12">
                 <v-text-field
                   :readonly="!isEditMode"
                   v-bind:background-color="bgcolor"
@@ -92,13 +94,23 @@
                   v-model.trim="fieldInfoData.location"
                 ></v-text-field>
               </v-col>
-              <v-col v-if="isEditMode" cols="3">
+            </v-row>
+            <v-row v-if="isEditMode">
+              <v-col cols="6">
                 <v-btn
                   color="primary"
                   class="white--text"
                   elevation="2"
                   @click="changeFocusLatLng()"
-                >検索</v-btn>
+                >住所から座標へ</v-btn>
+              </v-col>
+              <v-col cols="6">
+                <v-btn
+                  color="primary"
+                  class="white--text"
+                  elevation="2"
+                  @click="setAddress()"
+                >座標から住所へ</v-btn>
               </v-col>
             </v-row>
             <p></p>
@@ -162,6 +174,7 @@
               color="primary"
               class="ma-2 white--text"
               elevation="2"
+              :disabled="!isValid()"
               @click="update()"
             >更新</v-btn>
             <v-btn
@@ -169,6 +182,7 @@
               color="primary"
               class="ma-2 white--text"
               elevation="2"
+              :disabled="!isValid()"
               @click="add()"
             >追加</v-btn>
             <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">閉じる</v-btn>
@@ -194,6 +208,8 @@ import {
 import moment from "moment";
 
 import { mapLoaderOptions, mapOptions } from "./mapConfig";
+
+import messages from "@/assets/messages.json";
 
 const HEADERS = [
   { text: "デバイス名", value: "name", sortable: true },
@@ -292,6 +308,11 @@ export default {
 
   data() {
     return {
+      messages: messages,
+      fieldError: "",
+      latitudeError: "",
+      longitudeError: "",
+
       selected: [],
       isEditMode: false,
       isAddMode: false,
@@ -312,6 +333,7 @@ export default {
       longtitude: "",
       splitArr: [],
       marker: null,
+      appendMaker: null,
       address: "",
 
       mapLoader: null,
@@ -353,11 +375,66 @@ export default {
 
   computed: {
     isFieldNameNotNull() {
-      return this.fieldInfoData.name.length > 0;
+      if (this.fieldInfoData.name.length == 0) {
+        this.setFieldMessage(this.messages.required);
+        return false;
+      } else {
+        this.setFieldMessage("");
+        return true;
+      }
+    },
+    checkLatitude() {
+      let value = this.mapHandler.latitude;
+      if (null == value || 0 == value.length) {
+        this.setLatitudeMessage(this.messages.required);
+      } else if (isNaN(value)) {
+        this.setLatitudeMessage(this.messages.numeric);
+      } else {
+        if (value > 90 || value < -90) {
+          this.setLatitudeMessage(this.messages.rangeLatitude);
+        } else {
+          this.setLatitudeMessage("");
+          return true;
+        }
+      }
+      return false;
+    },
+    checkLongitude() {
+      let value = this.mapHandler.longitude;
+      if (null == value || 0 == value.length) {
+        this.setLongitudeMessage(this.messages.required);
+      } else if (isNaN(value)) {
+        this.setLongitudeMessage(this.messages.numeric);
+      } else {
+        if (value > 180 || value < -180) {
+          this.setLongitudeMessage(this.messages.rangeLongtitude);
+        } else {
+          this.setLongitudeMessage("");
+          return true;
+        }
+      }
+      return false;
     },
   },
 
   methods: {
+    setFieldMessage(mssg) {
+      this.fieldError = mssg;
+    },
+    setLatitudeMessage(mssg) {
+      this.latitudeError = mssg;
+    },
+    setLongitudeMessage(mssg) {
+      this.longitudeError = mssg;
+    },
+    isValid() {
+      return (
+        0 == this.fieldError.length &&
+        0 == this.latitudeError.length &&
+        0 == this.longitudeError.length
+      );
+    },
+
     //* -----------------------------------------------
     // 地図の初期化
     //* -----------------------------------------------
@@ -384,6 +461,13 @@ export default {
             }
           );
 
+          this.map.addListener(
+            "click",
+            function (e) {
+              this.getClickLatLng(e.latLng, this.map);
+            }.bind(this)
+          );
+
           if (this.marker) {
             this.marker.setMap(null);
           }
@@ -399,6 +483,22 @@ export default {
         .catch((e) => {
           console.error(e);
         });
+    },
+    getClickLatLng(lat_lng, map) {
+      console.log(lat_lng);
+      this.mapHandler.latitude = lat_lng.lat();
+      this.mapHandler.longitude = lat_lng.lng();
+      if (this.appendMaker) {
+        this.appendMaker.setMap(null);
+      }
+      // マーカーを設置
+      this.appendMaker = new this.google.maps.Marker({
+        position: lat_lng,
+        map: map,
+      });
+
+      // 座標の中心をずらす
+      this.map.panTo(lat_lng);
     },
     //* -----------------------------------------------
     // 更新モード・非更新モード変更時のフラグの設定及びデータの設定
@@ -632,6 +732,7 @@ export default {
           console.log(error);
         });
     },
+    setAddress: function () {},
   },
 };
 </script>
