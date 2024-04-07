@@ -5,72 +5,78 @@
         <v-row>
           <v-col cols="4">
             <v-text-field
-              label="圃場名"
+              label="圃場名【必須】"
               :readonly="!isEditMode"
               dense
               hide-details="auto"
               outlined
               filled
               v-bind:background-color="bgcolor"
-              v-model="fieldInfoData.name"
+              v-model.trim="fieldInfoData.name"
             ></v-text-field>
-            <p></p>
+            <p v-if="!isFieldNameNotNull" class="error">圃場名の入力は必須です。</p>
           </v-col>
           <v-col cols="6" align="right">
             <div v-if="!isAddMode">
               <!--  更新モードボタン -->
-              <v-icon right icon="mdi-vuetify" @click="changeMode()"
-                >mdi-pencil-outline</v-icon
-              >
-              <v-icon right icon="mdi-vuetify" @click="deleteFieldInfo()"
-                >mdi-trash-can-outline</v-icon
-              >
+              <v-icon right icon="mdi-vuetify" @click="changeMode()">mdi-pencil-outline</v-icon>
+              <v-icon right icon="mdi-vuetify" @click="deleteFieldInfo()">mdi-trash-can-outline</v-icon>
             </div>
           </v-col>
         </v-row>
 
         <v-row>
+          <!-- *********** 地図入力エリア ********** -->
           <v-col cols="6">
-            <!-- google map -->
-            <v-sheet
-              id="deviceDetailMap"
-              v-bind:class="{
+            <v-container>
+              <!-- *********** 地図 ********** -->
+              <v-card>
+                <!-- google map -->
+                <v-sheet
+                  id="deviceDetailMap"
+                  v-bind:class="{
                 'v-sheet--readonly': !isEditMode,
                 'pa-0': isEditMode,
               }"
-              :light="true"
-              style="width: 100%; height: 400px"
-            />
-
-            <p></p>
-            <v-row cols="3" justify="center">
-              <v-col cols="3">
-                <v-subheader>GPS Code</v-subheader>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  label="緯度（Latitude）"
-                  dense
-                  hide-details="auto"
-                  outlined
-                  filled
-                  :readonly="!isEditMode"
-                  v-model="mapHandler.latitude"
-                ></v-text-field>
-              </v-col>
-              <v-col cols="4">
-                <v-text-field
-                  label="経度（Longitude）"
-                  dense
-                  hide-details="auto"
-                  outlined
-                  filled
-                  :readonly="!isEditMode"
-                  v-model="mapHandler.longitude"
-                ></v-text-field>
-              </v-col>
-            </v-row>
+                  :light="true"
+                  style="width: 100%; height: 400px"
+                />
+              </v-card>
+            </v-container>
+            <v-container>
+              <!-- *********** 緯度経度入力 ********** -->
+              <div style="display:flex;width:100%;">
+                <div style="width:30%;display:flex;align-items:center;">GPS Code入力</div>
+                <div style="width:70%">
+                  <div style="margin-bottom:12px">
+                    <v-text-field
+                      label="緯度（Latitude）【必須】"
+                      dense
+                      hide-details="auto"
+                      outlined
+                      filled
+                      :readonly="!isEditMode"
+                      v-model.trim="mapHandler.latitude"
+                      v-bind:background-color="bgcolor"
+                    ></v-text-field>
+                  </div>
+                  <div>
+                    <v-text-field
+                      label="経度（Longitude）【必須】"
+                      dense
+                      hide-details="auto"
+                      outlined
+                      filled
+                      v-bind:background-color="bgcolor"
+                      :readonly="!isEditMode"
+                      v-model.trim="mapHandler.longitude"
+                    ></v-text-field>
+                  </div>
+                </div>
+              </div>
+            </v-container>
           </v-col>
+
           <v-col cols="1"></v-col>
           <v-col cols="5">
             <v-row>
@@ -83,7 +89,7 @@
                   hide-details="auto"
                   outlined
                   filled
-                  v-model="fieldInfoData.location"
+                  v-model.trim="fieldInfoData.location"
                 ></v-text-field>
               </v-col>
               <v-col v-if="isEditMode" cols="3">
@@ -92,8 +98,7 @@
                   class="white--text"
                   elevation="2"
                   @click="changeFocusLatLng()"
-                  >検索</v-btn
-                >
+                >検索</v-btn>
               </v-col>
             </v-row>
             <p></p>
@@ -107,7 +112,7 @@
                   hide-details="auto"
                   outlined
                   filled
-                  v-model="fieldInfoData.contructor"
+                  v-model.trim="fieldInfoData.contructor"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -122,7 +127,7 @@
                   outlined
                   filled
                   readonly
-                  v-model="fieldInfoData.registeredDate"
+                  v-model.trim="fieldInfoData.registeredDate"
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -141,8 +146,7 @@
                   :items="useSelectDeviceInfoDataList"
                   @click:row="clickRow"
                   :useFieldInfoDataList="useFieldInfoDataList"
-                >
-                </v-data-table>
+                ></v-data-table>
               </v-col>
             </v-row>
           </v-col>
@@ -150,13 +154,7 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <div v-if="!isEditMode" class="GS_ButtonArea">
-            <v-btn
-              color="gray"
-              class="ma-2 black--text"
-              elevation="2"
-              @click="back()"
-              >キャンセル</v-btn
-            >
+            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">キャンセル</v-btn>
           </div>
           <div v-if="isEditMode" class="GS_ButtonArea">
             <v-btn
@@ -165,23 +163,15 @@
               class="ma-2 white--text"
               elevation="2"
               @click="update()"
-              >更新</v-btn
-            >
+            >更新</v-btn>
             <v-btn
               v-show="isAddMode"
               color="primary"
               class="ma-2 white--text"
               elevation="2"
               @click="add()"
-              >追加</v-btn
-            >
-            <v-btn
-              color="gray"
-              class="ma-2 black--text"
-              elevation="2"
-              @click="back()"
-              >キャンセル</v-btn
-            >
+            >追加</v-btn>
+            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">閉じる</v-btn>
           </div>
         </v-card-actions>
       </template>
@@ -210,18 +200,19 @@ const HEADERS = [
   { text: "品種名", value: "brand", sortable: true },
 ];
 
-
 const checkLatitude = (value) => {
-  if(null == value || null == value || "" == value || "" == value) return false;
-  if(value > 90 || value < -90) return false;
+  if (null == value || null == value || "" == value || "" == value)
+    return false;
+  if (value > 90 || value < -90) return false;
   return true;
-}
+};
 
 const checkLongitude = (value) => {
-  if(null == value || null == value || "" == value || "" == value) return false;
-  if(value > 180 || value < -180) return false;
+  if (null == value || null == value || "" == value || "" == value)
+    return false;
+  if (value > 180 || value < -180) return false;
   return true;
-}
+};
 
 class MapHandler {
   constructor() {
@@ -234,7 +225,7 @@ class MapHandler {
         .then((response) => {
           const responseData = response["data"];
           //データが存在するかを確認後、処理
-          if(responseData && responseData.length > 0){
+          if (responseData && responseData.length > 0) {
             var coordinates = responseData[0]["geometry"]["coordinates"];
             data.longitude = coordinates[0];
             data.latitude = coordinates[1];
@@ -264,7 +255,7 @@ var createFieldObject = function (soruce, mapHandler) {
   soruce.latitude = parseFloat(mapHandler.latitude);
   soruce.longitude = parseFloat(mapHandler.longitude);
   //POSTやPUT例
-  var id = (null == soruce.id)?null:parseInt(soruce.id);
+  var id = null == soruce.id ? null : parseInt(soruce.id);
   const data = {
     id: id,
     name: soruce.name,
@@ -322,7 +313,7 @@ export default {
       splitArr: [],
       marker: null,
       address: "",
-      
+
       mapLoader: null,
       map: null,
     };
@@ -360,35 +351,49 @@ export default {
       });
   },
 
-  components: {},
+  computed: {
+    isFieldNameNotNull() {
+      return this.fieldInfoData.name.length > 0;
+    },
+  },
 
   methods: {
     //* -----------------------------------------------
     // 地図の初期化
     //* -----------------------------------------------
     setMap() {
-      if(this.mapLoader == null) this.mapLoader = new Loader(mapLoaderOptions);
-      this.mapLoader.load()
+      if (this.mapLoader == null) this.mapLoader = new Loader(mapLoaderOptions);
+      this.mapLoader
+        .load()
         .then((google) => {
-          if(this.google == null) this.google = google;
+          if (this.google == null) this.google = google;
           // 地図の初期化
-          this.map = new this.google.maps.Map(document.getElementById("deviceDetailMap"), {
-            // 初期表示設定
-            ...mapOptions,
-            //フォーカスを充てる座標を指定
-            center: { lat: this.mapHandler.latitude, lng: this.mapHandler.longitude, }, 
-            click: (event) => {
-              console.log(event);
+          this.map = new this.google.maps.Map(
+            document.getElementById("deviceDetailMap"),
+            {
+              // 初期表示設定
+              ...mapOptions,
+              //フォーカスを充てる座標を指定
+              center: {
+                lat: this.mapHandler.latitude,
+                lng: this.mapHandler.longitude,
+              },
+              click: (event) => {
+                console.log(event);
+              },
             }
-          });
-          
-          if(this.marker){
-            this.marker.setMap(null); 
+          );
+
+          if (this.marker) {
+            this.marker.setMap(null);
           }
           this.marker = new google.maps.Marker({
-            position:{lat:this.mapHandler.latitude, lng: this.mapHandler.longitude,},
+            position: {
+              lat: this.mapHandler.latitude,
+              lng: this.mapHandler.longitude,
+            },
             map: this.map,
-            title: "位置情報"
+            title: "位置情報",
           });
         })
         .catch((e) => {
@@ -586,22 +591,20 @@ export default {
       }
     },
 
-    changeFocusLatLng: function() {
+    changeFocusLatLng: function () {
       const { location } = this.fieldInfoData;
-      if(!location) return;
+      if (!location) return;
 
       useMapLocation(location)
         .then((response) => {
-          
           //場所検索後の座標を取得・格納
           const responseData = response["data"];
           //データが存在するかを確認後、処理
-          if(responseData && responseData.length > 0){
-          
+          if (responseData && responseData.length > 0) {
             const coordinates = response.data[0]["geometry"]["coordinates"];
             const latitude = coordinates[1];
             const longitude = coordinates[0];
-            
+
             const google = this.google;
             const map = this.map;
 
@@ -611,13 +614,13 @@ export default {
             mapHandler["longitude"] = longitude;
             console.log(mapHandler);
 
-            if(this.marker){
-              this.marker.setMap(null); 
+            if (this.marker) {
+              this.marker.setMap(null);
             }
             this.marker = new google.maps.Marker({
-              position:{lat:latitude, lng: longitude},
+              position: { lat: latitude, lng: longitude },
               map: map,
-              title: "位置情報"
+              title: "位置情報",
             });
 
             const newCenter = new google.maps.LatLng(latitude, longitude);
@@ -628,7 +631,6 @@ export default {
           //失敗時
           console.log(error);
         });
-
     },
   },
 };
@@ -642,6 +644,12 @@ export default {
   background-color: #ccc;
 }
 .editableInput input {
-  background-color: #fff;
+  background-color: #d9f99d;
+}
+
+.error {
+  font-size: 9pt;
+  padding-left: 10px;
+  /*  color: rgb(34, 9, 9);*/
 }
 </style>

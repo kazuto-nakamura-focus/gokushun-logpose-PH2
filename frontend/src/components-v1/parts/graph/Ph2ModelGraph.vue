@@ -3,7 +3,7 @@
     <v-card elevation-6>
       <v-container>
         <v-row>
-          <v-col>
+          <v-col cols="11">
             <v-btn
               class="ml-1"
               v-for="(button, index) in editButtons"
@@ -14,7 +14,7 @@
               @click="openDialog(button)"
             >{{ button.name }}</v-btn>
           </v-col>
-          <v-col align="right">
+          <v-col align="right" cols="1">
             <div>
               <v-icon @click="handleClose()">mdi-close</v-icon>
             </div>
