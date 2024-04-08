@@ -206,9 +206,8 @@ import {
   useDeviceInfo,
 } from "@/api/ManagementScreenTop/MSDevice";
 import moment from "moment";
-
 import { mapLoaderOptions, mapOptions } from "./mapConfig";
-
+import { callAddressAPI } from "@/lib/ReverseGeoCoding.js";
 import messages from "@/assets/messages.json";
 
 const HEADERS = [
@@ -732,7 +731,41 @@ export default {
           console.log(error);
         });
     },
-    setAddress: function () {},
+    setAddress: function () {
+      this.fieldInfoData.location = "";
+      callAddressAPI(this.mapHandler.latitude, this.mapHandler.longitude)
+        .then((response) => {
+          const data = response["data"];
+          const address = data["address"];
+          // * 日本国内の場合
+          if (address["country"] == "日本") {
+            let topname;
+            // 都内の場合
+            if (address.province === undefined) topname = "東京都";
+            // 地方の場合
+            else topname = address.province;
+            // 表示分割
+            let names = data.display_name.split(",");
+            // 都道府県名まで移動
+            let i = names.length - 1;
+            for (; i >= 0; i--) {
+              let item = names[i].trim();
+              if (item == topname) break;
+            }
+            for (; i >= 0; i--) {
+              this.fieldInfoData.location += names[i].trim();
+            }
+          } else {
+            let names = data.display_name.split(",");
+            for (let i = 0; i < names.length - 2; i++)
+              this.fieldInfoData.location += names[i].trim() + ", ";
+            this.fieldInfoData.location += names[names.length - 2].trim();
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    },
   },
 };
 </script>
