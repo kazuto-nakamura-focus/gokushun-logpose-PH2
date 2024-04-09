@@ -2,5 +2,6 @@
     "required": "このフィールドの入力は必須です。",
     "numeric": "数値を入力してください。",
     "rangeLatitude": "数値は-90度から90度の範囲にしてください。",
-    "rangeLongtitude": "経度は-180度から180度の範囲にしてください。"
+    "rangeLongtitude": "経度は-180度から180度の範囲にしてください。",
+    "wrongDate": "MM/DD形式で入力してください。"
 }

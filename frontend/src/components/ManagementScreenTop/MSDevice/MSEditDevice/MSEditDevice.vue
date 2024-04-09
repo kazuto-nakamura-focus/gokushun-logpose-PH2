@@ -64,37 +64,44 @@
           </v-col>
           <v-col cols="6">
             <div style="border-left:2px dotted gray;padding-left:10px;" class="deviceSet">
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:10px">基準日</div>
+              <div style="margin-bottom:20px;">
                 <v-text-field
+                  label="基準日【必須】"
                   dense
                   hide-details="auto"
                   outlined
-                  placeholder="01/01"
-                  v-model="deviceInfoData.baseDateShort"
+                  filled
+                  default="01/01"
+                  background-color="#F4FCE0"
+                  v-model.trim="deviceInfoData.baseDateShort"
                 ></v-text-field>
+                <p v-if="!isBaseDateNotNull" class="error">{{this.messages.wrongDate}}</p>
               </div>
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:10px">タイムゾーン</div>
+              <div>
                 <v-select
                   v-model="deviceInfoData.timeZone"
                   :items="timeZone"
+                  label="タイムゾーン【必須】"
                   width="60"
                   item-text="name"
                   item-value="id"
+                  background-color="#F4FCE0"
                   dense
                 ></v-select>
               </div>
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:10px">運用開始日</div>
+              <div style="margin-bottom:16px;">
                 <v-text-field
+                  label="運用開始日"
                   dense
                   hide-details="auto"
                   outlined
-                  placeholder="YYYY/MM/DD"
+                  filled
+                  default="01/01"
+                  background-color="#F4FCE0"
                   v-model.trim="deviceInfoData.opStartShort"
                 ></v-text-field>
               </div>
+
               <div style=" display: flex;margin-bottom:10px">
                 <div style="width:120px;height:100%;padding-top:14px; font-size:10pt">引継ぎデバイスID</div>
                 <div style="width:130px;">
@@ -109,14 +116,16 @@
                   <v-checkbox v-model="transitFlag" label="更新時実績値の引継ぎ実行"></v-checkbox>
                 </div>
               </div>
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:10px">運用終了日</div>
+              <div style="margin-bottom:16px;">
                 <v-text-field
+                  label="運用終了日"
                   dense
                   hide-details="auto"
                   outlined
-                  placeholder="YYYY/MM/DD"
-                  v-model="deviceInfoData.opEndShort"
+                  filled
+                  default="01/01"
+                  background-color="#F4FCE0"
+                  v-model.trim="deviceInfoData.opEndShort"
                 ></v-text-field>
               </div>
             </div>
@@ -179,7 +188,7 @@ import {
   useLoadData,
 } from "@/api/ManagementScreenTop/MSDevice";
 import { AgGridVue } from "ag-grid-vue";
-import moment from "moment-timezone";
+//import moment from "moment-timezone";
 import "moment/locale/ja";
 import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 import messages from "@/assets/messages.json";
@@ -409,13 +418,8 @@ export default {
   },
 
   mounted() {
-    let txList = moment.tz.names();
-    for (const item of txList) {
-      this.timeZone.push({
-        name: item,
-        id: item,
-      });
-    }
+    this.timeZone.push("Asia/Tokyo");
+    this.timeZone.push("Pacific/Auckland");
   },
   computed: {
     //* -------------------------------------------
@@ -428,6 +432,12 @@ export default {
     // Sigfox ID
     isSigFoxNotNull() {
       return this.deviceInfoData.sigFoxDeviceId.length != 0;
+    },
+    isBaseDateNotNull() {
+      let result = this.deviceInfoData.baseDateShort.match(
+        /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/
+      );
+      return null != result;
     },
   },
   methods: {
