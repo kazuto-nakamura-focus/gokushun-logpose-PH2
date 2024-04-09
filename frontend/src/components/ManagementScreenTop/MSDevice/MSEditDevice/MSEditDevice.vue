@@ -11,40 +11,55 @@
 
         <v-row>
           <v-col cols="6">
+            <div style="margin-bottom:12px;">
+              <v-text-field
+                label="デバイス名【必須】"
+                dense
+                hide-details="auto"
+                outlined
+                filled
+                background-color="#F4FCE0"
+                v-model.trim="deviceInfoData.name"
+              ></v-text-field>
+              <p v-if="!isDeviceNotNull" class="error">{{this.messages.required}}</p>
+            </div>
             <div>
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:10px">デバイス名</div>
-                <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.name"></v-text-field>
-              </div>
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:10px">圃場</div>
-                <v-select
-                  v-bind:items="useFieldInfoDataList"
-                  dense
-                  outlined
-                  @change="setField"
-                  v-model="deviceInfoData.fieldId"
-                  item-text="name"
-                  item-value="id"
-                  return-object
-                ></v-select>
-              </div>
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:10px">品種</div>
-                <v-text-field dense hide-details="auto" outlined v-model="deviceInfoData.brand"></v-text-field>
-              </div>
-              <div style=" display: flex;margin-bottom:10px">
-                <div
-                  style="width:120px;height:100%;padding-top:14px; font-size:10pt"
-                >Sigfox Device ID</div>
-
-                <v-text-field
-                  dense
-                  hide-details="auto"
-                  outlined
-                  v-model="deviceInfoData.sigFoxDeviceId"
-                ></v-text-field>
-              </div>
+              <v-select
+                label="圃場【必須】"
+                v-bind:items="useFieldInfoDataList"
+                dense
+                outlined
+                @change="setField"
+                v-model="deviceInfoData.fieldId"
+                item-text="name"
+                item-value="id"
+                return-object
+                background-color="#F4FCE0"
+                style="margin:0;"
+              ></v-select>
+            </div>
+            <div style="margin-bottom:12px;">
+              <v-text-field
+                label="品種"
+                dense
+                hide-details="auto"
+                outlined
+                filled
+                background-color="#F4FCE0"
+                v-model.trim="deviceInfoData.brand"
+              ></v-text-field>
+            </div>
+            <div style="margin-bottom:12px;">
+              <v-text-field
+                label="Sigfox Device ID【必須】"
+                dense
+                hide-details="auto"
+                outlined
+                filled
+                background-color="#F4FCE0"
+                v-model.trim="deviceInfoData.sigFoxDeviceId"
+              ></v-text-field>
+              <p v-if="!isSigFoxNotNull" class="error">{{this.messages.required}}</p>
             </div>
           </v-col>
           <v-col cols="6">
@@ -167,6 +182,7 @@ import { AgGridVue } from "ag-grid-vue";
 import moment from "moment-timezone";
 import "moment/locale/ja";
 import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
+import messages from "@/assets/messages.json";
 
 function RemoveCellRenderer() {
   let eGui = document.createElement("div");
@@ -204,6 +220,8 @@ export default {
 
   data() {
     return {
+      messages: messages,
+
       timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
       transitFlag: false,
@@ -398,6 +416,19 @@ export default {
         id: item,
       });
     }
+  },
+  computed: {
+    //* -------------------------------------------
+    // 入力チェック
+    //* -------------------------------------------
+    // * デバイス名
+    isDeviceNotNull() {
+      return this.deviceInfoData.name.length != 0;
+    },
+    // Sigfox ID
+    isSigFoxNotNull() {
+      return this.deviceInfoData.sigFoxDeviceId.length != 0;
+    },
   },
   methods: {
     extractKeys(mappings) {
