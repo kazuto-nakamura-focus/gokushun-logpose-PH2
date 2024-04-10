@@ -37,6 +37,7 @@
                 background-color="#F4FCE0"
                 style="margin:0;"
               ></v-select>
+              <p v-if="!isFieldNotNull" class="error">{{this.messages.required}}</p>
             </div>
             <div style="margin-bottom:12px;">
               <v-text-field
@@ -84,10 +85,10 @@
                   label="タイムゾーン【必須】"
                   width="60"
                   item-text="name"
-                  item-value="id"
                   background-color="#F4FCE0"
                   dense
                 ></v-select>
+                <p v-if="!isTzNotNull" class="error">{{this.messages.required}}</p>
               </div>
               <div style="margin-bottom:16px;">
                 <v-text-field
@@ -172,6 +173,7 @@
               class="ma-2 white--text"
               elevation="2"
               @click="update()"
+              :disabled="buttonStatus!=0"
             >{{ label }}</v-btn>
             <v-btn
               v-if="deviceInfoData.id != null"
@@ -179,6 +181,7 @@
               class="ma-2 white--text"
               elevation="2"
               @click="dataLoad()"
+              :disabled="buttonStatus!=0"
             >センサーデータのロード</v-btn>
 
             <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">キャンセル</v-btn>
@@ -221,6 +224,11 @@ function AddCellRenderer() {
   return eGui;
 }
 
+function setBackground(value) {
+  if (value == null || value.length == 0) return { border: "2px solid #f33" };
+  else return { border: "1px solid #fff" };
+}
+
 export default {
   props: {
     mode: {
@@ -248,7 +256,7 @@ export default {
       columnDefs: [
         {
           field: "displayId",
-          headerName: "*センサータイプ",
+          headerName: "センサータイプ",
           singleClickEdit: true,
           resizable: true,
           editable: true,
@@ -261,10 +269,13 @@ export default {
           },
           refData: this.useDeviceMasters.sensorContents,
           valueListGap: 0,
+          cellStyle: (params) => {
+            return setBackground(params.data.displayId);
+          },
         },
         {
           field: "modelId",
-          headerName: "*センサー型番",
+          headerName: "センサー型番",
           singleClickEdit: true,
           resizable: true,
           editable: true,
@@ -277,14 +288,17 @@ export default {
           },
           refData: this.useDeviceMasters.sensorModels,
           valueListGap: 0,
+          cellStyle: (params) => {
+            return setBackground(params.data.modelId);
+          },
         },
         {
           field: "channel",
-          headerName: "*チャンネル",
+          headerName: "チャンネル",
           singleClickEdit: true,
           resizable: true,
           editable: true,
-          width: 80,
+          width: 90,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
             values: [
@@ -305,16 +319,22 @@ export default {
               "15",
               "16",
             ],
-            valueListGap: 0,
+          },
+          valueListGap: 0,
+          cellStyle: (params) => {
+            return setBackground(params.data.channel);
           },
         },
         {
           field: "name",
           singleClickEdit: true,
-          headerName: "*センサ―名",
+          headerName: "センサ―名",
           editable: true,
           resizable: true,
           width: 100,
+          cellStyle: (params) => {
+            return setBackground(params.data.name);
+          },
         },
         {
           field: "sizeId",
@@ -420,6 +440,7 @@ export default {
           : Object.assign({}, this.skelton),
       sensorList: null,
       // sensorData: null, //マスターセンサーデータ
+      buttonStatus: 7,
     };
   },
 
@@ -438,27 +459,48 @@ export default {
     //* -------------------------------------------
     // * デバイス名
     isDeviceNotNull() {
-      return (
+      return this.setStatus(
+        1,
         this.deviceInfoData.name != null && this.deviceInfoData.name.length != 0
       );
     },
     // Sigfox ID
     isSigFoxNotNull() {
-      return (
+      return this.setStatus(
+        2,
         this.deviceInfoData.sigFoxDeviceId != null &&
-        this.deviceInfoData.sigFoxDeviceId.length != 0
+          this.deviceInfoData.sigFoxDeviceId.length != 0
       );
     },
+    // 基準日
     isBaseDateNotNull() {
-      if (null == this.deviceInfoData.baseDateShort) return false;
-      if (0 == this.deviceInfoData.baseDateShort.length) return false;
+      if (null == this.deviceInfoData.baseDateShort)
+        return this.setStatus(4, false);
+      if (0 == this.deviceInfoData.baseDateShort.length)
+        return this.setStatus(4, false);
       let result = this.deviceInfoData.baseDateShort.match(
         /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/
       );
-      return null != result;
+      return this.setStatus(4, null != result);
+    },
+    // 圃場
+    isFieldNotNull() {
+      return this.setStatus(8, this.deviceInfoData.fieldId != null);
+    },
+    // タイムゾーン
+    isTzNotNull() {
+      return this.setStatus(16, this.deviceInfoData.timeZone != null);
     },
   },
   methods: {
+    setStatus(status, bool) {
+      if (!bool) {
+        this.buttonStatus = this.buttonStatus | status;
+      } else {
+        this.buttonStatus = (this.buttonStatus | status) - status;
+      }
+      return bool;
+    },
     extractKeys(mappings) {
       var value = Object.keys(mappings);
       return value;
