@@ -223,10 +223,24 @@ function AddCellRenderer() {
   </div>`;
   return eGui;
 }
-
+//* -----------------------------------------------
+// セルの背景色を設定する
+//* -----------------------------------------------
+// * 通常のセル
 function setBackground(value) {
+  //
   if (value == null || value.length == 0) return { border: "2px solid #f33" };
   else return { border: "1px solid #fff" };
+}
+// * 樹液流のセル
+function setSapBackground(displayId, value) {
+  if (!(displayId == null || displayId == "4")) {
+    return { border: "1px solid #fff", backgroundColor: "#aaa" };
+  } else {
+    if (value == null || value.length == 0)
+      return { border: "2px solid #f33", backgroundColor: "inherit" };
+    else return { border: "1px solid #fff", backgroundColor: "inherit" };
+  }
 }
 
 export default {
@@ -353,12 +367,7 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            if (
-              !(params.data.displayId == null || params.data.displayId == "4")
-            ) {
-              return { backgroundColor: "#aaa" };
-            }
-            return { backgroundColor: "rgba(0, 0, 0, 0)" };
+            return setSapBackground(params.data.displayId, params.data.sizeId);
           },
         },
         {
@@ -372,12 +381,7 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            if (
-              !(params.data.displayId == null || params.data.displayId == "4")
-            ) {
-              return { backgroundColor: "#aaa" };
-            }
-            return { backgroundColor: "rgba(0, 0, 0, 0)" };
+            return setSapBackground(params.data.displayId, params.data.kst);
           },
         },
         {
@@ -390,12 +394,10 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            if (
-              !(params.data.displayId == null || params.data.displayId == "4")
-            ) {
-              return { backgroundColor: "#aaa" };
-            }
-            return { backgroundColor: "rgba(0, 0, 0, 0)" };
+            return setSapBackground(
+              params.data.displayId,
+              params.data.stemDiameter
+            );
           },
         },
         {
