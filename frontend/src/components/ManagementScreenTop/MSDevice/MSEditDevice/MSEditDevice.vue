@@ -438,13 +438,20 @@ export default {
     //* -------------------------------------------
     // * デバイス名
     isDeviceNotNull() {
-      return this.deviceInfoData.name.length != 0;
+      return (
+        this.deviceInfoData.name != null && this.deviceInfoData.name.length != 0
+      );
     },
     // Sigfox ID
     isSigFoxNotNull() {
-      return this.deviceInfoData.sigFoxDeviceId.length != 0;
+      return (
+        this.deviceInfoData.sigFoxDeviceId != null &&
+        this.deviceInfoData.sigFoxDeviceId.length != 0
+      );
     },
     isBaseDateNotNull() {
+      if (null == this.deviceInfoData.baseDateShort) return false;
+      if (0 == this.deviceInfoData.baseDateShort.length) return false;
       let result = this.deviceInfoData.baseDateShort.match(
         /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/
       );
