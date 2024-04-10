@@ -103,14 +103,20 @@
               </div>
 
               <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:14px; font-size:10pt">引継ぎデバイスID</div>
-                <div style="width:130px;">
-                  <v-text-field
+                <div style="width:250px;">
+                  <v-select
+                    label="引継ぎデバイス"
+                    v-bind:items="deviceList"
+                    @change="setDevice"
                     dense
-                    hide-details="auto"
                     outlined
-                    v-model.trim="deviceInfoData.prevDeviceId"
-                  ></v-text-field>
+                    v-model="deviceInfoData.prevDeviceId"
+                    item-text="name"
+                    item-value="id"
+                    return-object
+                    background-color="#F4FCE0"
+                    style="margin:0;"
+                  ></v-select>
                 </div>
                 <div style="width:230px;margin-left:15px">
                   <v-checkbox v-model="transitFlag" label="更新時実績値の引継ぎ実行"></v-checkbox>
@@ -133,8 +139,12 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <div>センサー</div>
+            <!-- *********** センサー情報 ********** -->
 
+            <div>センサー</div>
+            <div>
+              <p v-if="!isBaseDateNotNull" class="error">{{this.messages.wrongDate}}</p>
+            </div>
             <div style="height: 325px">
               <div style="height: 325px; box-sizing: border-box">
                 <AgGridVue
@@ -225,23 +235,24 @@ export default {
     useFieldInfoDataList: Array, //* 圃場一覧
     useDeviceMasters: Object, //* マスター情報一覧
     useDeviceInfoData: Object, //デバイス詳細
+    deviceList: Array, //デバイスリスト
   },
 
   data() {
     return {
       messages: messages,
-
+      errormessage: "",
       timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
       transitFlag: false,
       columnDefs: [
         {
           field: "displayId",
-          headerName: "センサータイプ",
+          headerName: "*センサータイプ",
           singleClickEdit: true,
           resizable: true,
           editable: true,
-          width: 120,
+          width: 150,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
             values: this.extractKeys(
@@ -253,7 +264,7 @@ export default {
         },
         {
           field: "modelId",
-          headerName: "センサー型番",
+          headerName: "*センサー型番",
           singleClickEdit: true,
           resizable: true,
           editable: true,
@@ -269,7 +280,7 @@ export default {
         },
         {
           field: "channel",
-          headerName: "チャンネル",
+          headerName: "*チャンネル",
           singleClickEdit: true,
           resizable: true,
           editable: true,
@@ -300,7 +311,7 @@ export default {
         {
           field: "name",
           singleClickEdit: true,
-          headerName: "センサ―名",
+          headerName: "*センサ―名",
           editable: true,
           resizable: true,
           width: 100,
@@ -457,6 +468,9 @@ export default {
 
     setField(item) {
       this.deviceInfoData.fieldId = item.id;
+    },
+    setDevice(item) {
+      this.deviceInfoData.prevDeviceId = item.id;
     },
     //* ============================================
     // セルの値が変化した場合
