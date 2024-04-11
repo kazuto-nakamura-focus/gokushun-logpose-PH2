@@ -157,6 +157,7 @@
                   :gridOptions="gridOptions"
                   sizeColumn
                   @cell-clicked="onCellClicked"
+                  @first-data-rendered="onRendered"
                   @cell-value-changed="onColumnValueChanged"
                 ></AgGridVue>
               </div>
@@ -284,7 +285,7 @@ export default {
     return {
       messages: messages,
       errormessage: "",
-      isAllValueInputted: false,
+      isAllValueInputted: true,
       timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
       transitFlag: false,
@@ -609,7 +610,6 @@ export default {
         let sensorItems = [];
         // 画面のセンサー情報のリストを取り出す
         for (const item of rowData) {
-          console.log("item", item);
           if (
             null != item.displayId &&
             null != item.name &&
@@ -618,8 +618,6 @@ export default {
             sensorItems.push(item);
           }
         }
-        console.log("sensorItems");
-        console.log(sensorItems);
         const data = {
           //デバイス情報
           id: deviceId,
@@ -636,8 +634,6 @@ export default {
           //センサー情報
           sensorItems: sensorItems,
         };
-
-        console.log("update_data", data);
 
         if (this.mode == "update") {
           //デバイス情報更新(API)
@@ -702,7 +698,6 @@ export default {
     deleteDeviceInfo: function () {
       if (confirm("削除してもよろしいですか？")) {
         //デバイス情報削除(API)
-        console.log("deleteDeviceInfo", this.deviceInfoData.id);
         useDeviceInfoRemove(this.deviceInfoData.id)
           .then((response) => {
             //成功時
@@ -762,6 +757,14 @@ export default {
           add: [row],
         });
       }
+    },
+    onRendered() {
+      this.gridApi.forEachNode((node) => {
+        if (node.status !== undefined && 0 != node.status) {
+          this.isAllValueInputted = false;
+        }
+        //console.log(node);
+      });
     },
   },
 };
