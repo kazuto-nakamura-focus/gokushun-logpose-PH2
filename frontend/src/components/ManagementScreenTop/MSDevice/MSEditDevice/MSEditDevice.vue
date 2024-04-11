@@ -144,7 +144,7 @@
 
             <div>センサー</div>
             <div>
-              <p v-if="!isBaseDateNotNull" class="error">{{this.messages.wrongDate}}</p>
+              <p v-if="!isAllValueInputted" class="error">{{this.messages.NotFilledAll}}</p>
             </div>
             <div style="height: 325px">
               <div style="height: 325px; box-sizing: border-box">
@@ -173,7 +173,7 @@
               class="ma-2 white--text"
               elevation="2"
               @click="update()"
-              :disabled="buttonStatus!=0"
+              :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
             >{{ label }}</v-btn>
             <v-btn
               v-if="deviceInfoData.id != null"
@@ -181,7 +181,7 @@
               class="ma-2 white--text"
               elevation="2"
               @click="dataLoad()"
-              :disabled="buttonStatus!=0"
+              :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
             >センサーデータのロード</v-btn>
 
             <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">キャンセル</v-btn>
@@ -227,20 +227,40 @@ function AddCellRenderer() {
 // セルの背景色を設定する
 //* -----------------------------------------------
 // * 通常のセル
-function setBackground(value) {
+function setBackground(params, number, value) {
   //
-  if (value == null || value.length == 0) return { border: "2px solid #f33" };
-  else return { border: "1px solid #fff" };
+  if (value == null || value.length == 0) {
+    setStatus(params, number, false);
+    return { border: "2px solid #f33" };
+  } else {
+    setStatus(params, number, true);
+    return { border: "1px solid #fff" };
+  }
 }
 // * 樹液流のセル
-function setSapBackground(displayId, value) {
+function setSapBackground(params, number, displayId, value) {
   if (!(displayId == null || displayId == "4")) {
     return { border: "1px solid #fff", backgroundColor: "#aaa" };
   } else {
-    if (value == null || value.length == 0)
+    if (value == null || value.length == 0) {
+      setStatus(params, number, false);
       return { border: "2px solid #f33", backgroundColor: "inherit" };
-    else return { border: "1px solid #fff", backgroundColor: "inherit" };
+    } else {
+      setStatus(params, number, true);
+      return { border: "1px solid #fff", backgroundColor: "inherit" };
+    }
   }
+}
+//* -----------------------------------------------
+// 行のエラーステータスを設定する
+//* -----------------------------------------------
+function setStatus(params, number, bool) {
+  let row = params.node.parent.allLeafChildren[params.rowIndex];
+  if (row.status === undefined) {
+    row.status = new Number(0);
+  }
+  if (bool) row.status = (row.status | number) - number;
+  else row.status = row.status | number;
 }
 
 export default {
@@ -264,6 +284,7 @@ export default {
     return {
       messages: messages,
       errormessage: "",
+      isAllValueInputted: false,
       timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
       transitFlag: false,
@@ -284,7 +305,7 @@ export default {
           refData: this.useDeviceMasters.sensorContents,
           valueListGap: 0,
           cellStyle: (params) => {
-            return setBackground(params.data.displayId);
+            return setBackground(params, 1, params.data.displayId);
           },
         },
         {
@@ -303,7 +324,7 @@ export default {
           refData: this.useDeviceMasters.sensorModels,
           valueListGap: 0,
           cellStyle: (params) => {
-            return setBackground(params.data.modelId);
+            return setBackground(params, 2, params.data.modelId);
           },
         },
         {
@@ -336,7 +357,7 @@ export default {
           },
           valueListGap: 0,
           cellStyle: (params) => {
-            return setBackground(params.data.channel);
+            return setBackground(params, 4, params.data.channel);
           },
         },
         {
@@ -347,7 +368,9 @@ export default {
           resizable: true,
           width: 100,
           cellStyle: (params) => {
-            return setBackground(params.data.name);
+            params.status = new Number();
+            //      params.node.parent.allLeafChildren[params.rowIndex].status =new Boolean(true);
+            return setBackground(params, 8, params.data.name);
           },
         },
         {
@@ -367,7 +390,12 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            return setSapBackground(params.data.displayId, params.data.sizeId);
+            return setSapBackground(
+              params,
+              16,
+              params.data.displayId,
+              params.data.sizeId
+            );
           },
         },
         {
@@ -381,7 +409,12 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            return setSapBackground(params.data.displayId, params.data.kst);
+            return setSapBackground(
+              params,
+              32,
+              params.data.displayId,
+              params.data.kst
+            );
           },
         },
         {
@@ -395,6 +428,8 @@ export default {
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
             return setSapBackground(
+              params,
+              64,
               params.data.displayId,
               params.data.stemDiameter
             );
@@ -548,6 +583,15 @@ export default {
         rowNodes: [node],
       };
       param.api.refreshCells(refreshParams);
+
+      let items = param.node.parent.allLeafChildren;
+      this.isAllValueInputted = true;
+      for (const item of items) {
+        if (0 !== item.status) {
+          this.isAllValueInputted = false;
+          break;
+        }
+      }
     },
     update: function () {
       const message =
