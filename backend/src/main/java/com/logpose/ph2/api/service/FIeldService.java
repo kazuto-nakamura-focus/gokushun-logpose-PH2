@@ -6,19 +6,23 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.bulk.domain.DeviceStatusDomain;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2RelFieldDeviceEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2WeatherDailyMasterEntityExample;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelFieldDeviceMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2WeatherDailyMasterMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper;
 import com.logpose.ph2.api.domain.DeviceDomain;
 import com.logpose.ph2.api.dto.FieldDetailDTO;
 import com.logpose.ph2.api.dto.FieldInfoDTO;
 import com.logpose.ph2.api.dto.element.DeviceInfo;
-
-
 
 /**
  * 圃場に関する参照・更新サービス
@@ -33,11 +37,17 @@ public class FIeldService
 	@Autowired
 	private Ph2FieldsMapper ph2FieldsMapper;
 	@Autowired
+	private Ph2DevicesMapper ph2DevicesMapper;
+	@Autowired
 	private Ph2FieldDeviceJoinMapper ph2FieldDeviceSetJoinMapper;
 	@Autowired
 	private DeviceDomain deviceDomain;
 	@Autowired
-	private Ph2RelFieldDeviceMapper  ph2RelFieldDeviceMapper;
+	private DeviceStatusDomain deviceStatusDomain;
+	@Autowired
+	private Ph2RelFieldDeviceMapper ph2RelFieldDeviceMapper;
+	@Autowired
+	private Ph2WeatherDailyMasterMapper ph2WeatherDailyMasterMapper;
 
 	// ===============================================
 	// パブリック関数
@@ -80,11 +90,6 @@ public class FIeldService
 	public void delete(Long fieldId)
 		{
 		this.ph2FieldsMapper.deleteByPrimaryKey(fieldId);
-		
-		Ph2RelFieldDeviceEntityExample exm  = new Ph2RelFieldDeviceEntityExample();
-		exm.createCriteria().andFieldIdEqualTo(fieldId);
-		this.ph2RelFieldDeviceMapper.deleteByExample(exm);
-		
 		this.deviceDomain.deleteByFieldId(fieldId);
 		}
 
@@ -134,7 +139,7 @@ public class FIeldService
 		field.setCommenceDate(dto.getContructor());
 		field.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		field.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		
+
 		return this.ph2FieldsMapper.insert(field);
 		}
 
@@ -145,18 +150,56 @@ public class FIeldService
 	 * @param dto FieldInfoDTO
 	 */
 	// ###############################################
+	@Transactional(rollbackFor = Exception.class)
 	public void updateInfo(FieldInfoDTO dto)
 		{
-		// * 圃場情報の取得
+// * 圃場情報の取得
 		Ph2FieldsEntity field = this.ph2FieldsMapper.selectByPrimaryKey(dto.getId());
-		// * 圃場情報の更新
-		field.setClient(dto.getContructor());
-		field.setLatitude(dto.getLatitude());
-		field.setLocation(dto.getLocation());
-		field.setLongitude(dto.getLongitude());
-		field.setName(dto.getName());
-		field.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		this.ph2FieldsMapper.updateByPrimaryKey(field);
+// * デバイスのロックリスト
+		List<Long> locks = null;
+		List<Ph2DevicesEntity> devices = null;
+// * 緯度経度に変更がある場合
+		if ((dto.getLatitude().doubleValue() != field.getLatitude().doubleValue()) ||
+				(dto.getLongitude().doubleValue() != field.getLongitude().doubleValue()))
+			{
+// * 圃場に付属するデバイスリストを得る
+			Ph2DevicesEntityExample exm = new Ph2DevicesEntityExample();
+			exm.createCriteria().andFieldIdEqualTo(dto.getId());
+			devices = this.ph2DevicesMapper.selectByExample(exm);
+// * デバイスにロックを実施する
+			locks = this.deviceStatusDomain.lockDevices(devices);
+			}
+		try
+			{
+// * ロックがある場合（緯度経度に変更がある場合）、WheatherMasterを削除し、全データのアップロードを指定する
+			if (null != locks)
+				{
+				for (Ph2DevicesEntity device : devices)
+					{
+					Ph2WeatherDailyMasterEntityExample wexm = new Ph2WeatherDailyMasterEntityExample();
+					wexm.createCriteria().andDeviceIdEqualTo(device.getId());
+					this.ph2WeatherDailyMasterMapper.deleteByExample(wexm);
+					this.deviceStatusDomain.setAllStatusToAllLoaded();
+					}
+				}
+			// * 圃場情報の更新
+			field.setClient(dto.getContructor());
+			field.setLatitude(dto.getLatitude());
+			field.setLocation(dto.getLocation());
+			field.setLongitude(dto.getLongitude());
+			field.setName(dto.getName());
+			field.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+			this.ph2FieldsMapper.updateByPrimaryKey(field);
+			}
+		catch (Exception e)
+			{
+			throw e;
+			}
+		finally
+			{
+			if (null != locks)
+				this.deviceStatusDomain.unLockDevices(locks);
+			}
 		}
 
 	}

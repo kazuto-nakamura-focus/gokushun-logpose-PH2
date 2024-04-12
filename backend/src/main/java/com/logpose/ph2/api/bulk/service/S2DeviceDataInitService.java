@@ -31,7 +31,6 @@ public class S2DeviceDataInitService
 	private Ph2DeviceDayMapper ph2DeviceDayMapper;
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
-
 	// ===============================================
 	// 公開関数群
 	// ===============================================
@@ -53,7 +52,7 @@ public class S2DeviceDataInitService
 		this.Ph2RawDataMapper.deleteByDevice(deviceId);
 
 		this.ph2ModelDataMapper.deleteByDevice(deviceId);
-		
+
 		Ph2DeviceDayEntityExample exm = new Ph2DeviceDayEntityExample();
 		Ph2DeviceDayEntityExample.Criteria criteria3 = exm
 				.createCriteria().andDeviceIdEqualTo(deviceId);

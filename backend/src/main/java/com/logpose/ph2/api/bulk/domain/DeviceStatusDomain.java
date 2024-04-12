@@ -45,6 +45,7 @@ public class DeviceStatusDomain
 		{
 		return this.ph2DevicesMapper.selectAll(null);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * オブジェクトステータスリストを取得する
@@ -54,12 +55,13 @@ public class DeviceStatusDomain
 	public List<ObjectStatus> getStatusList(List<Ph2DevicesEntity> devices)
 		{
 		List<Long> idList = new ArrayList<>();
-		for(final Ph2DevicesEntity device : devices)
+		for (final Ph2DevicesEntity device : devices)
 			{
 			idList.add(device.getId());
 			}
 		return this.ph2DevicesMapper.selectDeviceStatus(idList);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスが全データロードかどうかチェックする
@@ -70,6 +72,7 @@ public class DeviceStatusDomain
 		{
 		return (device.getDataStatus() & ALL_LOAD_NEEDED) > 0;
 		}
+
 	// --------------------------------------------------
 	/**
 	 *全デバイスに対して全データロードモードを設定する
@@ -80,7 +83,7 @@ public class DeviceStatusDomain
 		{
 		this.ph2DevicesMapper.setAllStatus(ALL_LOAD_NEEDED);
 		}
-	
+
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスに対してローディング中であることを設定する
@@ -92,22 +95,22 @@ public class DeviceStatusDomain
 		{
 // * 最新の情報を得る
 		Ph2DevicesEntity entity = this.ph2DevicesMapper.selectByPrimaryKey(device.getId());
-		int prevStatus = (null !=entity.getDataStatus())?entity.getDataStatus().intValue() : 0;
-		int newStatus  = 0;
+		int prevStatus = (null != entity.getDataStatus()) ? entity.getDataStatus().intValue() : 0;
+		int newStatus = 0;
 // * ロックされていない場合
 		if ((prevStatus & ON_LOADING) == 0)
 			{
 			// ロック
 			newStatus = ON_LOADING;
 			// 全てのロード要求がある場合、そのステータスを保持
-			if((prevStatus & ALL_LOAD_NEEDED)>0)
+			if ((prevStatus & ALL_LOAD_NEEDED) > 0)
 				{
-				newStatus = newStatus|ALL_LOAD_NEEDED;
+				newStatus = newStatus | ALL_LOAD_NEEDED;
 				}
 			// 通常のロードの場合モデル情報を保持
-			else if((prevStatus & MODEL_DATA_CREATED)>0)
+			else if ((prevStatus & MODEL_DATA_CREATED) > 0)
 				{
-				newStatus = newStatus|MODEL_DATA_CREATED;
+				newStatus = newStatus | MODEL_DATA_CREATED;
 				}
 			device.setDataStatus(newStatus);
 			// DBへ更新
@@ -117,7 +120,7 @@ public class DeviceStatusDomain
 		else
 			return false;
 		}
-	
+
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスのローディング中ステータスを解消する
@@ -156,6 +159,7 @@ public class DeviceStatusDomain
 		{
 		this.setDataStatus(device, RAW_DATA_LOADED, true);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスに対してモデルデータが作成済を解除する
@@ -169,6 +173,7 @@ public class DeviceStatusDomain
 		device.setDataStatus(status);
 		this.update(device, false);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスに対してモデルデータが作成済であることを通知する
@@ -203,7 +208,7 @@ public class DeviceStatusDomain
 		if (null != device.getPreviousDeviceId())
 			{
 			Ph2DevicesEntity tmp = this.ph2DevicesMapper.selectByPrimaryKey(device.getPreviousDeviceId());
-			if( null != tmp)
+			if (null != tmp)
 				{
 				tmp.setId(device.getPreviousDeviceId());
 				if (!this.setDataOnLoad(tmp))
@@ -232,6 +237,31 @@ public class DeviceStatusDomain
 			}
 		return rockList;
 		}
+
+	// --------------------------------------------------
+	/**
+	 * デバイスリストに対してロックを試みる
+	 * @param device
+	 * @return ロックされたデバイスのIDリスト
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class)
+	public List<Long> lockDevices(List<Ph2DevicesEntity> devices)
+		{
+		List<Long> rockList = new ArrayList<>();
+// * デバイスに対してロックを試みる
+		for (Ph2DevicesEntity device : devices)
+			{
+			if (!this.setDataOnLoad(device))
+				{
+				new RuntimeException(ONLOAD_ERROR);
+				}
+// * ロックリストに追加する
+			rockList.add(device.getId());
+			}
+		return rockList;
+		}
+
 	// --------------------------------------------------
 	/**
 	 * 全データ更新要求を解除する
@@ -245,6 +275,7 @@ public class DeviceStatusDomain
 		device.setDataStatus(status);
 		this.update(device, false);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * 指定されたデバイスリストに対してロックを解除する 
@@ -267,6 +298,7 @@ public class DeviceStatusDomain
 		{
 		this.ph2DevicesMapper.updateAllStatus(ALL_LOAD_NEEDED, devices);
 		}
+
 	// --------------------------------------------------------
 	/**
 	 * デバイスのロード情報を得る
@@ -277,7 +309,8 @@ public class DeviceStatusDomain
 	public List<ObjectStatus> getAllStatusList(Date date)
 		{
 		return this.ph2DevicesMapper.selectAllStatus(date);
-		}	
+		}
+
 	// ===============================================
 	// 保護関数群
 	// ===============================================
@@ -288,10 +321,11 @@ public class DeviceStatusDomain
 		device.setDataStatus(orginal);
 		this.update(device, dataUpdated);
 		}
+
 	public void update(Ph2DevicesEntity device, boolean dataUpdated)
 		{
 		device.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		if(dataUpdated) device.setDataStatusDate(device.getUpdatedAt());
+		if (dataUpdated) device.setDataStatusDate(device.getUpdatedAt());
 		this.ph2DevicesMapper.updateByPrimaryKeySelective(device);
 		}
 	}
