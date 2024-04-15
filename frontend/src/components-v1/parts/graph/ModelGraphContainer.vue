@@ -54,7 +54,7 @@ export default {
       title.main =
         selectedItems.selectedField.name +
         "|" +
-        selectedItems.selectedField.name +
+        selectedItems.selectedDevice.name +
         "|" +
         selectedItems.selectedYear.id;
       title.sub = selectedItems.selectedModel.name;

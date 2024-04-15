@@ -322,11 +322,12 @@
     <result column="sun_time" jdbcType="BIGINT" property="sunTime" />
 	<result column="lapse_day" jdbcType="SMALLINT" property="lapseDay" />
     <result column="raw_cdd" jdbcType="DOUBLE" property="rawCdd" />
+	<result column="has_real" jdbcType="BIT" property="hasReal" />
   </resultMap>
 	<!-- ************************************************************************** -->
   <select id="selectOldData" resultMap="ExtendResultMap">
 	select
-		dd.lapse_day, bd.day_id, bd.tm, bd.average, bd.cdd, bd.par, bd.sun_time, bd.raw_cdd
+		dd.lapse_day, bd.day_id, bd.tm, bd.average, bd.cdd, bd.par, bd.sun_time, bd.raw_cdd, dd.has_real
 	from
 		ph2_device_day dd
 	join
@@ -346,7 +347,7 @@
 <!-- ************************************************************************** -->
    <select id="selectLastYearData" resultMap="ExtendResultMap">
    	select
-   	    dd.lapse_day, bd.day_id, bd.tm, bd.average, bd.cdd, bd.par, bd.sun_time, bd.raw_cdd
+   	    dd.lapse_day, bd.day_id, bd.tm, bd.average, bd.cdd, bd.par, bd.sun_time, bd.raw_cdd, dd.has_real
    	 from
    	 	ph2_device_day dd
 	join

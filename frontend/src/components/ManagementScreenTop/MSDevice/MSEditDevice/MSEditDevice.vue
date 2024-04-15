@@ -37,6 +37,7 @@
                 background-color="#F4FCE0"
                 style="margin:0;"
               ></v-select>
+              <p v-if="!isFieldNotNull" class="error">{{this.messages.required}}</p>
             </div>
             <div style="margin-bottom:12px;">
               <v-text-field
@@ -84,10 +85,10 @@
                   label="タイムゾーン【必須】"
                   width="60"
                   item-text="name"
-                  item-value="id"
                   background-color="#F4FCE0"
                   dense
                 ></v-select>
+                <p v-if="!isTzNotNull" class="error">{{this.messages.required}}</p>
               </div>
               <div style="margin-bottom:16px;">
                 <v-text-field
@@ -103,14 +104,20 @@
               </div>
 
               <div style=" display: flex;margin-bottom:10px">
-                <div style="width:120px;height:100%;padding-top:14px; font-size:10pt">引継ぎデバイスID</div>
-                <div style="width:130px;">
-                  <v-text-field
+                <div style="width:250px;">
+                  <v-select
+                    label="引継ぎデバイス"
+                    v-bind:items="deviceList"
+                    @change="setDevice"
                     dense
-                    hide-details="auto"
                     outlined
-                    v-model.trim="deviceInfoData.prevDeviceId"
-                  ></v-text-field>
+                    v-model="deviceInfoData.prevDeviceId"
+                    item-text="name"
+                    item-value="id"
+                    return-object
+                    background-color="#F4FCE0"
+                    style="margin:0;"
+                  ></v-select>
                 </div>
                 <div style="width:230px;margin-left:15px">
                   <v-checkbox v-model="transitFlag" label="更新時実績値の引継ぎ実行"></v-checkbox>
@@ -133,8 +140,12 @@
         </v-row>
         <v-row>
           <v-col cols="12">
-            <div>センサー</div>
+            <!-- *********** センサー情報 ********** -->
 
+            <div>センサー</div>
+            <div>
+              <p v-if="!isAllValueInputted" class="error">{{this.messages.NotFilledAll}}</p>
+            </div>
             <div style="height: 325px">
               <div style="height: 325px; box-sizing: border-box">
                 <AgGridVue
@@ -146,6 +157,7 @@
                   :gridOptions="gridOptions"
                   sizeColumn
                   @cell-clicked="onCellClicked"
+                  @first-data-rendered="onRendered"
                   @cell-value-changed="onColumnValueChanged"
                 ></AgGridVue>
               </div>
@@ -162,6 +174,7 @@
               class="ma-2 white--text"
               elevation="2"
               @click="update()"
+              :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
             >{{ label }}</v-btn>
             <v-btn
               v-if="deviceInfoData.id != null"
@@ -169,6 +182,7 @@
               class="ma-2 white--text"
               elevation="2"
               @click="dataLoad()"
+              :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
             >センサーデータのロード</v-btn>
 
             <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">キャンセル</v-btn>
@@ -210,6 +224,45 @@ function AddCellRenderer() {
   </div>`;
   return eGui;
 }
+//* -----------------------------------------------
+// セルの背景色を設定する
+//* -----------------------------------------------
+// * 通常のセル
+function setBackground(params, number, value) {
+  //
+  if (value == null || value.length == 0) {
+    setStatus(params, number, false);
+    return { border: "2px solid #f33" };
+  } else {
+    setStatus(params, number, true);
+    return { border: "1px solid #fff" };
+  }
+}
+// * 樹液流のセル
+function setSapBackground(params, number, displayId, value) {
+  if (!(displayId == null || displayId == "4")) {
+    return { border: "1px solid #fff", backgroundColor: "#aaa" };
+  } else {
+    if (value == null || value.length == 0) {
+      setStatus(params, number, false);
+      return { border: "2px solid #f33", backgroundColor: "inherit" };
+    } else {
+      setStatus(params, number, true);
+      return { border: "1px solid #fff", backgroundColor: "inherit" };
+    }
+  }
+}
+//* -----------------------------------------------
+// 行のエラーステータスを設定する
+//* -----------------------------------------------
+function setStatus(params, number, bool) {
+  let row = params.node.parent.allLeafChildren[params.rowIndex];
+  if (row.status === undefined) {
+    row.status = new Number(0);
+  }
+  if (bool) row.status = (row.status | number) - number;
+  else row.status = row.status | number;
+}
 
 export default {
   props: {
@@ -225,12 +278,14 @@ export default {
     useFieldInfoDataList: Array, //* 圃場一覧
     useDeviceMasters: Object, //* マスター情報一覧
     useDeviceInfoData: Object, //デバイス詳細
+    deviceList: Array, //デバイスリスト
   },
 
   data() {
     return {
       messages: messages,
-
+      errormessage: "",
+      isAllValueInputted: true,
       timeZone: [],
       label: this.mode == "update" ? "更新" : "追加",
       transitFlag: false,
@@ -241,7 +296,7 @@ export default {
           singleClickEdit: true,
           resizable: true,
           editable: true,
-          width: 120,
+          width: 150,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
             values: this.extractKeys(
@@ -250,6 +305,9 @@ export default {
           },
           refData: this.useDeviceMasters.sensorContents,
           valueListGap: 0,
+          cellStyle: (params) => {
+            return setBackground(params, 1, params.data.displayId);
+          },
         },
         {
           field: "modelId",
@@ -266,6 +324,9 @@ export default {
           },
           refData: this.useDeviceMasters.sensorModels,
           valueListGap: 0,
+          cellStyle: (params) => {
+            return setBackground(params, 2, params.data.modelId);
+          },
         },
         {
           field: "channel",
@@ -273,7 +334,7 @@ export default {
           singleClickEdit: true,
           resizable: true,
           editable: true,
-          width: 80,
+          width: 90,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
             values: [
@@ -294,7 +355,10 @@ export default {
               "15",
               "16",
             ],
-            valueListGap: 0,
+          },
+          valueListGap: 0,
+          cellStyle: (params) => {
+            return setBackground(params, 4, params.data.channel);
           },
         },
         {
@@ -304,6 +368,11 @@ export default {
           editable: true,
           resizable: true,
           width: 100,
+          cellStyle: (params) => {
+            params.status = new Number();
+            //      params.node.parent.allLeafChildren[params.rowIndex].status =new Boolean(true);
+            return setBackground(params, 8, params.data.name);
+          },
         },
         {
           field: "sizeId",
@@ -322,12 +391,12 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            if (
-              !(params.data.displayId == null || params.data.displayId == "4")
-            ) {
-              return { backgroundColor: "#aaa" };
-            }
-            return { backgroundColor: "rgba(0, 0, 0, 0)" };
+            return setSapBackground(
+              params,
+              16,
+              params.data.displayId,
+              params.data.sizeId
+            );
           },
         },
         {
@@ -341,12 +410,12 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            if (
-              !(params.data.displayId == null || params.data.displayId == "4")
-            ) {
-              return { backgroundColor: "#aaa" };
-            }
-            return { backgroundColor: "rgba(0, 0, 0, 0)" };
+            return setSapBackground(
+              params,
+              32,
+              params.data.displayId,
+              params.data.kst
+            );
           },
         },
         {
@@ -359,12 +428,12 @@ export default {
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {
-            if (
-              !(params.data.displayId == null || params.data.displayId == "4")
-            ) {
-              return { backgroundColor: "#aaa" };
-            }
-            return { backgroundColor: "rgba(0, 0, 0, 0)" };
+            return setSapBackground(
+              params,
+              64,
+              params.data.displayId,
+              params.data.stemDiameter
+            );
           },
         },
         {
@@ -409,6 +478,7 @@ export default {
           : Object.assign({}, this.skelton),
       sensorList: null,
       // sensorData: null, //マスターセンサーデータ
+      buttonStatus: 7,
     };
   },
 
@@ -427,20 +497,48 @@ export default {
     //* -------------------------------------------
     // * デバイス名
     isDeviceNotNull() {
-      return this.deviceInfoData.name.length != 0;
+      return this.setStatus(
+        1,
+        this.deviceInfoData.name != null && this.deviceInfoData.name.length != 0
+      );
     },
     // Sigfox ID
     isSigFoxNotNull() {
-      return this.deviceInfoData.sigFoxDeviceId.length != 0;
+      return this.setStatus(
+        2,
+        this.deviceInfoData.sigFoxDeviceId != null &&
+          this.deviceInfoData.sigFoxDeviceId.length != 0
+      );
     },
+    // 基準日
     isBaseDateNotNull() {
+      if (null == this.deviceInfoData.baseDateShort)
+        return this.setStatus(4, false);
+      if (0 == this.deviceInfoData.baseDateShort.length)
+        return this.setStatus(4, false);
       let result = this.deviceInfoData.baseDateShort.match(
         /^(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])$/
       );
-      return null != result;
+      return this.setStatus(4, null != result);
+    },
+    // 圃場
+    isFieldNotNull() {
+      return this.setStatus(8, this.deviceInfoData.fieldId != null);
+    },
+    // タイムゾーン
+    isTzNotNull() {
+      return this.setStatus(16, this.deviceInfoData.timeZone != null);
     },
   },
   methods: {
+    setStatus(status, bool) {
+      if (!bool) {
+        this.buttonStatus = this.buttonStatus | status;
+      } else {
+        this.buttonStatus = (this.buttonStatus | status) - status;
+      }
+      return bool;
+    },
     extractKeys(mappings) {
       var value = Object.keys(mappings);
       return value;
@@ -457,6 +555,9 @@ export default {
 
     setField(item) {
       this.deviceInfoData.fieldId = item.id;
+    },
+    setDevice(item) {
+      this.deviceInfoData.prevDeviceId = item.id;
     },
     //* ============================================
     // セルの値が変化した場合
@@ -483,6 +584,15 @@ export default {
         rowNodes: [node],
       };
       param.api.refreshCells(refreshParams);
+
+      let items = param.node.parent.allLeafChildren;
+      this.isAllValueInputted = true;
+      for (const item of items) {
+        if (0 !== item.status) {
+          this.isAllValueInputted = false;
+          break;
+        }
+      }
     },
     update: function () {
       const message =
@@ -500,7 +610,6 @@ export default {
         let sensorItems = [];
         // 画面のセンサー情報のリストを取り出す
         for (const item of rowData) {
-          console.log("item", item);
           if (
             null != item.displayId &&
             null != item.name &&
@@ -509,8 +618,6 @@ export default {
             sensorItems.push(item);
           }
         }
-        console.log("sensorItems");
-        console.log(sensorItems);
         const data = {
           //デバイス情報
           id: deviceId,
@@ -527,8 +634,6 @@ export default {
           //センサー情報
           sensorItems: sensorItems,
         };
-
-        console.log("update_data", data);
 
         if (this.mode == "update") {
           //デバイス情報更新(API)
@@ -593,7 +698,6 @@ export default {
     deleteDeviceInfo: function () {
       if (confirm("削除してもよろしいですか？")) {
         //デバイス情報削除(API)
-        console.log("deleteDeviceInfo", this.deviceInfoData.id);
         useDeviceInfoRemove(this.deviceInfoData.id)
           .then((response) => {
             //成功時
@@ -653,6 +757,14 @@ export default {
           add: [row],
         });
       }
+    },
+    onRendered() {
+      this.gridApi.forEachNode((node) => {
+        if (node.status !== undefined && 0 != node.status) {
+          this.isAllValueInputted = false;
+        }
+        //console.log(node);
+      });
     },
   },
 };

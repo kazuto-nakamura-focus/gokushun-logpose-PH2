@@ -10,4 +10,5 @@ import lombok.EqualsAndHashCode;
 public class ExtendDailyBaseDataEntity extends Ph2DailyBaseDataEntity
 	{
 	private Long lapseDay;
+	private Boolean hasReal;
 	}

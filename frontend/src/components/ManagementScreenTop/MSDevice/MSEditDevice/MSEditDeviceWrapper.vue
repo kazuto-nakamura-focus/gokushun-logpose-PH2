@@ -7,6 +7,7 @@
       :useFieldInfoDataList="useFieldInfoDataList"
       :useDeviceInfoData="useDeviceInfoData"
       :useDeviceMasters="useDeviceMasters"
+      :deviceList="deviceList"
     />
   </v-app>
 </template>
@@ -27,6 +28,10 @@ export default {
     },
     selectedDevice: {
       type: Object,
+      required: true,
+    },
+    deviceList: {
+      type: Array,
       required: true,
     },
   },
@@ -76,11 +81,11 @@ export default {
         .then((response) => {
           //成功時
           const { status, message, data } = response["data"];
-          if(status === 0){
+          if (status === 0) {
             this.useFieldInfoDataList = data;
             preparedCount++;
             if (preparedCount == 3) this.prepared = true;
-          }else{
+          } else {
             throw new Error(message);
           }
         })
@@ -91,12 +96,12 @@ export default {
       //マスターデータ取得
       useDeviceMastersAPI()
         .then((response) => {
-          const { status, message, data} = response["data"];
-          if(status === 0){
+          const { status, message, data } = response["data"];
+          if (status === 0) {
             this.PRIVATE.convertMaster(data, this.useDeviceMasters);
             preparedCount++;
             if (preparedCount == 3) this.prepared = true;
-          }else{
+          } else {
             throw new Error(message);
           }
         })
@@ -104,25 +109,25 @@ export default {
           console.log(error);
         });
 
-      if(null != this.selectedDevice.id) {
-      //デバイス情報詳細取得(API)
-      useDeviceInfo(this.selectedDevice.id)
-        .then((response) => {
-          const { status, message, data } = response["data"];
-          if(status === 0){
-            this.useDeviceInfoData = data;
-            preparedCount++;
-            if (preparedCount == 3) this.prepared = true;
-          }else{
-            throw new Error(message);
-          }
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-      }else {
+      if (null != this.selectedDevice.id) {
+        //デバイス情報詳細取得(API)
+        useDeviceInfo(this.selectedDevice.id)
+          .then((response) => {
+            const { status, message, data } = response["data"];
+            if (status === 0) {
+              this.useDeviceInfoData = data;
+              preparedCount++;
+              if (preparedCount == 3) this.prepared = true;
+            } else {
+              throw new Error(message);
+            }
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
         preparedCount++;
-          if (preparedCount == 3) this.prepared = true;
+        if (preparedCount == 3) this.prepared = true;
       }
     },
 

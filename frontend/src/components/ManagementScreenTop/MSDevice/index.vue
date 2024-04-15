@@ -77,6 +77,7 @@
         v-if="display == 'deviceEdit'"
         :selectedDevice="selectedDevice"
         :onEnd="fromDevice"
+        :deviceList="useDeviceInfoDataList"
       />
       <confirmDailog :shared="sharedConfirm" ref="confirm" />
       <loading-device-list :shared="loaderDialog" ref="loader" />

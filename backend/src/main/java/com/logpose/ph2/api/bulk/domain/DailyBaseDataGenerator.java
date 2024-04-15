@@ -315,7 +315,7 @@ public class DailyBaseDataGenerator
 			}
 		entity.setDayId(device.getId());
 		entity.setAverage(sum / count);
-		entity.setTm((min + max) / 2 );
+		entity.setTm((min + max) / 2);
 		entity.setRawCdd((min + max) / 2 - 9.18);
 		entity.setCdd(0.0);
 		result.setEntity(entity);
@@ -406,14 +406,15 @@ public class DailyBaseDataGenerator
 			{
 			lapseDayList.add(deviceDay.getLapseDay());
 			}
-// * 引継ぎデータを取得
+// * 未設定データの経過日のリストからそれに対応する引継ぎデータを取得する
 		List<ExtendDailyBaseDataEntity> base_data = this.ph2DailyBaseDataMapper.selectOldData(deviceId, year,
 				lapseDayList);
 // * 引継ぎデータが無い場合、元のリストを返す
-		if( 0 == base_data.size())
+		if (0 == base_data.size())
 			{
 			return unsetDevices;
 			}
+		Date today = (new DeviceDayAlgorithm()).getTimeZero(new Date());
 // * 引継ぎデータを未設定ディリーデータに渡す
 		for (Ph2DeviceDayEntity deviceDay : unsetDevices)
 			{
@@ -435,6 +436,12 @@ public class DailyBaseDataGenerator
 						{
 						cache.addDailyBaseData(entity);
 						}
+// * 引継ぎ元データの実データ有無を引き継ぐ
+					if (deviceDay.getDate().getTime() < today.getTime())
+						{
+						deviceDay.setHasReal(entity.getHasReal());
+						this.ph2DeviceDayMapper.updateByPrimaryKey(deviceDay);
+						}
 					has_data = true;
 					break;
 					}
@@ -444,7 +451,8 @@ public class DailyBaseDataGenerator
 				{
 				base_data.remove(i);
 				}
-			else resultList.add(deviceDay);
+			else
+				resultList.add(deviceDay);
 			}
 
 		cache.flush();
