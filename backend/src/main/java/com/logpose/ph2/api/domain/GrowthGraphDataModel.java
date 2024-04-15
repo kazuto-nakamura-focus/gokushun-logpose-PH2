@@ -1,6 +1,5 @@
 package com.logpose.ph2.api.domain;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,9 +9,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.formula.Formula;
-import com.logpose.ph2.api.utility.DateTimeUtility;
 
 public class GrowthGraphDataModel
 	{
@@ -29,30 +26,6 @@ public class GrowthGraphDataModel
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * グラフデータの作成
-	 *
-	 * @return グラフデータ
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	public RealModelGraphDataDTO toGraphData() throws ParseException
-		{
-		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
-		// * 最小値・最大値の設定
-		Double firstValue = (fRealValues.size() > 0) ? fRealValues.get(0) : fModelValues.get(0);
-		Double endValue = (fRealValues.size() > 0) ? fRealValues.get(fRealValues.size() - 1)
-				: fModelValues.get(fModelValues.size() - 1);
-		resultData
-				.setXStart(DateTimeUtility.getStringFromDate(startDate));
-		resultData.setXEnd(DateTimeUtility.getStringFromDate(endDate));
-		resultData.setYStart(firstValue);
-		resultData.setYEnd(endValue);
-		resultData.setValues(fRealValues);
-		resultData.setPredictValues(fModelValues);
-		return resultData;
-		}
 
 	// --------------------------------------------------
 	/**

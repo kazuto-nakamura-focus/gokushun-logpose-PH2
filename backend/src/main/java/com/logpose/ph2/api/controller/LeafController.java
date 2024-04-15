@@ -21,8 +21,8 @@ import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
 import com.logpose.ph2.api.dto.LeafvaluesDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.service.LeafService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -63,7 +63,7 @@ public class LeafController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<RealModelGraphDataDTO> as_result = this.leafService
+			List<ModelGraphDataDTO> as_result = this.leafService
 					.getLeaflGraphData(deviceId, year);
 			as_dto.setSuccess(as_result);
 			}

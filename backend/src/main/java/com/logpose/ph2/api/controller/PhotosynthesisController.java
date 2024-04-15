@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.service.PhotosynthesisService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +58,7 @@ public class PhotosynthesisController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			RealModelGraphDataDTO as_result = this.photosynthesisService
+			ModelGraphDataDTO as_result = this.photosynthesisService
 					.GetModelGraphData(fieldId, year);
 			as_dto.setSuccess(as_result);
 			}

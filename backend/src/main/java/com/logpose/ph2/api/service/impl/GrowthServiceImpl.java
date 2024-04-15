@@ -19,8 +19,8 @@ import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.dto.growth.FValuesDTO;
 import com.logpose.ph2.api.service.GrowthService;
 
@@ -95,7 +95,7 @@ public class GrowthServiceImpl implements GrowthService
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
+	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
 		return this.growthDomain.getModelGraph(deviceId, year);
@@ -113,12 +113,11 @@ public class GrowthServiceImpl implements GrowthService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getSumilateGraph(
+	/*public ModelGraphDataDTO getSumilateGraph(
 			Long deviceId, Short year, Long paramId) throws ParseException
 		{
 		return this.growthDomain.getSimulateModelGraph(deviceId, year, paramId);
-		}
-
+*/
 	// --------------------------------------------------
 	/**
 	 * 生育推定イベントデータ取得

@@ -3,7 +3,6 @@ package com.logpose.ph2.api.domain.photosynthesis;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.domain.common.MaxValue;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 @Component
 public class PhotoGraphDomain extends GraphDomain
@@ -37,7 +36,7 @@ public class PhotoGraphDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
+	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
@@ -47,45 +46,30 @@ public class PhotoGraphDomain extends GraphDomain
 		if (null == entites.get(0).getfValue()) return null;
 
 		// * 前日の日付
-		Calendar cal = Calendar.getInstance();
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
 
-		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
+		ModelGraphDataDTO areaModel = new ModelGraphDataDTO();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		MaxValue max = new MaxValue();
-		Double prev = null;
-
 		for (ModelDataEntity entity : entites)
 			{
 			category.add(sdf.format(entity.getDate()));
 
 			Double value = entity.getCulmitiveCnopyPs();
-
-			if (value == null) continue;
-			value = ((double) Math.round(value * 100)) / 100;
-			if (null != prev)
+			if (null != value)
 				{
-				if ((prev.doubleValue() - value.doubleValue()) > 5) continue;
+				value = ((double) Math.round(value * 100)) / 100;
 				}
-			prev = value;
-			if (entity.getIsReal())
-				{
-				areaModel.getValues().add(value.doubleValue());
-				areaModel.getPredictValues().add(null);
-				}
-			else
-				{
-				areaModel.getValues().add(null);
-				areaModel.getPredictValues().add(value.doubleValue());
-				}
+			areaModel.add(entity.getSourceType(), value);
 // * 日付カテゴリの設定
 			max.setMax(value);
 // * タイトルに表示する値
 			if (entity.getDate().getTime() == titlleDate.getTime())
 				{
-				areaModel.setEstimated(value.doubleValue());
+				if (value != null)
+					areaModel.setEstimated(value.doubleValue());
 				}
 			}
 // * 最小値・最大値の設定

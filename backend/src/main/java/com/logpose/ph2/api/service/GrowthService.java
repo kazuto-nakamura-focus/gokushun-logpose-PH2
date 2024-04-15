@@ -11,8 +11,8 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.dto.growth.FValuesDTO;
 
 /**
@@ -55,7 +55,7 @@ public interface GrowthService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year) throws ParseException;
+	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year) throws ParseException;
 	// --------------------------------------------------
 	/**
 	 * 生育推定モデルグラフデータ取得
@@ -68,8 +68,8 @@ public interface GrowthService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getSumilateGraph(
-			Long deviceId, Short year, Long paramId) throws ParseException;
+	/*public ModelGraphDataDTO getSumilateGraph(
+			Long deviceId, Short year, Long paramId) throws ParseException;*/
 	
 	// --------------------------------------------------
 	/**

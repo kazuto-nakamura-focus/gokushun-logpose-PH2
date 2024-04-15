@@ -1,4 +1,4 @@
-package com.logpose.ph2.api.dto;
+package com.logpose.ph2.api.dto.graph;
 
 import java.util.ArrayList;
 import java.util.List;

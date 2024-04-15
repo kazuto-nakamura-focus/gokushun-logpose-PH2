@@ -22,7 +22,7 @@ import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
 import com.logpose.ph2.api.dto.LeafvaluesDTO;
 import com.logpose.ph2.api.dto.MaxMinDateDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.service.LeafService;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -78,7 +78,7 @@ public class LeafServiceImpl implements LeafService
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public List<RealModelGraphDataDTO> getLeaflGraphData(Long deviceId,
+	public List<ModelGraphDataDTO> getLeaflGraphData(Long deviceId,
 			short year) throws ParseException
 		{
 		return this.graphDomain.getModelGraph(deviceId, year);

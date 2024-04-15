@@ -29,8 +29,8 @@ import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
@@ -172,7 +172,7 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// -------------------------------------------------
-	public RealModelGraphDataDTO getModelGraphData(
+	public void getModelGraphData(
 			Long deviceId, Short year, Date startDate,
 			Ph2ParamsetGrowthEntity param, Ph2ModelDataMapper mapper)
 			throws ParseException
@@ -189,14 +189,7 @@ public class GrowthDomain extends GraphDomain
 			GrowthGraphDataModel modelData = new GrowthGraphDataModel();
 			modelData.calculateFvalues(realDayData, param, fstageInfo,
 					this.fstageValues.getSprout(), mapper);
-// * DBを更新する場合
-			if (null != mapper) return null;
-// * グラフデータの生成
-			else
-				return modelData.toGraphData();
 			}
-		else
-			return null;
 		}
 
 	// --------------------------------------------------
@@ -235,13 +228,13 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	private RealModelGraphDataDTO getModelDataByParameter(Long deviceId,
+	private void getModelDataByParameter(Long deviceId,
 			Short year,
 			Ph2ParamsetGrowthEntity param) throws ParseException
 		{
 		Ph2DeviceDayEntity firstDay = this.deviceDayDomain.getFirstDay(deviceId,
 				year);
-		return this.getModelGraphData(deviceId, year, firstDay.getDate(),
+		 this.getModelGraphData(deviceId, year, firstDay.getDate(),
 				param, null);
 		}
 
@@ -256,14 +249,14 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getSimulateModelGraph(Long deviceId,
+/*	public ModelGraphDataDTO getSimulateModelGraph(Long deviceId,
 			Short year,
 			Long paramId) throws ParseException
 		{
 		Ph2ParamsetGrowthEntity entity = this.ph2ParamsetGrowthMapper
 				.selectByPrimaryKey(paramId);
 		return getModelDataByParameter(deviceId, year, entity);
-		}
+		}*/
 
 	// --------------------------------------------------
 	/**
@@ -279,7 +272,7 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getSimulateModelGraph(Long deviceId,
+/*	public ModelGraphDataDTO getSimulateModelGraph(Long deviceId,
 			Short year,
 			double bd, double be, double ad, double ae) throws ParseException
 		{
@@ -289,7 +282,7 @@ public class GrowthDomain extends GraphDomain
 		param.setBeforeD(bd);
 		param.setBeforeE(be);
 		return getModelDataByParameter(deviceId, year, param);
-		}
+		}*/
 
 	// --------------------------------------------------
 	/**
@@ -298,10 +291,10 @@ public class GrowthDomain extends GraphDomain
 	 *
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
-	 * @return RealModelGraphDataDTO
+	 * @return ModelGraphDataDTO
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
+	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
 		{
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectModelDataByType(deviceId, year);
@@ -309,10 +302,8 @@ public class GrowthDomain extends GraphDomain
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
 
-		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
+		ModelGraphDataDTO resultData = new ModelGraphDataDTO();
 
-		List<Double> values = new ArrayList<>();
-		List<Double> predictValues = new ArrayList<>();
 // * 最大値
 		MaxValue maxValue = new MaxValue();
 // * 前日の日付
@@ -321,31 +312,9 @@ public class GrowthDomain extends GraphDomain
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		boolean prev = entites.get(0).getIsReal();
 		for (ModelDataEntity entity : entites)
 			{
-			if (entity.getIsReal())
-				{
-				values.add(entity.getfValue());
-				if (!prev)
-					{
-					predictValues.add(entity.getfValue());
-					prev = true;
-					}
-				else
-					predictValues.add(null);
-				}
-			else
-				{
-				predictValues.add(entity.getfValue());
-				if (prev)
-					{
-					values.add(entity.getfValue());
-					prev = false;
-					}
-				else
-					values.add(null);
-				}
+			resultData.add(entity.getSourceType(), entity.getfValue());
 			// * 取得日
 			category.add(sdf.format(entity.getDate()));
 			// * 最大値
@@ -357,8 +326,6 @@ public class GrowthDomain extends GraphDomain
 				}
 			}
 // * 値の設定
-		resultData.setValues(values);
-		resultData.setPredictValues(predictValues);
 		resultData.setCategory(category);
 // * アノテーションデータの生成
 		List<EventDaysDTO> annotations = super.getEvent(deviceId, year);

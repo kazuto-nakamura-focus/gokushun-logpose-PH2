@@ -49,7 +49,6 @@ public class PSGraphDataGenerator
 			Ph2ModelDataEntity model = parameters.getPh2ModelDataMapper().selectByExample(exm)
 					.get(0);
 // * 葉面積推定の値を得る
-			
 			double value = Formula.toPsAmount(f_value, g_value, accumulatedValue,
 					model.getCrownLeafArea(), data.getPar(), data.getSunTime(),
 					parameters.getShootCount());

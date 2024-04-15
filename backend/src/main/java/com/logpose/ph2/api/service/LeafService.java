@@ -9,7 +9,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
 import com.logpose.ph2.api.dto.LeafvaluesDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 /**
  * 葉面積・葉枚数のサービス
@@ -43,7 +43,7 @@ public interface LeafService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public List<RealModelGraphDataDTO> getLeaflGraphData(Long deviceId, short year) throws ParseException;
+	public List<ModelGraphDataDTO> getLeaflGraphData(Long deviceId, short year) throws ParseException;
 
 	// --------------------------------------------------
 	/**

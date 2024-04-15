@@ -293,6 +293,7 @@
     <result column="leaf_count" jdbcType="DOUBLE" property="leafCount" />
     <result column="lapse_day" jdbcType="SMALLINT" property="lapseDay" />
 	<result column="has_real" jdbcType="SMALLINT" property="isReal" />
+	<result column="source_type" jdbcType="SMALLINT" property="sourceType" />
   </resultMap>
   
   <select id="selectModelDataByType" resultMap="ModelDataEntity">
@@ -304,7 +305,8 @@
         md.leaf_count as leaf_count,
         dd.date as date,
         dd.lapse_day as lapse_day,
-        dd.has_real as has_real
+        dd.has_real as has_real,
+        dd.source_type as source_type
     FROM
         ph2_device_day dd
     JOIN
@@ -404,23 +406,19 @@
 		</foreach>
 	</insert>
 <!-- ************************************************************************** -->
-	<resultMap id="LeafModelDataEntity"
-		type="com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity">
-		<result column="day_id" jdbcType="BIGINT" property="dayId" />
-		<result column="f_value" jdbcType="DOUBLE" property="fValue" />
-		<result column="culmitive_cnopy_ps" jdbcType="DOUBLE"
-			property="culmitiveCnopyPs" />
-		<result column="crown_leaf_area" jdbcType="DOUBLE"
-			property="crownLeafArea" />
-		<result column="date" jdbcType="DATE" property="date" />
-		<result column="leaf_count" jdbcType="DOUBLE"
-			property="leafCount" />
-		<result column="lapse_day" jdbcType="SMALLINT"
-			property="lapseDay" />
-		<result column="has_real" jdbcType="SMALLINT" property="isReal" />
-		<result column="real_area" jdbcType="SMALLINT"
-			property="realArea" />
-	</resultMap>
+  <resultMap id="LeafModelDataEntity"
+	type="com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity">
+	<result column="day_id" jdbcType="BIGINT" property="dayId" />
+	<result column="f_value" jdbcType="DOUBLE" property="fValue" />
+	<result column="culmitive_cnopy_ps" jdbcType="DOUBLE" property="culmitiveCnopyPs" />
+	<result column="crown_leaf_area" jdbcType="DOUBLE" property="crownLeafArea" />
+	<result column="date" jdbcType="DATE" property="date" />
+	<result column="leaf_count" jdbcType="DOUBLE" property="leafCount" />
+	<result column="lapse_day" jdbcType="SMALLINT" property="lapseDay" />
+	<result column="has_real" jdbcType="SMALLINT" property="isReal" />
+	<result column="real_area" jdbcType="SMALLINT" property="realArea" />
+	<result column="source_type" jdbcType="SMALLINT" property="sourceType" />
+  </resultMap>
 	<select id="selectLeafModelDataByType" resultMap="LeafModelDataEntity">
 		SELECT
 			md.day_id as day_id,
@@ -431,7 +429,8 @@
 			dd,date as date,
 			dd.lapse_day as lapse_day,
 			dd.has_real as has_real,
-			rl.real_area as real_area
+			rl.real_area as real_area,
+			dd.source_type as source_type
 		FROM
 			ph2_device_day dd
 		JOIN

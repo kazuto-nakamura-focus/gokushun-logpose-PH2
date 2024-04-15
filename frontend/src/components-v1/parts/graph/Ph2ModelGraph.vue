@@ -131,12 +131,7 @@ export default {
       // * ボタンの表示
       this.editButtons =
         allEditButtons[this.target.selectedItems.selectedModel.id].buttons;
-      //「実績」値の一覧
-      const values = this.target.data?.values;
-      //「推定」値の一覧
-      const predictValues = this.target.data?.predictValues;
-      // 「実測値」値の一覧
-      const meauredValues = this.target.data?.meauredValues;
+
       //生育名毎の閾値
       const annotations = this.target.data?.annotations;
 
@@ -153,21 +148,43 @@ export default {
         if (tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
       }
       this.chart.options = this.target.options;
-      this.chart.series = [
-        {
-          name: "実績値",
-          data: values,
-        },
-        {
-          name: "推定値",
-          data: predictValues,
-        },
-        {
-          name: "実測値",
-          data: meauredValues,
-        },
-      ];
-
+      this.chart.options.colors = [];
+      this.chart.series = [];
+      this.chart.options.stroke.dashArray = [];
+      // * 実績値
+      //this.chart.options.colors.push("#0066ed");
+      this.chart.series.push({
+        name: "現在のセンサー値",
+        data: this.target.data?.values,
+        color: "#0066ed",
+      });
+      this.chart.options.stroke.dashArray.push(0);
+      this.chart.series.push({
+        name: "引継ぎ元センサー値(点線)",
+        data: this.target.data?.otherValues[0],
+        color: "#0066ed",
+      });
+      this.chart.options.stroke.dashArray.push(2);
+      this.chart.series.push({
+        name: "昨年のセンサー値",
+        data: this.target.data?.otherValues[1],
+        color: "#00db28",
+      });
+      this.chart.options.stroke.dashArray.push(2);
+      this.chart.series.push({
+        name: "過去天気データ",
+        data: this.target.data?.otherValues[2],
+        color: "#d200dd",
+      });
+      this.chart.options.stroke.dashArray.push(0);
+      if (true == this.target.data.hasMeasured) {
+        this.chart.series.push({
+          name: "実測データ",
+          data: this.target.data?.meauredValues,
+          color: "#c18100",
+        });
+        this.chart.options.stroke.dashArray.push(0);
+      }
       this.chartDisplay = true;
     },
     //* ============================================

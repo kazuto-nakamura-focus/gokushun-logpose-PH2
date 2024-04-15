@@ -20,11 +20,10 @@ import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
-import com.logpose.ph2.api.dto.GraphDataDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.dto.growth.FValuesDTO;
 import com.logpose.ph2.api.service.GrowthService;
 
@@ -67,7 +66,7 @@ public class GrowthController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			RealModelGraphDataDTO as_result = this.growthService.getModelGraph(deviceId,
+			ModelGraphDataDTO as_result = this.growthService.getModelGraph(deviceId,
 					year);
 			as_dto.setSuccess(as_result);
 			}
@@ -87,7 +86,7 @@ public class GrowthController
 	 * @return ResponseDTO(GraphDataDTO)
 	 */
 	// --------------------------------------------------
-	@GetMapping("/graph/byParamSet")
+/*	@GetMapping("/graph/byParamSet")
 	public ResponseDTO modelGraphByParam(HttpServletRequest httpReq,
 			@RequestParam("deviceId") Long deviceId,
 			@RequestParam("year") Short year,
@@ -105,7 +104,7 @@ public class GrowthController
 			as_dto.setError(e);
 			}
 		return as_dto;
-		}
+		}*/
 
 	// --------------------------------------------------
 	/**

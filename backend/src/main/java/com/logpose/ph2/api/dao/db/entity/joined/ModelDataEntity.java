@@ -14,4 +14,5 @@ public class ModelDataEntity extends Ph2ModelDataEntity
 	private Date date;
 	private Short lapseDay;
 	private Boolean isReal;
+	private Short sourceType;
 	}

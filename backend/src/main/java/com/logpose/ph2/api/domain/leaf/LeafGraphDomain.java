@@ -3,7 +3,6 @@ package com.logpose.ph2.api.domain.leaf;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +14,7 @@ import com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.domain.common.MaxValue;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 import lombok.Data;
 
@@ -42,7 +41,7 @@ public class LeafGraphDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public List<RealModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
+	public List<ModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
 		List<LeafModelDataEntity> entites = this.ph2ModelDataMapper
@@ -51,11 +50,10 @@ public class LeafGraphDomain extends GraphDomain
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
 
-		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
-		RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
+		ModelGraphDataDTO areaModel = new ModelGraphDataDTO();
+		ModelGraphDataDTO countModel = new ModelGraphDataDTO();
 
 // * 前日の日付
-		Calendar cal = Calendar.getInstance();
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
 
 // * 日付カテゴリ
@@ -67,6 +65,7 @@ public class LeafGraphDomain extends GraphDomain
 
 		List<MeasureDataItem> measureDataList = new ArrayList<>();
 		int index = 0;
+		List<Double> allValues = new ArrayList<>();
 		for (LeafModelDataEntity entity : entites)
 			{
 // * 実測値の値代入
@@ -80,24 +79,14 @@ public class LeafGraphDomain extends GraphDomain
 				item.setModel(entity.getCrownLeafArea());
 				item.setDiff(item.getMeasure() - item.getModel());
 				measureDataList.add(item);
+				
 				}
 			index++;
 // * 実績値の葉枚数と面積の代入
-			if (entity.getIsReal())
-				{
-				areaModel.getValues().add(entity.getCrownLeafArea());
-				countModel.getValues().add(entity.getLeafCount());
-				areaModel.getPredictValues().add(null);
-				countModel.getPredictValues().add(null);
-				}
+			areaModel.add(entity.getSourceType(), entity.getCrownLeafArea());
+			allValues.add(entity.getCrownLeafArea());
 // * 予想値の葉枚数と面積の代入
-			else
-				{
-				areaModel.getPredictValues().add(entity.getCrownLeafArea());
-				countModel.getPredictValues().add(entity.getLeafCount());
-				areaModel.getValues().add(null);
-				countModel.getValues().add(null);
-				}
+			countModel.add(entity.getSourceType(), entity.getLeafCount());
 // * 葉面積グラフの最大値の設定
 			maxArea.setMax(entity.getCrownLeafArea());
 // * 実測値がある場合は葉面積グラフの最大値をその値も参照する
@@ -114,7 +103,7 @@ public class LeafGraphDomain extends GraphDomain
 			category.add(sdf.format(entity.getDate()));
 			}
 // * 実測値のモデルデータ作成
-		this.setMeasuredValues(areaModel.getValues(), areaModel.getMeauredValues(), measureDataList, maxArea);
+		this.setMeasuredValues(allValues, areaModel.getMeauredValues(), measureDataList, maxArea);
 // * 最小値・最大値の設定
 		String first = category.get(0);
 		String last = category.get(category.size() - 1);
@@ -137,7 +126,7 @@ public class LeafGraphDomain extends GraphDomain
 // * 葉枚数グラフの日付カテゴリの設定
 		countModel.setCategory(category);
 		// * 値の設定
-		List<RealModelGraphDataDTO> resultData = new ArrayList<>();
+		List<ModelGraphDataDTO> resultData = new ArrayList<>();
 		resultData.add(areaModel);
 		resultData.add(countModel);
 		return resultData;

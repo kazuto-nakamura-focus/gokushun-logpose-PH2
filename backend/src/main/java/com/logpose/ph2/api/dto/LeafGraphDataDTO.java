@@ -1,5 +1,7 @@
 package com.logpose.ph2.api.dto;
 
+import com.logpose.ph2.api.dto.graph.GraphDataDTO;
+
 import lombok.Data;
 
 /**
