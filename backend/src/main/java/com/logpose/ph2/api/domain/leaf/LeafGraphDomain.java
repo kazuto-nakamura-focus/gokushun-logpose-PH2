@@ -115,7 +115,7 @@ public class LeafGraphDomain extends GraphDomain
 			category.add(sdf.format(entity.getDate()));
 			}
 // * 実測値のモデルデータ作成
-		this.setMeasuredValues(areaModel.getValues(), areaModel.getMeauredValues(), measureDataList, maxArea);
+		this.setMeasuredValues(allValues, areaModel.getMeauredValues(), measureDataList, maxArea);
 // * 最小値・最大値の設定
 		String first = category.get(0);
 		String last = category.get(category.size() - 1);

@@ -51,8 +51,7 @@ public class PSGraphDataGenerator
 // * 葉面積推定の値を得る
 			
 			double value = Formula.toPsAmount(f_value, g_value, accumulatedValue,
-					model.getCrownLeafArea(), data.getPar(), data.getSunTime(),
-					parameters.getShootCount());
+					model.getCrownLeafArea(), data.getPar(), data.getSunTime());
 // * テーブルを更新
 			exporter.add(model, value);
 // * 積算値の更新
