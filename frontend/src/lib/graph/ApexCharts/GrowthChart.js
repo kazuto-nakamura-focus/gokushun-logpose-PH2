@@ -191,19 +191,32 @@ export class GrowthChart {
 
     this.data.chartOptions.yaxis.min = 0;
     this.data.chartOptions.xaxis.categories = source.category;
-    this.data.chartOptions.yaxis.max = this.setMax(source.yend);
+    let unit = this.setStep(source.yend);
+    this.data.chartOptions.yaxis.stepSize = unit;
+    this.data.chartOptions.yaxis.max = this.setMax(source.yend, unit);
   }
   // ======================================================
-  // Y軸のメモリを設定する
+  // Y軸の目盛りの最大値設定する
   // ======================================================
-  setMax(max) {
-    // * 分割値が10以上の場合は10で割って小数点を四捨五入した後で10倍する
-    if (max > 10) {
-      max = Math.ceil(max / 10) * 10;
-    } else {
-      // * 分割値が0以下の場合は10をかけて小数点を除いた上で10で割る
-      max = Math.ceil(max * 10) / 10;
-    }
-    return max;
+  setMax(max, unit) {
+    let value = Math.trunc(max / unit) + 1;
+    return unit * value;
+  }
+  // ======================================================
+  // Y軸の目盛りのステップサイズを設定する
+  // ======================================================
+  setStep(max) {
+    // * 計算を簡単にするため、桁をそろえる
+    let munit = 10 * 15;
+    if (max > munit) return 20;
+    munit = 5 * 15;
+    if (max > munit) return 10;
+    munit = 1 * 15;
+    if (max > munit) return 5;
+    munit = 0.5 * 15;
+    if (max > munit) return 1;
+    munit = 0.1 * 15;
+    if (max > munit) return 0.5;
+    return 0.1;
   }
 }

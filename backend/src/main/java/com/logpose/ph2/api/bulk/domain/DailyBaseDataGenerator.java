@@ -27,6 +27,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WeatherDailyMasterMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
 import com.logpose.ph2.api.dto.BaseDataDTO;
+import com.logpose.ph2.api.master.DeviceDayMaster;
 
 import lombok.Data;
 
@@ -85,6 +86,7 @@ public class DailyBaseDataGenerator
 				this.setIsolationData(device_day, tmRecords, result, cache);
 				// ディリーデータに実データがあることを示すフラグを立て、テーブルを更新する
 				device_day.setHasReal(true);
+				device_day.setSourceType(DeviceDayMaster.ORIGINAL);
 				this.ph2DeviceDayMapper.updateByPrimaryKey(device_day);
 				}
 // * データが存在しない場合、未設定リストに追加する
@@ -118,7 +120,8 @@ public class DailyBaseDataGenerator
 		Ph2DeviceDayEntity device_day = unsetDevices.get(0);
 // * 取り込み処理を実行する
 		short last_year = (short) (device_day.getYear() - 1);
-		return this.loadFromOtherDailyBaseData(device_day.getDeviceId(), last_year, unsetDevices);
+		return this.loadFromOtherDailyBaseData(device_day.getDeviceId(), last_year, unsetDevices,
+				DeviceDayMaster.PREVIOUS_YEAR);
 		}
 
 	// --------------------------------------------------
@@ -144,7 +147,7 @@ public class DailyBaseDataGenerator
 // * 最初の一件を取り出す
 		Ph2DeviceDayEntity device_day = unsetDevices.get(0);
 // * 取り込み処理を実行する
-		return this.loadFromOtherDailyBaseData(device.getPreviousDeviceId(), device_day.getYear(), unsetDevices);
+		return this.loadFromOtherDailyBaseData(device.getPreviousDeviceId(), device_day.getYear(), unsetDevices, DeviceDayMaster.PREVIOUS_DEVICE);
 		}
 
 	// --------------------------------------------------
@@ -198,6 +201,8 @@ public class DailyBaseDataGenerator
 					{
 					cache.addDailyBaseData(baseData);
 					}
+				deviceDay.setSourceType(DeviceDayMaster.WHEATHER);
+				this.ph2DeviceDayMapper.updateByPrimaryKey(deviceDay);
 				}
 			else
 				{
@@ -395,7 +400,7 @@ public class DailyBaseDataGenerator
 	 */
 	// --------------------------------------------------
 	public List<Ph2DeviceDayEntity> loadFromOtherDailyBaseData(long deviceId, short year,
-			List<Ph2DeviceDayEntity> unsetDevices)
+			List<Ph2DeviceDayEntity> unsetDevices, short souceType)
 		{
 		List<Ph2DeviceDayEntity> resultList = new ArrayList<>();
 // * キャッシュの作成
@@ -440,7 +445,6 @@ public class DailyBaseDataGenerator
 					if (deviceDay.getDate().getTime() < today.getTime())
 						{
 						deviceDay.setHasReal(entity.getHasReal());
-						this.ph2DeviceDayMapper.updateByPrimaryKey(deviceDay);
 						}
 					has_data = true;
 					break;
@@ -449,6 +453,8 @@ public class DailyBaseDataGenerator
 				}
 			if (has_data)
 				{
+				deviceDay.setSourceType(souceType);
+				this.ph2DeviceDayMapper.updateByPrimaryKey(deviceDay);
 				base_data.remove(i);
 				}
 			else
