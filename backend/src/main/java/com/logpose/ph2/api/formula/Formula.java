@@ -113,7 +113,7 @@ public class Formula
 	public static double toPsAmount(
 			double f, double g,
 			double prev, double leafArea,
-			double PAR, long sunLight, int shootCount)
+			double PAR, long sunLight)
 		{
 		//  PARまたはsunHoursがゼロの場合
 		if((0 == PAR)||(0 == sunLight))
@@ -123,15 +123,26 @@ public class Formula
 		// 日照時間
 		double sunHours = sunLight / 3600;
 		double SunHours6 = sunHours * 6;
-
 		// Math.exp対応で小数点を丸める
 		double tmp = g * PAR / 600 / SunHours6;
-		if(Double.isNaN(tmp)) return prev;
-		BigDecimal bd = new BigDecimal(tmp);
-		bd = bd.setScale(5, RoundingMode.HALF_UP); // 小数第5位で四捨五入
-		return prev +
-				((f * Math.exp(bd.doubleValue()) * PAR / 600 / SunHours6 / 81.4 / 1000000) * 44 * 600 * 6) * sunHours
-						* (leafArea / 1000);
+		try
+			{
+			BigDecimal bd = new BigDecimal(tmp);
+			bd = bd.setScale(6, RoundingMode.HALF_UP); // 小数第6位で四捨五入
+			tmp = bd.doubleValue();
+			}
+		catch(Exception e)
+			{
+			return prev;
+			}
+		tmp = ((f * Math.exp(tmp) * PAR / 600 / SunHours6 / 81.4 / 1000000) * 44 * 600 * 6) * sunHours
+				* (leafArea / 1000);
+		if(Double.isNaN(tmp) || Double.isInfinite(tmp))
+			{
+			return prev;
+			}
+	//	if( tmp > 100) return prev;
+		return prev + tmp;
 		}
 
 	// --------------------------------------------------
