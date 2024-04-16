@@ -3,7 +3,6 @@ package com.logpose.ph2.api.domain.leaf;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +54,6 @@ public class LeafGraphDomain extends GraphDomain
 		RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
 
 // * 前日の日付
-		Calendar cal = Calendar.getInstance();
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
 
 // * 日付カテゴリ
@@ -67,6 +65,7 @@ public class LeafGraphDomain extends GraphDomain
 
 		List<MeasureDataItem> measureDataList = new ArrayList<>();
 		int index = 0;
+		List<Double> allValues = new ArrayList<>();
 		for (LeafModelDataEntity entity : entites)
 			{
 // * 実測値の値代入
@@ -82,6 +81,8 @@ public class LeafGraphDomain extends GraphDomain
 				measureDataList.add(item);
 				}
 			index++;
+			allValues.add(entity.getCrownLeafArea());
+
 // * 実績値の葉枚数と面積の代入
 			if (entity.getIsReal())
 				{
