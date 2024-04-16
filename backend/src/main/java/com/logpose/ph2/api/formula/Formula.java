@@ -1,5 +1,7 @@
 package com.logpose.ph2.api.formula;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Calendar;
 
 import com.logpose.ph2.api.dto.DailyBaseDataDTO;
@@ -111,15 +113,36 @@ public class Formula
 	public static double toPsAmount(
 			double f, double g,
 			double prev, double leafArea,
-			double PAR, long sunLight, int shootCount)
+			double PAR, long sunLight)
 		{
-		//＝Σ(((f*exp(g*PARdaily/600/日照時間*6)*PARdaily/600/日照時間*6/81.4/1000000)44*600*6)*日照時間*樹冠葉面積*1000)
+		//  PARまたはsunHoursがゼロの場合
+		if((0 == PAR)||(0 == sunLight))
+			return prev;
+		
+		// ＝Σ(((f*exp(g*PARdaily/600/日照時間*6)*PARdaily/600/日照時間*6/81.4/1000000)44*600*6)*日照時間*樹冠葉面積*1000)
 		// 日照時間
 		double sunHours = sunLight / 3600;
-		double SunHours6 = sunHours*6;
-		
-		return prev + 
-				((f * Math.exp(g * PAR/600/SunHours6)*PAR/600/SunHours6/81.4/1000000)*44*600*6)*sunHours*(leafArea/1000);
+		double SunHours6 = sunHours * 6;
+		// Math.exp対応で小数点を丸める
+		double tmp = g * PAR / 600 / SunHours6;
+		try
+			{
+			BigDecimal bd = new BigDecimal(tmp);
+			bd = bd.setScale(6, RoundingMode.HALF_UP); // 小数第6位で四捨五入
+			tmp = bd.doubleValue();
+			}
+		catch(Exception e)
+			{
+			return prev;
+			}
+		tmp = ((f * Math.exp(tmp) * PAR / 600 / SunHours6 / 81.4 / 1000000) * 44 * 600 * 6) * sunHours
+				* (leafArea / 1000);
+		if(Double.isNaN(tmp) || Double.isInfinite(tmp))
+			{
+			return prev;
+			}
+	//	if( tmp > 100) return prev;
+		return prev + tmp;
 		}
 
 	// --------------------------------------------------
@@ -147,9 +170,9 @@ public class Formula
 		{
 		double rs = toResitence(x);
 		double y = 1 / (Math.log(rs / 10000) / 3900 + (1 / 298.15)) - 273.15;
-		y= y * 0.82 + 4.65;
-		
-		return 1.3083*y - 9.3353; // 2024/03/22追加
+		y = y * 0.82 + 4.65;
+
+		return 1.3083 * y - 9.3353; // 2024/03/22追加
 		}
 
 	// --------------------------------------------------
