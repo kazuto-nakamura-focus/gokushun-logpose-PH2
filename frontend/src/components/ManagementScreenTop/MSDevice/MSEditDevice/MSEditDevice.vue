@@ -241,6 +241,7 @@ function setBackground(params, number, value) {
 // * 樹液流のセル
 function setSapBackground(params, number, displayId, value) {
   if (!(displayId == null || displayId == "4")) {
+    setStatus(params, number, true);
     return { border: "1px solid #fff", backgroundColor: "#aaa" };
   } else {
     if (value == null || value.length == 0) {
@@ -472,13 +473,10 @@ export default {
         sizeId: null,
         size: null,
       },
-      deviceInfoData:
-        null != this.useDeviceInfoData
-          ? this.useDeviceInfoData
-          : Object.assign({}, this.skelton),
+      deviceInfoData: this.useDeviceInfoData,
       sensorList: null,
       // sensorData: null, //マスターセンサーデータ
-      buttonStatus: 7,
+      buttonStatus: 0,
     };
   },
 
@@ -486,7 +484,41 @@ export default {
     AgGridVue,
     WaitDialog,
   },
-
+  beforeMount() {
+    if (null == this.deviceInfoData) {
+      this.deviceInfoData = {
+        //* 圃場ID
+        fieldId: null,
+        //* 圃場名
+        field: null,
+        //* 品種ID
+        brandId: null,
+        //* 品種
+        brand: null,
+        //* タイムゾーン
+        timeZone: null,
+        //* 基準日
+        baseDate: null,
+        //* 基準日表示用
+        baseDateShort: null,
+        //* 登録日時
+        registeredDate: null,
+        // * SigFox ID
+        sigFoxDeviceId: null,
+        // * 引継ぎ元デバイス
+        prevDeviceId: null,
+        // * 運用開始日
+        opStart: null,
+        // * 運用終了日
+        opEnd: null,
+        // * 運用開始日
+        opStartShort: null,
+        // * 運用終了日
+        opEndShort: null,
+        sensorItems: [],
+      };
+    }
+  },
   mounted() {
     this.timeZone.push("Asia/Tokyo");
     this.timeZone.push("Pacific/Auckland");
@@ -724,12 +756,12 @@ export default {
       var row = Object.assign({}, this.skelton);
       this.rowData = [row];
 
-      if (this.useDeviceInfoData.sensorItems.length === 0) {
+      if (this.deviceInfoData.sensorItems.length === 0) {
         this.gridApi.forEachNode((node) => this.rowData.push(node.data));
         const rowDataArray = [...this.rowData];
         console.log("rowDataArray", rowDataArray);
       } else {
-        this.rowData = [...this.useDeviceInfoData.sensorItems];
+        this.rowData = [...this.deviceInfoData.sensorItems];
         console.log("MSEditDevice_rowData(3):", this.rowData);
       }
     },
