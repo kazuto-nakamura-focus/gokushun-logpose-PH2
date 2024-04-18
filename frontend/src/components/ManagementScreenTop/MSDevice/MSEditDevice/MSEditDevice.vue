@@ -370,8 +370,6 @@ export default {
           resizable: true,
           width: 100,
           cellStyle: (params) => {
-            params.status = new Number();
-            //      params.node.parent.allLeafChildren[params.rowIndex].status =new Boolean(true);
             return setBackground(params, 8, params.data.name);
           },
         },
