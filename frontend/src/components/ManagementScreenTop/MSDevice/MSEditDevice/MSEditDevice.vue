@@ -2,6 +2,9 @@
   <v-app>
     <v-container>
       <template>
+        <div id="input_comment" class="comment">
+          <p>入力後リターンキーを押してください。</p>
+        </div>
         <v-row v-if="mode == 'update'">
           <!-- 更新モードの時表示-->
           <v-col align="right">
@@ -146,8 +149,8 @@
             <div>
               <p v-if="!isAllValueInputted" class="error">{{this.messages.NotFilledAll}}</p>
             </div>
-            <div style="height: 325px">
-              <div style="height: 325px; box-sizing: border-box">
+            <div style="height: 420px">
+              <div style="height: 420px; box-sizing: border-box">
                 <AgGridVue
                   style="width: 100%; height: 100%"
                   class="ag-theme-gs"
@@ -159,6 +162,9 @@
                   @cell-clicked="onCellClicked"
                   @first-data-rendered="onRendered"
                   @cell-value-changed="onColumnValueChanged"
+                  @cellMouseOver="onCellMouseOver"
+                  @cellFocused="onCellFocused"
+                  @cellKeyPress="onCellKeyPress"
                 ></AgGridVue>
               </div>
             </div>
@@ -240,10 +246,21 @@ function setBackground(params, number, value) {
 }
 // * 樹液流のセル
 function setSapBackground(params, number, displayId, value) {
+  let obj = { isActive: false };
+  if (params.column.colDef.inactive === undefined) {
+    params.column.colDef.inactive = new Map();
+  }
+  if (params.column.colDef.inactive[params.rowIndex] === undefined) {
+    params.column.colDef.inactive[params.rowIndex] = obj;
+  } else {
+    obj = params.column.colDef.inactive[params.rowIndex];
+  }
   if (!(displayId == null || displayId == "4")) {
     setStatus(params, number, true);
+    obj.isActive = false;
     return { border: "1px solid #fff", backgroundColor: "#aaa" };
   } else {
+    obj.isActive = true;
     if (value == null || value.length == 0) {
       setStatus(params, number, false);
       return { border: "2px solid #f33", backgroundColor: "inherit" };
@@ -364,6 +381,7 @@ export default {
         },
         {
           field: "name",
+          colId: "sensor",
           singleClickEdit: true,
           headerName: "センサ―名",
           editable: true,
@@ -475,6 +493,8 @@ export default {
       sensorList: null,
       // sensorData: null, //マスターセンサーデータ
       buttonStatus: 0,
+      mouseX: 0,
+      mouseY: 0,
     };
   },
 
@@ -796,6 +816,68 @@ export default {
         //console.log(node);
       });
     },
+    //* ============================================
+    // リターンキーが押されたときの処理を記述
+    //* ============================================
+    onCellKeyPress(params) {
+      // リターンキーが押されたときの処理を記述
+      if (params.event.keyCode === 13) {
+        this.hideComment();
+      }
+    },
+    //* ============================================
+    // マウスの座標軸を設定する
+    //* ============================================
+    onCellMouseOver(params) {
+      // マウスの座標を取得
+      this.mouseX = params.event.clientX;
+      this.mouseY = params.event.clientY;
+    },
+    //* ============================================
+    //  セルにフォーカスが移ったときコメントを表示
+    //* ============================================
+    onCellFocused(params) {
+      // * セルが編集可能で通常入力
+      if (params.column.colId == "sensor") {
+        this.showComment();
+      } else if (
+        params.column.colId == "kst" ||
+        params.column.colId == "stemDiameter"
+      ) {
+        if (params.column.colDef.inactive[params.rowIndex].isActive) {
+          this.showComment();
+        } else {
+          this.hideComment();
+        }
+      } else {
+        this.hideComment();
+      }
+    },
+
+    //* ============================================
+    // マウスの座標軸上にコメントを表示
+    //* ============================================
+    showComment() {
+      //* コメントボックスを取得
+      let element = document.getElementById("input_comment");
+      //* コメント位置を設定
+      let y = this.mouseY + 10;
+      let x = this.mouseX - 10;
+      element.style.top = "" + y + "px";
+      element.style.left = "" + x + "px";
+      //* コメントを表示
+      element.style.display = "inline-block";
+      // * コメント表示時は入力不可
+      this.setStatus(32, false);
+    },
+    //* ============================================
+    // コメントを隠す
+    //* ============================================
+    hideComment() {
+      let element = document.getElementById("input_comment");
+      element.style.display = "none";
+      this.setStatus(32, true);
+    },
   },
 };
 </script>
@@ -810,5 +892,23 @@ export default {
 .deviceSet .v-input--selection-controls {
   padding: 0;
   margin: 0;
+}
+.comment {
+  position: fixed;
+  display: none;
+  margin: 1.5em 0;
+  padding: 7px 10px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #555;
+  font-size: 8pt;
+  background: #fff;
+  z-index: 100;
+  border: 1px ridge #ff66ff;
+}
+
+.comment p {
+  margin: 0;
+  padding: 0;
 }
 </style>
