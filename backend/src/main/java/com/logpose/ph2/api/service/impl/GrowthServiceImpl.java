@@ -239,7 +239,7 @@ public class GrowthServiceImpl implements GrowthService
 		this.growthDomain.updateModelTable(deviceId, year, null);
 		this.fStageTableDomain.resetActualDate(deviceId, year);
 		this.leafDomain.updateModelTable(deviceId, year, null);
-		this.photoSynthesisDomain.updateModelTable(deviceId, year, null);
+		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 
 	// --------------------------------------------------
@@ -259,7 +259,7 @@ public class GrowthServiceImpl implements GrowthService
 			this.growthDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
 			this.fStageTableDomain.resetActualDate(dto.getDeviceId(), dto.getYear());
 			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
-			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
 			}
 		}
 

@@ -1,7 +1,6 @@
 package com.logpose.ph2.api.service;
 
 import java.text.ParseException;
-import java.util.Date;
 
 import org.springframework.stereotype.Service;
 
@@ -27,7 +26,7 @@ public interface PhotosynthesisService
 	 * @param date 対象日付
 	 */
 	// --------------------------------------------------
-	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException;
+	public void updateDateModel(Long deviceId, Short year) throws ParseException;
 	// --------------------------------------------------
 	/**
 	 * 光合成推定グラフデータ取得

@@ -2,7 +2,6 @@ package com.logpose.ph2.api.domain.photosynthesis;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,14 +56,9 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public void updateModelTable(Long deviceId, Short year, Date startDate)
+	public void updateModelTable(Long deviceId, Short year)
 			throws ParseException
 		{
-		if (null == year)
-			{
-			// * デバイスID、統計開始日から年度を取得。
-			year = this.deviceDayDomain.getYear(deviceId, startDate);
-			}
 // * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
 		List<DailyBaseDataDTO> realDayData = this.growthDomainMapper
 				.selectDailyData(deviceId, year, null);

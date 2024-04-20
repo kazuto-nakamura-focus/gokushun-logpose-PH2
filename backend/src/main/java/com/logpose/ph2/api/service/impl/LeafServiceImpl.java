@@ -290,7 +290,7 @@ public class LeafServiceImpl implements LeafService
 		if (this.leafDomain.updateParamSet(dto))
 			{
 			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
-			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
 			}
 		}
 
@@ -317,7 +317,7 @@ public class LeafServiceImpl implements LeafService
 		{
 		this.leafDomain.setDefault(deviceId, year, paramId);
 		this.leafDomain.updateModelTable(deviceId, year, null);
-		this.photoSynthesisDomain.updateModelTable(deviceId, year, null);
+		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 
 	// --------------------------------------------------

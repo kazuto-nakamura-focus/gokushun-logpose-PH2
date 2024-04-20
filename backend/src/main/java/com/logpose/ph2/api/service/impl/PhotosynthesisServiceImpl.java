@@ -2,7 +2,6 @@ package com.logpose.ph2.api.service.impl;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,7 +134,7 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 		{
 		if (this.photoSynthesisDomain.updateParamSet(dto))
 			{
-			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
 			}
 		}
 
@@ -157,9 +156,9 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException
+	public void updateDateModel(Long deviceId, Short year) throws ParseException
 		{
-		this.photoSynthesisDomain.updateModelTable(deviceId, year, date);
+		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 
 	@Override
@@ -167,7 +166,7 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
 		{
 		this.photoSynthesisDomain.setDefault(deviceId, year, paramId);
-		this.photoSynthesisDomain.updateModelTable(deviceId, year, null);
+		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 	// --------------------------------------------------
 	/**
