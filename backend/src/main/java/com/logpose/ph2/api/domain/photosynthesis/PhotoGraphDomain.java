@@ -15,7 +15,7 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.domain.common.MaxValue;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 @Component
 public class PhotoGraphDomain extends GraphDomain
@@ -37,7 +37,7 @@ public class PhotoGraphDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
+	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
@@ -50,7 +50,7 @@ public class PhotoGraphDomain extends GraphDomain
 		Calendar cal = Calendar.getInstance();
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
 
-		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
+		ModelGraphDataDTO areaModel = new ModelGraphDataDTO();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");

@@ -14,7 +14,7 @@ import com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.domain.common.MaxValue;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 import lombok.Data;
 
@@ -41,7 +41,7 @@ public class LeafGraphDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public List<RealModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
+	public List<ModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
 		List<LeafModelDataEntity> entites = this.ph2ModelDataMapper
@@ -50,8 +50,8 @@ public class LeafGraphDomain extends GraphDomain
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
 
-		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
-		RealModelGraphDataDTO countModel = new RealModelGraphDataDTO();
+		ModelGraphDataDTO areaModel = new ModelGraphDataDTO();
+		ModelGraphDataDTO countModel = new ModelGraphDataDTO();
 
 // * 前日の日付
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
@@ -138,7 +138,7 @@ public class LeafGraphDomain extends GraphDomain
 // * 葉枚数グラフの日付カテゴリの設定
 		countModel.setCategory(category);
 		// * 値の設定
-		List<RealModelGraphDataDTO> resultData = new ArrayList<>();
+		List<ModelGraphDataDTO> resultData = new ArrayList<>();
 		resultData.add(areaModel);
 		resultData.add(countModel);
 		return resultData;

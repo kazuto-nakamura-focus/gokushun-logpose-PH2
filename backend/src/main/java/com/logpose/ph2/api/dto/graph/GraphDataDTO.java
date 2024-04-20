@@ -1,4 +1,4 @@
-package com.logpose.ph2.api.dto;
+package com.logpose.ph2.api.dto.graph;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +12,6 @@ import lombok.Data;
 @Data
 public class GraphDataDTO
 	{
-	//* 選択されたデータ
-	//private SelectedTarget selected;
 	//* Y軸最小値
 	private Double YStart;
 	//* Y軸最大値

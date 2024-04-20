@@ -3,7 +3,7 @@ package com.logpose.ph2.api.dto.sensorData;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.logpose.ph2.api.dto.GraphDataDTO;
+import com.logpose.ph2.api.dto.graph.GraphDataDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

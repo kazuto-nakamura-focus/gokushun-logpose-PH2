@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 /**
  * 光合成推定のサービス
@@ -38,7 +38,7 @@ public interface PhotosynthesisService
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException;
+	public ModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException;
 
 	// --------------------------------------------------
 	/**

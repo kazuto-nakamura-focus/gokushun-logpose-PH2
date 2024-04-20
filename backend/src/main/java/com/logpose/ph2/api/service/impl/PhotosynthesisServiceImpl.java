@@ -17,7 +17,7 @@ import com.logpose.ph2.api.domain.photosynthesis.PhotoGraphDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.service.PhotosynthesisService;
 
 /**
@@ -50,7 +50,7 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	// --------------------------------------------------
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public RealModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException
+	public ModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException
 		{
 		return this.graphDomain.getModelGraph(deviceId, year);
 		}

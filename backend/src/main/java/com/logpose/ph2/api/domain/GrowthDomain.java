@@ -29,8 +29,8 @@ import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
@@ -172,7 +172,7 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// -------------------------------------------------
-	public RealModelGraphDataDTO getModelGraphData(
+	public ModelGraphDataDTO getModelGraphData(
 			Long deviceId, Short year, Date startDate,
 			Ph2ParamsetGrowthEntity param, Ph2ModelDataMapper mapper)
 			throws ParseException
@@ -235,7 +235,7 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	private RealModelGraphDataDTO getModelDataByParameter(Long deviceId,
+	private ModelGraphDataDTO getModelDataByParameter(Long deviceId,
 			Short year,
 			Ph2ParamsetGrowthEntity param) throws ParseException
 		{
@@ -256,7 +256,7 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getSimulateModelGraph(Long deviceId,
+	public ModelGraphDataDTO getSimulateModelGraph(Long deviceId,
 			Short year,
 			Long paramId) throws ParseException
 		{
@@ -279,7 +279,7 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getSimulateModelGraph(Long deviceId,
+	public ModelGraphDataDTO getSimulateModelGraph(Long deviceId,
 			Short year,
 			double bd, double be, double ad, double ae) throws ParseException
 		{
@@ -298,10 +298,10 @@ public class GrowthDomain extends GraphDomain
 	 *
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
-	 * @return RealModelGraphDataDTO
+	 * @return ModelGraphDataDTO
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
+	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
 		{
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectModelDataByType(deviceId, year);
@@ -309,7 +309,7 @@ public class GrowthDomain extends GraphDomain
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
 
-		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
+		ModelGraphDataDTO resultData = new ModelGraphDataDTO();
 
 		List<Double> values = new ArrayList<>();
 		List<Double> predictValues = new ArrayList<>();
