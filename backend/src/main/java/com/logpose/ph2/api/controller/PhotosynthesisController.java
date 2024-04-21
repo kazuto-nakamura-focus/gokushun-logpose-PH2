@@ -1,5 +1,7 @@
 package com.logpose.ph2.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -87,7 +89,7 @@ public class PhotosynthesisController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			PhotosynthesisValueDTO result = this.photosynthesisService
+			List<PhotosynthesisValueDTO> result = this.photosynthesisService
 					.getRealValues(deviceId, year);
 			as_dto.setSuccess(result);
 			}

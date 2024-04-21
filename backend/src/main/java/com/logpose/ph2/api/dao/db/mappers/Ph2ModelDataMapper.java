@@ -9,6 +9,7 @@ import org.apache.ibatis.annotations.Param;
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity;
+import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dto.ValueDateDTO;
 @Mapper
@@ -84,6 +85,8 @@ public interface Ph2ModelDataMapper {
 
 	List<ModelDataEntity> selectModelDataByType(@Param("deviceId") Long deviceId, @Param("year") Short year);
 
+	List<ModelAndDailyDataEntity> selectModelAndDailyData(@Param("deviceId") Long deviceId, @Param("year") Short year);
+	
 	ValueDateDTO selectRealFValueByDate(@Param("deviceId") Long deviceId, @Param("date") Date date, @Param("isReal") boolean isReal);
 	
 	ValueDateDTO selectFValueByDate(@Param("deviceId") Long deviceId, @Param("date") Date date);

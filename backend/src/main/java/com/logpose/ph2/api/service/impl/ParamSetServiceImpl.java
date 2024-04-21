@@ -10,7 +10,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.domain.GrowthDomain;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
-import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PSModelDataParameterAggregator;
 import com.logpose.ph2.api.dto.HistoryDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.ParamSetExtendDTO;
@@ -35,7 +35,7 @@ public class ParamSetServiceImpl implements ParamSetService
 	@Autowired
 	private LeafDomain leafDomain;
 	@Autowired
-	private PhotoSynthesisDomain photoSynthesisDomain;
+	private PSModelDataParameterAggregator photoSynthesisDomain;
 
 	// ===============================================
 	// パブリック関数

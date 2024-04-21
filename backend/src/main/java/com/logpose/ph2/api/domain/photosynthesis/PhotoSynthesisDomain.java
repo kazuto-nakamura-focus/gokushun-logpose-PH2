@@ -11,114 +11,103 @@ import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsFieldEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsWeibullEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntityExample;
-import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsFieldMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsWeibullMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealPsAmountMapper;
-import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
-import com.logpose.ph2.api.domain.DeviceDayDomain;
-import com.logpose.ph2.api.dto.DailyBaseDataDTO;
+import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
-public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
+public class PhotoSynthesisDomain extends PSGraphDataGeneratorWrapper
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private DeviceDayDomain deviceDayDomain;
-	@Autowired
-	private GrowthDomainMapper growthDomainMapper;
+	private ParameterSetDomain parameterSetDomain;
 	@Autowired
 	private Ph2RealPsAmountMapper ph2RealPsAmountMapper;
 	@Autowired
 	private Ph2ParamsetPsFieldMapper ph2ParamsetPsFieldMapper;
 	@Autowired
 	private Ph2ParamsetPsWeibullMapper ph2ParamsetPsWeibullMapper;
-	@Autowired
-	private Ph2ModelDataMapper ph2ModelDataMapper;
-	/*
-	 * @Autowired
-	 * ParameterSetDomain parameterSetDomain;
-	 * @Autowired
-	 * private DefaultPsParameters defaultPsParameters;
-	 */
 
-	// --------------------------------------------------
+	// ===============================================
+	// 公開関数群
+	// ===============================================
+	// ###############################################
 	/**
-	 * デバイスのモデルテーブルを更新する
-	 * 
+	 * モデルデータの更新
+	 *
 	 * @param deviceId デバイスID
 	 * @param year 年度
-	 * @param startDate 統計対象開始日
-	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
-	public void updateModelTable(Long deviceId, Short year)
-			throws ParseException
+	// ###############################################
+	public void updateModelTable(Long devieId, Short year)
 		{
-// * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
-		List<DailyBaseDataDTO> realDayData = this.growthDomainMapper
-				.selectDailyData(deviceId, year, null);
-// * データの出力先の設定をする
-		if (0 != realDayData.size())
-			{
-			// * データ生成のためのパラメータを作成する。
-			PSModelDataParameters parameters = new PSModelDataParameters();
-			super.setParameters(deviceId, year, parameters);
-			
-			PSModelDataExporter exporter = new PSModelDataExporter(ph2ModelDataMapper);
-			new PSGraphDataGenerator(parameters, exporter, realDayData);
-			}
+// * モデルデータの更新
+		super.updateModelTable(devieId, year, null, null, null);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定実績値取得
 	 *
-	 * @param devieId
+	 * @param deviceId デバイスID
+	 * @param year 年度
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public List<Ph2RealPsAmountEntity> getRealPsAmountEntity(Long devieId, Short year)
 		{
+// * 検索条件の設定
 		Ph2RealPsAmountEntityExample exm = new Ph2RealPsAmountEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(devieId).andYearEqualTo(year);
 		exm.setOrderByClause("date desc");
+
+// * 問合せ実行
 		return this.ph2RealPsAmountMapper.selectByExample(exm);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定実績値更新
 	 *
-	 * @param dto PhotosynthesisValueDTO
+	 * @param entity Ph2RealPsAmountEntity 更新データ
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public void update(Ph2RealPsAmountEntity entity)
 		{
+// * 検索条件の設定
 		Ph2RealPsAmountEntityExample exm = new Ph2RealPsAmountEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(entity.getDeviceId()).andDateEqualTo(entity.getDate());
 		List<Ph2RealPsAmountEntity> entities = this.ph2RealPsAmountMapper.selectByExample(exm);
-		if(0 < entities.size())
+
+// * データの更新または追加
+		if (0 < entities.size())
 			{
 			this.ph2RealPsAmountMapper.updateByExample(entity, exm);
 			}
-		else this.ph2RealPsAmountMapper.insert(entity);
+		else
+			this.ph2RealPsAmountMapper.insert(entity);
+
+// * モデルデータの更新
+		super.updateModelTable(entity.getDeviceId(), entity.getYear(), null, null, null);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定パラメータセット更新
 	 *
-	 * @param PhotosynthesisParamSetDTO 更新データ
+	 * @param dto PhotosynthesisParamSetDTO 更新データ
 	 */
-	// --------------------------------------------------
-	public boolean updateParamSet(PhotosynthesisParamSetDTO dto)
+	// ###############################################
+	public void updateParamSet(PhotosynthesisParamSetDTO dto)
 		{
+// * パラメータセットの共通部分の変更
 		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.PHOTO);
 
+// * フィールド値の変更
 		Ph2ParamsetPsFieldEntity field = this.ph2ParamsetPsFieldMapper
 				.selectByPrimaryKey(dto.getId());
 		field.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -126,6 +115,7 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 		field.setValueG(dto.getFieldG());
 		this.ph2ParamsetPsFieldMapper.updateByPrimaryKey(field);
 
+// * ワイブル値の変更
 		Ph2ParamsetPsWeibullEntity weibull = this.ph2ParamsetPsWeibullMapper
 				.selectByPrimaryKey(dto.getId());
 		weibull.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -133,24 +123,31 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 		weibull.setValueB(dto.getWeibullB());
 		weibull.setValueL(dto.getWeibullL());
 		this.ph2ParamsetPsWeibullMapper.updateByPrimaryKey(weibull);
-		
-		return isDeault;
+
+// * デフォルト値の場合、モデルデータの更新を行う
+		if (isDeault)
+			{
+			// * モデルデータの更新
+			super.updateModelTable(dto.getDeviceId(), dto.getYear(), dto.getFieldF(), dto.getFieldG(), null);
+			}
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * デフォルト値の設定
-	 *
-	 * @param paramId パラメータセットID
-	 * @throws ParseException 
+	 * @param deviceId 対象となるデバイスID
+	 * @param year 対象となる年度
+	 * @param paramId デフォルトとなるパラメータセットID
+	 * @throws ParseException
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
-		// * パラメータセットの詳細を取得する
+// * パラメータセットの詳細を取得する
 		PhotosynthesisParamSetDTO paramInfo = super.getDetail(paramId);
-		// * 同じ年度・デバイスの場合
+
+// * デバイスIDまたは年度が異なっている場合、新たなパラメータとして追加する
 		if ((paramInfo.getDeviceId().longValue() != deviceId.longValue())
 				|| (paramInfo.getYear().shortValue() != year.shortValue()))
 			{
@@ -158,6 +155,10 @@ public class PhotoSynthesisDomain extends PSModelDataParameterAggregator
 			paramInfo.setYear(year);
 			paramId = super.addParamSet(null, paramInfo);
 			}
+// * 指定されたパラメータセットIDを指定デバイスの指定年度に対して、デフォルト値に設定する
 		parameterSetDomain.setDefautParamSet(ModelMaster.PHOTO, deviceId, year, paramId);
+
+// * デバイスのモデルテーブルを更新する
+		super.updateModelTable(deviceId, year, paramInfo.getFieldF(), paramInfo.getFieldG(), null);
 		}
 	}
