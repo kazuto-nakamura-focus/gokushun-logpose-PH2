@@ -1,6 +1,5 @@
 package com.logpose.ph2.api.service.impl;
 
-import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -111,23 +110,15 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	/**
 	 * 光合成推定実績値更新
 	 *
-	 * @param dto PhotosynthesisValueDTO 更新データ
+	 * @param records PhotosynthesisValueDTO 更新データリスト
 	 * @throws ParseException
 	 */
 	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setRealValue(PhotosynthesisValueDTO dto) throws ParseException
+	public void setRealValue(List<PhotosynthesisValueDTO> records) throws ParseException
 		{
-		Ph2RealPsAmountEntity entity = new Ph2RealPsAmountEntity();
-		entity.setDeviceId(dto.getDeviceId());
-		entity.setValueF(dto.getF());
-		entity.setValueG(dto.getG());
-		entity.setDate(DateTimeUtility.getDateFromString(dto.getDate()));
-		entity.setYear(dto.getYear());
-		entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		this.photoSynthesisDomain.update(entity);
+		this.photoSynthesisDomain.update(records);
 		}
 	// ###############################################
 	/**

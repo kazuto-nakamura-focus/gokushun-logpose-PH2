@@ -11,62 +11,36 @@
           <!-- 入力部分 -->
           <v-container>
             <div class="text-subtitle-1">イールド値モデルパラメータ</div>
-            <div>
-              <v-container class="sprout">
-                <v-row>
-                  <v-col cols="1">
-                    <v-row>
-                      <v-subheader class="ma-0 pa-1">実績日</v-subheader>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="4">
-                    <div style="margin-top: -10px; padding: 0">
-                      <ph-2-date-picker
-                        ref="date"
-                        width="100%"
-                        @onChange="handleDate"
-                        style="margin: 0; padding: 0"
-                        dense
-                      />
-                    </div>
-                  </v-col>
-
-                  <v-col cols="3">
-                    <v-row>
-                      <v-subheader class="ma-0 pa-1">f</v-subheader>
-                      <v-text-field
-                        class="ma-0 pa-1"
-                        dense
-                        hide-details="auto"
-                        outlined
-                        v-model.number="
-                          photosynthesisValueData.photosynthesisValueF
-                        "
-                      ></v-text-field>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="3">
-                    <v-row>
-                      <v-subheader class="ma-0 pa-1">g</v-subheader>
-
-                      <v-text-field
-                        class="ma-0 pa-1"
-                        dense
-                        hide-details="auto"
-                        outlined
-                        v-model.number="
-                          photosynthesisValueData.photosynthesisValueG
-                        "
-                      ></v-text-field>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-container>
+            <p v-if="!isAllValueInputted" class="error">{{this.messages.NotFilledAll}}</p>
+            <div style="height: 420px">
+              <div style="height: 420px; box-sizing: border-box">
+                <AgGridVue
+                  style="width: 100%; height: 100%"
+                  class="ag-theme-gs"
+                  :columnDefs="columnDefs"
+                  @grid-ready="onGridReady"
+                  :rowData="rowData"
+                  :gridOptions="gridOptions"
+                  sizeColumn
+                  @cell-clicked="onCellClicked"
+                  @first-data-rendered="onRendered"
+                  @cell-value-changed="onColumnValueChanged"
+                  @cellMouseOver="onCellMouseOver"
+                  @cellFocused="onCellFocused"
+                  @cellKeyPress="onCellKeyPress"
+                ></AgGridVue>
+              </div>
             </div>
           </v-container>
 
           <div class="GS_ButtonArea">
-            <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="register()">保存</v-btn>
+            <v-btn
+              color="primary"
+              class="ma-2 white--text"
+              elevation="2"
+              :disabled="!isAllValueInputted"
+              @click="register()"
+            >保存</v-btn>
             <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
           </div>
         </v-card>
@@ -77,13 +51,65 @@
 <script>
 import moment from "moment";
 import { mdiExitToApp } from "@mdi/js";
-import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
+//import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
 import InputHeader from "./InputHeader.vue";
 
 import {
   usePhotosynthesisValuesUpdate,
   usePhotosynthesisValuesDetail,
 } from "@/api/TopStateGrowth/PEActualValueInput";
+import { AgGridVue } from "ag-grid-vue";
+import messages from "@/assets/messages.json";
+//* ============================================
+// 行削除を表示
+//* ============================================
+function RemoveCellRenderer() {
+  let eGui = document.createElement("div");
+  eGui.innerHTML = `
+  <div>
+  <button data-action="remove" >-</button>
+  </div>`;
+  return eGui;
+}
+//* ============================================
+// 行追加を表示
+//* ============================================
+function AddCellRenderer() {
+  let eGui = document.createElement("div");
+  eGui.innerHTML = `
+  <div>
+  <button data-action="add" >+</button>
+  </div>`;
+  return eGui;
+}
+//* ============================================
+// セルのステータスを設定
+//* ============================================
+function setStatus(params, number, bool) {
+  let row = params.node.parent.allLeafChildren[params.rowIndex];
+  if (row.status === undefined) {
+    row.status = new Number(0);
+  }
+  if (bool) row.status = (row.status | number) - number;
+  else row.status = row.status | number;
+}
+//* ============================================
+// セルの背景色を設定
+//* ============================================
+var regexp = new RegExp(/^[-]?([1-9]\d*|0)(\.\d+)?$/);
+function setBackground(params, number, value) {
+  //
+  if (value == null || value.length == 0) {
+    setStatus(params, number, false);
+    return { border: "2px solid #f33" };
+  } else if (!regexp.test(value)) {
+    setStatus(params, number, false);
+    return { border: "2px solid #f33" };
+  } else {
+    setStatus(params, number, true);
+    return { border: "1px solid #fff" };
+  }
+}
 
 export default {
   name: "PEActualValueInput",
@@ -93,6 +119,67 @@ export default {
 
   data() {
     return {
+      messages: messages,
+      errormessage: "",
+      isAllValueInputted: true,
+
+      columnDefs: [
+        {
+          field: "date",
+          colId: "date",
+          singleClickEdit: true,
+          headerName: "日付",
+          editable: true,
+          resizable: true,
+          width: 100,
+          cellStyle: (params) => {
+            return setBackground(params, 1, params.data.name);
+          },
+        },
+        {
+          field: "f",
+          colId: "f",
+          singleClickEdit: true,
+          headerName: "f値",
+          editable: true,
+          resizable: true,
+          width: 50,
+          cellStyle: (params) => {
+            return setBackground(params, 2, params.data.name);
+          },
+        },
+        {
+          field: "g",
+          colId: "g",
+          singleClickEdit: true,
+          headerName: "g値",
+          editable: true,
+          resizable: true,
+          width: 100,
+          cellStyle: (params) => {
+            return setBackground(params, 4, params.data.name);
+          },
+        },
+        {
+          field: "remove",
+          headerName: "削除",
+          cellRenderer: RemoveCellRenderer,
+          colId: "remove",
+          editable: false,
+          width: 75,
+        },
+        {
+          field: "add",
+          headerName: "追加",
+          cellRenderer: AddCellRenderer,
+          colId: "add",
+          editable: false,
+          width: 75,
+        },
+      ],
+      rowData: [],
+      mouseX: 0,
+      mouseY: 0,
       selectedItems: null,
       value: "",
       date: moment().format("YYYY-MM-DD"),
@@ -107,7 +194,13 @@ export default {
       year: 0,
       isUpdated: false,
       // headers: HEADERS,
-
+      skelton: {
+        deviceId: null,
+        year: null,
+        date: null,
+        f: null,
+        g: null,
+      },
       photosynthesisValueData: {
         photosynthesisDate: moment().format("YYYY-MM-DD"),
         photosynthesisValueF: 0,
@@ -117,14 +210,19 @@ export default {
   },
 
   components: {
-    Ph2DatePicker,
+    // Ph2DatePicker,
     InputHeader,
+    AgGridVue,
   },
 
   mounted() {
     this.shared.mount(this);
   },
+
   methods: {
+    //* ============================================
+    // 初期化処理
+    //* ============================================
     initialize: function (data) {
       this.selectedItems = data.menu;
       this.$nextTick(
@@ -140,7 +238,6 @@ export default {
       this.title = data.title;
       // 圃場
       this.field = this.selectedItems.selectedField;
-
       // デバイス
       this.device = this.selectedItems.selectedDevice;
       this.isUpdated = false;
@@ -148,41 +245,25 @@ export default {
       //光合成推定実績取得
       usePhotosynthesisValuesDetail(this.device.id, this.year)
         .then((response) => {
-          console.log(response);
+          console.log("red", response);
           const ps_data = response["data"]["data"];
-          if (null != ps_data.date) {
-            this.date = ps_data.date;
-            this.photosynthesisValueData.photosynthesisValueF = ps_data.f;
-            this.photosynthesisValueData.photosynthesisValueG = ps_data.g;
-          }
+          this.rowData = ps_data;
         })
         .catch((error) => {
           console.log(error);
         });
     },
-    handleDate(date) {
-      this.date = date;
-    },
-    close: function () {
-      this.isDialog = false;
-      this.shared.onConclude(this.isUpdated);
-    },
+    //* ============================================
+    // 登録処理
+    //* ============================================
     register: function () {
-      const data = {
-        deviceId: this.device.id,
-        date: this.date,
-        year: this.year,
-        f: this.photosynthesisValueData.photosynthesisValueF,
-        g: this.photosynthesisValueData.photosynthesisValueG,
-      };
-
-      // console.log("--- data ---");
-      console.log(data);
-
+      for (const item of this.rowData) {
+        item.deviceId = this.device.id;
+        item.year = this.year.id;
+      }
       //光合成推定実績値更新
-      usePhotosynthesisValuesUpdate(data)
+      usePhotosynthesisValuesUpdate(this.rowData)
         .then((response) => {
-          console.log(response);
           const { status, message } = response["data"];
           if (status === 0) {
             alert("登録が完了しました。");
@@ -196,30 +277,143 @@ export default {
           console.log(error);
         });
     },
+    handleDate(date) {
+      this.date = date;
+    },
+    close: function () {
+      this.isDialog = false;
+      this.shared.onConclude(this.isUpdated);
+    },
+
     handleChangeDate() {},
+
+    //* ============================================
+    // セルの値が変化した場合
+    //* ============================================
+    onColumnValueChanged: function (param) {
+      let items = param.node.parent.allLeafChildren;
+      this.isAllValueInputted = true;
+      for (const item of items) {
+        if (0 !== item.status) {
+          this.isAllValueInputted = false;
+          break;
+        }
+      }
+    },
+    //* ============================================
+    // グリッドが表示された時
+    //* ============================================
+    //gridApi使用設定
+    onGridReady: function (params) {
+      this.gridApi = params.api;
+      this.gridColumnApi = params.columnAPI;
+      if (this.rowData == null || this.rowData.length == 0) {
+        var row = Object.assign({}, this.skelton);
+        this.rowData = [row];
+      }
+    },
+
+    //* ============================================
+    // row追加・削除
+    //* ============================================
+    onCellClicked(params) {
+      const gridApi = params?.api;
+      const nodes = [];
+      gridApi?.forEachNode((node) => nodes.push(node));
+      if (params.column.colId === "remove") {
+        params.api.applyTransaction({
+          remove: [params.data],
+        });
+
+        if (nodes.length == 1) {
+          let row = Object.assign({}, this.skelton);
+          params.api.applyTransaction({
+            add: [row],
+          });
+        }
+      } else if (params.column.colId === "add") {
+        let row = Object.assign({}, this.skelton);
+        params.api.applyTransaction({
+          add: [row],
+        });
+      }
+    },
+    //* ============================================
+    // リターンキーが押されたときの処理を記述
+    //* ============================================
+    onCellKeyPress(params) {
+      // リターンキーが押されたときの処理を記述
+      if (params.event.keyCode === 13) {
+        this.hideComment();
+      }
+    },
+    //* ============================================
+    // マウスの座標軸を設定する
+    //* ============================================
+    onCellMouseOver(params) {
+      this.mouseX = params.event.clientX;
+      this.mouseY = params.event.clientY;
+    },
+    //* ============================================
+    //  セルにフォーカスが移ったときコメントを表示
+    //* ============================================
+    onCellFocused(params) {
+      if (
+        params.column.colId == "date" ||
+        params.column.colId == "f" ||
+        params.column.colId == "gf"
+      ) {
+        this.showComment();
+      } else {
+        this.hideComment();
+      }
+    },
+
+    //* ============================================
+    // マウスの座標軸上にコメントを表示
+    //* ============================================
+    showComment() {
+      //* コメントボックスを取得
+      let element = document.getElementById("input_comment");
+      //* コメント位置を設定
+      let y = this.mouseY + 10;
+      let x = this.mouseX - 10;
+      element.style.top = "" + y + "px";
+      element.style.left = "" + x + "px";
+      //* コメントを表示
+      element.style.display = "inline-block";
+      // * コメント表示時は入力不可
+      this.setStatus(32, false);
+    },
+    //* ============================================
+    // コメントを隠す
+    //* ============================================
+    hideComment() {
+      let element = document.getElementById("input_comment");
+      element.style.display = "none";
+      this.setStatus(32, true);
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
 @import "@/style/common.css";
-// .GS_unit_text {
-//   margin-top: 1.7rem;
-//   font-style: italic;
-//   color: gray;
-//   font-size: 0.8em;
-//   width: auto;
-// }
+.comment {
+  position: fixed;
+  display: none;
+  margin: 1.5em 0;
+  padding: 7px 10px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #555;
+  font-size: 8pt;
+  background: #fff;
+  z-index: 100;
+  border: 1px ridge #ff66ff;
+}
 
-// .container {
-//   display: flex;
-//   flex-flow: wrap;
-//   align-items: center;
-// }
-// .fields {
-//   display: flex;
-//   padding: 3pt;
-//   font-size: 11pt;
-//   width: 90%;
-//   flex-wrap: wrap;
-// }
+.comment p {
+  margin: 0;
+  padding: 0;
+}
 </style>

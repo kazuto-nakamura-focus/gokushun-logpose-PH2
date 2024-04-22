@@ -65,11 +65,11 @@ public interface PhotosynthesisService
 	/**
 	 * 光合成推定実績値更新
 	 *
-	 * @param dto PhotosynthesisValueDTO 更新データ
+	 * @param records PhotosynthesisValueDTO 更新データリスト
 	 * @throws ParseException
 	 */
 	// ###############################################
-	public void setRealValue(PhotosynthesisValueDTO dto) throws ParseException;
+	public void setRealValue(List<PhotosynthesisValueDTO> dto) throws ParseException;
 
 	// ###############################################
 	/**

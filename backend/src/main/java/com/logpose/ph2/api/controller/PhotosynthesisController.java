@@ -112,7 +112,7 @@ public class PhotosynthesisController
 	@PutMapping("/values")
 	public ResponseDTO updateValues(HttpServletRequest httpReq,
 			HttpServletResponse res,
-			@RequestBody @Validated PhotosynthesisValueDTO dto)
+			@RequestBody List<PhotosynthesisValueDTO> dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try

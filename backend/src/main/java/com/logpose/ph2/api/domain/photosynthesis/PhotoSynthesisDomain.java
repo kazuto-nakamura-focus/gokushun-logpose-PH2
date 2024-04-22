@@ -2,11 +2,13 @@ package com.logpose.ph2.api.domain.photosynthesis;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsFieldEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetPsWeibullEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
@@ -16,6 +18,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsWeibullMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealPsAmountMapper;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
@@ -63,7 +66,7 @@ public class PhotoSynthesisDomain extends PSGraphDataGeneratorWrapper
 // * 検索条件の設定
 		Ph2RealPsAmountEntityExample exm = new Ph2RealPsAmountEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(devieId).andYearEqualTo(year);
-		exm.setOrderByClause("date desc");
+		exm.setOrderByClause("date asc");
 
 // * 問合せ実行
 		return this.ph2RealPsAmountMapper.selectByExample(exm);
@@ -73,26 +76,51 @@ public class PhotoSynthesisDomain extends PSGraphDataGeneratorWrapper
 	/**
 	 * 光合成推定実績値更新
 	 *
-	 * @param entity Ph2RealPsAmountEntity 更新データ
+	 * @param records PhotosynthesisValueDTO 更新データリスト
+	 * @throws ParseException 
 	 */
 	// ###############################################
-	public void update(Ph2RealPsAmountEntity entity)
+	public void update(List<PhotosynthesisValueDTO> records) throws ParseException
 		{
-// * 検索条件の設定
-		Ph2RealPsAmountEntityExample exm = new Ph2RealPsAmountEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(entity.getDeviceId()).andDateEqualTo(entity.getDate());
-		List<Ph2RealPsAmountEntity> entities = this.ph2RealPsAmountMapper.selectByExample(exm);
-
-// * データの更新または追加
-		if (0 < entities.size())
+		Timestamp time = new Timestamp(System.currentTimeMillis());
+		for (final PhotosynthesisValueDTO dto : records)
 			{
-			this.ph2RealPsAmountMapper.updateByExample(entity, exm);
+			Date tmp = DateTimeUtility.getDateFromString(dto.getDate());
+// * 該当するデバイスと日付を検索
+			Ph2RealPsAmountEntity entity = this.ph2RealPsAmountMapper.selectByPrimaryKey(dto.getDeviceId(), tmp);
+// * 存在しない場合、新たに作成
+			if (null == entity)
+				{
+				entity = new Ph2RealPsAmountEntity();
+				entity.setDeviceId(dto.getDeviceId());
+				entity.setYear(dto.getYear());
+				entity.setDate(time);
+				}
+// * データの作成
+			entity.setUpdatedAt(time);
+			entity.setValueF(dto.getF());
+			entity.setValueG(dto.getG());
+// * データの更新時
+			if (null != entity.getCreatedAt())
+				{
+				this.ph2RealPsAmountMapper.updateByPrimaryKey(entity);
+				}
+			else
+				{
+				entity.setCreatedAt(time);
+				this.ph2RealPsAmountMapper.insert(entity);
+				}
 			}
-		else
-			this.ph2RealPsAmountMapper.insert(entity);
-
-// * モデルデータの更新
-		super.updateModelTable(entity.getDeviceId(), entity.getYear(), null, null, null);
+// * 古いデータの削除
+		if (records.size() > 0)
+			{
+			Ph2RealPsAmountEntityExample exm = new Ph2RealPsAmountEntityExample();
+			exm.createCriteria()
+					.andDeviceIdEqualTo(records.get(0).getDeviceId())
+					.andYearEqualTo(records.get(0).getYear())
+					.andUpdatedAtLessThan(time);
+			this.ph2RealPsAmountMapper.countByExample(exm);
+			}
 		}
 
 	// ###############################################
