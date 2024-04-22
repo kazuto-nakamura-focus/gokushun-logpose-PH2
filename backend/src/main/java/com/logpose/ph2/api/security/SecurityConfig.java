@@ -13,6 +13,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
@@ -31,6 +32,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.cors.CorsConfiguration;
 
+import java.io.IOException;
+import java.util.List;
+
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -39,6 +43,12 @@ public class SecurityConfig {
 
     @Value("${spring.security.oauth2.client.registration.heroku.redirect-uri}")
     private String redirectUri;
+
+    @Value("${frontend.after-logout-uri}")
+    private String redirectAfterLogoutUri;
+
+    @Value("${spring.session.jdbc.table-name}")
+    private String sessionTableName;
 
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOauth2AuthorizationRequestRepository;
@@ -78,7 +88,8 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/**", "/api/bulk/update").permitAll()
                                 .anyRequest().authenticated()
                 )
-//                .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                //セッション
+                .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 //OAuth2ログイン設定
                 .oauth2Login(configure ->
                                 configure
@@ -106,7 +117,7 @@ public class SecurityConfig {
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
                                 .deleteCookies("JSESSIONID")
                                 .invalidateHttpSession(true)
-                                .logoutSuccessUrl(redirectUri)
+                                .logoutSuccessUrl(redirectAfterLogoutUri)
                                 .clearAuthentication(true)  // 認証情報をクリア
                 );
 //                .exceptionHandling(exceptionHandling ->
