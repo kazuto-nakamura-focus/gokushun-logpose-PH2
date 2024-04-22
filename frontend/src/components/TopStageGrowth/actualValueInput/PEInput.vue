@@ -2,8 +2,11 @@
 <template>
   <v-app>
     <v-container>
-      <v-dialog v-model="isDialog" width="700" persistent>
+      <v-dialog v-model="isDialog" width="600" persistent>
         <v-card>
+          <div id="input_comment" class="comment">
+            <p>入力後リターンキーを押してください。</p>
+          </div>
           <v-card-title v-if="title != null">実績値入力</v-card-title>
           <v-card-text>(PAMで計測した「f」と「g」の値を入力してください。)</v-card-text>
           <!-- タイトル部分 -->
@@ -23,7 +26,6 @@
                   :gridOptions="gridOptions"
                   sizeColumn
                   @cell-clicked="onCellClicked"
-                  @first-data-rendered="onRendered"
                   @cell-value-changed="onColumnValueChanged"
                   @cellMouseOver="onCellMouseOver"
                   @cellFocused="onCellFocused"
@@ -38,7 +40,7 @@
               color="primary"
               class="ma-2 white--text"
               elevation="2"
-              :disabled="!isAllValueInputted"
+              :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
               @click="register()"
             >保存</v-btn>
             <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
@@ -51,7 +53,6 @@
 <script>
 import moment from "moment";
 import { mdiExitToApp } from "@mdi/js";
-//import Ph2DatePicker from "@/components/parts/Ph2DatePicker.vue";
 import InputHeader from "./InputHeader.vue";
 
 import {
@@ -121,8 +122,8 @@ export default {
     return {
       messages: messages,
       errormessage: "",
-      isAllValueInputted: true,
-
+      isAllValueInputted: false,
+      buttonStatus: 0,
       columnDefs: [
         {
           field: "date",
@@ -131,9 +132,9 @@ export default {
           headerName: "日付",
           editable: true,
           resizable: true,
-          width: 100,
+          width: 200,
           cellStyle: (params) => {
-            return setBackground(params, 1, params.data.name);
+            return setBackground(params, 1, params.data.date);
           },
         },
         {
@@ -143,9 +144,9 @@ export default {
           headerName: "f値",
           editable: true,
           resizable: true,
-          width: 50,
+          width: 100,
           cellStyle: (params) => {
-            return setBackground(params, 2, params.data.name);
+            return setBackground(params, 2, params.data.f);
           },
         },
         {
@@ -157,7 +158,7 @@ export default {
           resizable: true,
           width: 100,
           cellStyle: (params) => {
-            return setBackground(params, 4, params.data.name);
+            return setBackground(params, 4, params.data.g);
           },
         },
         {
@@ -198,19 +199,17 @@ export default {
         deviceId: null,
         year: null,
         date: null,
-        f: null,
-        g: null,
+        f: 0.6,
+        g: -0.001,
       },
-      photosynthesisValueData: {
-        photosynthesisDate: moment().format("YYYY-MM-DD"),
-        photosynthesisValueF: 0,
-        photosynthesisValueG: 0,
+      gridOptions: {
+        // 列の定義
+        columnDefs: this.columnDefs,
       },
     };
   },
 
   components: {
-    // Ph2DatePicker,
     InputHeader,
     AgGridVue,
   },
@@ -245,13 +244,22 @@ export default {
       //光合成推定実績取得
       usePhotosynthesisValuesDetail(this.device.id, this.year)
         .then((response) => {
-          console.log("red", response);
           const ps_data = response["data"]["data"];
-          this.rowData = ps_data;
+          if (ps_data.length > 0) {
+            this.rowData = ps_data;
+          }
         })
         .catch((error) => {
           console.log(error);
         });
+    },
+    setStatus(status, bool) {
+      if (!bool) {
+        this.buttonStatus = this.buttonStatus | status;
+      } else {
+        this.buttonStatus = (this.buttonStatus | status) - status;
+      }
+      return bool;
     },
     //* ============================================
     // 登録処理
@@ -361,7 +369,7 @@ export default {
       if (
         params.column.colId == "date" ||
         params.column.colId == "f" ||
-        params.column.colId == "gf"
+        params.column.colId == "g"
       ) {
         this.showComment();
       } else {
@@ -396,8 +404,7 @@ export default {
   },
 };
 </script>
-<style lang="scss" scoped>
-@import "@/style/common.css";
+<style scoped>
 .comment {
   position: fixed;
   display: none;

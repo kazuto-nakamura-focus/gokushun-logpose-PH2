@@ -19,6 +19,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
 
 import com.logpose.ph2.api.security.jwt.JwtAuthorizationFilter;
 import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
@@ -30,10 +31,6 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.cors.CorsConfiguration;
-
-import java.io.IOException;
-import java.util.List;
 
 @RequiredArgsConstructor
 @Configuration
@@ -47,8 +44,8 @@ public class SecurityConfig {
     @Value("${frontend.after-logout-uri}")
     private String redirectAfterLogoutUri;
 
-    @Value("${spring.session.jdbc.table-name}")
-    private String sessionTableName;
+    //@Value("${spring.session.jdbc.table-name}")
+    //private String sessionTableName;
 
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOauth2AuthorizationRequestRepository;
