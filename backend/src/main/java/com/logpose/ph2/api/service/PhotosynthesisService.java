@@ -26,7 +26,7 @@ public interface PhotosynthesisService
 	 *
 	 * @param deviceId-デバイスID
 	 * @param year-年度
-	 * @return GraphDataDTO
+	 * @return ModelGraphDataDTO
 	 * @throws ParseException 
 	 */
 	// ###############################################

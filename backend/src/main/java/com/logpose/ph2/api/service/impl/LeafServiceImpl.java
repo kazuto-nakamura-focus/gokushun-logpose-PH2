@@ -50,32 +50,16 @@ public class LeafServiceImpl implements LeafService
 	// ===============================================
 	// パブリック関数
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * 葉面積・葉枚数モデルデータ作成(バッチよりコール)
-	 *
-	 * @param deviceId デバイスID
-	 * @pram year 対象年度
-	 * @param date 対象日付
-	 */
-	// --------------------------------------------------
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException
-		{
-		this.leafDomain.updateModelTable(deviceId, year, date);
-		}
-
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 葉面積モデルグラフデータ取得
 	 *
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @return ResponseDTO(GraphDataDTO)
+	 * @param deviceId-デバイスID
+	 * @param year-対象年度
+	 * @return LeafGraphDataDTO
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<ModelGraphDataDTO> getLeaflGraphData(Long deviceId,
@@ -84,17 +68,16 @@ public class LeafServiceImpl implements LeafService
 		return this.graphDomain.getModelGraph(deviceId, year);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
-	 * 新梢数検索処理
+	 * 新梢数取得処理
 	 *
-	 * @param Long deviceId
-	 * @param Short year
-	 * @param Date date
-	 * @throws ParseException
-	 * @return LeafShootDTO
+	 * @param deviceId デバイスID
+	 * @param year 対象年度
+	 * @param date 対象日付
+	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(readOnly = true)
 	public LeafShootDTO getShootCount(Long deviceId, Short year, Date date)
@@ -132,40 +115,16 @@ public class LeafServiceImpl implements LeafService
 		return result;
 		}
 
-	// --------------------------------------------------
-	/**
-	 * 新梢数登録処理
-	 *
-	 * @param dto
-	 *            LeafShootDTO
-	 * @throws ParseException
-	 */
-	// --------------------------------------------------
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void addShoot(LeafShootDTO dto) throws ParseException
-		{
-		Ph2RealLeafShootsCountEntity entity = new Ph2RealLeafShootsCountEntity();
-		entity.setDeviceId(dto.getDeviceId());
-		entity.setTargetDate(DateTimeUtility.getDateFromString(dto.getDate()));
-		entity.setCount(dto.getCount());
-		// TODO Year はいるのかな？
-		Calendar cal = Calendar.getInstance();
-		cal.setTime(entity.getTargetDate());
-		entity.setYear((short) cal.get(Calendar.YEAR));
-		this.leafDomain.addShootCount(entity);
-		}
-
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 新梢辺り葉枚数・平均個葉面積検索処理
 	 *
-	 * @param deviceId
-	 * @param year
-	 * @param date
+	 * @param deviceId データを表示するデバイスのID
+	 * @param date 実績の日付
+	 * 	@param date 対象日付
 	 * @throws ParseException
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public LeafvaluesDTO getAreaAndCount(Long deviceId, Short year, Date date)
@@ -201,15 +160,32 @@ public class LeafServiceImpl implements LeafService
 		return result;
 		}
 
-	// --------------------------------------------------
+	// ###############################################
+	/**
+	 * 葉面積・葉枚数パラメータセット詳細取得
+	 *
+	 * @param paramSetId パラメータセットID
+	 * @return LeafParamSetDTO
+	 * @throws JsonProcessingException
+	 * @throws JsonMappingException
+	 */
+	// ###############################################
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public LeafParamSetDTO getDetailParamSet(Long paramSetId)
+			throws JsonMappingException, JsonProcessingException
+		{
+		return this.leafDomain.getDetail(paramSetId);
+		}
+
+	// ###############################################
 	/**
 	 * 新梢辺り葉枚数・平均個葉面積定義検索処理
 	 *
 	 * @param deviceId
 	 * @param year
-	 * @throws ParseException
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public List<LeafvaluesDTO> getAllAreaAndCount(Long deviceId, Short year)
@@ -228,16 +204,38 @@ public class LeafServiceImpl implements LeafService
 		return results;
 		}
 
-	// --------------------------------------------------
+	// ###############################################
+	/**
+	 * 新梢数登録処理
+	 *
+	 * @param dto LeafShootDTO
+	 * @throws ParseException
+	 */
+	// ###############################################
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void addShoot(LeafShootDTO dto) throws ParseException
+		{
+		Ph2RealLeafShootsCountEntity entity = new Ph2RealLeafShootsCountEntity();
+		entity.setDeviceId(dto.getDeviceId());
+		entity.setTargetDate(DateTimeUtility.getDateFromString(dto.getDate()));
+		entity.setCount(dto.getCount());
+		// TODO Year はいるのかな？
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(entity.getTargetDate());
+		entity.setYear((short) cal.get(Calendar.YEAR));
+		this.leafDomain.addShootCount(entity);
+		}
+
+	// ###############################################
 	/**
 	 * 新梢辺り葉枚数・平均個葉面積登録処理
 	 *
-	 * @param dto
-	 *            LeafvaluesDTO
+	 * @param dto LeafvaluesDTO
 	 * @return ResponseDTO (null)
 	 * @throws ParseException
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void setAreaAndCount(LeafvaluesDTO dto) throws ParseException
@@ -254,35 +252,33 @@ public class LeafServiceImpl implements LeafService
 		this.leafDomain.addAreaAndCount(entity);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
-	 * 葉面積・葉枚数パラメータセット詳細取得
-	 *
-	 * @param paramSetId
-	 *            パラメータセットID
-	 * @return LeafParamSetDTO
-	 * @throws JsonProcessingException
-	 * @throws JsonMappingException
+	 * 基準パラメータセットの設定
+	 * @param deviceId デバイスID
+	 * @param year 対象年度
+	 * @param paramSetId パラメータセットID
+	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public LeafParamSetDTO getDetailParamSet(Long paramSetId)
-			throws JsonMappingException, JsonProcessingException
+	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
 		{
-		return this.leafDomain.getDetail(paramSetId);
+		this.leafDomain.setDefault(deviceId, year, paramId);
+		this.leafDomain.updateModelTable(deviceId, year, null);
+		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 葉面積・葉枚数パラメータセット更新
 	 *
-	 * @param dto
-	 *            LeafParamSetDTO
+	 * @param dto LeafParamSetDTO
 	 * @return ResponseDTO (null)
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateParamSet(LeafParamSetDTO dto) throws ParseException
@@ -294,16 +290,14 @@ public class LeafServiceImpl implements LeafService
 			}
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 葉面積・葉枚数パラメータセット追加
 	 *
-	 * @param dto
-	 *            LeafParamSetDTO
-	 * @return 
+	 * @param dto LeafParamSetDTO
 	 * @return ResponseDTO (null)
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public Long addParamSet(LeafParamSetDTO dto)
@@ -311,27 +305,4 @@ public class LeafServiceImpl implements LeafService
 		return this.leafDomain.addParamSet(null, dto);
 		}
 
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
-		{
-		this.leafDomain.setDefault(deviceId, year, paramId);
-		this.leafDomain.updateModelTable(deviceId, year, null);
-		this.photoSynthesisDomain.updateModelTable(deviceId, year);
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 基準パラメータセットの取得
-	 *
-	 * @param deviceId
-	 * @param year
-	 */
-	// --------------------------------------------------
-	@Override
-	public LeafParamSetDTO getDefault(Long deviceId, Short year)
-		{
-// * デフォルトパラメータの取得
-		return this.leafDomain.getParmaters(deviceId, year);
-		}
 	}

@@ -60,7 +60,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	// ===============================================
 	// 公開メソッド
 	// ===============================================
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * デバイスのモデルテーブルを更新する
 	 * 
@@ -69,7 +69,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	 * @param startDate 統計対象開始日
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public void updateModelTable(Long deviceId, Short year, Date startDate)
 			throws ParseException
 		{
