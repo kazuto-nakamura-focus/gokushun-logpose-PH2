@@ -14,7 +14,7 @@ import com.logpose.ph2.api.domain.photosynthesis.PSModelDataParameterAggregator;
 import com.logpose.ph2.api.dto.HistoryDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.ParamSetExtendDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 import com.logpose.ph2.api.service.ParamSetService;
 

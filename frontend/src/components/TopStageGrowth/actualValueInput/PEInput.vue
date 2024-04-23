@@ -14,7 +14,7 @@
           <!-- 入力部分 -->
           <v-container>
             <div class="text-subtitle-1">イールド値モデルパラメータ</div>
-            <p v-if="!isAllValueInputted" class="error">{{this.messages.NotFilledAll}}</p>
+            <p v-if="!isAllValueInputted" class="error">{{this.messages.NotNumberAll}}</p>
             <div style="height: 420px">
               <div style="height: 420px; box-sizing: border-box">
                 <AgGridVue
@@ -131,7 +131,7 @@ export default {
     return {
       messages: messages,
       errormessage: "",
-      isAllValueInputted: false,
+      isAllValueInputted: true,
       buttonStatus: 0,
       dateInfo: {
         date: null,
@@ -145,12 +145,9 @@ export default {
           colId: "date",
           singleClickEdit: true,
           headerName: "日付",
-          editable: true,
+          editable: false,
           resizable: true,
           width: 200,
-          cellStyle: (params) => {
-            return setBackground(params, 1, params.data.date);
-          },
         },
         {
           field: "f",
@@ -213,7 +210,7 @@ export default {
       skelton: {
         deviceId: null,
         year: null,
-        date: null,
+        date: this.date,
         f: 0.6,
         g: -0.001,
       },
@@ -257,6 +254,14 @@ export default {
           const ps_data = response["data"]["data"];
           this.dateInfo.minDate = ps_data.minDate;
           this.dateInfo.maxDate = ps_data.maxDate;
+          this.skelton.date = ps_data.minDate;
+          if (this.rowData[0].date == null) {
+            this.rowData[0].date = ps_data.minDate;
+            this.$set(this.rowData, 0, {
+              ...this.rowData[0],
+              date: ps_data.minDate,
+            });
+          }
           if (ps_data.values.length > 0) {
             this.rowData = ps_data.values;
           }
@@ -279,7 +284,7 @@ export default {
     register: function () {
       for (const item of this.rowData) {
         item.deviceId = this.device.id;
-        item.year = this.year.id;
+        item.year = this.year;
       }
       //光合成推定実績値更新
       usePhotosynthesisValuesUpdate(this.rowData)
@@ -310,10 +315,15 @@ export default {
     handleChangeDate() {
       this.hideDatePicker();
       let params = this.dateInfo.params;
+      // let date = this.rowData[params.rowIndex].date;
+      //  const rowNode = this.gridApi.getRowNode(date);
+      //  const newDate = this.dateInfo.date;
       this.rowData[params.rowIndex].date = this.dateInfo.date;
-
-      params.api.applyTransaction({
-        update: this.rowData,
+      // var newValues = Object.assign({}, this.rowData[params.rowIndex]);
+      let rowIndex = params.rowIndex;
+      this.$set(this.rowData, rowIndex, {
+        ...this.rowData[rowIndex],
+        date: this.dateInfo.date,
       });
     },
 
@@ -347,22 +357,27 @@ export default {
     // row追加・削除
     //* ============================================
     onCellClicked(params) {
+      console.log("sek", params);
+
       const gridApi = params?.api;
       const nodes = [];
       gridApi?.forEachNode((node) => nodes.push(node));
       if (params.column.colId === "remove") {
+        this.rowData.splice(params.rowIndex, 1);
         params.api.applyTransaction({
           remove: [params.data],
         });
 
         if (nodes.length == 1) {
           let row = Object.assign({}, this.skelton);
+          this.rowData.push(row);
           params.api.applyTransaction({
             add: [row],
           });
         }
       } else if (params.column.colId === "add") {
         let row = Object.assign({}, this.skelton);
+        this.rowData.splice(1, 0, row);
         params.api.applyTransaction({
           add: [row],
         });

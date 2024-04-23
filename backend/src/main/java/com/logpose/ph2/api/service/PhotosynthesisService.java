@@ -5,9 +5,10 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisDetailDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisValueDTO;
 
 /**
  * 光合成推定のサービス
@@ -49,7 +50,7 @@ public interface PhotosynthesisService
 	 * @throws ParseException 
 	 */
 	// ###############################################
-	public List<PhotosynthesisValueDTO> getRealValues(Long deviceId, Short year) throws ParseException;
+	public PhotosynthesisDetailDTO getRealValues(Long deviceId, Short year) throws ParseException;
 
 	// ###############################################
 	/**

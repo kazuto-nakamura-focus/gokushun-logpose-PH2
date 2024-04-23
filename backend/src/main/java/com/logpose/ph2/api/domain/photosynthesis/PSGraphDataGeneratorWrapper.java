@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
 
 @Component
 public class PSGraphDataGeneratorWrapper extends PSModelDataParameterAggregator

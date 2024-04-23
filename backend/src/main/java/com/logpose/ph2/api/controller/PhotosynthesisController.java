@@ -15,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisDetailDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.service.PhotosynthesisService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -76,7 +77,7 @@ public class PhotosynthesisController
 	/**
 	 * 光合成推定実績値取得
 	 *
-	 * @param dto PhotosynthesisValueDTO
+	 * @param dto PhotosynthesisDetailDTO
 	 * @return ResponseDTO (null)
 	 */
 	// --------------------------------------------------
@@ -89,7 +90,7 @@ public class PhotosynthesisController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<PhotosynthesisValueDTO> result = this.photosynthesisService
+			PhotosynthesisDetailDTO result = this.photosynthesisService
 					.getRealValues(deviceId, year);
 			as_dto.setSuccess(result);
 			}

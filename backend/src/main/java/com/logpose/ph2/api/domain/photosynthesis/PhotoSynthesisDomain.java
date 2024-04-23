@@ -17,8 +17,8 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsFieldMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsWeibullMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealPsAmountMapper;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
@@ -94,7 +94,7 @@ public class PhotoSynthesisDomain extends PSGraphDataGeneratorWrapper
 				entity = new Ph2RealPsAmountEntity();
 				entity.setDeviceId(dto.getDeviceId());
 				entity.setYear(dto.getYear());
-				entity.setDate(time);
+				entity.setDate(tmp);
 				}
 // * データの作成
 			entity.setUpdatedAt(time);
@@ -120,6 +120,12 @@ public class PhotoSynthesisDomain extends PSGraphDataGeneratorWrapper
 					.andYearEqualTo(records.get(0).getYear())
 					.andUpdatedAtLessThan(time);
 			this.ph2RealPsAmountMapper.countByExample(exm);
+			}
+// * デバイスのモデルテーブルを更新する
+		if(records.size() > 0)
+			{
+			PhotosynthesisValueDTO dto = records.get(0);
+			super.updateModelTable(dto.getDeviceId(), dto.getYear(), null, null, null);
 			}
 		}
 

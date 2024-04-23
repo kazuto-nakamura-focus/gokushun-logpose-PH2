@@ -16,6 +16,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
+import com.logpose.ph2.api.dto.device.DeviceTermDTO;
 import com.logpose.ph2.api.dto.device.DeviceUpdateDTO;
 
 /**
@@ -153,6 +154,32 @@ public class DeviceDomain
 		prev.setOpEnd(target.getOpStart());
 		this.devicesMapper.updateByPrimaryKey(prev);
 		}
+	// --------------------------------------------------
+	/**
+	 * デバイスの指定年度の開始日・終了日を設定する
+	 *
+	 *@param deviceId
+	 *@param year
+	 */
+	// --------------------------------------------------
+	public DeviceTermDTO getTerm(Long deviceId, Short year)
+		{
+		DeviceTermDTO term = new DeviceTermDTO();
+		Ph2DevicesEntity device = this.devicesMapper.selectByPrimaryKey(deviceId);
+		Calendar baseDate = Calendar.getInstance();
+// * 基準日
+		baseDate.setTime(device.getBaseDate());
+// * 開始日
+		baseDate.set(Calendar.YEAR, year);
+		term.setStartDate(baseDate.getTime());
+// * 終了日
+		baseDate.add(Calendar.YEAR, 1);
+		baseDate.add(Calendar.DATE, -1);
+		term.setEndDate(baseDate.getTime());
+		
+		return term;
+		}
+	
 	// ===============================================
 	// 保護関数群
 	// ===============================================

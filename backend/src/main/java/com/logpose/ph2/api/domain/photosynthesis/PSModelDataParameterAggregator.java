@@ -19,7 +19,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsFieldMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetPsWeibullMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealPsAmountMapper;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component

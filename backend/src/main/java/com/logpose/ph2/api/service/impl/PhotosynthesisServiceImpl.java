@@ -10,11 +10,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
+import com.logpose.ph2.api.domain.DeviceDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoGraphDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
+import com.logpose.ph2.api.dto.device.DeviceTermDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisDetailDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.service.PhotosynthesisService;
 
 /**
@@ -32,6 +35,9 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 
 	@Autowired
 	private PhotoGraphDomain graphDomain;
+	
+	@Autowired
+	private DeviceDomain deviceDomain;
 	// ===============================================
 	// 公開関数群
 	// ===============================================
@@ -77,9 +83,10 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	 */
 	// ###############################################
 	@Override
-	public List<PhotosynthesisValueDTO> getRealValues(Long deviceId, Short year) throws ParseException
+	public PhotosynthesisDetailDTO getRealValues(Long deviceId, Short year) throws ParseException
 		{
-		List<PhotosynthesisValueDTO> result = new ArrayList<>();
+		PhotosynthesisDetailDTO result = new PhotosynthesisDetailDTO();
+		List<PhotosynthesisValueDTO> values = new ArrayList<>();
 		List<Ph2RealPsAmountEntity> records = this.photoSynthesisDomain.getRealPsAmountEntity(deviceId, year);
 		for(final Ph2RealPsAmountEntity entity : records)
 			{
@@ -88,7 +95,12 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 			item.setDeviceId(deviceId);
 			item.setF(entity.getValueF());
 			item.setG(entity.getValueG());
+			values.add(item);
 			}
+		DeviceTermDTO term = this.deviceDomain.getTerm(deviceId, year);
+		result.setValues(values);
+		result.setMaxDate(DateTimeUtility.getStringFromDate(term.getEndDate()));
+		result.setMinDate(DateTimeUtility.getStringFromDate(term.getStartDate()));
 		return result;
 		}
 
