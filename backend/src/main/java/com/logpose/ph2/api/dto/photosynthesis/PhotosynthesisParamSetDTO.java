@@ -1,4 +1,6 @@
-package com.logpose.ph2.api.dto;
+package com.logpose.ph2.api.dto.photosynthesis;
+
+import com.logpose.ph2.api.dto.ParamSetDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

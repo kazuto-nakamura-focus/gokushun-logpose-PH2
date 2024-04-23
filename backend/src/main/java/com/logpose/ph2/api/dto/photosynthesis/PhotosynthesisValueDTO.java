@@ -1,4 +1,4 @@
-package com.logpose.ph2.api.dto;
+package com.logpose.ph2.api.dto.photosynthesis;
 
 import lombok.Data;
 

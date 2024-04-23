@@ -4,7 +4,7 @@
     <v-container>
       <v-dialog v-model="isDialog" width="600" persistent>
         <v-card>
-          <div id="input_comment" class="comment">
+          <div ref="guideComment" class="comment">
             <p>入力後リターンキーを押してください。</p>
           </div>
           <v-card-title v-if="title != null">実績値入力</v-card-title>
@@ -18,12 +18,12 @@
             <div style="height: 420px">
               <div style="height: 420px; box-sizing: border-box">
                 <AgGridVue
+                  ref="agGrid"
                   style="width: 100%; height: 100%"
                   class="ag-theme-gs"
                   :columnDefs="columnDefs"
                   @grid-ready="onGridReady"
                   :rowData="rowData"
-                  :gridOptions="gridOptions"
                   sizeColumn
                   @cell-clicked="onCellClicked"
                   @cell-value-changed="onColumnValueChanged"
@@ -46,6 +46,15 @@
             <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
           </div>
         </v-card>
+        <div class="datePicker" ref="dateInput">
+          <v-date-picker
+            v-model="dateInfo.date"
+            :min="dateInfo.minDate"
+            :max="dateInfo.maxDate"
+            @change="handleChangeDate"
+            locale="jp-ja"
+          ></v-date-picker>
+        </div>
       </v-dialog>
     </v-container>
   </v-app>
@@ -124,6 +133,12 @@ export default {
       errormessage: "",
       isAllValueInputted: false,
       buttonStatus: 0,
+      dateInfo: {
+        date: null,
+        minDate: null,
+        maxDate: null,
+        params: null,
+      },
       columnDefs: [
         {
           field: "date",
@@ -202,10 +217,6 @@ export default {
         f: 0.6,
         g: -0.001,
       },
-      gridOptions: {
-        // 列の定義
-        columnDefs: this.columnDefs,
-      },
     };
   },
 
@@ -226,7 +237,6 @@ export default {
       this.selectedItems = data.menu;
       this.$nextTick(
         function () {
-          this.$refs.date.initialize(data.menu.selectedYear);
           this.$refs.titleHeader.initialize(data.menu);
         }.bind(this)
       );
@@ -245,8 +255,10 @@ export default {
       usePhotosynthesisValuesDetail(this.device.id, this.year)
         .then((response) => {
           const ps_data = response["data"]["data"];
-          if (ps_data.length > 0) {
-            this.rowData = ps_data;
+          this.dateInfo.minDate = ps_data.minDate;
+          this.dateInfo.maxDate = ps_data.maxDate;
+          if (ps_data.values.length > 0) {
+            this.rowData = ps_data.values;
           }
         })
         .catch((error) => {
@@ -292,8 +304,18 @@ export default {
       this.isDialog = false;
       this.shared.onConclude(this.isUpdated);
     },
+    //* ============================================
+    // 日付設定処理
+    //* ============================================
+    handleChangeDate() {
+      this.hideDatePicker();
+      let params = this.dateInfo.params;
+      this.rowData[params.rowIndex].date = this.dateInfo.date;
 
-    handleChangeDate() {},
+      params.api.applyTransaction({
+        update: this.rowData,
+      });
+    },
 
     //* ============================================
     // セルの値が変化した場合
@@ -366,14 +388,16 @@ export default {
     //  セルにフォーカスが移ったときコメントを表示
     //* ============================================
     onCellFocused(params) {
-      if (
-        params.column.colId == "date" ||
-        params.column.colId == "f" ||
-        params.column.colId == "g"
-      ) {
+      if (params.column.colId == "f" || params.column.colId == "g") {
         this.showComment();
       } else {
         this.hideComment();
+      }
+      // * 日付セルにフォーカスが移った場合
+      if (params.column.colId == "date") {
+        this.dateInfo.params = params;
+        this.dateInfo.date = this.rowData[params.rowIndex].date;
+        this.showDatePicker();
       }
     },
 
@@ -381,30 +405,54 @@ export default {
     // マウスの座標軸上にコメントを表示
     //* ============================================
     showComment() {
-      //* コメントボックスを取得
-      let element = document.getElementById("input_comment");
       //* コメント位置を設定
       let y = this.mouseY + 10;
       let x = this.mouseX - 10;
-      element.style.top = "" + y + "px";
-      element.style.left = "" + x + "px";
+      this.$refs.guideComment.style.top = "" + y + "px";
+      this.$refs.guideComment.style.left = "" + x + "px";
       //* コメントを表示
-      element.style.display = "inline-block";
+      this.$refs.guideComment.style.display = "inline-block";
       // * コメント表示時は入力不可
       this.setStatus(32, false);
+    },
+    //* ============================================
+    // マウスの座標軸上に日付入力を表示
+    //* ============================================
+    showDatePicker() {
+      //* コメント位置を設定
+      let y = this.mouseY + 10;
+      let x = this.mouseX - 10;
+      this.$refs.dateInput.style.top = "" + y + "px";
+      this.$refs.dateInput.style.left = "" + x + "px";
+      //* 日付入力を表示
+      this.$refs.dateInput.style.display = "inline-block";
+      // * 日付入力表示時は入力不可
+      this.setStatus(64, false);
     },
     //* ============================================
     // コメントを隠す
     //* ============================================
     hideComment() {
-      let element = document.getElementById("input_comment");
-      element.style.display = "none";
+      this.$refs.guideComment.style.display = "none";
       this.setStatus(32, true);
+    },
+    //* ============================================
+    // 日付を隠す
+    //* ============================================
+    hideDatePicker() {
+      this.$refs.dateInput.style.display = "none";
+      this.setStatus(64, true);
     },
   },
 };
 </script>
-<style scoped>
+<style>
+.datePicker {
+  position: fixed;
+  display: none;
+  z-index: 200;
+  border: 1px ridge #ff66ff;
+}
 .comment {
   position: fixed;
   display: none;
