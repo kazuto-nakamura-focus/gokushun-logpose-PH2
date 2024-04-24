@@ -12,18 +12,11 @@ import com.logpose.ph2.api.configration.DefaultLeafCountParameters;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntityExample;
-import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafCountMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsCountMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2WibleMasterMapper;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.master.ModelMaster;
@@ -36,66 +29,20 @@ public class LeafModelDataParameterAggregator
 	// ===============================================
 	@Autowired
 	protected ParameterSetDomain parameterSetDomain;
-	/** ワイブル分布マスターデータ */
 	@Autowired
-	private Ph2WibleMasterMapper ph2WibleMasterMapper;
+	protected DefaultLeafCountParameters defaultLeafCountParameters;
 	@Autowired
-	private DefaultLeafCountParameters defaultLeafCountParameters;
+	protected DefaultLeafAreaParameters defaultLeafAreaParameters;
 	@Autowired
-	private DefaultLeafAreaParameters defaultLeafAreaParameters;
+	protected Ph2RealLeafShootsCountMapper ph2RealLeafShootsCountMapper;
 	@Autowired
-	private Ph2RealLeafShootsCountMapper ph2RealLeafShootsCountMapper;
+	protected Ph2ParamsetLeafAreaMapper ph2ParamsetLeafAreaMapper;
 	@Autowired
-	private Ph2ParamsetLeafAreaMapper ph2ParamsetLeafAreaMapper;
-	@Autowired
-	private Ph2ParamsetLeafCountMapper ph2ParamsetLeafCountMapper;
-	@Autowired
-	private Ph2RealGrowthFStageMapper realGrowthFStageMapper;
-	@Autowired
-	private Ph2ModelDataMapper modelDataMapper;
-
+	protected Ph2ParamsetLeafCountMapper ph2ParamsetLeafCountMapper;
 	// ===============================================
 	// 公開メソッド
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 *　パラメータの設定を行う
-	 * @param parameters 設定対象となるパラメータ
-	 */
-	// --------------------------------------------------
-	public void setParameters(Long deviceId, Short year, LeafModelDataParameters parameters)
-		{
-// * 葉面積パラメータセットの取得
-		LeafParamSetDTO paramset = this.getParmaters(deviceId, year);
-		parameters.setParams(paramset);
-		
-// * 萌芽日
-		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId)//
-			.andYearEqualTo(year).andStageEndEqualTo((short) 4);
-		List<Ph2RealGrowthFStageEntity> rec = this.realGrowthFStageMapper.selectByExample(exm);
-		Ph2RealGrowthFStageEntity entity = rec.get(0);
-		List<Integer> sproutDay = this.modelDataMapper.//
-				selectLapseDayByFValue(deviceId, year, entity.getActualDate(), entity.getAccumulatedF());
-		// 萌芽日が存在しない場合はデフォルト設定
-		if(sproutDay.size() == 0)
-			{
-			sproutDay = this.modelDataMapper.//
-					selectLapseDayByFValue(deviceId, year, null, (double) 15);
-			}
-		parameters.setLapseDay(sproutDay.get(0));
-		
-// * 新梢数
-		int shoot_count = this.getShootCount(deviceId, year);
-		parameters.setShootCount(shoot_count);
-		
-// * ワイブル分布の取得
-		List<Ph2WibleMasterEntity> wibles = this.ph2WibleMasterMapper
-				.selectByExample(new Ph2WibleMasterEntityExample());
-		parameters.setWibles(wibles);
-		}
-
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * パラメータセットをデフォルトフラグがあるもので、近い年から取得する。
 	 * 存在しない場合はデフォルト値を設定して返却
@@ -105,7 +52,7 @@ public class LeafModelDataParameterAggregator
 	 * @return Ph2ParamsetGrowthEntity
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public LeafParamSetDTO getParmaters(Long deviceId, Short year)
 	// throws ParseException
 		{
@@ -148,7 +95,7 @@ public class LeafModelDataParameterAggregator
 		return this.getDetail(paramId);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 対象デバイスの対象年度の新梢数を取得する。
 	 * 存在しない場合はデフォルト値を設定して返却
@@ -158,7 +105,7 @@ public class LeafModelDataParameterAggregator
 	 * @return 新梢数
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public int getShootCount(Long deviceId, Short year)
 		{
 		Ph2RealLeafShootsCountEntityExample exm = new Ph2RealLeafShootsCountEntityExample();
@@ -176,14 +123,14 @@ public class LeafModelDataParameterAggregator
 			}
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 葉面積・葉枚数パラメータセット詳細取得
 	 *
 	 * @param paramSetId パラメータセットID
 	 * @return LeafParamSetDTO
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public LeafParamSetDTO getDetail(Long paramSetId)
 		{
 		LeafParamSetDTO result = new LeafParamSetDTO();
@@ -203,14 +150,14 @@ public class LeafModelDataParameterAggregator
 		return result;
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 葉面積・葉枚数パラメータセット追加
 	 *
 	 * @param LeafParamSetDTO 更新データ
 	 * @return 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public Long addParamSet(Long id, LeafParamSetDTO dto)
 		{
 		if (null == id)

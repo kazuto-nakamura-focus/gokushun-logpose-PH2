@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 public class ModelAndDailyDataEntity extends Ph2ModelDataEntity
 	{
 	private Date date;
+	private Short lapseDay;
 	private Float tm;
 	private Double cdd;
 	private Double par;

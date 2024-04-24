@@ -46,7 +46,7 @@ public class GrowthServiceImpl implements GrowthService
 	// ===============================================
 	// パブリック関数
 	// ===============================================
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 生育推定モデルデータの作成
 	 *
@@ -54,7 +54,7 @@ public class GrowthServiceImpl implements GrowthService
 	 * @param date 対象日付
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException
@@ -238,7 +238,7 @@ public class GrowthServiceImpl implements GrowthService
 		this.growthDomain.setDefault(deviceId, year, paramId);
 		this.growthDomain.updateModelTable(deviceId, year, null);
 		this.fStageTableDomain.resetActualDate(deviceId, year);
-		this.leafDomain.updateModelTable(deviceId, year, null);
+		this.leafDomain.updateModelTable(deviceId, year);
 		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 
@@ -258,7 +258,7 @@ public class GrowthServiceImpl implements GrowthService
 			{
 			this.growthDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
 			this.fStageTableDomain.resetActualDate(dto.getDeviceId(), dto.getYear());
-			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
+			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
 			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
 			}
 		}

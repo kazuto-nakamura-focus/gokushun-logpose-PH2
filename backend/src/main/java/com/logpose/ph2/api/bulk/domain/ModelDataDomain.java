@@ -29,7 +29,7 @@ public class ModelDataDomain
 		{
 		this.growthDomain.updateModelTable(deviceId, year, startDate);
 		this.fStageTableDomain.resetActualDate(deviceId, year);
-		this.leafDomain.updateModelTable(deviceId, year, startDate);
+		this.leafDomain.updateModelTable(deviceId, year);
 		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 	}

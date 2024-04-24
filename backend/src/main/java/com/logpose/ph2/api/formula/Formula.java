@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Calendar;
 
-import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
@@ -63,15 +62,14 @@ public class Formula
 	/**
 	 * 葉枚数モデル式
 	 * @param params 葉面積モデルパラメータ
-	 * @param dayData 日にちデータ
+	 * @param tm tm値
 	 * @return 葉枚数
 	 */
 	// --------------------------------------------------
 	public static double toCountLeaf(LeafParamSetDTO params,
-			DailyBaseDataDTO dayData)
+			double tm)
 		{
 		double c = params.getCountC();
-		double tm = dayData.getTm();
 		double d = params.getCountD();
 		// (葉の枚数/シュート)LAR =c*Tm + d
 		return c * tm + d;

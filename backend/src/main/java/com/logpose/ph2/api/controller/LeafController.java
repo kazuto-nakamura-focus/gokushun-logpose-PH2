@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.logpose.ph2.api.controller.dto.LeafAreaAndCountDTO;
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
@@ -245,12 +246,12 @@ public class LeafController
 	// --------------------------------------------------
 	@PostMapping("/value/areaAndCount")
 	public ResponseDTO updateAreaAndCount(HttpServletRequest httpReq,
-			@RequestBody @Validated LeafvaluesDTO dto)
+			@RequestBody @Validated LeafAreaAndCountDTO dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.leafService.setAreaAndCount(dto);
+			this.leafService.setAreaAndCount(dto.getDeviceId(), dto.getYear(), dto.getValues());
 			as_dto.setSuccess(null);
 			}
 		catch (Exception e)

@@ -141,22 +141,26 @@
 			mapperName="Ph2ParamsetPsWeibullMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
+			-->
 			 <table tableName="ph2_real_leaf_shoots_area" domainObjectName="Ph2RealLeafShootsAreaEntity" 
 			mapperName="Ph2RealLeafShootsAreaMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> 
+			<!--
 			<table tableName="ph2_real_leaf_shoots_count" domainObjectName="Ph2RealLeafShootsCountEntity" 
 			mapperName="Ph2RealLeafShootsCountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table>  <table tableName="ph2_real_fruits_data" domainObjectName="Ph2RealFruitsDataEntity" 
+			</table>  -->
+			<!--
+			<table tableName="ph2_real_fruits_data" domainObjectName="Ph2RealFruitsDataEntity" 
 			mapperName="Ph2RealFruitsDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> -->
+			</table> 
 			<table tableName="ph2_real_ps_amount" domainObjectName="Ph2RealPsAmountEntity" 
 			mapperName="Ph2RealPsAmountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
-			<!--
+			
 			<table tableName="ph2_real_growth_f_stage" domainObjectName="Ph2RealGrowthFStageEntity" 
 			mapperName="Ph2RealGrowthFStageMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 

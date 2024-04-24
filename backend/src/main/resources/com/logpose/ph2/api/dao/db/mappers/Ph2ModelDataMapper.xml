@@ -326,6 +326,7 @@
 		<result column="crown_leaf_area" jdbcType="DOUBLE" property="crownLeafArea" />
 		<result column="leaf_count" jdbcType="DOUBLE" property="leafCount" />
 		<result column="date" jdbcType="DATE" property="date" />
+		<result column="lapse_day" jdbcType="SMALLINT" property="lapseDay" />
 		<result column="tm" jdbcType="REAL" property="tm" />
 		<result column="cdd" jdbcType="DOUBLE" property="cdd" />
 		<result column="par" jdbcType="DOUBLE" property="par" />
@@ -341,6 +342,7 @@
 			md.crown_leaf_area as crown_leaf_area,
 			md.leaf_count as leaf_count,
 			dd.date as date,
+			dd.lapse_day as lapseDay,
 			db.tm as tm,
 			db.cdd as cdd,
 			db.par as par,

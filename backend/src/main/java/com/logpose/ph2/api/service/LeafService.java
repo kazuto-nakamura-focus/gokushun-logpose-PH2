@@ -10,6 +10,7 @@ import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.LeafShootDTO;
 import com.logpose.ph2.api.dto.LeafvaluesDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.leaf.LeafAreaValuesDTO;
 
 /**
  * 葉面積・葉枚数のサービス
@@ -101,7 +102,7 @@ public interface LeafService
 	 * @throws ParseException
 	 */
 	// ###############################################
-	public void setAreaAndCount(LeafvaluesDTO dto) throws ParseException;
+	public void setAreaAndCount(Long deviceId, Short year, List<LeafAreaValuesDTO> values) throws ParseException;
 
 	// ###############################################
 	/**

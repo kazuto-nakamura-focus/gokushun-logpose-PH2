@@ -12,7 +12,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.logpose.ph2.api.configration.DefaultLeafCountParameters;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
@@ -23,6 +22,7 @@ import com.logpose.ph2.api.dto.LeafShootDTO;
 import com.logpose.ph2.api.dto.LeafvaluesDTO;
 import com.logpose.ph2.api.dto.MaxMinDateDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.leaf.LeafAreaValuesDTO;
 import com.logpose.ph2.api.service.LeafService;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -231,25 +231,18 @@ public class LeafServiceImpl implements LeafService
 	/**
 	 * 新梢辺り葉枚数・平均個葉面積登録処理
 	 *
-	 * @param dto LeafvaluesDTO
-	 * @return ResponseDTO (null)
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 * @param values List<LeafAreaValuesDTO>
 	 * @throws ParseException
 	 */
 	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void setAreaAndCount(LeafvaluesDTO dto) throws ParseException
+	public void setAreaAndCount(Long deviceId, Short year, List<LeafAreaValuesDTO> values) throws ParseException
 		{
-		Ph2RealLeafShootsAreaEntity entity = new Ph2RealLeafShootsAreaEntity();
-		entity.setDeviceId(dto.getDeviceId());
-		entity.setTargetDate(DateTimeUtility.getDateFromString(dto.getDate()));
-		entity.setCount(dto.getCount());
-		entity.setAverageArea(dto.getAverageArea());
-		entity.setRealArea(dto.getTotalArea());
-		entity.setYear(dto.getYear());
-
 		// * 新梢辺り葉枚数・平均個葉面積登録処理
-		this.leafDomain.addAreaAndCount(entity);
+		this.leafDomain.addAreaAndCount(deviceId, year, values);
 		}
 
 	// ###############################################
@@ -266,7 +259,6 @@ public class LeafServiceImpl implements LeafService
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
 		{
 		this.leafDomain.setDefault(deviceId, year, paramId);
-		this.leafDomain.updateModelTable(deviceId, year, null);
 		this.photoSynthesisDomain.updateModelTable(deviceId, year);
 		}
 
@@ -285,7 +277,6 @@ public class LeafServiceImpl implements LeafService
 		{
 		if (this.leafDomain.updateParamSet(dto))
 			{
-			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear(), null);
 			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
 			}
 		}

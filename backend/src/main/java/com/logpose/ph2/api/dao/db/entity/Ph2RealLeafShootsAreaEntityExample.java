@@ -200,8 +200,7 @@ public class Ph2RealLeafShootsAreaEntityExample {
 			{
 			if (values == null || values.size() == 0)
 				{
-				throw new RuntimeException(
-						"Value list for " + property + " cannot be null or empty");
+				throw new RuntimeException("Value list for " + property + " cannot be null or empty");
 				}
 			List<java.sql.Date> dateList = new ArrayList<>();
 			Iterator<Date> iter = values.iterator();
@@ -212,15 +211,13 @@ public class Ph2RealLeafShootsAreaEntityExample {
 			addCriterion(condition, dateList, property);
 			}
 
-		protected void addCriterionForJDBCDate(String condition, Date value1, Date value2,
-				String property)
+		protected void addCriterionForJDBCDate(String condition, Date value1, Date value2, String property)
 			{
 			if (value1 == null || value2 == null)
 				{
 				throw new RuntimeException("Between values for " + property + " cannot be null");
 				}
-			addCriterion(condition, new java.sql.Date(value1.getTime()),
-					new java.sql.Date(value2.getTime()), property);
+			addCriterion(condition, new java.sql.Date(value1.getTime()), new java.sql.Date(value2.getTime()), property);
 			}
 
 		public Criteria andDeviceIdIsNull()

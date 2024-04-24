@@ -30,7 +30,7 @@ public class LeafGraphDomain extends GraphDomain
 	// ===============================================
 	// 公開メソッド
 	// ===============================================
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 葉面積モデルグラフデータ取得
 	 *    モデルテーブルから検索してデータを取得する
@@ -40,7 +40,7 @@ public class LeafGraphDomain extends GraphDomain
 	 * @return GraphDataDTO
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public List<ModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
 			throws ParseException
 		{
@@ -144,7 +144,7 @@ public class LeafGraphDomain extends GraphDomain
 		return resultData;
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 実測値から想定グラフを作成する
 	 *
@@ -153,7 +153,7 @@ public class LeafGraphDomain extends GraphDomain
 	 * @return GraphDataDTO
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	private void setMeasuredValues(List<Double> modelDataList, List<Double> measureDataList,
 			List<MeasureDataItem> existData, MaxValue max)
 		{

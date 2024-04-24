@@ -119,7 +119,7 @@ public class PhotoSynthesisDomain extends PSGraphDataGeneratorWrapper
 					.andDeviceIdEqualTo(records.get(0).getDeviceId())
 					.andYearEqualTo(records.get(0).getYear())
 					.andUpdatedAtLessThan(time);
-			this.ph2RealPsAmountMapper.countByExample(exm);
+			this.ph2RealPsAmountMapper.deleteByExample(exm);
 			}
 // * デバイスのモデルテーブルを更新する
 		if(records.size() > 0)
