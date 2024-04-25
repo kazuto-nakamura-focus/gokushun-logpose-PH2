@@ -33,7 +33,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
     private static final String BEARER_PREFIX = "Bearer ";
     private static Logger LOG = LogManager.getLogger(OAuth2AuthenticationSuccessHandler.class);
     @Value("${spring.security.oauth2.client.registration.heroku.redirect-uri}")
-    private String frontendRedirectUri;
+    private String backendRedirectUri;
 
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOauth2AuthorizationRequestRepository;
@@ -99,7 +99,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // TODO: リフレッシュトークン削除
             oAuth2UserUnlinkManager.unlink(provider, accessToken);
 
-            String parseUri = String.format("%s%s", redirectUri, "api/logout");
+            String parseUri = String.format("%s%s", backendRedirectUri, "api/logout");
             return UriComponentsBuilder.fromUriString(parseUri)
                     .build().toUriString();
         }
