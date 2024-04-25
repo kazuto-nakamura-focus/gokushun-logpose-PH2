@@ -12,8 +12,8 @@ const app = express();
 //バックエンドアプリのJARファイルパス
 const BACKEND_JAR_PATH =
   "./backend/jar/logpose-ph2-api-0.0.1-SNAPSHOT.jar";
-const BATCH_JAR_PATH =
-  "./batch/jar/logpose-ph2-batch-0.0.1-SNAPSHOT.jar";
+// const BATCH_JAR_PATH =
+//   "./batch/jar/logpose-ph2-batch-0.0.1-SNAPSHOT.jar";
 
 //バックエンドアプリを起動
 const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=stg",]);
