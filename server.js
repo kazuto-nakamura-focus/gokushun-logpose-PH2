@@ -16,7 +16,7 @@ const BATCH_JAR_PATH =
   "./batch/jar/logpose-ph2-batch-0.0.1-SNAPSHOT.jar";
 
 //バックエンドアプリを起動
-const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=prd",]);
+const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=stg",]);
 //const batchProcess = spawn("java", ["-jar", BATCH_JAR_PATH, "--spring.profiles.active=prd", "-", "true", "-"]);
 
 //バックエンド起動時のコールバック関数登録
