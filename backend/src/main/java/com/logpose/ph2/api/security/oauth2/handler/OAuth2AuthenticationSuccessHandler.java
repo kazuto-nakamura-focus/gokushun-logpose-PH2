@@ -99,7 +99,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             // TODO: リフレッシュトークン削除
             oAuth2UserUnlinkManager.unlink(provider, accessToken);
 
-            String parseUri = "/api/logout";
+            String parseUri = String.format("%s%s", redirectUri, "api/logout");
             return UriComponentsBuilder.fromUriString(parseUri)
                     .build().toUriString();
         }
