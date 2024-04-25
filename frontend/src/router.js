@@ -63,7 +63,6 @@ router.beforeEach((to, from, next) => {
         const path = to["path"];
         console.log(path.includes("/login"), isLoggedIn);
         
-        
         if(path.includes("/login")){
           if(!isLoggedIn){
             next();
@@ -71,6 +70,7 @@ router.beforeEach((to, from, next) => {
             next("/");
           }
         }else if (!isLoggedIn) {
+          alert("ログインセッションがタイムアウトしました。再ログインしてください");
           next('/login');
         } else {
           next();

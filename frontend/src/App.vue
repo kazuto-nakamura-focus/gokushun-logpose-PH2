@@ -37,8 +37,44 @@
 <script>
 import { mapState } from "vuex";
 import navigation from "@/components/parts/navigation.vue";
+import store from "./store";
+// import router from "./router"
 
 export default {
+  mounted() {
+    document.addEventListener("visibilitychange", this.handleVisibilityChange);
+  },
+  beforeDestroy() {
+    document.removeEventListener(
+      "visibilitychange",
+      this.handleVisibilityChange
+    );
+  },
+  methods: {
+    handleVisibilityChange() {
+      const pathName = window.location.pathname;
+      const loginUrl = `/login`;
+
+      if (document.visibilityState === "visible") {
+        // ブラウザが表示されたときに実行される処理
+        store.dispatch("checkSession").then((isLoggedIn) => {
+          console.log("ブラウザが表示されました。APIを呼び出します。");
+          console.log(isLoggedIn);
+          console.log(pathName)
+          if(!isLoggedIn){
+            if(!pathName.includes(loginUrl)){
+              alert("ログインセッションがタイムアウトしました。再ログインしてください");
+              window.location.href = loginUrl;
+            }
+          }else{
+            if(pathName.includes(loginUrl)){
+              window.location.href = "/";
+            }
+          }
+        });
+      }
+    },
+  },
   computed: {
     ...mapState({
       isLoading: (state) => state.isLoading,
