@@ -23,6 +23,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.io.IOException;
@@ -75,6 +76,9 @@ public class SecurityConfig {
                                 .requestMatchers("/api/auth/**", "/api/bulk/update").permitAll()
                                 .anyRequest().authenticated()
                 )
+                .rememberMe((rememberMe) -> rememberMe
+                        .rememberMeServices(rememberMeServices())
+                )
                 //セッション
                 .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 //OAuth2ログイン設定
@@ -112,6 +116,16 @@ public class SecurityConfig {
 
 //        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+
+    @Bean
+    public SpringSessionRememberMeServices rememberMeServices() {
+        SpringSessionRememberMeServices rememberMeServices =
+                new SpringSessionRememberMeServices();
+        // optionally customize
+        rememberMeServices.setAlwaysRemember(true);
+        return rememberMeServices;
     }
 
     public class Http401AuthenticationEntryPoint implements AuthenticationEntryPoint {
