@@ -334,7 +334,7 @@
       and target_date = #{targetDate,jdbcType=DATE}
   </update>
 <!-- ************************************************************************** -->
-   <resultMap id="LeafvaluesDTO" type="com.logpose.ph2.api.dto.LeafvaluesDTO">
+   <resultMap id="LeafvalueDTO" type="com.logpose.ph2.api.dto.leaf.LeafAreaValueDTO">
 		<result column="date" property="date" />
 		<result column="count" property="count" />
 		<result column="averageArea" property="averageArea" />
@@ -342,7 +342,7 @@
 		<result column="estimatedArea" property="estimatedArea" />
 	</resultMap>
 <!-- ************************************************************************** -->
-    <select id="selectByDeviceYearDate" resultMap="LeafvaluesDTO">
+    <select id="selectByDeviceYearDate" resultMap="LeafvalueDTO">
 		SELECT
 			ph2_real_leaf_shoots_area.target_date as date,
 			ph2_real_leaf_shoots_area."count" as count,
@@ -366,7 +366,7 @@
 			ph2_device_day.date = #{date}
   	</select>
 <!-- ************************************************************************** -->
-    <select id="selectByDeviceYear" resultMap="LeafvaluesDTO">
+    <select id="selectByDeviceYear" resultMap="LeafvalueDTO">
 		SELECT 
 			ph2_real_leaf_shoots_area.target_date as date,
 			ph2_real_leaf_shoots_area."count" as count,

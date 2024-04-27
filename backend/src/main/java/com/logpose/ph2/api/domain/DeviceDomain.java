@@ -10,6 +10,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
@@ -160,9 +161,10 @@ public class DeviceDomain
 	 *
 	 *@param deviceId
 	 *@param year
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public DeviceTermDTO getTerm(Long deviceId, Short year)
+	public DeviceTermDTO getTerm(Long deviceId, Short year) throws ParseException
 		{
 		DeviceTermDTO term = new DeviceTermDTO();
 		Ph2DevicesEntity device = this.devicesMapper.selectByPrimaryKey(deviceId);
@@ -171,11 +173,11 @@ public class DeviceDomain
 		baseDate.setTime(device.getBaseDate());
 // * 開始日
 		baseDate.set(Calendar.YEAR, year);
-		term.setStartDate(baseDate.getTime());
+		term.setStartDate(DateTimeUtility.getStringFromDate(baseDate.getTime()));
 // * 終了日
 		baseDate.add(Calendar.YEAR, 1);
 		baseDate.add(Calendar.DATE, -1);
-		term.setEndDate(baseDate.getTime());
+		term.setEndDate(DateTimeUtility.getStringFromDate(baseDate.getTime()));
 		
 		return term;
 		}

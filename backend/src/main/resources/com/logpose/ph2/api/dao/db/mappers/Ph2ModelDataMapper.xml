@@ -342,7 +342,7 @@
 			md.crown_leaf_area as crown_leaf_area,
 			md.leaf_count as leaf_count,
 			dd.date as date,
-			dd.lapse_day as lapseDay,
+			dd.lapse_day as lapse_day,
 			db.tm as tm,
 			db.cdd as cdd,
 			db.par as par,

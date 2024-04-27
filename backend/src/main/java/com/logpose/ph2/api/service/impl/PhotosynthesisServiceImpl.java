@@ -99,8 +99,8 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 			}
 		DeviceTermDTO term = this.deviceDomain.getTerm(deviceId, year);
 		result.setValues(values);
-		result.setMaxDate(DateTimeUtility.getStringFromDate(term.getEndDate()));
-		result.setMinDate(DateTimeUtility.getStringFromDate(term.getStartDate()));
+		result.setMaxDate(term.getEndDate());
+		result.setMinDate(term.getStartDate());
 		return result;
 		}
 

@@ -1,11 +1,9 @@
 package com.logpose.ph2.api.controller;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,12 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.controller.dto.LeafAreaAndCountDTO;
+import com.logpose.ph2.api.controller.dto.NewLeafCountDTO;
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
-import com.logpose.ph2.api.dto.LeafShootDTO;
-import com.logpose.ph2.api.dto.LeafvaluesDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.leaf.LeafAreaValueListDTO;
+import com.logpose.ph2.api.dto.leaf.LeafShootDTO;
 import com.logpose.ph2.api.service.LeafService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -87,41 +86,12 @@ public class LeafController
 	@GetMapping("/value/shoot")
 	public ResponseDTO getShoot(HttpServletRequest httpReq,
 			@RequestParam("deviceId") Long deviceId,
-			@RequestParam("year") Short year,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
+			@RequestParam("year") Short year)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			LeafShootDTO result = this.leafService.getShootCount(deviceId, year, date);
-			as_dto.setSuccess(result);
-			}
-		catch (Exception e)
-			{
-			as_dto.setError(e);
-			}
-		return as_dto;
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 新梢辺り葉枚数・平均個葉面積検索処理
-	 *
-	 * @param deviceId
-	 * @param date
-	 * @throws ParseException
-	 */
-	// --------------------------------------------------
-	@GetMapping("/value/areaAndCount")
-	public ResponseDTO getAreaAndCount(HttpServletRequest httpReq,
-			@RequestParam("deviceId") Long deviceId,
-			@RequestParam("year") Short year,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
-		{
-		ResponseDTO as_dto = new ResponseDTO();
-		try
-			{
-			LeafvaluesDTO result = this.leafService.getAreaAndCount(deviceId, year, date);
+			LeafShootDTO result = this.leafService.getShootCount(deviceId, year);
 			as_dto.setSuccess(result);
 			}
 		catch (Exception e)
@@ -147,7 +117,7 @@ public class LeafController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<LeafvaluesDTO> result = this.leafService.getAllAreaAndCount(deviceId, year);
+			LeafAreaValueListDTO result = this.leafService.getAllAreaAndCount(deviceId, year);
 			as_dto.setSuccess(result);
 			}
 		catch (Exception e)
@@ -196,12 +166,12 @@ public class LeafController
 	// --------------------------------------------------
 	@PostMapping("/value/shoot")
 	public ResponseDTO addShoot(HttpServletRequest httpReq,
-			@RequestBody @Validated LeafShootDTO dto)
+			@RequestBody @Validated NewLeafCountDTO dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.leafService.addShoot(dto);
+			this.leafService.addShoot(dto.getDeviceId(), dto.getYear(), dto.getValue());
 			as_dto.setSuccess(null);
 			}
 		catch (Exception e)

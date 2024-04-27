@@ -23,10 +23,9 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WibleMasterMapper;
-import com.logpose.ph2.api.domain.ModelDataDomain;
+import com.logpose.ph2.api.domain.ModelAndDailyDataDomain;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
-import com.logpose.ph2.api.dto.LeafvaluesDTO;
-import com.logpose.ph2.api.dto.leaf.LeafAreaValuesDTO;
+import com.logpose.ph2.api.dto.leaf.LeafAreaValueDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
@@ -40,7 +39,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	@Autowired
 	private Ph2ModelDataMapper modelDataMapper;
 	@Autowired
-	private ModelDataDomain modelDataDomain;
+	private ModelAndDailyDataDomain modelDataDomain;
 	@Autowired
 	private Ph2WibleMasterMapper ph2WibleMasterMapper;
 	@Autowired
@@ -160,10 +159,10 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	 * @throws ParseException
 	 */
 	// ###############################################
-	public void addAreaAndCount(Long deviceId, Short year, List<LeafAreaValuesDTO> values) throws ParseException
+	public void addAreaAndCount(Long deviceId, Short year, List<LeafAreaValueDTO> values) throws ParseException
 		{
 		Timestamp time = new Timestamp(System.currentTimeMillis());
-		for (final LeafAreaValuesDTO dto : values)
+		for (final LeafAreaValueDTO dto : values)
 			{
 			Date tmp = DateTimeUtility.getDateFromString(dto.getDate());
 // * 該当するデバイスと日付を検索
@@ -319,10 +318,10 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	 * @param deviceId デバイスID
 	 * @param year 年度
 	 * @param date 日付
-	 * @return LeafvaluesDTO
+	 * @return LeafAreaValueDTO
 	 */
 	// ###############################################
-	public LeafvaluesDTO searchShootArea(Long deviceId, Short year, Date date)
+	public LeafAreaValueDTO searchShootArea(Long deviceId, Short year, Date date)
 		{
 		return this.ph2RealLeafShootsAreaMapper.selectByDeviceYearDate(deviceId, year, date);
 		}
@@ -333,10 +332,10 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	 * 
 	 * @param deviceId
 	 * @param year
-	 * @return List<LeafvaluesDTO>
+	 * @return List<LeafAreaValueDTO>
 	 */
 	// ###############################################
-	public List<LeafvaluesDTO> searchShootAreaAll(Long deviceId, Short year)
+	public List<LeafAreaValueDTO> searchShootAreaAll(Long deviceId, Short year)
 		{
 		return this.ph2RealLeafShootsAreaMapper.selectByDeviceYear(deviceId, year);
 		}

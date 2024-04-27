@@ -8,7 +8,7 @@ import org.apache.ibatis.annotations.Param;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntityExample;
-import com.logpose.ph2.api.dto.LeafvaluesDTO;
+import com.logpose.ph2.api.dto.leaf.LeafAreaValueDTO;
 
 @Mapper
 public interface Ph2RealLeafShootsAreaMapper
@@ -83,10 +83,10 @@ public interface Ph2RealLeafShootsAreaMapper
 	 */
 	int updateByPrimaryKey(Ph2RealLeafShootsAreaEntity row);
 
-	LeafvaluesDTO selectByDeviceYearDate(@Param("deviceId") Long deviceId,
+	LeafAreaValueDTO selectByDeviceYearDate(@Param("deviceId") Long deviceId,
 			@Param("year") Short year, @Param("date") Date date);
 
-	List<LeafvaluesDTO> selectByDeviceYear(@Param("deviceId") Long deviceId, @Param("year") Short year);
+	List<LeafAreaValueDTO> selectByDeviceYear(@Param("deviceId") Long deviceId, @Param("year") Short year);
 
 	List<Ph2RealLeafShootsAreaEntity> selectByDate(@Param("deviceId") Long deviceId,
 			@Param("year") Short year, @Param("date") Date date);

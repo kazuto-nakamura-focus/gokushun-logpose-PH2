@@ -1,8 +1,6 @@
 package com.logpose.ph2.api.controller.dto;
 
-import java.util.List;
-
-import com.logpose.ph2.api.dto.leaf.LeafAreaValueDTO;
+import com.logpose.ph2.api.dto.leaf.LeafShootDTO;
 
 import lombok.Data;
 /**
@@ -11,12 +9,12 @@ import lombok.Data;
  * @version 1.0
  */
 @Data
-public class LeafAreaAndCountDTO
+public class NewLeafCountDTO
 	{
 //* デバイスID
 	private Long deviceId;
 //* 年度
 	private Short year;
-	
-	private List<LeafAreaValueDTO> values;
+// * 登録データ
+	private LeafShootDTO value;
 	}

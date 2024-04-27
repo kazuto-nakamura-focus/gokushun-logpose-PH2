@@ -3,7 +3,7 @@ package com.logpose.ph2.api.dto.leaf;
 import lombok.Data;
 
 @Data
-public class LeafAreaValuesDTO
+public class LeafAreaValueDTO
 	{
 	//* 実施日
 	private String date;
@@ -13,4 +13,6 @@ public class LeafAreaValuesDTO
 	private Float averageArea;
 	//* 葉面積
 	private Double totalArea;
+	//* モデル値
+	private Double estimatedArea;
 	}

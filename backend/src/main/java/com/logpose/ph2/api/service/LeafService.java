@@ -1,16 +1,15 @@
 package com.logpose.ph2.api.service;
 
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
-import com.logpose.ph2.api.dto.LeafShootDTO;
-import com.logpose.ph2.api.dto.LeafvaluesDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
-import com.logpose.ph2.api.dto.leaf.LeafAreaValuesDTO;
+import com.logpose.ph2.api.dto.leaf.LeafAreaValueDTO;
+import com.logpose.ph2.api.dto.leaf.LeafAreaValueListDTO;
+import com.logpose.ph2.api.dto.leaf.LeafShootDTO;
 
 /**
  * 葉面積・葉枚数のサービス
@@ -40,23 +39,10 @@ public interface LeafService
 	 *
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
-	 * @param date 対象日付
 	 * @throws ParseException 
 	 */
 	// ###############################################
-	public LeafShootDTO getShootCount(Long deviceId, Short year, Date date) throws ParseException;
-
-	// ###############################################
-	/**
-	 * 新梢辺り葉枚数・平均個葉面積検索処理
-	 *
-	 * @param deviceId データを表示するデバイスのID
-	 * @param date 実績の日付
-	 * 	@param date 対象日付
-	 * @throws ParseException
-	 */
-	// ###############################################
-	public LeafvaluesDTO getAreaAndCount(Long deviceId, Short year, Date date) throws ParseException;
+	public LeafShootDTO getShootCount(Long deviceId, Short year) throws ParseException;
 
 	// ###############################################
 	/**
@@ -76,9 +62,10 @@ public interface LeafService
 	 *
 	 * @param deviceId
 	 * @param year
+	 * @throws ParseException 
 	 */
 	// ###############################################
-	List<LeafvaluesDTO> getAllAreaAndCount(Long deviceId, Short year);
+	LeafAreaValueListDTO getAllAreaAndCount(Long deviceId, Short year) throws ParseException;
 
 	// ===============================================
 	// パブリック関数（更新系)
@@ -87,11 +74,13 @@ public interface LeafService
 	/**
 	 * 新梢数登録処理
 	 *
-	 * @param dto LeafShootDTO
+	 * @param deviceId デバイスID
+	 * @param year 対象年度
+	 * @param dto 登録データ
 	 * @throws ParseException
 	 */
 	// ###############################################
-	public void addShoot(LeafShootDTO dto) throws ParseException;
+	public void addShoot(Long deviceId, Short year, LeafShootDTO dto) throws ParseException;
 
 	// ###############################################
 	/**
@@ -102,7 +91,7 @@ public interface LeafService
 	 * @throws ParseException
 	 */
 	// ###############################################
-	public void setAreaAndCount(Long deviceId, Short year, List<LeafAreaValuesDTO> values) throws ParseException;
+	public void setAreaAndCount(Long deviceId, Short year, List<LeafAreaValueDTO> values) throws ParseException;
 
 	// ###############################################
 	/**

@@ -3,11 +3,12 @@ package com.logpose.ph2.api.domain;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
-
-public class ModelDataDomain
+@Component
+public class ModelAndDailyDataDomain
 	{
 	// ===============================================
 	// クラスメンバー
