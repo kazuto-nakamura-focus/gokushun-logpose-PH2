@@ -1,9 +1,11 @@
 package com.logpose.ph2.api.controller;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -152,7 +154,33 @@ public class LeafController
 			}
 		return as_dto;
 		}
-
+	// --------------------------------------------------
+	/**
+	 * モデル値取得
+	 *
+	 * @param deviceId
+	 * @param date
+	 * @throws ParseException
+	 */
+	// --------------------------------------------------
+	@GetMapping("/value/model")
+	public ResponseDTO getModelValue(HttpServletRequest httpReq,
+			@RequestParam("deviceId") Long deviceId,
+			@RequestParam("year") Short year,
+			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			Double result = this.leafService.getModelValue(deviceId, year, date);
+			as_dto.setSuccess(result);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
 	// ===============================================
 	// パブリック関数（更新系)
 	// ===============================================

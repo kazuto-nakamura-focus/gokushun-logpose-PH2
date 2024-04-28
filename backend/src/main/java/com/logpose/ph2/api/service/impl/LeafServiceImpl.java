@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.service.impl;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,12 +142,31 @@ public class LeafServiceImpl implements LeafService
 		DeviceTermDTO term = this.deviceDomain.getTerm(deviceId, year);
 		result.setStartDate(term.getStartDate());
 		result.setEndDate(term.getEndDate());
-		
+
 // * 葉面積実測値の取得
 		List<LeafAreaValueDTO> values = this.leafDomain.searchShootAreaAll(deviceId, year);
 		result.setValues(values);
-		
+
 		return result;
+		}
+
+	// ###############################################
+	/**
+	 * モデル値検索
+	 *
+	 * @param deviceId データを表示するデバイスのID
+	 * @param date 実績の日付
+	 * 	@param date 対象日付
+	 * @return モデル値
+	 * @throws ParseException
+	 */
+	// ###############################################
+	@Override
+	@Transactional(readOnly = true)
+	public Double getModelValue(Long deviceId, Short year, Date date)
+			throws ParseException
+		{
+		return this.leafDomain.getModelValue(deviceId, year, date);
 		}
 
 	// ###############################################

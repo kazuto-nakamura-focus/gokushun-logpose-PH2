@@ -16,6 +16,7 @@
         @grid-ready="onGridReady"
         :rowData="rowData"
         sizeColumn
+        elevation-6
         @cell-clicked="onCellClicked"
         @cell-value-changed="onColumnValueChanged"
         @cellMouseOver="onCellMouseOver"
@@ -51,7 +52,9 @@ import messages from "@/assets/messages.json";
 import {
   useLeafValueAreaAndCount,
   useLeafValueAllAreaAndCountDetail,
+  useLeafModelValue,
 } from "@/api/TopStateGrowth/LAActualValueInput";
+
 //* ============================================
 // セルのステータスを設定
 //* ============================================
@@ -86,22 +89,31 @@ function AddCellRenderer() {
   return eGui;
 }
 //* ============================================
+// 数値バリデーションの実行
+//* ============================================
+var numReg = new RegExp(/^([1-9]\d*|0)(\.\d+)?$/);
+function numericValidation(value) {
+  if (value == null || value.length == 0) return false;
+  return numReg.test(value);
+}
+//* ============================================
+// 日付バリデーションの実行
+//* ============================================
+var dayReg = new RegExp(/^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])$/);
+function dayValidation(value) {
+  if (value == null || value.length == 0) return false;
+  return dayReg.test(value);
+}
+//* ============================================
 // セルの背景色を設定
 //* ============================================
-var regexp = new RegExp(/^([1-9]\d*|0)(\.\d+)?$/);
-function setBackground(params, number, value) {
-  //
-  if (value == null || value.length == 0) {
-    setStatus(params, number, false);
-    return { border: "2px solid #f33" };
-  } else if (!regexp.test(value)) {
-    setStatus(params, number, false);
-    return { border: "2px solid #f33" };
-  } else {
-    setStatus(params, number, true);
-    return { border: "1px solid #fff" };
-  }
+function setBackground(params, number, isCorrect) {
+  setStatus(params, number, isCorrect);
+  return isCorrect
+    ? { border: "1px solid #fff" }
+    : { border: "2px solid #f33" };
 }
+
 export default {
   props: {
     /*
@@ -132,7 +144,8 @@ export default {
           resizable: true,
           width: 120,
           cellStyle: (params) => {
-            return setBackground(params, 1, params.data.f);
+            let isCorrect = dayValidation(params.data.date);
+            return setBackground(params, 1, isCorrect);
           },
         },
         {
@@ -144,7 +157,8 @@ export default {
           resizable: true,
           width: 140,
           cellStyle: (params) => {
-            return setBackground(params, 2, params.data.f);
+            let isCorrect = numericValidation(params.data.count);
+            return setBackground(params, 2, isCorrect);
           },
         },
         {
@@ -156,7 +170,8 @@ export default {
           resizable: true,
           width: 150,
           cellStyle: (params) => {
-            return setBackground(params, 4, params.data.g);
+            let isCorrect = numericValidation(params.data.averageArea);
+            return setBackground(params, 4, isCorrect);
           },
         },
         {
@@ -169,10 +184,15 @@ export default {
           valueGetter: (params) => {
             let value = params.data.count * params.data.averageArea;
             value = value / 10000;
-            return Math.round(value * 10000) / 10000;
+            params.data.totalArea = Math.round(value * 10000) / 10000;
+            return params.data.totalArea;
           },
-          cellStyle: () => {
-            return { backgroundColor: "#aaa" };
+          cellStyle: (params) => {
+            let isCorrect = numericValidation(params.data.totalArea);
+            let style = setBackground(params, 8, isCorrect);
+            style.backgroundColor = new String();
+            style.backgroundColor = "#ccc";
+            return style;
           },
         },
         {
@@ -182,13 +202,8 @@ export default {
           editable: false,
           resizable: true,
           width: 140,
-          valueGetter: (params) => {
-            let value = params.data.count * params.data.averageArea;
-            value = value / 10000;
-            return Math.round(value * 10000) / 10000;
-          },
           cellStyle: () => {
-            return { backgroundColor: "#aaa" };
+            return { backgroundColor: "#ccc" };
           },
         },
         {
@@ -255,6 +270,7 @@ export default {
             //* ag-grid-vueの設定
             if (data.values.length > 0) {
               this.rowData = data.values;
+              this.isAllValueInputted = true;
               /*
 	          private String date; //* 実施日
 	          private Integer count; //* 新梢辺り葉枚数
@@ -265,6 +281,7 @@ export default {
             } else {
               var row = Object.assign({}, this.skelton);
               this.rowData = [row];
+              this.isAllValueInputted = false;
             }
           } else {
             alert("新梢辺り葉枚数・平均個葉面積取得に失敗しました。");
@@ -289,10 +306,10 @@ export default {
     // ======================================================
     // 葉面積データの登録を行う
     // ======================================================
-    callAPIuseLeafValueAreaAndCount() {
+    register() {
       const data = {
-        deviceId: this.device.id,
-        year: this.year.id,
+        deviceId: this.deviceId,
+        year: this.year,
         values: this.rowData,
       };
       //新梢辺り葉枚数・平均個葉面積登録処理
@@ -342,13 +359,28 @@ export default {
     //* ============================================
     handleChangeDate() {
       this.hideDatePicker();
-      let params = this.dateInfo.params;
-      this.rowData[params.rowIndex].date = this.dateInfo.date;
-      let rowIndex = params.rowIndex;
-      this.$set(this.rowData, rowIndex, {
-        ...this.rowData[rowIndex],
-        date: this.dateInfo.date,
-      });
+      // * モデル値を得て、セルに設定する
+      useLeafModelValue(this.deviceId, this.year, this.dateInfo.date)
+        .then((response) => {
+          const { status, message, data } = response["data"];
+          if (status === 0) {
+            let params = this.dateInfo.params;
+            this.rowData[params.rowIndex].date = this.dateInfo.date;
+            this.rowData[params.rowIndex].estimatedArea = data;
+            let rowIndex = params.rowIndex;
+            this.$set(this.rowData, rowIndex, {
+              ...this.rowData[rowIndex],
+              date: this.dateInfo.date,
+              estimatedArea: data,
+            });
+          } else {
+            alert("モデル値の取得に失敗しました。");
+            throw new Error(message);
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     //* ============================================
     // row追加・削除
@@ -400,7 +432,7 @@ export default {
     onCellFocused(params) {
       if (
         params.column.colId == "count" ||
-        params.column.colId == "gaverageArea"
+        params.column.colId == "averageArea"
       ) {
         this.showComment();
       } else {

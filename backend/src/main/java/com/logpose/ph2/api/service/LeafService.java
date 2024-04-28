@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.service;
 
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -66,6 +67,19 @@ public interface LeafService
 	 */
 	// ###############################################
 	LeafAreaValueListDTO getAllAreaAndCount(Long deviceId, Short year) throws ParseException;
+
+	// ###############################################
+	/**
+	 * モデル値検索
+	 *
+	 * @param deviceId データを表示するデバイスのID
+	 * @param date 実績の日付
+	 * 	@param date 対象日付
+	 * @return モデル値
+	 * @throws ParseException
+	 */
+	// ###############################################
+	public Double getModelValue(Long deviceId, Short year, Date date) throws ParseException;
 
 	// ===============================================
 	// パブリック関数（更新系)

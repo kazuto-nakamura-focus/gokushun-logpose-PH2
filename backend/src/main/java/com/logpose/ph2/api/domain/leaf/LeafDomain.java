@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DateTimeUtility;
+import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
@@ -243,7 +244,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 			// * モデルデータの更新
 			this.updateModelTable(dto.getDeviceId(), dto.getYear(), null, null, args);
 			}
-		
+
 		return isDeault;
 		}
 
@@ -313,17 +314,18 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 
 	// ###############################################
 	/**
-	 * 葉面積・葉枚数検索処理
+	 * モデル値取得処理
 	 * 
 	 * @param deviceId デバイスID
 	 * @param year 年度
 	 * @param date 日付
-	 * @return LeafAreaValueDTO
+	 * @return モデル値
 	 */
 	// ###############################################
-	public LeafAreaValueDTO searchShootArea(Long deviceId, Short year, Date date)
+	public Double getModelValue(Long deviceId, Short year, Date date)
 		{
-		return this.ph2RealLeafShootsAreaMapper.selectByDeviceYearDate(deviceId, year, date);
+		date = new DeviceDayAlgorithm().getTimeZero(date);
+		return this.modelDataMapper.selectCrownLeafAreaBySpecificDate(deviceId, year, date);
 		}
 
 	// ###############################################
