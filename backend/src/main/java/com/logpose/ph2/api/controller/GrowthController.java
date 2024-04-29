@@ -23,7 +23,6 @@ import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
-import com.logpose.ph2.api.dto.graph.GraphDataDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.dto.growth.FValuesDTO;
 import com.logpose.ph2.api.service.GrowthService;
@@ -87,7 +86,7 @@ public class GrowthController
 	 * @return ResponseDTO(GraphDataDTO)
 	 */
 	// --------------------------------------------------
-	@GetMapping("/graph/byParamSet")
+/*	@GetMapping("/graph/byParamSet")
 	public ResponseDTO modelGraphByParam(HttpServletRequest httpReq,
 			@RequestParam("deviceId") Long deviceId,
 			@RequestParam("year") Short year,
@@ -105,7 +104,7 @@ public class GrowthController
 			as_dto.setError(e);
 			}
 		return as_dto;
-		}
+		}*/
 
 	// --------------------------------------------------
 	/**
@@ -168,9 +167,7 @@ public class GrowthController
 	/**
 	 * 指定日より生育推定F値
 	 *
-	 * @param deviceId 圃場ID
-	 * @param year 年度
-	 * @param deviceId デバイスID
+	 * @param id  デバイスID
 	 * @param date 実績日
 	 * @return ResponseDTO(Double)
 	 */

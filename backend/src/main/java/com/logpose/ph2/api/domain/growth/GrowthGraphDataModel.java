@@ -1,4 +1,4 @@
-package com.logpose.ph2.api.domain;
+package com.logpose.ph2.api.domain.growth;
 
 import java.text.ParseException;
 import java.util.ArrayList;

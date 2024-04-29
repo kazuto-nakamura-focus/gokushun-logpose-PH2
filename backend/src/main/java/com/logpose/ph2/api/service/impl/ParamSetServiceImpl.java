@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
-import com.logpose.ph2.api.domain.GrowthDomain;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
+import com.logpose.ph2.api.domain.growth.GrowthDomain;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PSModelDataParameterAggregator;
 import com.logpose.ph2.api.dto.HistoryDTO;
