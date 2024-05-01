@@ -6,8 +6,9 @@
     <div ref="guideComment" class="comment">
       <p>入力後リターンキーを押してください。</p>
     </div>
+    <p v-if="agGridInputErrCount!=0" class="error">{{this.messages.NotNumberAll}}</p>
+
     <div style="height: 420px; box-sizing: border-box">
-      <p v-if="!isAllValueInputted" class="error">{{this.messages.NotNumberAll}}</p>
       <AgGridVue
         ref="agGrid"
         style="width: 100%; height: 100%"
@@ -29,9 +30,10 @@
         color="primary"
         class="ma-2 white--text"
         elevation="2"
-        :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
+        :disabled="agGridInputErrCount!=0"
         @click="register()"
       >保存</v-btn>
+      <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="reset()">元に戻す</v-btn>
       <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
     </div>
     <div class="datePicker" ref="dateInput">
@@ -126,8 +128,7 @@ export default {
     return {
       messages: messages,
       errormessage: "",
-      isAllValueInputted: true,
-      buttonStatus: 0,
+      agGridInputErrCount: 0,
       dateInfo: {
         date: null,
         minDate: null,
@@ -270,7 +271,7 @@ export default {
             //* ag-grid-vueの設定
             if (data.values.length > 0) {
               this.rowData = data.values;
-              this.isAllValueInputted = true;
+              this.agGridInputErrCount = 0;
               /*
 	          private String date; //* 実施日
 	          private Integer count; //* 新梢辺り葉枚数
@@ -281,7 +282,7 @@ export default {
             } else {
               var row = Object.assign({}, this.skelton);
               this.rowData = [row];
-              this.isAllValueInputted = false;
+              this.agGridInputErrCount = 1;
             }
           } else {
             alert("新梢辺り葉枚数・平均個葉面積取得に失敗しました。");
@@ -292,16 +293,12 @@ export default {
           console.log(error);
         });
     },
-    //* ============================================
-    // 入力チェックとボタン表示の設定
-    //* ============================================
-    setStatus(status, bool) {
-      if (!bool) {
-        this.buttonStatus = this.buttonStatus | status;
-      } else {
-        this.buttonStatus = (this.buttonStatus | status) - status;
-      }
-      return bool;
+    // ======================================================
+    // 値をリセットする
+    // ======================================================
+    reset() {
+      console.log("ss");
+      this.callAPILeafValueAllAreaAndCountDetail();
     },
     // ======================================================
     // 葉面積データの登録を行う
@@ -346,10 +343,10 @@ export default {
     //* ============================================
     onColumnValueChanged: function (param) {
       let items = param.node.parent.allLeafChildren;
-      this.isAllValueInputted = true;
+      this.agGridInputErrCount = 0;
       for (const item of items) {
         if (0 !== item.status) {
-          this.isAllValueInputted = false;
+          this.agGridInputErrCount++;
           break;
         }
       }
@@ -456,8 +453,6 @@ export default {
       this.$refs.guideComment.style.left = "" + x + "px";
       //* コメントを表示
       this.$refs.guideComment.style.display = "inline-block";
-      // * コメント表示時は入力不可
-      this.setStatus(32, false);
     },
     //* ============================================
     // マウスの座標軸上に日付入力を表示
@@ -470,22 +465,18 @@ export default {
       this.$refs.dateInput.style.left = "" + x + "px";
       //* 日付入力を表示
       this.$refs.dateInput.style.display = "inline-block";
-      // * 日付入力表示時は入力不可
-      this.setStatus(64, false);
     },
     //* ============================================
     // コメントを隠す
     //* ============================================
     hideComment() {
       this.$refs.guideComment.style.display = "none";
-      this.setStatus(32, true);
     },
     //* ============================================
     // 日付を隠す
     //* ============================================
     hideDatePicker() {
       this.$refs.dateInput.style.display = "none";
-      this.setStatus(64, true);
     },
     //* ============================================
     // 閉じるアクション
@@ -497,6 +488,8 @@ export default {
 };
 </script>
 <style>
+@import "@/style/common.css";
+
 .datePicker {
   position: fixed;
   display: none;

@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
-import com.logpose.ph2.api.domain.growth.GrowthDomain;
+import com.logpose.ph2.api.domain.growth.GrowthParameterDomain;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PSModelDataParameterAggregator;
 import com.logpose.ph2.api.dto.HistoryDTO;
@@ -31,7 +31,7 @@ public class ParamSetServiceImpl implements ParamSetService
 	@Autowired
 	private ParameterSetDomain parameterSetlDomain;
 	@Autowired
-	private GrowthDomain growthDomain;
+	private GrowthParameterDomain growthParameterDomain;
 	@Autowired
 	private LeafDomain leafDomain;
 	@Autowired
@@ -70,7 +70,7 @@ public class ParamSetServiceImpl implements ParamSetService
 		{
 		if (ModelMaster.GROWTH == modelId)
 			{
-			Ph2ParamsetGrowthEntity entity = this.growthDomain.getParmaters(deviceId, year);
+			Ph2ParamsetGrowthEntity entity = this.growthParameterDomain.getParmaters(deviceId, year);
 			return entity.getParamsetId();
 			}
 		else if (ModelMaster.LEAF == modelId)

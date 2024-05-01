@@ -1,57 +1,22 @@
 package com.logpose.ph2.api.domain.growth;
 
-import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
-import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.formula.Formula;
-import com.logpose.ph2.api.utility.DateTimeUtility;
 
-public class GrowthGraphDataModel
+public class GrowthModelDataGenerator
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	private List<Double> fRealValues = new ArrayList<>();
-	private List<Double> fModelValues = new ArrayList<>();
-	private Date startDate;
-	private Date endDate;
-
 	private double lastValue = 0;
 
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * グラフデータの作成
-	 *
-	 * @return グラフデータ
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	public ModelGraphDataDTO toGraphData() throws ParseException
-		{
-		ModelGraphDataDTO resultData = new ModelGraphDataDTO();
-		// * 最小値・最大値の設定
-		Double firstValue = (fRealValues.size() > 0) ? fRealValues.get(0) : fModelValues.get(0);
-		Double endValue = (fRealValues.size() > 0) ? fRealValues.get(fRealValues.size() - 1)
-				: fModelValues.get(fModelValues.size() - 1);
-		resultData
-				.setXStart(DateTimeUtility.getStringFromDate(startDate));
-		resultData.setXEnd(DateTimeUtility.getStringFromDate(endDate));
-		resultData.setYStart(firstValue);
-		resultData.setYEnd(endValue);
-		resultData.setValues(fRealValues);
-		resultData.setPredictValues(fModelValues);
-		return resultData;
-		}
-
 	// ###############################################
 	/**
 	 * F値を算出し、リストに格納する
@@ -63,14 +28,12 @@ public class GrowthGraphDataModel
 	 * @param mapper DBマッパー
 	 */
 	// ###############################################
-	public void calculateFvalues(
+	public GrowthModelDataGenerator(
 			List<ModelAndDailyDataEntity> list,
 			Ph2ParamsetGrowthEntity param,
 			List<Ph2RealGrowthFStageEntity> fStageInfoList,
 			short sproutStage)
 		{
-		startDate = list.get(0).getDate();  // 年度の初日
-		endDate = list.get(list.size() - 1).getDate();  // 年度の最後
 		short startDay = 0;
 		for (Ph2RealGrowthFStageEntity fstageInfo : fStageInfoList)
 			{

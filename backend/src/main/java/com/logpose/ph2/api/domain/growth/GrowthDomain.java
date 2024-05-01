@@ -13,28 +13,22 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.configration.DefaultFtageValues;
-import com.logpose.ph2.api.configration.DefaultGrowthParameters;
-import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
+import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetGrowthMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.domain.DeviceDayDomain;
 import com.logpose.ph2.api.domain.GraphDomain;
-import com.logpose.ph2.api.domain.ParameterSetDomain;
+import com.logpose.ph2.api.domain.ModelAndDailyDataDomain;
 import com.logpose.ph2.api.domain.common.MaxValue;
-import com.logpose.ph2.api.dto.DailyBaseDataDTO;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
-import com.logpose.ph2.api.dto.GrowthParamSetDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
-import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
 public class GrowthDomain extends GraphDomain
@@ -43,78 +37,23 @@ public class GrowthDomain extends GraphDomain
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private ParameterSetDomain parameterSetDomain;
-	@Autowired
-	private DefaultGrowthParameters parameters;
-	@Autowired
 	private DefaultFtageValues fstageValues;
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
 	@Autowired
 	private Ph2RealGrowthFStageMapper ph2RealGrowthFStageMapper;
 	@Autowired
-	private Ph2ParamsetGrowthMapper ph2ParamsetGrowthMapper;
+	private GrowthParameterDomain growthParameterDomain;
 	@Autowired
 	private GrowthDomainMapper growthDomainMapper;
-	/*
-	 * @Autowired
-	 * private Ph2FDataMapper ph2FDataMapper;
-	 */
 	@Autowired
 	private DeviceDayDomain deviceDayDomain;
+	@Autowired
+	private ModelAndDailyDataDomain modelDataDomain;
 
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * パラメータセットをデフォルトフラグがあるもので、近い年から取得する。
-	 * 存在しない場合はデフォルト値を設定して返却
-	 * 
-	 * @param deviceId-デバイスID
-	 * @param year-対象年度
-	 * @return Ph2ParamsetGrowthEntity
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	public Ph2ParamsetGrowthEntity getParmaters(Long deviceId, Short year)
-	// throws ParseException
-		{
-		// * 該当するパラメータセットのカタログを取得
-		List<Ph2ParamsetCatalogEntity> params = parameterSetDomain
-				.getParamSetCatalogsByYear(
-						1, deviceId, year);
-		// * 該当するパラメータセットが存在する場合
-		if ((0 < params.size()) && (year.intValue() == params.get(0).getYear().intValue()))
-			{
-			return this.ph2ParamsetGrowthMapper
-					.selectByPrimaryKey(params.get(0).getId());
-			}
-		// * 存在しない場合、パラメータセット・カタログに履歴を付与して更新する
-		Long paramId = parameterSetDomain.addCatalogData(1, deviceId, year);
-		// * 最近のパラメータセット・カタログがある場合
-		Ph2ParamsetGrowthEntity entity;
-		if (0 < params.size())
-			{
-			GrowthParamSetDTO dto = this.getDetail(params.get(0).getId());
-			this.addParamSet(paramId, dto);
-			entity = this.ph2ParamsetGrowthMapper.selectByPrimaryKey(paramId);
-			}
-		// * 全く新規の場合
-		else
-			{
-			entity = new Ph2ParamsetGrowthEntity();
-			entity.setParamsetId(paramId);
-			entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-			entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-			entity.setAfterD(parameters.getAd());
-			entity.setAfterE(parameters.getAe());
-			entity.setBeforeD(parameters.getBd());
-			entity.setBeforeE(parameters.getBe());
-			this.ph2ParamsetGrowthMapper.insert(entity);
-			}
-		return entity;
-		}
 
 	// --------------------------------------------------
 	/**
@@ -167,43 +106,6 @@ public class GrowthDomain extends GraphDomain
 
 	// --------------------------------------------------
 	/**
-	 * モデルデータテーブルから生育推定グラフデータを作成する
-	 * 
-	 * @param deviceId 対象デバイスID
-	 * @param year 対象年度
-	 * @param startDate 統計開始日
-	 * @throws ParseException 
-	 */
-	// -------------------------------------------------
-	public ModelGraphDataDTO getModelGraphData(
-			Long deviceId, Short year, Date startDate,
-			Ph2ParamsetGrowthEntity param, Ph2ModelDataMapper mapper)
-			throws ParseException
-		{
-// * デバイスID、年度からFStage情報を取得
-		List<Ph2RealGrowthFStageEntity> fstageInfo = this
-				.getFStageData(deviceId, year);
-// * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
-		List<DailyBaseDataDTO> realDayData = this.growthDomainMapper
-				.selectDailyData(deviceId, year, null);
-// * 計算処理を実行
-		if (0 != realDayData.size())
-			{
-			GrowthGraphDataModel modelData = new GrowthGraphDataModel();
-			modelData.calculateFvalues(realDayData, param, fstageInfo,
-					this.fstageValues.getSprout(), mapper);
-// * DBを更新する場合
-			if (null != mapper) return null;
-// * グラフデータの生成
-			else
-				return modelData.toGraphData();
-			}
-		else
-			return null;
-		}
-
-	// --------------------------------------------------
-	/**
 	 * デバイスのモデルテーブルを更新する
 	 * 
 	 * @param deviceId デバイスID
@@ -212,86 +114,27 @@ public class GrowthDomain extends GraphDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public void updateModelTable(Long deviceId, Short year, Date startDate)
+	public void updateModelTable(Long deviceId, Short year)
 			throws ParseException
 		{
-		if (null == year)
+// * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
+		List<ModelAndDailyDataEntity> realDayData = this.modelDataDomain.get(deviceId, year);
+
+// * 日ごとデータがある場合
+		if (0 != realDayData.size())
 			{
-			// * デバイスID、統計開始日から年度を取得。
-			year = this.deviceDayDomain.getYear(deviceId, startDate);
+// * デバイスID、年度からパラメータセットを取得
+			Ph2ParamsetGrowthEntity param = this.growthParameterDomain.getParmaters(deviceId, year);
+
+// * デバイスID、年度からFStage情報を取得
+			List<Ph2RealGrowthFStageEntity> fstageInfo = this.getFStageData(deviceId, year);
+
+// * モデルデータの更新
+			new GrowthModelDataGenerator(realDayData, param, fstageInfo, this.fstageValues.getSprout());
+
+// * DBへの更新を行う
+			this.modelDataDomain.upate(realDayData);
 			}
-		// * デバイスID、年度からパラメータセットを取得
-		Ph2ParamsetGrowthEntity param = this.getParmaters(deviceId, year);
-		// * 生育推定モデルデータの更新
-		this.getModelGraphData(deviceId, year,
-				startDate, param, this.ph2ModelDataMapper);
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 特定のパラメータ指定による生育推定モデルグラフデータ取得
-	 *
-	 * @param deviceId  デバイスID
-	 * @param year 対象年度
-	 * @param param 生育推定パラメータ
-	 * @return GraphDataDTO
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	private ModelGraphDataDTO getModelDataByParameter(Long deviceId,
-			Short year,
-			Ph2ParamsetGrowthEntity param) throws ParseException
-		{
-		Ph2DeviceDayEntity firstDay = this.deviceDayDomain.getFirstDay(deviceId,
-				year);
-		return this.getModelGraphData(deviceId, year, firstDay.getDate(),
-				param, null);
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 特定のパラメータ指定による生育推定モデルグラフデータ取得
-	 *
-	 * @param deviceId  デバイスID
-	 * @param year 対象年度
-	 * @param paramID パラメータID
-	 * @return GraphDataDTO
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	public ModelGraphDataDTO getSimulateModelGraph(Long deviceId,
-			Short year,
-			Long paramId) throws ParseException
-		{
-		Ph2ParamsetGrowthEntity entity = this.ph2ParamsetGrowthMapper
-				.selectByPrimaryKey(paramId);
-		return getModelDataByParameter(deviceId, year, entity);
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 特定のパラメータ指定による生育推定モデルグラフデータ取得
-	 *
-	 * @param deviceId  デバイスID
-	 * @param year 対象年度
-	 * @param bd 萌芽日前d値
-	 * @param be 萌芽日前e値
-	 * @param ad 萌芽日後d値
-	 * @param ae 萌芽日後e値 
-	 * @return GraphDataDTO
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	public ModelGraphDataDTO getSimulateModelGraph(Long deviceId,
-			Short year,
-			double bd, double be, double ad, double ae) throws ParseException
-		{
-		Ph2ParamsetGrowthEntity param = new Ph2ParamsetGrowthEntity();
-		param.setAfterD(ad);
-		param.setAfterE(ae);
-		param.setBeforeD(bd);
-		param.setBeforeE(be);
-		return getModelDataByParameter(deviceId, year, param);
 		}
 
 	// --------------------------------------------------
@@ -472,106 +315,6 @@ public class GrowthDomain extends GraphDomain
 				this.ph2RealGrowthFStageMapper.insert(item);
 				}
 			}
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 生育推定パラメータセット詳細取得
-	 *
-	 * @param paramSetId パラメータセットID
-	 * @return GrowthParamSetDTO
-	 */
-	// --------------------------------------------------
-	public GrowthParamSetDTO getDetail(Long paramSetId)
-		{
-		GrowthParamSetDTO result = new GrowthParamSetDTO();
-
-		parameterSetDomain.fetchDetail(paramSetId, result);
-		Ph2ParamsetGrowthEntity field = this.ph2ParamsetGrowthMapper
-				.selectByPrimaryKey(paramSetId);
-
-		result.setAd(field.getAfterD());
-		result.setAe(field.getAfterE());
-		result.setBd(field.getBeforeD());
-		result.setBe(field.getBeforeE());
-		return result;
-		}
-
-	// --------------------------------------------------
-	/**
-	 * デフォルト値の設定
-	 *
-	 * @param paramId パラメータセットID
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	public void setDefault(Long deviceId, Short year, Long paramId)
-			throws ParseException
-		{
-		// * パラメータセットの詳細を取得する
-		GrowthParamSetDTO paramInfo = this.getDetail(paramId);
-		// * 同じ年度・デバイスの場合
-		if ((paramInfo.getDeviceId().longValue() != deviceId.longValue())
-				|| (paramInfo.getYear().shortValue() != year.shortValue()))
-			{
-			paramInfo.setDeviceId(deviceId);
-			paramInfo.setYear(year);
-			paramId = this.addParamSet(null, paramInfo);
-			}
-		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 生育推定パラメータセット更新
-	 *
-	 * @param dto 更新データ
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-	public boolean updateParamSet(GrowthParamSetDTO dto) throws ParseException
-		{
-		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.GROWTH);
-
-		Ph2ParamsetGrowthEntity entity = this.ph2ParamsetGrowthMapper
-				.selectByPrimaryKey(dto.getId());
-		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		entity.setAfterD(dto.getAd());
-		entity.setAfterE(dto.getAe());
-		entity.setBeforeD(dto.getBd());
-		entity.setBeforeE(dto.getBe());
-		this.ph2ParamsetGrowthMapper.updateByPrimaryKey(entity);
-		return isDeault;
-		}
-
-	// --------------------------------------------------
-	/**
-	 * 生育推定パラメータセット追加
-	 *
-	 * @param dto 更新データ
-	 * @return 
-	 */
-	// --------------------------------------------------
-	public Long addParamSet(Long parentId, GrowthParamSetDTO dto)
-		{
-		// * パラメータセットカタログに登録する
-		if (null == parentId)
-			{
-			// * 追加時、ここではデフォルトフラグはfalseとする。
-			dto.setDefaultFlg(false);
-			parentId = parameterSetDomain.add(dto, ModelMaster.GROWTH);
-			}
-		// * テーブル:成長予測パラメータセット(ph2_paramset_growth)に新しいパラメータセットレコードを追加する。
-		Ph2ParamsetGrowthEntity entity = new Ph2ParamsetGrowthEntity();
-		entity.setParamsetId(parentId);
-		entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		entity.setAfterD(dto.getAd());
-		entity.setAfterE(dto.getAe());
-		entity.setBeforeD(dto.getBd());
-		entity.setBeforeE(dto.getBe());
-		this.ph2ParamsetGrowthMapper.insert(entity);
-		return parentId;
 		}
 
 	}
