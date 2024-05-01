@@ -1,13 +1,14 @@
 package com.logpose.ph2.api.service;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisDetailDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisValueDTO;
 
 /**
  * 光合成推定のサービス
@@ -17,93 +18,88 @@ import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 public interface PhotosynthesisService
 	{
 	// ===============================================
-	// パブリック関数(検索系)
+	// 公開関数群
 	// ===============================================
-	// --------------------------------------------------
-	/**
-	 * 光合成推定モデルデータ作成(バッチよりコール)
-	 *
-	 * @param deviceId デバイスID
-	 * @param date 対象日付
-	 */
-	// --------------------------------------------------
-	public void updateDateModel(Long deviceId, Short year, Date date) throws ParseException;
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定グラフデータ取得
 	 *
 	 * @param deviceId-デバイスID
 	 * @param year-年度
-	 * @return GraphDataDTO
+	 * @return ModelGraphDataDTO
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
-	public RealModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException;
+	// ###############################################
+	public ModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException;
+	// ###############################################
+	/**
+	 * モデルデータの更新
+	 *
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 */
+	// ###############################################
+	public void updateDateModel(Long deviceId, Short year);
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定実績値取得
 	 *
 	 * @param devieId-デバイスID
-	 * @param date-実績の日付
+	 * @param year 年度
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
-	public PhotosynthesisValueDTO getRealValues(Long deviceId, Short year) throws ParseException;
-	
-	// --------------------------------------------------
+	// ###############################################
+	public PhotosynthesisDetailDTO getRealValues(Long deviceId, Short year) throws ParseException;
+
+	// ###############################################
 	/**
 	 * 光合成推定パラメータセット詳細取得
 	 *
-	 * @param paramSetId- パラメータセットID
-	 * @return PhotosynthesisParamSetDTO
+	 * @param paramSetId パラメータセットID
+	 * @return PhotosynthesisParamSetDTO 光合成推定パラメータセット詳細
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public PhotosynthesisParamSetDTO getDetailParamSet(Long paramSetId);
 
-
-	// ===============================================
-	// パブリック関数(更新系)
-	// ===============================================
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定実績値更新
 	 *
-	 * @param dto-PhotosynthesisValueDTO
-	 * @throws ParseException 
+	 * @param records PhotosynthesisValueDTO 更新データリスト
+	 * @throws ParseException
 	 */
-	// --------------------------------------------------
-	public void setRealValue(PhotosynthesisValueDTO dto) throws ParseException;
+	// ###############################################
+	public void setRealValue(List<PhotosynthesisValueDTO> dto) throws ParseException;
 
-
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定パラメータセット更新
 	 *
-	 * @param PhotosynthesisParamSetDTO
-	 * @throws ParseException 
-	 * @throws Exception 
+	 * @param dto PhotosynthesisParamSetDTO 更新データ
 	 */
-	// --------------------------------------------------
-	public void updateParamSet(PhotosynthesisParamSetDTO dto) throws ParseException, Exception;
+	// ###############################################
+	public void updateParamSet(PhotosynthesisParamSetDTO dto);
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 光合成推定パラメータセット追加
 	 *
-	 * @param PhotosynthesisParamSetDTO
-	 * @return 
+	 * @param PhotosynthesisParamSetDTO 更新データ
+	 * @return 追加されたパラメータセットのID
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public Long addParamSet(PhotosynthesisParamSetDTO dto);
-	
-	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException;
+
+	// ###############################################
 	/**
-	 * 基準パラメータセットの取得
+	 * 基準パラメータセットの設定
 	 *
-	 * @param deviceId
-	 * @param year
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 * @param paramId パラメータセットID
+	 * @throws ParseException
 	 */
-	PhotosynthesisParamSetDTO getDefault(Long deviceId, Short year);
-	
+	// ###############################################
+	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException;
 	}

@@ -1,7 +1,9 @@
-package com.logpose.ph2.api.dto;
+package com.logpose.ph2.api.dto.graph;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.logpose.ph2.api.dto.EventDaysDTO;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -12,7 +14,7 @@ import lombok.EqualsAndHashCode;
  */
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class RealModelGraphDataDTO extends GraphDataDTO
+public class ModelGraphDataDTO extends GraphDataDTO
 	{
 	//* モデル値のリスト
 	private List<Double> predictValues = new ArrayList<>();

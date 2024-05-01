@@ -1,16 +1,14 @@
-package com.logpose.ph2.api.domain;
+package com.logpose.ph2.api.domain.growth;
 
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2ModelDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
-import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
-import com.logpose.ph2.api.dto.DailyBaseDataDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 import com.logpose.ph2.api.formula.Formula;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -37,9 +35,9 @@ public class GrowthGraphDataModel
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public RealModelGraphDataDTO toGraphData() throws ParseException
+	public ModelGraphDataDTO toGraphData() throws ParseException
 		{
-		RealModelGraphDataDTO resultData = new RealModelGraphDataDTO();
+		ModelGraphDataDTO resultData = new ModelGraphDataDTO();
 		// * 最小値・最大値の設定
 		Double firstValue = (fRealValues.size() > 0) ? fRealValues.get(0) : fModelValues.get(0);
 		Double endValue = (fRealValues.size() > 0) ? fRealValues.get(fRealValues.size() - 1)
@@ -54,7 +52,7 @@ public class GrowthGraphDataModel
 		return resultData;
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * F値を算出し、リストに格納する
 	 *
@@ -64,13 +62,12 @@ public class GrowthGraphDataModel
 	 * @param sproutStage 萌芽前ステージ
 	 * @param mapper DBマッパー
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public void calculateFvalues(
-			List<DailyBaseDataDTO> list,
+			List<ModelAndDailyDataEntity> list,
 			Ph2ParamsetGrowthEntity param,
 			List<Ph2RealGrowthFStageEntity> fStageInfoList,
-			short sproutStage,
-			Ph2ModelDataMapper mapper)
+			short sproutStage)
 		{
 		startDate = list.get(0).getDate();  // 年度の初日
 		endDate = list.get(list.size() - 1).getDate();  // 年度の最後
@@ -91,12 +88,12 @@ public class GrowthGraphDataModel
 				dValue = param.getAfterD();
 				eValue = param.getAfterE();
 				}
-			startDay = this.addDate(startDay, list, dValue, eValue, fstageInfo.getAccumulatedF(), mapper);
+			startDay = this.addDate(startDay, list, dValue, eValue, fstageInfo.getAccumulatedF());
 			}
-		this.addDate(startDay, list, param.getAfterD(), param.getAfterE(), Double.MAX_VALUE, mapper);
+		this.addDate(startDay, list, param.getAfterD(), param.getAfterE(), Double.MAX_VALUE);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 計算開始日数から最大F値までF値を積算し、リストに格納する
 	 *
@@ -108,44 +105,25 @@ public class GrowthGraphDataModel
 	 * @param mapper DBマッパー
 	 * @return 計算最終日
 	 */
-	// --------------------------------------------------
-	public short addDate(
+	// ###############################################
+	private short addDate(
 			short startDay,
-			List<DailyBaseDataDTO> list,
+			List<ModelAndDailyDataEntity> list,
 			double dValue,
 			double eValue,
-			double limitFValue,
-			Ph2ModelDataMapper mapper)
+			double limitFValue)
 		{
 		short index = startDay;
 		for (; index < list.size(); index++)
 			{
-// * 平均気温を取り出す
-			DailyBaseDataDTO temperature = list.get(index);
+			ModelAndDailyDataEntity entity = list.get(index);
 // * F値を算出する
-			double fValue = Formula.toFValue(temperature.getTm(), dValue,
+			double fValue = Formula.toFValue(entity.getTm(), dValue,
 					eValue);
 // * 積算F値を算出する
 			lastValue = lastValue + fValue;
-// * Mapperがある場合DBを更新する
-			if (null != mapper)
-				{
-				Ph2ModelDataEntity model = mapper.selectByPrimaryKey(temperature.getDayId());
-				model.setfValue(lastValue);
-				mapper.updateByPrimaryKey(model);
-				}
-			else
-				{
-				if (temperature.isReal())
-					{
-					fRealValues.add(lastValue);
-					}
-				else
-					{
-					fModelValues.add(lastValue);
-					}
-				}
-			// * Max値に達した場合
+			entity.setfValue(lastValue);
+// * Max値に達した場合
 			if (lastValue > limitFValue)
 				{
 				return (short) (index + 1);

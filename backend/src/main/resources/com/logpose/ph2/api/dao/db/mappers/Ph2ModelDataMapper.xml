@@ -283,7 +283,7 @@
       leaf_count = #{leafCount,jdbcType=DOUBLE}
     where day_id = #{dayId,jdbcType=BIGINT}
   </update>
-	
+<!-- ************************************************************************** -->
    <resultMap id="ModelDataEntity" type="com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity">
     <result column="day_id" jdbcType="BIGINT" property="dayId" />
     <result column="f_value" jdbcType="DOUBLE" property="fValue" />
@@ -317,6 +317,49 @@
         dd.year = #{year}
     ORDER BY dd.lapse_day  
   </select>
+  <!-- ************************************************************************** -->
+	<resultMap id="ModelAndDailyDataEntity"
+		type="com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity">
+		<result column="day_id" jdbcType="BIGINT" property="dayId" />
+		<result column="f_value" jdbcType="DOUBLE" property="fValue" />
+		<result column="culmitive_cnopy_ps" jdbcType="DOUBLE" property="culmitiveCnopyPs" />
+		<result column="crown_leaf_area" jdbcType="DOUBLE" property="crownLeafArea" />
+		<result column="leaf_count" jdbcType="DOUBLE" property="leafCount" />
+		<result column="date" jdbcType="DATE" property="date" />
+		<result column="lapse_day" jdbcType="SMALLINT" property="lapseDay" />
+		<result column="tm" jdbcType="REAL" property="tm" />
+		<result column="cdd" jdbcType="DOUBLE" property="cdd" />
+		<result column="par" jdbcType="DOUBLE" property="par" />
+		<result column="sun_time" jdbcType="BIGINT" property="sunTime" />
+		<result column="raw_cdd" jdbcType="DOUBLE" property="rawCdd" />
+	</resultMap>
+
+	<select id="selectModelAndDailyData" resultMap="ModelAndDailyDataEntity">
+	    SELECT
+			md.day_id as day_id,
+			md.f_value as f_value,
+			md.culmitive_cnopy_ps as culmitive_cnopy_ps,
+			md.crown_leaf_area as crown_leaf_area,
+			md.leaf_count as leaf_count,
+			dd.date as date,
+			dd.lapse_day as lapse_day,
+			db.tm as tm,
+			db.cdd as cdd,
+			db.par as par,
+			db.sun_time as sun_time,
+			db.raw_cdd as raw_cdd
+		FROM
+			ph2_device_day dd
+		JOIN
+			ph2_model_data md ON dd.id = md.day_id
+		JOIN
+			ph2_daily_base_data db on dd.id = db.day_id
+		WHERE
+			dd.device_id = #{deviceId}
+		AND
+			dd.year = #{year}
+		ORDER BY dd.lapse_day
+	</select>
 <!-- ************************************************************************** -->
   	<resultMap id="ValueDateDTO"
 		type="com.logpose.ph2.api.dto.ValueDateDTO">
@@ -473,4 +516,20 @@
 			</choose>
 		order by ph2_device_day.lapse_day
 	</select>
+<!-- ************************************************************************** -->
+    <select id="selectCrownLeafAreaBySpecificDate" resultType="java.lang.Double">
+    SELECT
+        md.crown_leaf_area
+    FROM
+        ph2_device_day dd
+    JOIN
+        ph2_model_data md ON dd.id = md.day_id
+    WHERE
+        dd.device_id = #{deviceId}
+   	AND
+        dd.year = #{year}
+	AND
+     	dd.date = #{date}
+	limit 1
+  </select>
 </mapper>

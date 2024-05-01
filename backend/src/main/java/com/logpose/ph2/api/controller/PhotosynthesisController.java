@@ -1,5 +1,7 @@
 package com.logpose.ph2.api.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -13,10 +15,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.controller.dto.TargetParamDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisParamSetDTO;
-import com.logpose.ph2.api.dto.PhotosynthesisValueDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisDetailDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisParamSetDTO;
+import com.logpose.ph2.api.dto.photosynthesis.PhotosynthesisValueDTO;
 import com.logpose.ph2.api.service.PhotosynthesisService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +61,7 @@ public class PhotosynthesisController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			RealModelGraphDataDTO as_result = this.photosynthesisService
+			ModelGraphDataDTO as_result = this.photosynthesisService
 					.GetModelGraphData(fieldId, year);
 			as_dto.setSuccess(as_result);
 			}
@@ -74,7 +77,7 @@ public class PhotosynthesisController
 	/**
 	 * 光合成推定実績値取得
 	 *
-	 * @param dto PhotosynthesisValueDTO
+	 * @param dto PhotosynthesisDetailDTO
 	 * @return ResponseDTO (null)
 	 */
 	// --------------------------------------------------
@@ -87,7 +90,7 @@ public class PhotosynthesisController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			PhotosynthesisValueDTO result = this.photosynthesisService
+			PhotosynthesisDetailDTO result = this.photosynthesisService
 					.getRealValues(deviceId, year);
 			as_dto.setSuccess(result);
 			}
@@ -110,7 +113,7 @@ public class PhotosynthesisController
 	@PutMapping("/values")
 	public ResponseDTO updateValues(HttpServletRequest httpReq,
 			HttpServletResponse res,
-			@RequestBody @Validated PhotosynthesisValueDTO dto)
+			@RequestBody List<PhotosynthesisValueDTO> dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try

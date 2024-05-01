@@ -12,7 +12,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.GrowthDomainMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2ParamSetJoinMapper;
 import com.logpose.ph2.api.dto.EventDaysDTO;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 public class GraphDomain
 	{
@@ -97,7 +97,7 @@ public class GraphDomain
 	 * @param dto
 	 */
 	// --------------------------------------------------
-	public void setComment(Long device, Short year, RealModelGraphDataDTO dto)
+	public void setComment(Long device, Short year, ModelGraphDataDTO dto)
 		{
 		List<String> comments = this.ph2ParamSetJoinMapper.selectLatestComment(device, year);
 		if (comments.size() == 0)

@@ -1,9 +1,7 @@
 package com.logpose.ph2.api.domain.photosynthesis;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +13,7 @@ import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
 import com.logpose.ph2.api.domain.common.MaxValue;
-import com.logpose.ph2.api.dto.RealModelGraphDataDTO;
+import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
 
 @Component
 public class PhotoGraphDomain extends GraphDomain
@@ -26,7 +24,10 @@ public class PhotoGraphDomain extends GraphDomain
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
 
-	// --------------------------------------------------
+	// ===============================================
+	// 公開関数群
+	// ===============================================
+	// ###############################################
 	/**
 	 * 光合成量モデルグラフデータ取得
 	 *    モデルテーブルから検索してデータを取得する
@@ -34,11 +35,9 @@ public class PhotoGraphDomain extends GraphDomain
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
 	 * @return GraphDataDTO
-	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
-	public RealModelGraphDataDTO getModelGraph(Long deviceId, Short year)
-			throws ParseException
+	// ###############################################
+	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
 		{
 		List<ModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectModelDataByType(deviceId, year);
@@ -47,10 +46,9 @@ public class PhotoGraphDomain extends GraphDomain
 		if (null == entites.get(0).getfValue()) return null;
 
 		// * 前日の日付
-		Calendar cal = Calendar.getInstance();
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
 
-		RealModelGraphDataDTO areaModel = new RealModelGraphDataDTO();
+		ModelGraphDataDTO areaModel = new ModelGraphDataDTO();
 // * 日付カテゴリ
 		List<String> category = new ArrayList<>();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
@@ -64,7 +62,13 @@ public class PhotoGraphDomain extends GraphDomain
 			Double value = entity.getCulmitiveCnopyPs();
 
 			if (value == null) continue;
-			value = ((double) Math.round(value * 100)) / 100;
+			// * タイトルに表示する値
+			if (entity.getDate().getTime() == titlleDate.getTime())
+				{
+				areaModel.setEstimated(value.doubleValue());
+				}
+			
+			value = ((double) Math.round(value * 1000)) / 1000;
 			if (null != prev)
 				{
 				if ((prev.doubleValue() - value.doubleValue()) > 5) continue;
@@ -82,11 +86,7 @@ public class PhotoGraphDomain extends GraphDomain
 				}
 // * 日付カテゴリの設定
 			max.setMax(value);
-// * タイトルに表示する値
-			if (entity.getDate().getTime() == titlleDate.getTime())
-				{
-				areaModel.setEstimated(value.doubleValue());
-				}
+
 			}
 // * 最小値・最大値の設定
 		String first = category.get(0);

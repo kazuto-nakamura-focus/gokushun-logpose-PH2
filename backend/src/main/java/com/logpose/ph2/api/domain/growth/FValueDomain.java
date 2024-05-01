@@ -16,7 +16,7 @@ import com.logpose.ph2.api.dto.ValueDateDTO;
 import com.logpose.ph2.api.dto.growth.FValuesDTO;
 
 @Component
-public class FStageTableDomain
+public class FValueDomain
 	{
 	// ===============================================
 	// クラスメンバー
@@ -83,15 +83,15 @@ public class FStageTableDomain
 			}
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 日付からF値の情報を得る
 	 *
-	 * @param id
-	 * @param dateString
+	 * @param id ph2_real_growth_f_stageのID
+	 * @param date
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public FValuesDTO checkFValueByDate(Long id, String dateString) throws ParseException
 		{
 		Date date = DateTimeUtility.getDateFromString(dateString);
