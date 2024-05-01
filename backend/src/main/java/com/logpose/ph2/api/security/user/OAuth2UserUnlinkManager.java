@@ -11,9 +11,9 @@ public class OAuth2UserUnlinkManager {
     @Autowired
     private HerokuOAuth2UserUnlink herokuOAuth2UserUnlink;
 
-    public void unlink(OAuth2Provider provider, String accessToken) {
+    public void unlink(OAuth2Provider provider, String token) {
         if (OAuth2Provider.HEROKU.equals(provider)) {
-            herokuOAuth2UserUnlink.unlink(accessToken);
+            herokuOAuth2UserUnlink.unlink(token);
         } else {
             throw new OAuth2AuthenticationProcessingException(
                     "Unlink with " + provider.getRegistrationId() + " is not supported");

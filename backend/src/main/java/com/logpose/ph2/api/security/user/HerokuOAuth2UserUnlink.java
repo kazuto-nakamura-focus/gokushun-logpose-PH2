@@ -39,12 +39,12 @@ public class HerokuOAuth2UserUnlink implements OAuth2UserUnlink {
 
             HttpEntity<String> entity = new HttpEntity<>(headers);
             LOG.info("Unlink:{}", unlinkUrl);
-            ResponseEntity<String> response = restTemplate.exchange(
-                    unlinkUrl,
-                    HttpMethod.DELETE,
-                    entity,
-                    String.class
-            );
+//            ResponseEntity<String> response = restTemplate.exchange(
+//                    unlinkUrl,
+//                    HttpMethod.DELETE,
+//                    entity,
+//                    String.class
+//            );
         } catch (Exception e) {
             e.printStackTrace();
         }

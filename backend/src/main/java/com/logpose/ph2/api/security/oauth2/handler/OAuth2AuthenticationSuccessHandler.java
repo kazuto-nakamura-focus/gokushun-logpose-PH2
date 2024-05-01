@@ -25,21 +25,23 @@ import java.util.Optional;
 
 import static com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.MODE_PARAM_COOKIE_NAME;
 import static com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+
 @RequiredArgsConstructor
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-
+    private static final String AUTHORIZATION_HEADER = "Authorization";
+    private static final String BEARER_PREFIX = "Bearer ";
     private static Logger LOG = LogManager.getLogger(OAuth2AuthenticationSuccessHandler.class);
     @Value("${spring.security.oauth2.client.registration.heroku.redirect-uri}")
-    private String frontendRedirectUri;
+    private String backendRedirectUri;
 
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOauth2AuthorizationRequestRepository;
 
     @Autowired
     private OAuth2UserUnlinkManager oAuth2UserUnlinkManager;
-    @Autowired
-    private TokenProvider tokenProvider;
+//    @Autowired
+//    private TokenProvider tokenProvider;
 
 
     @Override
@@ -57,7 +59,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         getRedirectStrategy().sendRedirect(request, response, targetUrl);
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
+    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
         LOG.info("determineTargetUrl");
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
@@ -71,12 +73,8 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         OAuth2UserPrincipal principal = getOAuth2UserPrincipal(authentication);
         LOG.info("determineTargetUrl:{}, {}, {}, ", targetUrl, mode, principal);
 
-        if (principal == null) {
-            return UriComponentsBuilder.fromUriString(targetUrl)
-                    .queryParam("error", "Login failed")
-                    .build().toUriString();
-        }
-
+//        String token = tokenProvider.createToken(authentication);
+        String accessToken = principal.getUserInfo().getAccessToken();
         if ("login".equalsIgnoreCase(mode)) {
             // TODO: DB 保存
             // TODO: アクセストークン、リフレッシュトークン発行
@@ -87,37 +85,34 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     principal.getUserInfo().getAccessToken()
             );
 
-            String accessToken = tokenProvider.createToken(authentication);
-            String refreshToken = "refresh_token";
+//            CookieUtils.addCookie(response, TokenProvider.TOKEN_COOKIE_NAME, token, 60 * 60 * 24 * 30);
 
             return UriComponentsBuilder.fromUriString(targetUrl)
 //                    .queryParam("access_token", accessToken)
-//                    .queryParam("refresh_token", refreshToken)
+//                    .queryParam("redirect_uri", redirectUri )
                     .build().toUriString();
 
         } else if ("unlink".equalsIgnoreCase(mode)) {
-            String accessToken = principal.getUserInfo().getAccessToken();
             OAuth2Provider provider = principal.getUserInfo().getProvider();
-            LOG.info("accessToken:"+accessToken);
 
             // TODO: DB 削除
             // TODO: リフレッシュトークン削除
             oAuth2UserUnlinkManager.unlink(provider, accessToken);
 
-            String parseUri = String.format("%s/api/logout", frontendRedirectUri);
+            String parseUri = String.format("%s%s", backendRedirectUri, "api/logout");
             return UriComponentsBuilder.fromUriString(parseUri)
                     .build().toUriString();
         }
 
-        return UriComponentsBuilder.fromUriString(frontendRedirectUri)
-//                .queryParam("error", "Login failed")
+        return UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("error", "Login failed")
                 .build().toUriString();
     }
 
     private OAuth2UserPrincipal getOAuth2UserPrincipal(Authentication authentication) {
         Object principal = authentication.getPrincipal();
         if (principal instanceof OAuth2UserPrincipal) {
-            LOG.info("principal type:"+principal.getClass().getSimpleName());
+            LOG.info("principal type:" + principal.getClass().getSimpleName());
             return (OAuth2UserPrincipal) principal;
         }
         return null;

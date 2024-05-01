@@ -1,8 +1,13 @@
 package com.logpose.ph2.api.security;
 
-import java.io.IOException;
-import java.util.List;
-
+import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
+import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
+import com.logpose.ph2.api.security.oauth2.service.CustomOAuth2UserService;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,19 +22,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-
-import com.logpose.ph2.api.security.jwt.JwtAuthorizationFilter;
-import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationFailureHandler;
-import com.logpose.ph2.api.security.oauth2.handler.OAuth2AuthenticationSuccessHandler;
-import com.logpose.ph2.api.security.oauth2.service.CustomOAuth2UserService;
-
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 import org.springframework.web.cors.CorsConfiguration;
 
 import java.io.IOException;
@@ -47,8 +41,8 @@ public class SecurityConfig {
     @Value("${frontend.after-logout-uri}")
     private String redirectAfterLogoutUri;
 
-    @Value("${spring.session.jdbc.table-name}")
-    private String sessionTableName;
+//    @Value("${spring.session.jdbc.table-name}")
+//    private String sessionTableName;
 
     @Autowired
     private HttpCookieOAuth2AuthorizationRequestRepository httpCookieOauth2AuthorizationRequestRepository;
@@ -58,14 +52,8 @@ public class SecurityConfig {
     private OAuth2AuthenticationSuccessHandler oauth2AuthenticationSuccessHandler;
     @Autowired
     private OAuth2AuthenticationFailureHandler oauth2AuthenticationFailureHandler;
-    @Autowired
-    private JwtAuthorizationFilter jwtAuthorizationFilter;
-
-
-//    @Bean
-//    public PasswordEncoder passwordEncoder() {
-//        return new BCryptPasswordEncoder();
-//    }
+//    @Autowired
+//    private JwtAuthorizationFilter jwtAuthorizationFilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -87,6 +75,9 @@ public class SecurityConfig {
                         requests
                                 .requestMatchers("/api/auth/**", "/api/bulk/update").permitAll()
                                 .anyRequest().authenticated()
+                )
+                .rememberMe((rememberMe) -> rememberMe
+                        .rememberMeServices(rememberMeServices())
                 )
                 //セッション
                 .sessionManagement(sessions -> sessions.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
@@ -115,17 +106,26 @@ public class SecurityConfig {
                         configure
                                 //フロントエンドとバックエンドのセッションを切るURLを変更
                                 .logoutRequestMatcher(new AntPathRequestMatcher("/api/logout"))
-                                .deleteCookies("JSESSIONID")
+                                .deleteCookies("JSESSIONID", "SESSION", "TOKEN")
                                 .invalidateHttpSession(true)
                                 .logoutSuccessUrl(redirectAfterLogoutUri)
                                 .clearAuthentication(true)  // 認証情報をクリア
+                ).exceptionHandling(exceptionHandling ->
+                        exceptionHandling.authenticationEntryPoint(new Http401AuthenticationEntryPoint())
                 );
-//                .exceptionHandling(exceptionHandling ->
-//                        exceptionHandling.authenticationEntryPoint(new Http401AuthenticationEntryPoint())
-//                );
 
-        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
+//        http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
         return http.build();
+    }
+
+
+    @Bean
+    public SpringSessionRememberMeServices rememberMeServices() {
+        SpringSessionRememberMeServices rememberMeServices =
+                new SpringSessionRememberMeServices();
+        // optionally customize
+        rememberMeServices.setAlwaysRemember(true);
+        return rememberMeServices;
     }
 
     public class Http401AuthenticationEntryPoint implements AuthenticationEntryPoint {

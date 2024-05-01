@@ -1,8 +1,9 @@
 package com.logpose.ph2.api.security.user;
 
+import java.io.Serializable;
 import java.util.Map;
 
-public class HerokuOAuth2UserInfo implements OAuth2UserInfo {
+public class HerokuOAuth2UserInfo implements OAuth2UserInfo, Serializable {
     private final Map<String, Object> attributes;
     private final String accessToken;
     private final String id;

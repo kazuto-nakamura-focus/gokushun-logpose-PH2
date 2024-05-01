@@ -56,10 +56,10 @@
         <v-list-item>
           <div style="display: flex; justify-content: right">
             <div>
-              <button v-if="userName == null" v-on:click="login">
+              <!-- <button v-if="userName == null" v-on:click="login">
                 <u>ログイン</u>
-              </button>
-              <button v-else v-on:click="logout">
+              </button> -->
+              <button v-if="userName != null" v-on:click="logout">
                 <u>ログアウト</u>
               </button>
             </div>
