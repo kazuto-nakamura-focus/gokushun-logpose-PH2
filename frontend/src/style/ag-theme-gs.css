@@ -14,14 +14,14 @@
   --ag-range-selection-background-color-2: rgba(33, 150, 243, 0.36);
   --ag-range-selection-background-color-3: rgba(33, 150, 243, 0.49);
   --ag-range-selection-background-color-4: rgba(33, 150, 243, 0.59);
-  --ag-background-color: #d6f1d4;
+  --ag-background-color: #fff;
   --ag-foreground-color: #181d1f;
-  --ag-border-color: #ffffff;
+  --ag-border-color: #ccc;
   --ag-secondary-border-color: #dde2eb;
-  --ag-header-background-color: #00B428;
-  --ag-header-foreground-color: #ffffff;
+  --ag-header-background-color: #efefef;
+  --ag-header-foreground-color: #666;
   --ag-tooltip-background-color: #f8f8f8;
-  --ag-odd-row-background-color: #b6dbb3;
+  --ag-odd-row-background-color: #fff;
   --ag-control-panel-background-color: #f8f8f8;
   --ag-subheader-background-color: #fff;
   --ag-invalid-color: #e02525;
@@ -37,7 +37,7 @@
   --ag-chip-background-color: rgba(24, 29, 31, 0.07);
   --ag-input-disabled-border-color: rgba(186, 191, 199, 0.3);
   --ag-input-disabled-background-color: rgba(186, 191, 199, 0.15);
-  --ag-borders: solid 3px;
+  --ag-borders: solid  1px;
   --ag-border-radius: 3px;
   --ag-borders-side-button: none;
   --ag-side-button-selected-background-color: transparent;
@@ -74,7 +74,13 @@
   --ag-cell-horizontal-border: solid #fff;
 
 }
-
+.ag-select .ag-picker-field-wrapper{
+  background-color:#f4fce0;
+}
+input[class^=ag-]{
+    margin: 0;
+    background-color: #f4fce0;
+}
 .ag-theme-gs-dark {
   --ag-background-color: #181d1f;
   --ag-foreground-color: #fff;
