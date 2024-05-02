@@ -31,7 +31,7 @@ public class GrowthParameterDomain
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * パラメータセットをデフォルトフラグがあるもので、近い年から取得する。
 	 * 存在しない場合はデフォルト値を設定して返却
@@ -41,23 +41,24 @@ public class GrowthParameterDomain
 	 * @return Ph2ParamsetGrowthEntity
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public Ph2ParamsetGrowthEntity getParmaters(Long deviceId, Short year)
 	// throws ParseException
 		{
-		// * 該当するパラメータセットのカタログを取得
+// * 該当するパラメータセットのカタログを取得
 		List<Ph2ParamsetCatalogEntity> params = parameterSetDomain
 				.getParamSetCatalogsByYear(
 						1, deviceId, year);
-		// * 該当するパラメータセットが存在する場合
+// * 該当するパラメータセットが存在する場合
 		if ((0 < params.size()) && (year.intValue() == params.get(0).getYear().intValue()))
 			{
 			return this.ph2ParamsetGrowthMapper
 					.selectByPrimaryKey(params.get(0).getId());
 			}
-		// * 存在しない場合、パラメータセット・カタログに履歴を付与して更新する
+// * 存在しない場合、パラメータセット・カタログに履歴を付与して更新する
 		Long paramId = parameterSetDomain.addCatalogData(1, deviceId, year);
-		// * 最近のパラメータセット・カタログがある場合
+		
+// * 最近のパラメータセット・カタログがある場合
 		Ph2ParamsetGrowthEntity entity;
 		if (0 < params.size())
 			{
@@ -65,7 +66,7 @@ public class GrowthParameterDomain
 			this.addParamSet(paramId, dto);
 			entity = this.ph2ParamsetGrowthMapper.selectByPrimaryKey(paramId);
 			}
-		// * 全く新規の場合
+// * 全く新規の場合
 		else
 			{
 			entity = new Ph2ParamsetGrowthEntity();
@@ -80,14 +81,14 @@ public class GrowthParameterDomain
 			}
 		return entity;
 		}
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 生育推定パラメータセット詳細取得
 	 *
 	 * @param paramSetId パラメータセットID
 	 * @return GrowthParamSetDTO
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public GrowthParamSetDTO getDetail(Long paramSetId)
 		{
 		GrowthParamSetDTO result = new GrowthParamSetDTO();
@@ -102,16 +103,16 @@ public class GrowthParameterDomain
 		result.setBe(field.getBeforeE());
 		return result;
 		}
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * デフォルト値の設定
-	 *
+	 * 
+	 * @param deviceId-デバイスID
+	 * @param year-対象年度
 	 * @param paramId パラメータセットID
-	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
+	// ###############################################
 	public void setDefault(Long deviceId, Short year, Long paramId)
-			throws ParseException
 		{
 		// * パラメータセットの詳細を取得する
 		GrowthParamSetDTO paramInfo = this.getDetail(paramId);
@@ -126,15 +127,14 @@ public class GrowthParameterDomain
 		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
 		}
 
-	// --------------------------------------------------
+	// ###############################################
 	/**
 	 * 生育推定パラメータセット更新
 	 *
 	 * @param dto 更新データ
-	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
-	public boolean updateParamSet(GrowthParamSetDTO dto) throws ParseException
+	// ###############################################
+	public boolean updateParamSet(GrowthParamSetDTO dto)
 		{
 		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.GROWTH);
 
@@ -159,14 +159,14 @@ public class GrowthParameterDomain
 	// --------------------------------------------------
 	public Long addParamSet(Long parentId, GrowthParamSetDTO dto)
 		{
-		// * パラメータセットカタログに登録する
+// * パラメータセットカタログに登録する
 		if (null == parentId)
 			{
-			// * 追加時、ここではデフォルトフラグはfalseとする。
+// * 追加時、ここではデフォルトフラグはfalseとする。
 			dto.setDefaultFlg(false);
 			parentId = parameterSetDomain.add(dto, ModelMaster.GROWTH);
 			}
-		// * テーブル:成長予測パラメータセット(ph2_paramset_growth)に新しいパラメータセットレコードを追加する。
+// * テーブル:成長予測パラメータセット(ph2_paramset_growth)に新しいパラメータセットレコードを追加する。
 		Ph2ParamsetGrowthEntity entity = new Ph2ParamsetGrowthEntity();
 		entity.setParamsetId(parentId);
 		entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));

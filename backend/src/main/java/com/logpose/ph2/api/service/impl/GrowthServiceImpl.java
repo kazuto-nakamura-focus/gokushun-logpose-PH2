@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.domain.growth.FValueDomain;
 import com.logpose.ph2.api.domain.growth.GrowthDomain;
+import com.logpose.ph2.api.domain.growth.GrowthGraphDomain;
 import com.logpose.ph2.api.domain.growth.GrowthParameterDomain;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
@@ -39,12 +40,14 @@ public class GrowthServiceImpl implements GrowthService
 	@Autowired
 	private FValueDomain fValueDomain;
 	@Autowired
+	private GrowthGraphDomain growthGraphDomain;
+	@Autowired
 	private PhotoSynthesisDomain photoSynthesisDomain;
 	@Autowired
 	private GrowthParameterDomain growthParameterDomain;
 
 	// ===============================================
-	// パブリック関数
+	// パブリック関数群（検索系)
 	// ===============================================
 	// ###############################################
 	/**
@@ -54,34 +57,14 @@ public class GrowthServiceImpl implements GrowthService
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
 	 * @return ModelGraphDataDTO
-	 * @throws ParseException 
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
-			throws ParseException
 		{
-		return this.growthDomain.getModelGraph(deviceId, year);
+		return this.growthGraphDomain.getModelGraph(deviceId, year);
 		}
-
-	// ###############################################
-	/**
-	 * 生育推定モデルグラフデータ取得
-	 *    デイリーデータをベースに再計算をしてデータを取得する
-	 *
-	 * @param deviceId-デバイスID
-	 * @param year-対象年度
-	 * @param paramId-パラメータID
-	 * @return ModelGraphDataDTO
-	 * @throws ParseException 
-	 */
-	// ###############################################
-/*	public ModelGraphDataDTO getSumilateGraph(
-			Long deviceId, Short year, Long paramId) throws ParseException
-		{
-		return this.growthDomain.getSimulateModelGraph(deviceId, year, paramId);
-		}*/
 
 	// ###############################################
 	/**
@@ -93,10 +76,10 @@ public class GrowthServiceImpl implements GrowthService
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public List<EventDaysDTO> getEvent(Long deviceId, Short year)
 		{
-		return this.growthDomain.getEvent(deviceId, year);
+		return this.growthGraphDomain.getEvent(deviceId, year);
 		}
 
 	// ###############################################
@@ -106,13 +89,11 @@ public class GrowthServiceImpl implements GrowthService
 	 * @param deviceId デバイスID
 	 * @param year 年度
 	 * @return List<Ph2RealGrowthFStageEntity>
-	 * @throws ParseException 
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public List<Ph2RealGrowthFStageEntity> getAllF(Long deviceId,
-			Short year) throws ParseException
+	@Transactional(readOnly = true)
+	public List<Ph2RealGrowthFStageEntity> getAllF(Long deviceId, Short year)
 		{
 		return this.growthDomain.getALlFValus(deviceId, year);
 		}
@@ -124,16 +105,17 @@ public class GrowthServiceImpl implements GrowthService
 	 * @param deviceId デバイスID
 	 * @param date 日付
 	 * @return ValueDateDTO
-	 * @throws Exception 
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public ValueDateDTO getFData(Long deviceId, Date date) throws Exception
+	@Transactional(readOnly = true)
+	public ValueDateDTO getFData(Long deviceId, Date date)
 		{
 		return this.growthDomain.getRealFData(deviceId, date);
 		}
-
+	// ===============================================
+	// パブリック関数群（更新系)
+	// ===============================================
 	// ###############################################
 	/**
 	 * 生育推定実績値更新
@@ -146,6 +128,7 @@ public class GrowthServiceImpl implements GrowthService
 	public void updateFData(FDataListDTO dto)
 		{
 		this.growthDomain.updateFValues(dto);
+		
 		}
 
 	// --------------------------------------------------

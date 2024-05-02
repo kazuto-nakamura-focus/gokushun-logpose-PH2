@@ -12,8 +12,6 @@ import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
@@ -21,10 +19,10 @@ import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WibleMasterMapper;
 import com.logpose.ph2.api.domain.ModelAndDailyDataDomain;
+import com.logpose.ph2.api.domain.applied_model.AppliedModel;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.leaf.LeafAreaValueDTO;
 import com.logpose.ph2.api.master.ModelMaster;
@@ -36,7 +34,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private Ph2RealGrowthFStageMapper realGrowthFStageMapper;
+	private AppliedModel appliedModel;
 	@Autowired
 	private Ph2ModelDataMapper modelDataMapper;
 	@Autowired
@@ -47,7 +45,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 	protected Ph2RealLeafShootsAreaMapper ph2RealLeafShootsAreaMapper;
 
 	// ===============================================
-	// 公開メソッド
+	// 公開関数群
 	// ===============================================
 	// ###############################################
 	/**
@@ -91,19 +89,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 // * 萌芽日の取得
 			if (null == sproutDay)
 				{
-				Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
-				exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year).andStageEndEqualTo((short) 4);
-
-				List<Ph2RealGrowthFStageEntity> rec = this.realGrowthFStageMapper.selectByExample(exm);
-				Ph2RealGrowthFStageEntity entity = rec.get(0);
-
-				List<Integer> sproutDays = this.modelDataMapper.selectLapseDayByFValue(deviceId, year,
-						entity.getActualDate(), entity.getAccumulatedF());
-				if (sproutDays.size() == 0)
-					{
-					sproutDays = this.modelDataMapper.selectLapseDayByFValue(deviceId, year, null, (double) 15);
-					}
-				sproutDay = sproutDays.get(0).shortValue();
+				sproutDay = this.appliedModel.getSproutDay(deviceId, year);
 				}
 
 // * 新梢数が無い場合は取得する
