@@ -112,7 +112,7 @@ public class GrowthParameterDomain
 	 * @param paramId パラメータセットID
 	 */
 	// ###############################################
-	public void setDefault(Long deviceId, Short year, Long paramId)
+	public GrowthParamSetDTO setDefault(Long deviceId, Short year, Long paramId)
 		{
 		// * パラメータセットの詳細を取得する
 		GrowthParamSetDTO paramInfo = this.getDetail(paramId);
@@ -125,6 +125,7 @@ public class GrowthParameterDomain
 			paramId = this.addParamSet(null, paramInfo);
 			}
 		parameterSetDomain.setDefautParamSet(ModelMaster.GROWTH, deviceId, year, paramId);
+		return paramInfo;
 		}
 
 	// ###############################################
@@ -134,7 +135,7 @@ public class GrowthParameterDomain
 	 * @param dto 更新データ
 	 */
 	// ###############################################
-	public boolean updateParamSet(GrowthParamSetDTO dto)
+	public GrowthParamSetDTO updateParamSet(GrowthParamSetDTO dto)
 		{
 		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.GROWTH);
 
@@ -146,7 +147,8 @@ public class GrowthParameterDomain
 		entity.setBeforeD(dto.getBd());
 		entity.setBeforeE(dto.getBe());
 		this.ph2ParamsetGrowthMapper.updateByPrimaryKey(entity);
-		return isDeault;
+		
+		return (isDeault) ? dto : null;
 		}
 
 	// --------------------------------------------------

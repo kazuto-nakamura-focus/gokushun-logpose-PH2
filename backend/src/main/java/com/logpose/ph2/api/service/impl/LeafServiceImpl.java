@@ -15,7 +15,8 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
 import com.logpose.ph2.api.domain.DeviceDomain;
 import com.logpose.ph2.api.domain.leaf.LeafDomain;
 import com.logpose.ph2.api.domain.leaf.LeafGraphDomain;
-import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
+import com.logpose.ph2.api.domain.leaf.LeafParameterDomain;
+import com.logpose.ph2.api.domain.model.ModelDataDomain;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.device.DeviceTermDTO;
 import com.logpose.ph2.api.dto.graph.ModelGraphDataDTO;
@@ -42,12 +43,14 @@ public class LeafServiceImpl implements LeafService
 	@Autowired
 	private LeafGraphDomain graphDomain;
 	@Autowired
+	private LeafParameterDomain leafParameterDomain;
+	@Autowired
 	private DefaultLeafCountParameters defaultLeafCountParameters;
 	@Autowired
-	private PhotoSynthesisDomain photoSynthesisDomain;
+	private ModelDataDomain modelDataDomain;
 
 	// ===============================================
-	// パブリック関数
+	// パブリック関数群（検索系)
 	// ===============================================
 	// ###############################################
 	/**
@@ -56,13 +59,11 @@ public class LeafServiceImpl implements LeafService
 	 * @param deviceId-デバイスID
 	 * @param year-対象年度
 	 * @return LeafGraphDataDTO
-	 * @throws ParseException 
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public List<ModelGraphDataDTO> getLeaflGraphData(Long deviceId,
-			short year) throws ParseException
+	@Transactional(readOnly = true)
+	public List<ModelGraphDataDTO> getLeaflGraphData(Long deviceId, short year)
 		{
 		return this.graphDomain.getModelGraph(deviceId, year);
 		}
@@ -78,8 +79,7 @@ public class LeafServiceImpl implements LeafService
 	// ###############################################
 	@Override
 	@Transactional(readOnly = true)
-	public LeafShootDTO getShootCount(Long deviceId, Short year)
-			throws ParseException
+	public LeafShootDTO getShootCount(Long deviceId, Short year) throws ParseException
 		{
 		LeafShootDTO result = new LeafShootDTO();
 
@@ -116,11 +116,11 @@ public class LeafServiceImpl implements LeafService
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public LeafParamSetDTO getDetailParamSet(Long paramSetId)
 			throws JsonMappingException, JsonProcessingException
 		{
-		return this.leafDomain.getDetail(paramSetId);
+		return this.leafParameterDomain.getDetail(paramSetId);
 		}
 
 	// ###############################################
@@ -134,7 +134,7 @@ public class LeafServiceImpl implements LeafService
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public LeafAreaValueListDTO getAllAreaAndCount(Long deviceId, Short year) throws ParseException
 		{
 		LeafAreaValueListDTO result = new LeafAreaValueListDTO();
@@ -168,7 +168,9 @@ public class LeafServiceImpl implements LeafService
 		{
 		return this.leafDomain.getModelValue(deviceId, year, date);
 		}
-
+	// ===============================================
+	// パブリック関数群（更新系)
+	// ===============================================
 	// ###############################################
 	/**
 	 * 新梢数登録処理
@@ -188,7 +190,9 @@ public class LeafServiceImpl implements LeafService
 		entity.setYear(year);
 		entity.setTargetDate(DateTimeUtility.getDateFromString(dto.getDate()));
 		entity.setCount(dto.getCount());
-		this.leafDomain.addShootCount(entity);
+		short shootCount = this.leafDomain.addShootCount(entity);
+		
+		this.modelDataDomain.updateByShootCount(deviceId, year, shootCount);
 		}
 
 	// ###############################################
@@ -222,8 +226,8 @@ public class LeafServiceImpl implements LeafService
 	@Transactional(rollbackFor = Exception.class)
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
 		{
-		this.leafDomain.setDefault(deviceId, year, paramId);
-		this.photoSynthesisDomain.updateModelTable(deviceId, year);
+		LeafParamSetDTO paramInfo = this.leafParameterDomain.setDefault(deviceId, year, paramId);
+		this.modelDataDomain.updateByLeafParams(deviceId, year, paramInfo);
 		}
 
 	// ###############################################
@@ -239,9 +243,10 @@ public class LeafServiceImpl implements LeafService
 	@Transactional(rollbackFor = Exception.class)
 	public void updateParamSet(LeafParamSetDTO dto) throws ParseException
 		{
-		if (this.leafDomain.updateParamSet(dto))
+		LeafParamSetDTO paramInfo = this.leafParameterDomain.updateParamSet(dto);
+		if (null != paramInfo)
 			{
-			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
+			this.modelDataDomain.updateByLeafParams(dto.getDeviceId(), dto.getYear(), paramInfo);
 			}
 		}
 
@@ -257,7 +262,7 @@ public class LeafServiceImpl implements LeafService
 	@Transactional(rollbackFor = Exception.class)
 	public Long addParamSet(LeafParamSetDTO dto)
 		{
-		return this.leafDomain.addParamSet(null, dto);
+		return this.leafParameterDomain.addParamSet(null, dto);
 		}
 
 	}

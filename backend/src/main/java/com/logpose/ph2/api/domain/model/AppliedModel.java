@@ -1,4 +1,4 @@
-package com.logpose.ph2.api.domain.applied_model;
+package com.logpose.ph2.api.domain.model;
 
 import java.util.List;
 

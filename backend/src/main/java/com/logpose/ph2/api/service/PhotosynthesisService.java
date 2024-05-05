@@ -31,15 +31,6 @@ public interface PhotosynthesisService
 	 */
 	// ###############################################
 	public ModelGraphDataDTO GetModelGraphData(Long deviceId, Short year) throws ParseException;
-	// ###############################################
-	/**
-	 * モデルデータの更新
-	 *
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 */
-	// ###############################################
-	public void updateDateModel(Long deviceId, Short year);
 
 	// ###############################################
 	/**

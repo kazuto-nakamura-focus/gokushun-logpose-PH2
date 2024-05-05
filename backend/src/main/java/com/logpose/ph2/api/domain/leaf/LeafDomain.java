@@ -10,112 +10,39 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
-import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsAreaEntityExample;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2WibleMasterEntityExample;
-import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsAreaMapper;
-import com.logpose.ph2.api.dao.db.mappers.Ph2WibleMasterMapper;
-import com.logpose.ph2.api.domain.ModelAndDailyDataDomain;
-import com.logpose.ph2.api.domain.applied_model.AppliedModel;
-import com.logpose.ph2.api.dto.LeafParamSetDTO;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsCountMapper;
 import com.logpose.ph2.api.dto.leaf.LeafAreaValueDTO;
-import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
-public class LeafDomain extends LeafModelDataParameterAggregator
+public class LeafDomain
 	{
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private AppliedModel appliedModel;
-	@Autowired
 	private Ph2ModelDataMapper modelDataMapper;
 	@Autowired
-	private ModelAndDailyDataDomain modelDataDomain;
+	private Ph2RealLeafShootsCountMapper ph2RealLeafShootsCountMapper;
 	@Autowired
-	private Ph2WibleMasterMapper ph2WibleMasterMapper;
-	@Autowired
-	protected Ph2RealLeafShootsAreaMapper ph2RealLeafShootsAreaMapper;
+	private Ph2RealLeafShootsAreaMapper ph2RealLeafShootsAreaMapper;
 
 	// ===============================================
 	// 公開関数群
 	// ===============================================
 	// ###############################################
 	/**
-	 * デバイスのモデルテーブルを更新する
-	 * 
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @throws ParseException 
-	 */
-	// ###############################################
-	public void updateModelTable(Long deviceId, Short year) throws ParseException
-		{
-		this.updateModelTable(deviceId, year, null, null, null);
-		}
-
-	// ###############################################
-	/**
-	 * デバイスのモデルテーブルを更新する
-	 * 
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @param shootCount 新梢数
-	 * @param sproutDay 萌芽日
-	 * @param parameters パラメータセットの値群
-	 * @throws ParseException
-	 */
-	// ###############################################
-	public void updateModelTable(Long deviceId, Short year, Short shootCount, Short sproutDay,
-			LeafParamSetDTO parameters)
-			throws ParseException
-		{
-// * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
-		List<ModelAndDailyDataEntity> realDayData = this.modelDataDomain.get(deviceId, year);
-
-// * 日ごとデータがある場合
-		if (0 != realDayData.size())
-			{
-// * 葉面積パラメータセットの取得
-			if (null == parameters) parameters = this.getParmaters(deviceId, year);
-
-// * 萌芽日の取得
-			if (null == sproutDay)
-				{
-				sproutDay = this.appliedModel.getSproutDay(deviceId, year);
-				}
-
-// * 新梢数が無い場合は取得する
-			if (null == shootCount) shootCount = (short) super.getShootCount(deviceId, year);
-
-// * ワイブル分布の取得
-			List<Ph2WibleMasterEntity> wibles = this.ph2WibleMasterMapper
-					.selectByExample(new Ph2WibleMasterEntityExample());
-
-// * データの生成を行う
-			new LeafModelDataGenerator(sproutDay, shootCount, parameters, wibles, realDayData);
-
-// * DBへの更新を行う
-			this.modelDataDomain.upate(realDayData);
-			}
-		}
-
-	// ###############################################
-	/**
 	 * 新梢数登録処理
 	 *
 	 * @param entity Ph2ParamsetLeafCountEntity
-	 * @throws ParseException 
+	 * @return 新梢数
 	 */
 	// ###############################################
-	public void addShootCount(Ph2RealLeafShootsCountEntity entity) throws ParseException
+	public short addShootCount(Ph2RealLeafShootsCountEntity entity)
 		{
 		entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 // * 既存のものがあるか検索
@@ -132,8 +59,59 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 			entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 			this.ph2RealLeafShootsCountMapper.insert(entity);
 			}
+		return entity.getCount().shortValue();
 // * モデルテーブルを更新する
-		this.updateModelTable(entity.getDeviceId(), entity.getYear(), entity.getCount().shortValue(), null, null);
+//		this.updateModelTable(entity.getDeviceId(), entity.getYear(), entity.getCount().shortValue(), null, null);
+		}
+	// ###############################################
+	/**
+	 * 新梢数検索処理(日付指定無し)
+	 *
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 * @return Ph2RealLeafShootsCountEntity
+	 */
+	// ###############################################
+	public Ph2RealLeafShootsCountEntity searchShootCount(
+			Long deviceId, Short year)
+		{
+		List<Ph2RealLeafShootsCountEntity> entities = this.ph2RealLeafShootsCountMapper
+				.selectByDeviceId(deviceId, year);
+		return (entities.size() != 0) ? entities.get(0) : null;
+		}
+
+	// ###############################################
+	/**
+	 * 新梢数検索処理(日付指定あり)
+	 *
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 * @param date 日付
+	 * @return Ph2RealLeafShootsCountEntity
+	 */
+	// ###############################################
+	public Ph2RealLeafShootsCountEntity searchShootCountByDate(
+			Long deviceId, Short year, Date date)
+		{
+		List<Ph2RealLeafShootsCountEntity> entities = this.ph2RealLeafShootsCountMapper
+				.selectByDate(deviceId, year, date);
+		return (entities.size() != 0) ? entities.get(0) : null;
+		}
+
+	// ###############################################
+	/**
+	 * モデル値取得処理
+	 * 
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 * @param date 日付
+	 * @return モデル値
+	 */
+	// ###############################################
+	public Double getModelValue(Long deviceId, Short year, Date date)
+		{
+		date = new DeviceDayAlgorithm().getTimeZero(date);
+		return this.modelDataMapper.selectCrownLeafAreaBySpecificDate(deviceId, year, date);
 		}
 
 	// ###############################################
@@ -190,129 +168,7 @@ public class LeafDomain extends LeafModelDataParameterAggregator
 			}
 		}
 
-	// ###############################################
-	/**
-	 * 葉面積・葉枚数パラメータセット更新
-	 *
-	 * @param LeafParamSetDTO 更新データ
-	 * @return 更新されたパラメータセットがデフォルトかどうかのフラグ
-	 * @throws ParseException 
-	 */
-	// ###############################################
-	public boolean updateParamSet(LeafParamSetDTO dto) throws ParseException
-		{
-		boolean isDeault = parameterSetDomain.update(dto, ModelMaster.LEAF);
 
-		Ph2ParamsetLeafAreaEntity area = this.ph2ParamsetLeafAreaMapper
-				.selectByPrimaryKey(dto.getId());
-		area.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		area.setValueA(dto.getAreaA());
-		area.setValueB(dto.getAreaB());
-		area.setValueC(dto.getAreaC());
-		this.ph2ParamsetLeafAreaMapper.updateByPrimaryKey(area);
-
-		Ph2ParamsetLeafCountEntity count = this.ph2ParamsetLeafCountMapper
-				.selectByPrimaryKey(dto.getId());
-		count.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-		count.setValueC(dto.getCountC());
-		count.setValueD(dto.getCountD());
-		this.ph2ParamsetLeafCountMapper.updateByPrimaryKey(count);
-
-		// * デフォルト値の場合、モデルデータの更新を行う
-		if (isDeault)
-			{
-			LeafParamSetDTO args = new LeafParamSetDTO();
-			args.setAreaA(dto.getAreaA());
-			args.setAreaB(dto.getAreaB());
-			args.setAreaC(dto.getAreaC());
-			args.setCountC(dto.getCountC());
-			args.setCountD(dto.getCountD());
-			// * モデルデータの更新
-			this.updateModelTable(dto.getDeviceId(), dto.getYear(), null, null, args);
-			}
-
-		return isDeault;
-		}
-
-	// ###############################################
-	/**
-	 * デフォルト値の設定
-	 * 
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @param paramId パラメータセットID
-	 * @throws ParseException 
-	 */
-	// ###############################################
-	public void setDefault(Long deviceId, Short year, Long paramId)
-			throws ParseException
-		{
-// * パラメータセットの詳細を取得する
-		LeafParamSetDTO paramInfo = super.getDetail(paramId);
-// * 同じ年度・デバイスの場合
-		if ((paramInfo.getDeviceId().longValue() != deviceId.longValue())
-				|| (paramInfo.getYear().shortValue() != year.shortValue()))
-			{
-			paramInfo.setDeviceId(deviceId);
-			paramInfo.setYear(year);
-			paramId = super.addParamSet(null, paramInfo);
-			}
-		parameterSetDomain.setDefautParamSet(ModelMaster.LEAF, deviceId, year,
-				paramId);
-// * デバイスのモデルテーブルを更新する
-		this.updateModelTable(deviceId, year, null, null, null);
-		}
-
-	// ###############################################
-	/**
-	 * 新梢数検索処理(日付指定無し)
-	 *
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @return Ph2RealLeafShootsCountEntity
-	 */
-	// ###############################################
-	public Ph2RealLeafShootsCountEntity searchShootCount(
-			Long deviceId, Short year)
-		{
-		List<Ph2RealLeafShootsCountEntity> entities = this.ph2RealLeafShootsCountMapper
-				.selectByDeviceId(deviceId, year);
-		return (entities.size() != 0) ? entities.get(0) : null;
-		}
-
-	// ###############################################
-	/**
-	 * 新梢数検索処理(日付指定あり)
-	 *
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @param date 日付
-	 * @return Ph2RealLeafShootsCountEntity
-	 */
-	// ###############################################
-	public Ph2RealLeafShootsCountEntity searchShootCountByDate(
-			Long deviceId, Short year, Date date)
-		{
-		List<Ph2RealLeafShootsCountEntity> entities = this.ph2RealLeafShootsCountMapper
-				.selectByDate(deviceId, year, date);
-		return (entities.size() != 0) ? entities.get(0) : null;
-		}
-
-	// ###############################################
-	/**
-	 * モデル値取得処理
-	 * 
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @param date 日付
-	 * @return モデル値
-	 */
-	// ###############################################
-	public Double getModelValue(Long deviceId, Short year, Date date)
-		{
-		date = new DeviceDayAlgorithm().getTimeZero(date);
-		return this.modelDataMapper.selectCrownLeafAreaBySpecificDate(deviceId, year, date);
-		}
 
 	// ###############################################
 	/**

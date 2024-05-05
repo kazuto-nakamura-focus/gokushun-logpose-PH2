@@ -38,11 +38,9 @@ public class LeafGraphDomain extends GraphDomain
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
 	 * @return GraphDataDTO
-	 * @throws ParseException 
 	 */
 	// ###############################################
 	public List<ModelGraphDataDTO> getModelGraph(Long deviceId, Short year)
-			throws ParseException
 		{
 		List<LeafModelDataEntity> entites = this.ph2ModelDataMapper
 				.selectLeafModelDataByType(deviceId, year);

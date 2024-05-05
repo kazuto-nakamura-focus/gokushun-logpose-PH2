@@ -12,8 +12,6 @@ import com.logpose.ph2.api.configration.DefaultLeafCountParameters;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetCatalogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafAreaEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntity;
-import com.logpose.ph2.api.dao.db.entity.Ph2RealLeafShootsCountEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafAreaMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafCountMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsCountMapper;
@@ -22,7 +20,7 @@ import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.master.ModelMaster;
 
 @Component
-public class LeafModelDataParameterAggregator
+public class LeafParameterDomain
 	{
 	// ===============================================
 	// クラスメンバー
@@ -94,35 +92,6 @@ public class LeafModelDataParameterAggregator
 			}
 		return this.getDetail(paramId);
 		}
-
-	// ###############################################
-	/**
-	 * 対象デバイスの対象年度の新梢数を取得する。
-	 * 存在しない場合はデフォルト値を設定して返却
-	 * 
-	 * @param deviceId-デバイスID
-	 * @param year-対象年度
-	 * @return 新梢数
-	 * @throws ParseException 
-	 */
-	// ###############################################
-	public int getShootCount(Long deviceId, Short year)
-		{
-		Ph2RealLeafShootsCountEntityExample exm = new Ph2RealLeafShootsCountEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId)
-				.andYearEqualTo(year);
-		List<Ph2RealLeafShootsCountEntity> result = this.ph2RealLeafShootsCountMapper
-				.selectByExample(exm);
-		if (result.size() > 0)
-			{
-			return result.get(0).getCount();
-			}
-		else
-			{
-			return this.defaultLeafCountParameters.getCount();
-			}
-		}
-
 	// ###############################################
 	/**
 	 * 葉面積・葉枚数パラメータセット詳細取得
@@ -149,7 +118,77 @@ public class LeafModelDataParameterAggregator
 
 		return result;
 		}
+	// ###############################################
+	/**
+	 * 葉面積・葉枚数パラメータセット更新
+	 *
+	 * @param LeafParamSetDTO 更新データ
+	 * @return 更新されたパラメータセットがデフォルトかどうかのフラグ
+	 * @throws ParseException 
+	 */
+	// ###############################################
+	public LeafParamSetDTO updateParamSet(LeafParamSetDTO dto) throws ParseException
+		{
+		boolean isDeault = this.parameterSetDomain.update(dto, ModelMaster.LEAF);
 
+		Ph2ParamsetLeafAreaEntity area = this.ph2ParamsetLeafAreaMapper
+				.selectByPrimaryKey(dto.getId());
+		area.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		area.setValueA(dto.getAreaA());
+		area.setValueB(dto.getAreaB());
+		area.setValueC(dto.getAreaC());
+		this.ph2ParamsetLeafAreaMapper.updateByPrimaryKey(area);
+
+		Ph2ParamsetLeafCountEntity count = this.ph2ParamsetLeafCountMapper
+				.selectByPrimaryKey(dto.getId());
+		count.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+		count.setValueC(dto.getCountC());
+		count.setValueD(dto.getCountD());
+		this.ph2ParamsetLeafCountMapper.updateByPrimaryKey(count);
+
+		// * デフォルト値の場合、モデルデータの更新を行う
+		if (isDeault)
+			{
+			LeafParamSetDTO args = new LeafParamSetDTO();
+			args.setAreaA(dto.getAreaA());
+			args.setAreaB(dto.getAreaB());
+			args.setAreaC(dto.getAreaC());
+			args.setCountC(dto.getCountC());
+			args.setCountD(dto.getCountD());
+			return args;
+			}
+		else
+			{
+			return null;
+			}
+		}
+
+	// ###############################################
+	/**
+	 * デフォルト値の設定
+	 * 
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 * @param paramId パラメータセットID
+	 * @throws ParseException 
+	 */
+	// ###############################################
+	public LeafParamSetDTO setDefault(Long deviceId, Short year, Long paramId)
+			throws ParseException
+		{
+// * パラメータセットの詳細を取得する
+		LeafParamSetDTO paramInfo = this.getDetail(paramId);
+// * 同じ年度・デバイスの場合
+		if ((paramInfo.getDeviceId().longValue() != deviceId.longValue())
+				|| (paramInfo.getYear().shortValue() != year.shortValue()))
+			{
+			paramInfo.setDeviceId(deviceId);
+			paramInfo.setYear(year);
+			paramId = this.addParamSet(null, paramInfo);
+			}
+		parameterSetDomain.setDefautParamSet(ModelMaster.LEAF, deviceId, year, paramId);
+		return paramInfo;
+		}
 	// ###############################################
 	/**
 	 * 葉面積・葉枚数パラメータセット追加

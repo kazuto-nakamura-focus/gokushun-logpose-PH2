@@ -11,6 +11,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealPsAmountEntity;
 import com.logpose.ph2.api.domain.DeviceDomain;
+import com.logpose.ph2.api.domain.model.ModelDataDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PSParameterSetDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoGraphDomain;
 import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
 import com.logpose.ph2.api.dto.device.DeviceTermDTO;
@@ -34,12 +36,19 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	private PhotoSynthesisDomain photoSynthesisDomain;
 
 	@Autowired
+	private PSParameterSetDomain parameterSetDomain;
+
+	@Autowired
+	private ModelDataDomain modelDataDomain;
+
+	@Autowired
 	private PhotoGraphDomain graphDomain;
-	
+
 	@Autowired
 	private DeviceDomain deviceDomain;
+
 	// ===============================================
-	// 公開関数群
+	// 公開関数群(検索系)
 	// ===============================================
 	// ###############################################
 	/**
@@ -59,22 +68,6 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 
 	// ###############################################
 	/**
-	 * モデルデータの更新
-	 *
-	 * @param deviceId デバイスID
-	 * @param year 対象年度
-	 * @param year 年度
-	 */
-	// ###############################################
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updateDateModel(Long deviceId, Short year)
-		{
-		this.photoSynthesisDomain.updateModelTable(deviceId, year);
-		}
-
-	// ###############################################
-	/**
 	 * 光合成推定実績値取得
 	 *
 	 * @param deviceId デバイスID
@@ -83,12 +76,13 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	 */
 	// ###############################################
 	@Override
+	@Transactional(readOnly = true)
 	public PhotosynthesisDetailDTO getRealValues(Long deviceId, Short year) throws ParseException
 		{
 		PhotosynthesisDetailDTO result = new PhotosynthesisDetailDTO();
 		List<PhotosynthesisValueDTO> values = new ArrayList<>();
 		List<Ph2RealPsAmountEntity> records = this.photoSynthesisDomain.getRealPsAmountEntity(deviceId, year);
-		for(final Ph2RealPsAmountEntity entity : records)
+		for (final Ph2RealPsAmountEntity entity : records)
 			{
 			PhotosynthesisValueDTO item = new PhotosynthesisValueDTO();
 			item.setDate(DateTimeUtility.getStringFromDate(entity.getDate()));
@@ -113,11 +107,15 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	 */
 	// ###############################################
 	@Override
+	@Transactional(readOnly = true)
 	public PhotosynthesisParamSetDTO getDetailParamSet(Long paramSetId)
 		{
-		return this.photoSynthesisDomain.getDetail(paramSetId);
+		return this.parameterSetDomain.getDetail(paramSetId);
 		}
 
+	// ===============================================
+	// 公開関数群(更新系)
+	// ===============================================
 	// ###############################################
 	/**
 	 * 光合成推定実績値更新
@@ -130,8 +128,13 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	@Transactional(rollbackFor = Exception.class)
 	public void setRealValue(List<PhotosynthesisValueDTO> records) throws ParseException
 		{
-		this.photoSynthesisDomain.update(records);
+		if (this.photoSynthesisDomain.update(records))
+			{
+			PhotosynthesisValueDTO record = records.get(0);
+			this.modelDataDomain.updateByPsActualValue(record.getDeviceId(), record.getYear());
+			}
 		}
+
 	// ###############################################
 	/**
 	 * 光合成推定パラメータセット更新
@@ -143,8 +146,13 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	@Transactional(rollbackFor = Exception.class)
 	public void updateParamSet(PhotosynthesisParamSetDTO dto)
 		{
-		this.photoSynthesisDomain.updateParamSet(dto);
+		PhotosynthesisParamSetDTO entity = this.parameterSetDomain.updateParamSet(dto);
+		if (null != entity)
+			{
+			this.modelDataDomain.updateByPsParam(dto.getDeviceId(), dto.getYear(), entity);
+			}
 		}
+
 	// ###############################################
 	/**
 	 * 光合成推定パラメータセット追加
@@ -157,7 +165,7 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	@Transactional(rollbackFor = Exception.class)
 	public Long addParamSet(PhotosynthesisParamSetDTO dto)
 		{
-		return this.photoSynthesisDomain.addParamSet(null, dto);
+		return this.parameterSetDomain.addParamSet(null, dto);
 		}
 
 	// ###############################################
@@ -174,6 +182,10 @@ public class PhotosynthesisServiceImpl implements PhotosynthesisService
 	@Transactional(rollbackFor = Exception.class)
 	public void setDefault(Long deviceId, Short year, Long paramId) throws ParseException
 		{
-		this.photoSynthesisDomain.setDefault(deviceId, year, paramId);
+		PhotosynthesisParamSetDTO entity = this.parameterSetDomain.setDefault(deviceId, year, paramId);
+		if (null != entity)
+			{
+			this.modelDataDomain.updateByPsParam(deviceId, year, entity);
+			}
 		}
 	}

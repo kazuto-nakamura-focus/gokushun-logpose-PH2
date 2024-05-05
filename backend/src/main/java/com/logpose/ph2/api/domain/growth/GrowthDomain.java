@@ -1,7 +1,6 @@
 package com.logpose.ph2.api.domain.growth;
 
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 
@@ -9,14 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
-import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
-import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
-import com.logpose.ph2.api.domain.ModelAndDailyDataDomain;
-import com.logpose.ph2.api.domain.applied_model.AppliedModel;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
 
@@ -27,64 +22,13 @@ public class GrowthDomain
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private AppliedModel appliedModel;
-	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
 	@Autowired
 	private Ph2RealGrowthFStageMapper ph2RealGrowthFStageMapper;
-	@Autowired
-	private GrowthParameterDomain growthParameterDomain;
-	@Autowired
-	private ModelAndDailyDataDomain modelDataDomain;
 
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	// ###############################################
-	/**
-	 * デバイスのモデルテーブルを更新する
-	 * 
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @throws ParseException 
-	 */
-	// ###############################################
-	public void updateModelTable(Long deviceId, Short year)
-		{
-		this.updateModelTable(deviceId, year, null);
-		}
-	// ###############################################
-	/**
-	 * デバイスのモデルテーブルを更新する
-	 * 
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 */
-	// ###############################################
-	public void updateModelTable(Long deviceId, Short year, Ph2ParamsetGrowthEntity param)
-		{
-// * 統計対象開始日から存在しているDailyBaseDataの気温情報を取得
-		List<ModelAndDailyDataEntity> realDayData = this.modelDataDomain.get(deviceId, year);
-
-// * 日ごとデータがある場合
-		if (0 != realDayData.size())
-			{
-			if (null == param)
-				{
-// * デバイスID、年度からパラメータセットを取得
-				param = this.growthParameterDomain.getParmaters(deviceId, year);
-				}
-// * 萌芽日（経過日）を取得する
-			short sproutDay = this.appliedModel.getSproutDay(deviceId, year);
-
-// * モデルデータの更新
-			new GrowthModelDataGenerator(realDayData, param, sproutDay);
-
-// * DBへの更新を行う
-			this.modelDataDomain.upate(realDayData);
-			}
-		}
-
 	// ###############################################
 	/**
 	 * 生育推定F値データ取得
