@@ -91,8 +91,19 @@ public class Formula
 		double a = params.getAreaA();
 		double b = params.getAreaB();
 		double c = params.getAreaC();
+		double exp = 4 * c * ((b - cdd) / a);
+		try
+			{
+			BigDecimal bd = new BigDecimal(exp);
+			bd = bd.setScale(6, RoundingMode.HALF_UP); // 小数第6位で四捨五入
+			exp = bd.doubleValue();
+			}
+		catch(Exception e)
+			{
+			exp = 0;
+			}
 		// LAｃ＝a/(1+exp(4c((b-CDD)/a)))*実測新梢数*ワイブル値
-		return a / (1 + Math.exp(4 * c * ((b - cdd) / a))) * count * wible;
+		return a / (1 + Math.exp(exp)) * count * wible;
 		}
 
 	// --------------------------------------------------

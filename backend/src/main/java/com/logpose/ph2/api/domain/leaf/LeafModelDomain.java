@@ -126,9 +126,10 @@ public class LeafModelDomain
 // * 樹冠葉面積モデル値
 			double tla = 0;
 // * 萌芽日からの経過日数を算出
-			int lapse_day = lapseDay - data.getLapseDay().shortValue();
+			int lapse_day = data.getLapseDay() - lapseDay;
+
 // * 経過日数が１以上なら萌芽後として以下の処理を行う
-			if (lapse_day > 0)
+			if ( lapse_day > 0)
 				{
 				cdd += data.getRawCdd();
 				// * wible値を取得

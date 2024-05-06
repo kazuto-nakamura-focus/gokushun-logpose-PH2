@@ -376,61 +376,61 @@ public class Ph2RealPsAmountEntityExample {
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFEqualTo(Float value)
+		public Criteria andValueFEqualTo(Double value)
 			{
 			addCriterion("value_f =", value, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFNotEqualTo(Float value)
+		public Criteria andValueFNotEqualTo(Double value)
 			{
 			addCriterion("value_f <>", value, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFGreaterThan(Float value)
+		public Criteria andValueFGreaterThan(Double value)
 			{
 			addCriterion("value_f >", value, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFGreaterThanOrEqualTo(Float value)
+		public Criteria andValueFGreaterThanOrEqualTo(Double value)
 			{
 			addCriterion("value_f >=", value, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFLessThan(Float value)
+		public Criteria andValueFLessThan(Double value)
 			{
 			addCriterion("value_f <", value, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFLessThanOrEqualTo(Float value)
+		public Criteria andValueFLessThanOrEqualTo(Double value)
 			{
 			addCriterion("value_f <=", value, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFIn(List<Float> values)
+		public Criteria andValueFIn(List<Double> values)
 			{
 			addCriterion("value_f in", values, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFNotIn(List<Float> values)
+		public Criteria andValueFNotIn(List<Double> values)
 			{
 			addCriterion("value_f not in", values, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFBetween(Float value1, Float value2)
+		public Criteria andValueFBetween(Double value1, Double value2)
 			{
 			addCriterion("value_f between", value1, value2, "valueF");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueFNotBetween(Float value1, Float value2)
+		public Criteria andValueFNotBetween(Double value1, Double value2)
 			{
 			addCriterion("value_f not between", value1, value2, "valueF");
 			return (Criteria) this;
@@ -448,61 +448,61 @@ public class Ph2RealPsAmountEntityExample {
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGEqualTo(Float value)
+		public Criteria andValueGEqualTo(Double value)
 			{
 			addCriterion("value_g =", value, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGNotEqualTo(Float value)
+		public Criteria andValueGNotEqualTo(Double value)
 			{
 			addCriterion("value_g <>", value, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGGreaterThan(Float value)
+		public Criteria andValueGGreaterThan(Double value)
 			{
 			addCriterion("value_g >", value, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGGreaterThanOrEqualTo(Float value)
+		public Criteria andValueGGreaterThanOrEqualTo(Double value)
 			{
 			addCriterion("value_g >=", value, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGLessThan(Float value)
+		public Criteria andValueGLessThan(Double value)
 			{
 			addCriterion("value_g <", value, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGLessThanOrEqualTo(Float value)
+		public Criteria andValueGLessThanOrEqualTo(Double value)
 			{
 			addCriterion("value_g <=", value, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGIn(List<Float> values)
+		public Criteria andValueGIn(List<Double> values)
 			{
 			addCriterion("value_g in", values, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGNotIn(List<Float> values)
+		public Criteria andValueGNotIn(List<Double> values)
 			{
 			addCriterion("value_g not in", values, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGBetween(Float value1, Float value2)
+		public Criteria andValueGBetween(Double value1, Double value2)
 			{
 			addCriterion("value_g between", value1, value2, "valueG");
 			return (Criteria) this;
 			}
 
-		public Criteria andValueGNotBetween(Float value1, Float value2)
+		public Criteria andValueGNotBetween(Double value1, Double value2)
 			{
 			addCriterion("value_g not between", value1, value2, "valueG");
 			return (Criteria) this;
