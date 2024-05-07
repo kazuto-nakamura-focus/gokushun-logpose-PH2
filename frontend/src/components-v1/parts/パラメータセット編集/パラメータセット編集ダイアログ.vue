@@ -15,7 +15,8 @@
               :labels="{ checked: '編集モード', unchecked: '表示モード' }"
               @change="onToggleChange($event)"
             ></toggle-button>
-            <v-tabs v-model="tabModel">
+
+            <v-tabs v-model="tabModel" @change="tabChanged">
               <v-tab href="#tab-1">パラメータセット名</v-tab>
               <!--  <v-tab href="#tab-2" v-show="modelId==1">適用グラフ</v-tab>-->
               <v-tab href="#tab-3">履歴</v-tab>
@@ -43,7 +44,7 @@
                 />
               </v-tab-item>-->
               <v-tab-item value="tab-3">
-                <parameter-set-history ref="refHistory"></parameter-set-history>
+                <parameter-set-history ref="refHistory" @mounted="tabChanged"></parameter-set-history>
               </v-tab-item>
             </v-tabs>
           </v-container>
@@ -55,9 +56,7 @@
 
 <script>
 import { MountController } from "@/lib/mountController.js";
-//import { mdiExitToApp } from "@mdi/js";
 import ParameterSetTag from "@/components/TopStageGrowth/ParameterSet/ParameterSetTag.vue";
-//import ParameterSetGraph from "./Graph/index.vue";
 import ParameterSetHistory from "@/components-v1/parts/パラメータセット編集/履歴.vue";
 import { useGrowthParamDefaultId } from "@/api/TopStateGrowth/GEParameterSets";
 
@@ -74,6 +73,7 @@ export default {
       tabModel: "tab-1",
       defaultId: null,
       isEditMode: false,
+      selectedId: null,
     };
   },
 
@@ -117,7 +117,6 @@ export default {
               this.defaultId,
               this.selectedInfo.menu
             );
-            this.$refs.refHistory.initialize(this.defaultId);
           });
         })
         .catch((error) => {
@@ -128,9 +127,22 @@ export default {
     // 表示パラメータの変更を行う
     //*----------------------------
     changeItem: function (selectedId) {
-      if (null == selectedId) selectedId = this.defaultId;
-      this.$refs.refHistory.initialize(selectedId);
+      this.selectedId = selectedId;
     },
+    //*----------------------------
+    // タブ変更時の処理
+    //*----------------------------
+    tabChanged: function () {
+      // * 履歴タブへの変更
+      if (this.tabModel == "tab-3") {
+        // * タブを変えた時点ではRefsは認識できないので、履歴部分のマウントを待つ
+        if (this.$refs.refHistory !== undefined) {
+          if (null == this.selectedId) this.selectedId = this.defaultId;
+          this.$refs.refHistory.initialize(this.selectedId);
+        }
+      }
+    },
+
     //*----------------------------
     // 編集モードの変更を取得する
     //*----------------------------

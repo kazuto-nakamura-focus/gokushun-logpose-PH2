@@ -31,6 +31,9 @@ export default {
   components: {
     VuePerfectScrollbar,
   },
+  mounted: function () {
+    this.$emit("mounted");
+  },
   methods: {
     initialize: function (paramId) {
       this.histories.length = 0;
