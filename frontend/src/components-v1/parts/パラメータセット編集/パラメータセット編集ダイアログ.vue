@@ -2,7 +2,7 @@
 <template>
   <v-app>
     <v-container>
-      <v-dialog v-model="isDialog" width="700">
+      <v-dialog v-model="isDialog" permanent max-width="700px">
         <v-card>
           <v-container>
             <toggle-button
@@ -58,7 +58,7 @@ import { MountController } from "@/lib/mountController.js";
 //import { mdiExitToApp } from "@mdi/js";
 import ParameterSetTag from "@/components/TopStageGrowth/ParameterSet/ParameterSetTag.vue";
 //import ParameterSetGraph from "./Graph/index.vue";
-import ParameterSetHistory from "@/components/TopStageGrowth/ParameterSet/ParameterSetHistory.vue";
+import ParameterSetHistory from "@/components-v1/parts/パラメータセット編集/履歴.vue";
 import { useGrowthParamDefaultId } from "@/api/TopStateGrowth/GEParameterSets";
 
 export default {

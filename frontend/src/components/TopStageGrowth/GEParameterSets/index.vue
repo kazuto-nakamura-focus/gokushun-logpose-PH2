@@ -61,7 +61,7 @@ import { MountController } from "@/lib/mountController.js";
 import { mdiExitToApp } from "@mdi/js";
 import ParameterSetName from "./ParameterSetName/index.vue";
 import ParameterSetGraph from "./Graph/index.vue";
-import history from "@/components/TopStageGrowth/ParameterSet/ParameterSetHistory.vue";
+import history from "@/components-v1/parts/パラメータセット編集/履歴.vue";
 import {
   useGrowthParamSetList,
   useGrowthParamDefaultId,
@@ -140,7 +140,8 @@ export default {
   },
 
   mounted() {
-    this.isEditMode = false;s
+    this.isEditMode = false;
+    s;
     this.shared.mount(this);
   },
   updated() {},
@@ -333,7 +334,6 @@ export default {
       this.selectAfterParameterSetData = null;
       this.selectAfterParameterSetData = data;
     },
-   
   },
 };
 </script>

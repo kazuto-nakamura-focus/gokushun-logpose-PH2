@@ -4,17 +4,11 @@
       <VuePerfectScrollbar class="scroll-area">
         <div v-for="item in histories" :key="item.id" class="GS_history_row">
           <div class="GS_history_header">
-            <div>
-              {{ item.date }}
-            </div>
+            <div>{{ item.date }}</div>
             <div style="min-width: 10px"></div>
-            <div>
-              {{ item.name }}
-            </div>
+            <div>{{ item.name }}</div>
           </div>
-          <div class="GS_history_comment">
-            {{ item.comment }}
-          </div>
+          <div class="GS_history_comment">{{ item.comment }}</div>
           <v-divider></v-divider>
         </div>
       </VuePerfectScrollbar>

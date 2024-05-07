@@ -72,7 +72,7 @@ import moment from "moment";
 import allEditButtons from "@/components-v1/parts/graph/editButtons.json";
 import { DialogController } from "@/lib/mountController.js";
 import GEActualValueInput from "@/components-v1/GrowthModel/RealInput/GEMainInput.vue";
-import ParmeterSetDialog from "@/components/TopStageGrowth/ParameterSet/ParmeterSetDialog.vue";
+import ParmeterSetDialog from "@/components-v1/parts/パラメータセット編集/パラメータセット編集ダイアログ.vue";
 import ReferenceFValue from "@/components-v1/GrowthModel/RealFValueIput/index.vue";
 import LAActualValueInput from "@/components-v1/LeafModel/RealValueInput/葉面積葉枚数実績値入力画面.vue";
 import PEActualValueInput from "@/components/TopStageGrowth/actualValueInput/PEInput.vue";
@@ -125,7 +125,6 @@ export default {
         this.comment = "コメント:" + this.comment;
       }
       this.selectedMenu = this.target.selectedItems;
-      console.log("selected");
       console.log(this.selectedMenu);
       this.modelId = this.selectedMenu.selectedModel.id;
       // * ボタンの表示

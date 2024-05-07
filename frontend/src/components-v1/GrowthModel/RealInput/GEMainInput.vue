@@ -177,7 +177,6 @@ export default {
     };
   },
   mounted() {
-    console.log("fvc");
     this.shared.mount(this);
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;
