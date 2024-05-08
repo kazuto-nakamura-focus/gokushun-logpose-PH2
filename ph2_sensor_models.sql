@@ -1,9 +1,0 @@
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (1, 'HSHCAA106E', '0001-01-01 06:39:21.99594', '0001-01-01 06:39:21.99594');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (2, 'HSHCAA120B', '0001-01-01 06:39:22.00153', '0001-01-01 06:39:22.00153');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (3, 'HSHCAA114A', '0001-01-01 06:39:22.006511', '0001-01-01 06:39:22.006511');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (4, 'SP-110', '0001-01-01 06:39:22.0115', '0001-01-01 06:39:22.0115');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (5, 'MIJ-02LMS', '0001-01-01 06:39:22.016668', '0001-01-01 06:39:22.016668');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (6, 'PHYTOS-31', '0001-01-01 06:39:22.022005', '0001-01-01 06:39:22.022005');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (7, 'WATERMARK-200SS', '0001-01-01 06:39:22.027234', '0001-01-01 06:39:22.027234');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (34, 'SODIAL', '0001-01-01 07:57:53.90287', '0001-01-01 07:57:53.90287');
-INSERT INTO "ph2_sensor_models" ("id", "code", "created_at", "updated_at") VALUES (35, 'SM-150T', '2023-11-24 10:00:00.00000', '2023-11-24 10:00:00.00000');

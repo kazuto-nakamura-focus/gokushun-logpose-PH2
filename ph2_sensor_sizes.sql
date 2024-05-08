@@ -1,6 +1,0 @@
-INSERT INTO "ph2_sensor_sizes" ("id", "size", "dxd", "dxu", "dt", "rs", "created_at", "updated_at") VALUES (1, 8, '0.014', '0.011', '0.03', 267, '0001-01-01 09:54:14.255831', '0001-01-01 09:54:14.255831');
-INSERT INTO "ph2_sensor_sizes" ("id", "size", "dxd", "dxu", "dt", "rs", "created_at", "updated_at") VALUES (2, 10, '0.017', '0.0135', '0.035', 200, '0001-01-01 09:54:14.262327', '0001-01-01 09:54:14.262327');
-INSERT INTO "ph2_sensor_sizes" ("id", "size", "dxd", "dxu", "dt", "rs", "created_at", "updated_at") VALUES (3, 15, '0.025', '0.02', '0.05', 160, '0001-01-01 09:54:14.267936', '0001-01-01 09:54:14.267936');
-INSERT INTO "ph2_sensor_sizes" ("id", "size", "dxd", "dxu", "dt", "rs", "created_at", "updated_at") VALUES (4, 20, '0.033', '0.0265', '0.065', 126, '0001-01-01 09:54:14.274075', '0001-01-01 09:54:14.274075');
-INSERT INTO "ph2_sensor_sizes" ("id", "size", "dxd", "dxu", "dt", "rs", "created_at", "updated_at") VALUES (5, 25, '0.041', '0.033', '0.08', 60, '0001-01-01 09:54:14.278914', '0001-01-01 09:54:14.278914');
-INSERT INTO "ph2_sensor_sizes" ("id", "size", "dxd", "dxu", "dt", "rs", "created_at", "updated_at") VALUES (6, 30, '0.049', '0.0395', '0.095', 34, '0001-01-01 09:54:14.283927', '0001-01-01 09:54:14.283927');
