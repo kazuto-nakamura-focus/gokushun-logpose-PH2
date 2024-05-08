@@ -15,7 +15,7 @@
   </v-app>
 </template>
 <script>
-import InputHeader from "@/components/TopStageGrowth/actualValueInput/InputHeader.vue";
+import InputHeader from "@/components-v1/parts/変数入力画面ヘッダー.vue";
 import leafCountInput from "@/components-v1/LeafModel/RealValueInput/新梢数更新.vue";
 import leafAreaInput from "@/components-v1/LeafModel/RealValueInput/葉面積葉枚数更新.vue";
 

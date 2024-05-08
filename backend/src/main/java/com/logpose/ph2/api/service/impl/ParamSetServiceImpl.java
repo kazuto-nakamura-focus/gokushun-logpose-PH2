@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.domain.ParameterSetDomain;
 import com.logpose.ph2.api.domain.growth.GrowthParameterDomain;
-import com.logpose.ph2.api.domain.leaf.LeafDomain;
-import com.logpose.ph2.api.domain.photosynthesis.PSModelDataParameterAggregator;
+import com.logpose.ph2.api.domain.leaf.LeafParameterDomain;
+import com.logpose.ph2.api.domain.photosynthesis.PSParameterSetDomain;
 import com.logpose.ph2.api.dto.HistoryDTO;
 import com.logpose.ph2.api.dto.LeafParamSetDTO;
 import com.logpose.ph2.api.dto.ParamSetExtendDTO;
@@ -33,9 +33,9 @@ public class ParamSetServiceImpl implements ParamSetService
 	@Autowired
 	private GrowthParameterDomain growthParameterDomain;
 	@Autowired
-	private LeafDomain leafDomain;
+	private LeafParameterDomain leafParameterDomain;
 	@Autowired
-	private PSModelDataParameterAggregator photoSynthesisDomain;
+	private PSParameterSetDomain pSParameterSetDomain;
 
 	// ===============================================
 	// パブリック関数
@@ -75,12 +75,12 @@ public class ParamSetServiceImpl implements ParamSetService
 			}
 		else if (ModelMaster.LEAF == modelId)
 			{
-			LeafParamSetDTO entity = this.leafDomain.getParmaters(deviceId, year);
+			LeafParamSetDTO entity = this.leafParameterDomain.getParmaters(deviceId, year);
 			return entity.getId();
 			}
 		else if(ModelMaster.PHOTO == modelId)
 			{
-			PhotosynthesisParamSetDTO entity = this.photoSynthesisDomain.getParmaters(deviceId, year);
+			PhotosynthesisParamSetDTO entity = this.pSParameterSetDomain.getParmaters(deviceId, year);
 			return entity.getId();
 			}
 		return null;

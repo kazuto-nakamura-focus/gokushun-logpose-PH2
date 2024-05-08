@@ -2,7 +2,6 @@ package com.logpose.ph2.api.domain;
 
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -218,7 +217,7 @@ public class ParameterSetDomain
 	public Long addCatalogData(Integer modelId, Long deviceId, short year)
 		{
 		ParamSetDTO dto = new ParamSetDTO();
-		dto.setDate(new Date());
+		//dto.setDate(new Date());
 		dto.setComment("パラメータはシステムによるデフォルトの初期設定を使用しています。");
 		dto.setUserId((long) 1);
 		dto.setName("system");

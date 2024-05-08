@@ -88,9 +88,10 @@ public interface GrowthService
 	 * 生育推定実績値更新
 	 *
 	 * @param dto FDataListDTO
+	 * @throws ParseException 
 	 */
 	// ###############################################
-	public void updateFData(FDataListDTO dto);
+	public void updateFData(FDataListDTO dto) throws ParseException;
 
 	// ###############################################
 	/**

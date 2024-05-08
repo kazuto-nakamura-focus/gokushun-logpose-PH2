@@ -11,9 +11,9 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.domain.growth.FValueDomain;
 import com.logpose.ph2.api.domain.growth.GrowthDomain;
+import com.logpose.ph2.api.domain.growth.GrowthGraphDomain;
 import com.logpose.ph2.api.domain.growth.GrowthParameterDomain;
-import com.logpose.ph2.api.domain.leaf.LeafDomain;
-import com.logpose.ph2.api.domain.photosynthesis.PhotoSynthesisDomain;
+import com.logpose.ph2.api.domain.model.ModelDataDomain;
 import com.logpose.ph2.api.dto.EventDaysDTO;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
@@ -35,16 +35,16 @@ public class GrowthServiceImpl implements GrowthService
 	@Autowired
 	private GrowthDomain growthDomain;
 	@Autowired
-	private LeafDomain leafDomain;
-	@Autowired
 	private FValueDomain fValueDomain;
 	@Autowired
-	private PhotoSynthesisDomain photoSynthesisDomain;
+	private GrowthGraphDomain growthGraphDomain;
 	@Autowired
 	private GrowthParameterDomain growthParameterDomain;
-
+	@Autowired
+	private ModelDataDomain modelDataDomain;
+	
 	// ===============================================
-	// パブリック関数
+	// パブリック関数群（検索系)
 	// ===============================================
 	// ###############################################
 	/**
@@ -54,34 +54,14 @@ public class GrowthServiceImpl implements GrowthService
 	 * @param deviceId デバイスID
 	 * @param year 対象年度
 	 * @return ModelGraphDataDTO
-	 * @throws ParseException 
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public ModelGraphDataDTO getModelGraph(Long deviceId, Short year)
-			throws ParseException
 		{
-		return this.growthDomain.getModelGraph(deviceId, year);
+		return this.growthGraphDomain.getModelGraph(deviceId, year);
 		}
-
-	// ###############################################
-	/**
-	 * 生育推定モデルグラフデータ取得
-	 *    デイリーデータをベースに再計算をしてデータを取得する
-	 *
-	 * @param deviceId-デバイスID
-	 * @param year-対象年度
-	 * @param paramId-パラメータID
-	 * @return ModelGraphDataDTO
-	 * @throws ParseException 
-	 */
-	// ###############################################
-/*	public ModelGraphDataDTO getSumilateGraph(
-			Long deviceId, Short year, Long paramId) throws ParseException
-		{
-		return this.growthDomain.getSimulateModelGraph(deviceId, year, paramId);
-		}*/
 
 	// ###############################################
 	/**
@@ -93,10 +73,10 @@ public class GrowthServiceImpl implements GrowthService
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(readOnly = true)
 	public List<EventDaysDTO> getEvent(Long deviceId, Short year)
 		{
-		return this.growthDomain.getEvent(deviceId, year);
+		return this.growthGraphDomain.getEvent(deviceId, year);
 		}
 
 	// ###############################################
@@ -106,13 +86,11 @@ public class GrowthServiceImpl implements GrowthService
 	 * @param deviceId デバイスID
 	 * @param year 年度
 	 * @return List<Ph2RealGrowthFStageEntity>
-	 * @throws ParseException 
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public List<Ph2RealGrowthFStageEntity> getAllF(Long deviceId,
-			Short year) throws ParseException
+	@Transactional(readOnly = true)
+	public List<Ph2RealGrowthFStageEntity> getAllF(Long deviceId, Short year)
 		{
 		return this.growthDomain.getALlFValus(deviceId, year);
 		}
@@ -124,49 +102,14 @@ public class GrowthServiceImpl implements GrowthService
 	 * @param deviceId デバイスID
 	 * @param date 日付
 	 * @return ValueDateDTO
-	 * @throws Exception 
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public ValueDateDTO getFData(Long deviceId, Date date) throws Exception
+	@Transactional(readOnly = true)
+	public ValueDateDTO getFData(Long deviceId, Date date)
 		{
 		return this.growthDomain.getRealFData(deviceId, date);
 		}
-
-	// ###############################################
-	/**
-	 * 生育推定実績値更新
-	 *
-	 * @param dto FDataListDTO
-	 */
-	// ###############################################
-	@Override
-	@Transactional(rollbackFor = Exception.class)
-	public void updateFData(FDataListDTO dto)
-		{
-		this.growthDomain.updateFValues(dto);
-		}
-
-	// --------------------------------------------------
-	/**
-	 * デフォルトパラメータの変更
-	 *
-	 * @param deviceId デバイスID
-	 * @param year 年度
-	 * @param paramId -パラメータセットID
-	 * @throws ParseException 
-	 */
-	// --------------------------------------------------
-/*
- * @Override
- * @Transactional(rollbackFor = Exception.class)
- * public void setParameter(Long deviceId, Short year, Long paramId) throws
- * ParseException
- * {
- * this.growthDomain.setDefault(deviceId, year, paramId);
- * }
- */
 
 	// ###############################################
 	/**
@@ -185,6 +128,41 @@ public class GrowthServiceImpl implements GrowthService
 
 	// ###############################################
 	/**
+	 * 日付からF値の情報を得る
+	 *
+	 * @param id 
+	 * @param date
+	 * @throws ParseException 
+	 */
+	// ###############################################
+	@Override
+	public FValuesDTO checkFValueByDate(Long id, String date) throws ParseException
+		{
+		return this.fValueDomain.checkFValueByDate(id, date);
+		}
+
+	// ===============================================
+	// パブリック関数群（更新系)
+	// ===============================================
+	// ###############################################
+	/**
+	 * 生育推定実績値更新
+	 *
+	 * @param dto FDataListDTO
+	 * @throws ParseException 
+	 */
+	// ###############################################
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void updateFData(FDataListDTO dto) throws ParseException
+		{
+		this.growthDomain.updateFValues(dto);
+// * モデルデータの更新
+		this.modelDataDomain.doService(dto.getDeviceId(), dto.getYear());
+		}
+
+	// ###############################################
+	/**
 	 * デフォルト値の設定
 	 * 
 	 * @param deviceId デバイスID
@@ -198,11 +176,9 @@ public class GrowthServiceImpl implements GrowthService
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
-		this.growthParameterDomain.setDefault(deviceId, year, paramId);
-		this.growthDomain.updateModelTable(deviceId, year);
-		this.fValueDomain.resetActualDate(deviceId, year);
-		this.leafDomain.updateModelTable(deviceId, year);
-		this.photoSynthesisDomain.updateModelTable(deviceId, year);
+		GrowthParamSetDTO  params = this.growthParameterDomain.setDefault(deviceId, year, paramId);
+// * モデルデータの更新
+		this.modelDataDomain.updateByGrowthParams(deviceId, year, params);
 		}
 
 	// ###############################################
@@ -217,12 +193,10 @@ public class GrowthServiceImpl implements GrowthService
 	@Transactional(rollbackFor = Exception.class)
 	public void updateParamSet(GrowthParamSetDTO dto) throws ParseException
 		{
-		if (this.growthParameterDomain.updateParamSet(dto))
+		GrowthParamSetDTO params = this.growthParameterDomain.updateParamSet(dto);
+		if (null != params)
 			{
-			this.growthDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
-			this.fValueDomain.resetActualDate(dto.getDeviceId(), dto.getYear());
-			this.leafDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
-			this.photoSynthesisDomain.updateModelTable(dto.getDeviceId(), dto.getYear());
+			this.modelDataDomain.updateByGrowthParams(dto.getDeviceId(), dto.getYear(), params);
 			}
 		}
 
@@ -241,18 +215,4 @@ public class GrowthServiceImpl implements GrowthService
 		return this.growthParameterDomain.addParamSet(null, dto);
 		}
 
-	// ###############################################
-	/**
-	 * 日付からF値の情報を得る
-	 *
-	 * @param id 
-	 * @param date
-	 * @throws ParseException 
-	 */
-	// ###############################################
-	@Override
-	public FValuesDTO checkFValueByDate(Long id, String date) throws ParseException
-		{
-		return this.fValueDomain.checkFValueByDate(id, date);
-		}
 	}

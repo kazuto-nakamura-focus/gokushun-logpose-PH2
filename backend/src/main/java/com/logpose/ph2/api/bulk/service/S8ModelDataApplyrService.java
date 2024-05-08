@@ -8,8 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.logpose.ph2.api.bulk.domain.ModelDataDomain;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.api.domain.model.ModelDataDomain;
 
 @Service
 public class S8ModelDataApplyrService
@@ -47,7 +47,7 @@ public class S8ModelDataApplyrService
 				if (entity.getLapseDay().shortValue() == 1)
 					{
 					LOG.info(year + "年度モデルデータの作成。", deviceId);
-					this.modelDataDomain.doService(deviceId, entity.getYear(), entity.getDate());
+					this.modelDataDomain.doService(deviceId, entity.getYear());
 					}
 				}
 			}

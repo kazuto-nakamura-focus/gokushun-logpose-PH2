@@ -71,7 +71,7 @@ import CellRender from "./CellRender.vue";
 import { useGrowthFAll } from "@/api/TopStateGrowth/GEFValue/index";
 import { useGrowthFData } from "@/api/TopStateGrowth/GEActualValueInput/index";
 import { useGrowthFDataUpdate } from "@/api/TopStateGrowth/GEActualValueInput/index";
-import InputHeader from "@/components/TopStageGrowth/actualValueInput/InputHeader.vue";
+import InputHeader from "@/components-v1/parts/変数入力画面ヘッダー.vue";
 
 export default {
   name: "GEActualValueInput",
@@ -177,7 +177,6 @@ export default {
     };
   },
   mounted() {
-    console.log("fvc");
     this.shared.mount(this);
     this.gridApi = this.gridOptions.api;
     this.gridColumnApi = this.gridOptions.columnApi;

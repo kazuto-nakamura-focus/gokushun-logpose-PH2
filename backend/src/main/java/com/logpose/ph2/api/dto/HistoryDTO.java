@@ -1,7 +1,5 @@
 package com.logpose.ph2.api.dto;
 
-import java.util.Date;
-
 import lombok.Data;
 
 /**
@@ -11,7 +9,7 @@ import lombok.Data;
 public class HistoryDTO
 	{
 	//* 日時
-	private Date date;
+	private String date;
 	//* 変更者ID
 	private Long userId;
 	//* 変更者名

@@ -259,7 +259,6 @@ export default {
     // 新梢辺り葉枚数・平均個葉面積取得を行うAPIと処理
     // ======================================================
     callAPILeafValueAllAreaAndCountDetail: function () {
-      console.log("afv");
       // * 実績値の取得
       useLeafValueAllAreaAndCountDetail(this.deviceId, this.year)
         .then((response) => {
@@ -297,7 +296,6 @@ export default {
     // 値をリセットする
     // ======================================================
     reset() {
-      console.log("ss");
       this.callAPILeafValueAllAreaAndCountDetail();
     },
     // ======================================================

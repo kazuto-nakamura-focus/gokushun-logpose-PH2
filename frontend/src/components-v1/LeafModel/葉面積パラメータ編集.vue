@@ -108,6 +108,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.areaA"
+                background-color="#F4FCE0"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">b</v-subheader>
               <v-text-field
@@ -116,6 +117,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.areaB"
+                background-color="#F4FCE0"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">c</v-subheader>
               <v-text-field
@@ -124,6 +126,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.areaC"
+                background-color="#F4FCE0"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -137,6 +140,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.countC"
+                background-color="#F4FCE0"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">d</v-subheader>
               <v-text-field
@@ -145,6 +149,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.countD"
+                background-color="#F4FCE0"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -163,15 +168,15 @@ import {
 
 export default {
   props: {
-    isEditMode:Boolean,
+    isEditMode: Boolean,
     beforeParameterSetData: Object,
-    afterParameterSetData:Object,
+    afterParameterSetData: Object,
   },
 
   data() {
     return {
-      beforeData:this.beforeParameterSetData,
-      afterData:this.afterParameterSetData
+      beforeData: this.beforeParameterSetData,
+      afterData: this.afterParameterSetData,
     };
   },
   methods: {
@@ -189,7 +194,7 @@ export default {
           } else {
             this.beforeData = results.data;
             this.afterData = Object.assign({}, this.beforeData);
-            this.$emit('updateData',results.data );
+            this.$emit("updateData", results.data);
           }
         })
         .catch((error) => {
@@ -213,9 +218,9 @@ export default {
           if (results.status != 0) {
             console.log(results.message);
             alert("葉面積パラメータセットの追加に失敗しました。");
-          }else {
+          } else {
             alert("葉面積パラメータセットを追加しました。");
-            this.$emit('addData',results.data );
+            this.$emit("addData", results.data);
           }
         })
         .catch((error) => {
@@ -238,9 +243,9 @@ export default {
           if (results.status != 0) {
             console.log(results.message);
             alert("葉面積パラメータセットの更新に失敗しました。");
-          } else{
+          } else {
             alert("葉面積パラメータセットを更新しました。");
-            this.$emit('updateData',parentData );
+            this.$emit("updateData", parentData);
           }
         })
         .catch((error) => {

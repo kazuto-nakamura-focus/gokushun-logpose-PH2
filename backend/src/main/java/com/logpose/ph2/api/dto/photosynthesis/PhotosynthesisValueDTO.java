@@ -16,7 +16,7 @@ public class PhotosynthesisValueDTO
 	//* 実測日
 	private String date;
 	//* f値
-	private Float f;
+	private Double f;
 	//* g値
-	private Float g;
+	private Double g;
 	}

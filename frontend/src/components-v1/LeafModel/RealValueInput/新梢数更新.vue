@@ -126,8 +126,6 @@ export default {
     // サーバーデータの取得
     //* ============================================
     callAPILeafValueShootDetail() {
-      console.log("ccc");
-
       useLeafValueShootDetail(this.deviceId, this.year)
         .then((response) => {
           const { status, message, data } = response["data"];

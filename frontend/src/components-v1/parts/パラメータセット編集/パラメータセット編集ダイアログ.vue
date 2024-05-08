@@ -2,24 +2,29 @@
 <template>
   <v-app>
     <v-container>
-      <v-dialog v-model="isDialog" width="700">
+      <v-dialog v-model="isDialog" persistent max-width="700px">
         <v-card>
           <v-container>
-            <toggle-button
-              v-show="tabModel == 'tab-1'"
-              :value="false"
-              :checked="isEditMode"
-              v-model="isEditMode"
-              :width="125"
-              :height="27"
-              :labels="{ checked: '編集モード', unchecked: '表示モード' }"
-              @change="onToggleChange($event)"
-            ></toggle-button>
-            <v-tabs v-model="tabModel">
-              <v-tab href="#tab-1">パラメータセット名</v-tab>
+            <!-- タイトル部分 -->
+            <input-header ref="titleHeader" />
+
+            <v-tabs v-model="tabModel" @change="tabChanged">
+              <v-tab href="#tab-1">パラメータセット編集</v-tab>
               <!--  <v-tab href="#tab-2" v-show="modelId==1">適用グラフ</v-tab>-->
               <v-tab href="#tab-3">履歴</v-tab>
               <v-tab-item value="tab-1">
+                <div style="margin-top:10px">
+                  <toggle-button
+                    v-show="tabModel == 'tab-1'"
+                    :value="false"
+                    :checked="isEditMode"
+                    v-model="isEditMode"
+                    :width="125"
+                    :height="27"
+                    :labels="{ checked: '編集モード', unchecked: '表示モード' }"
+                    @change="onToggleChange($event)"
+                  ></toggle-button>
+                </div>
                 <v-card-text>
                   <div class="modal-tab">
                     <parameter-set-tag
@@ -43,7 +48,7 @@
                 />
               </v-tab-item>-->
               <v-tab-item value="tab-3">
-                <parameter-set-history ref="refHistory"></parameter-set-history>
+                <parameter-set-history ref="refHistory" @mounted="tabChanged"></parameter-set-history>
               </v-tab-item>
             </v-tabs>
           </v-container>
@@ -54,11 +59,10 @@
 </template>
 
 <script>
+import InputHeader from "@/components-v1/parts/変数入力画面ヘッダー.vue";
 import { MountController } from "@/lib/mountController.js";
-//import { mdiExitToApp } from "@mdi/js";
-import ParameterSetTag from "@/components/TopStageGrowth/ParameterSet/ParameterSetTag.vue";
-//import ParameterSetGraph from "./Graph/index.vue";
-import ParameterSetHistory from "@/components/TopStageGrowth/ParameterSet/ParameterSetHistory.vue";
+import ParameterSetTag from "@/components-v1/parts/パラメータセット編集/編集タブ共通.vue";
+import ParameterSetHistory from "@/components-v1/parts/パラメータセット編集/履歴タブ.vue";
 import { useGrowthParamDefaultId } from "@/api/TopStateGrowth/GEParameterSets";
 
 export default {
@@ -74,11 +78,12 @@ export default {
       tabModel: "tab-1",
       defaultId: null,
       isEditMode: false,
+      selectedId: null,
     };
   },
 
   components: {
-    //ParameterSetGraph,
+    InputHeader,
     ParameterSetHistory,
     ParameterSetTag,
   },
@@ -92,6 +97,9 @@ export default {
     // 初期表示を行う
     //*----------------------------
     initialize: function (selectedInfo) {
+      this.$nextTick(function () {
+        this.$refs.titleHeader.initialize(selectedInfo.menu);
+      });
       //* 選択されたデバイスや年度など
       this.selectedInfo = selectedInfo;
       //* モデル
@@ -117,7 +125,6 @@ export default {
               this.defaultId,
               this.selectedInfo.menu
             );
-            this.$refs.refHistory.initialize(this.defaultId);
           });
         })
         .catch((error) => {
@@ -128,9 +135,22 @@ export default {
     // 表示パラメータの変更を行う
     //*----------------------------
     changeItem: function (selectedId) {
-      if (null == selectedId) selectedId = this.defaultId;
-      this.$refs.refHistory.initialize(selectedId);
+      this.selectedId = selectedId;
     },
+    //*----------------------------
+    // タブ変更時の処理
+    //*----------------------------
+    tabChanged: function () {
+      // * 履歴タブへの変更
+      if (this.tabModel == "tab-3") {
+        // * タブを変えた時点ではRefsは認識できないので、履歴部分のマウントを待つ
+        if (this.$refs.refHistory !== undefined) {
+          if (null == this.selectedId) this.selectedId = this.defaultId;
+          this.$refs.refHistory.initialize(this.selectedId);
+        }
+      }
+    },
+
     //*----------------------------
     // 編集モードの変更を取得する
     //*----------------------------
@@ -154,7 +174,9 @@ export default {
 .theme--light.v-text-field--solo > .v-input__control > .v-input__slot {
   background: #f4f5fa;
 }
-
+.select_size {
+  max-width: 90%;
+}
 .modal-tab {
   background-color: white;
   padding: 5px;

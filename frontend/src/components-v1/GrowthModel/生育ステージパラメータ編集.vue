@@ -76,6 +76,7 @@
                   hide-details="auto"
                   outlined
                   v-model.trim.number="afterData.bd"
+                  background-color="#F4FCE0"
                 ></v-text-field>
                 <v-subheader class="ma-0 pa-1">e</v-subheader>
                 <v-text-field
@@ -84,6 +85,7 @@
                   hide-details="auto"
                   outlined
                   v-model.trim.number="afterData.be"
+                  background-color="#F4FCE0"
                 ></v-text-field>
               </v-row>
             </v-col>
@@ -97,6 +99,7 @@
                   hide-details="auto"
                   outlined
                   v-model.trim.number="afterData.ad"
+                  background-color="#F4FCE0"
                 ></v-text-field>
                 <v-subheader class="ma-0 pa-1">e</v-subheader>
                 <v-text-field
@@ -105,6 +108,7 @@
                   hide-details="auto"
                   outlined
                   v-model.trim.number="afterData.ae"
+                  background-color="#F4FCE0"
                 ></v-text-field>
               </v-row>
             </v-col>
@@ -179,7 +183,6 @@ export default {
             this.$emit("addData", results.data);
           }
         })
-        .bind(this)
         .catch((error) => {
           console.log(error);
         });

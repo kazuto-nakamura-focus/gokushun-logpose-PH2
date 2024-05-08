@@ -57,7 +57,7 @@ import {
   useGrowthFData,
   useGrowthFDataByDate,
 } from "@/api/TopStateGrowth/GEActualValueInput/index";
-import InputHeader from "@/components/TopStageGrowth/actualValueInput/InputHeader.vue";
+import InputHeader from "@/components-v1/parts/変数入力画面ヘッダー.vue";
 
 export default {
   name: "EditDialog",
