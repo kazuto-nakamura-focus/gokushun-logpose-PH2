@@ -2,25 +2,29 @@
 <template>
   <v-app>
     <v-container>
-      <v-dialog v-model="isDialog" permanent max-width="700px">
+      <v-dialog v-model="isDialog" persistent max-width="700px">
         <v-card>
           <v-container>
-            <toggle-button
-              v-show="tabModel == 'tab-1'"
-              :value="false"
-              :checked="isEditMode"
-              v-model="isEditMode"
-              :width="125"
-              :height="27"
-              :labels="{ checked: '編集モード', unchecked: '表示モード' }"
-              @change="onToggleChange($event)"
-            ></toggle-button>
+            <!-- タイトル部分 -->
+            <input-header ref="titleHeader" />
 
             <v-tabs v-model="tabModel" @change="tabChanged">
-              <v-tab href="#tab-1">パラメータセット名</v-tab>
+              <v-tab href="#tab-1">パラメータセット編集</v-tab>
               <!--  <v-tab href="#tab-2" v-show="modelId==1">適用グラフ</v-tab>-->
               <v-tab href="#tab-3">履歴</v-tab>
               <v-tab-item value="tab-1">
+                <div style="margin-top:10px">
+                  <toggle-button
+                    v-show="tabModel == 'tab-1'"
+                    :value="false"
+                    :checked="isEditMode"
+                    v-model="isEditMode"
+                    :width="125"
+                    :height="27"
+                    :labels="{ checked: '編集モード', unchecked: '表示モード' }"
+                    @change="onToggleChange($event)"
+                  ></toggle-button>
+                </div>
                 <v-card-text>
                   <div class="modal-tab">
                     <parameter-set-tag
@@ -55,9 +59,10 @@
 </template>
 
 <script>
+import InputHeader from "@/components-v1/parts/変数入力画面ヘッダー.vue";
 import { MountController } from "@/lib/mountController.js";
-import ParameterSetTag from "@/components/TopStageGrowth/ParameterSet/ParameterSetTag.vue";
-import ParameterSetHistory from "@/components-v1/parts/パラメータセット編集/履歴.vue";
+import ParameterSetTag from "@/components-v1/parts/パラメータセット編集/編集タブ共通.vue";
+import ParameterSetHistory from "@/components-v1/parts/パラメータセット編集/履歴タブ.vue";
 import { useGrowthParamDefaultId } from "@/api/TopStateGrowth/GEParameterSets";
 
 export default {
@@ -78,7 +83,7 @@ export default {
   },
 
   components: {
-    //ParameterSetGraph,
+    InputHeader,
     ParameterSetHistory,
     ParameterSetTag,
   },
@@ -92,6 +97,9 @@ export default {
     // 初期表示を行う
     //*----------------------------
     initialize: function (selectedInfo) {
+      this.$nextTick(function () {
+        this.$refs.titleHeader.initialize(selectedInfo.menu);
+      });
       //* 選択されたデバイスや年度など
       this.selectedInfo = selectedInfo;
       //* モデル
@@ -166,7 +174,9 @@ export default {
 .theme--light.v-text-field--solo > .v-input__control > .v-input__slot {
   background: #f4f5fa;
 }
-
+.select_size {
+  max-width: 90%;
+}
 .modal-tab {
   background-color: white;
   padding: 5px;

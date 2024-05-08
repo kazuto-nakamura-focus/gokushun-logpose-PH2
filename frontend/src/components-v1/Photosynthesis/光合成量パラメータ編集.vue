@@ -106,6 +106,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.fieldF"
+                background-color="#F4FCE0"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">g</v-subheader>
               <v-text-field
@@ -114,6 +115,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.fieldG"
+                background-color="#F4FCE0"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -127,6 +129,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.weibullA"
+                background-color="#F4FCE0"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">β</v-subheader>
               <v-text-field
@@ -135,6 +138,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.weibullB"
+                background-color="#F4FCE0"
               ></v-text-field>
               <v-subheader class="ma-0 pa-1">λ</v-subheader>
               <v-text-field
@@ -143,6 +147,7 @@
                 hide-details="auto"
                 outlined
                 v-model.trim.number="afterData.weibullL"
+                background-color="#F4FCE0"
               ></v-text-field>
             </v-row>
           </v-col>
@@ -168,7 +173,7 @@ export default {
 
   data() {
     return {
-      beforeData:this.beforeParameterSetData,
+      beforeData: this.beforeParameterSetData,
       afterData: this.afterParameterSetData,
     };
   },

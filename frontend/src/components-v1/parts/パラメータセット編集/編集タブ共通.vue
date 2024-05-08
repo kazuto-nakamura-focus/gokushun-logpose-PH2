@@ -1,9 +1,8 @@
 <template>
   <v-container>
     <div>
-      <div class="text-subtitle-1">パラメータセット名</div>
       <v-row>
-        <v-col cols="6">
+        <v-col cols="12">
           <v-select
             width="100%"
             v-model="paramId"
@@ -12,23 +11,15 @@
             item-value="id"
             class="select_size ml-1"
             @change="getItem"
+            label="パラメータセット名"
             expand
           ></v-select>
         </v-col>
-        <v-col cols="6">
-          <v-btn
-            color="primary"
-            class="ma-2 white--text"
-            elevation="2"
-            @click="setDefault"
-          >デフォルトパラメータに設定</v-btn>
-        </v-col>
       </v-row>
-
       <!--<v-subheader class="ma-0 pa-0" v-show="!isEditMode">{{
         title
       }}</v-subheader>-->
-      <div>
+      <div style="border:1px dotted gray;margin-top:10px;">
         <geParameterSets
           ref="refParameterSets"
           v-if="modelId == 1"
@@ -60,95 +51,105 @@
           :afterParameterSetData="afterParameterSetData"
         ></peParameterSets>
       </div>
-      <div v-if="!isEditMode">
-        <div class="text-subtitle-1">説明</div>
-        <v-text-field
-          class="ma-0 pa-0"
-          :value="beforeParameterSetData.comment"
-          single-line
-          full-width
-          filled
-          :readonly="!isEditMode"
-        ></v-text-field>
-        <div class="text-subtitle-1">編集者</div>
-        <v-text-field
-          class="ma-0 pa-0"
-          :value="beforeParameterSetData.name"
-          single-line
-          full-width
-          filled
-          :readonly="!isEditMode"
-        ></v-text-field>
-      </div>
 
-      <div v-if="isEditMode">
-        <div class="text-subtitle-1">説明</div>
-        <v-text-field
-          class="ma-0 pa-0"
-          :rules="[ruleContents]"
-          v-model.number="afterParameterSetData.comment"
-          single-line
-          full-width
-          :filled="!isEditMode"
-          :readonly="!isEditMode"
-        ></v-text-field>
-        <div class="text-subtitle-1">編集者</div>
-        <v-text-field
-          class="ma-0 pa-0"
-          :rules="[ruleAuthor]"
-          v-model.number="afterParameterSetData.name"
-          single-line
-          full-width
-          :filled="!isEditMode"
-          :readonly="!isEditMode"
-        ></v-text-field>
+      <div style="margin-top:30px">
+        <div v-if="!isEditMode">
+          <v-text-field
+            label="説明"
+            class="ma-0 pa-0"
+            :value="beforeParameterSetData.comment"
+            :readonly="!isEditMode"
+          ></v-text-field>
+          <v-text-field
+            label="編集者"
+            class="ma-0 pa-0"
+            :value="beforeParameterSetData.name"
+            :readonly="!isEditMode"
+          ></v-text-field>
+        </div>
+
+        <div v-if="isEditMode">
+          <v-text-field
+            label="説明"
+            class="ma-0 pa-0"
+            :rules="[ruleContents]"
+            v-model.number="afterParameterSetData.comment"
+            background-color="#F4FCE0"
+            :filled="!isEditMode"
+            :readonly="!isEditMode"
+          ></v-text-field>
+          <v-text-field
+            label="編集者"
+            class="ma-0 pa-0"
+            :rules="[ruleAuthor]"
+            v-model.number="afterParameterSetData.name"
+            background-color="#F4FCE0"
+            :filled="!isEditMode"
+            :readonly="!isEditMode"
+          ></v-text-field>
+        </div>
       </div>
     </div>
+
     <v-card-actions>
-      <v-spacer></v-spacer>
-      <div v-if="!isEditMode" class="GS_ButtonArea">
-        <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
-      </div>
-      <div v-if="isEditMode" class="GS_ButtonArea">
-        <v-btn
-          color="primary"
-          class="ma-2 white--text"
-          elevation="2"
-          @click="overwriteSave"
-          :disabled="isDisableButtos"
-        >上書き保存</v-btn>
-        <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="aliasSave">別名保存</v-btn>
-        <v-btn
-          color="primary"
-          class="ma-2 white--text"
-          elevation="2"
-          v-show="parameterSetList.length > 2"
-          @click="deleteParameterSet"
-          :disabled="isDisabledDeleteBtn"
-        >削除</v-btn>
-      </div>
-    </v-card-actions>
-    <v-card-actions>
-      <div v-if="isEditMode" class="GS_ButtonArea">
-        <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
+      <div style="display: grid;place-content: center;width:100%">
+        <div style="display:flex;margin-left:auto;margin-right:auto;">
+          <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="setDefault">デフォルトに設定</v-btn>
+          <v-btn
+            v-if="isEditMode"
+            color="primary"
+            class="ma-2 white--text"
+            elevation="2"
+            @click="overwriteSave"
+            :disabled="isDisableButtos"
+          >上書き保存</v-btn>
+          <v-btn
+            v-if="isEditMode"
+            color="primary"
+            class="ma-2 white--text"
+            elevation="2"
+            @click="aliasSave"
+          >別名保存</v-btn>
+          <v-btn
+            v-if="isEditMode"
+            color="primary"
+            class="ma-2 white--text"
+            elevation="2"
+            v-show="parameterSetList.length > 2"
+            @click="deleteParameterSet"
+            :disabled="isDisabledDeleteBtn"
+          >削除</v-btn>
+          <v-btn
+            v-if="!isEditMode"
+            color="gray"
+            class="ma-2 black--text"
+            elevation="2"
+            @click="close"
+          >閉じる</v-btn>
+          <v-btn
+            v-if="isEditMode"
+            color="gray"
+            class="ma-2 black--text"
+            elevation="2"
+            @click="close"
+          >キャンセル</v-btn>
+        </div>
       </div>
     </v-card-actions>
 
     <ParameterSetNameDialog
-      :handleSubmit="handleSubmitParameterSetName"
-      :show="isShowParameterSetName"
-      confirmText="保存"
-      cancelText="キャンセル"
+      v-if="isShowParameterSetName"
+      @submit="handleSubmitParameterSetName"
       ref="refParameterSetName"
     />
   </v-container>
 </template>
 
 <script>
-import ParameterSetNameDialog from "@/components/parts/ParameterSetName";
-import geParameterSets from "./models/GEParameterSets.vue";
-import laParameterSets from "./models/LAParameterSet.vue";
-import peParameterSets from "./models/PEParameterSets.vue";
+import ParameterSetNameDialog from "@/components-v1/parts/パラメータセット編集/パラメータセット名編集.vue";
+import geParameterSets from "@/components-v1/GrowthModel/生育ステージパラメータ編集.vue";
+import laParameterSets from "@/components-v1/LeafModel/葉面積パラメータ編集.vue";
+import peParameterSets from "@/components-v1/Photosynthesis/光合成量パラメータ編集.vue";
 import { useParamSetList, useParamSetDelete } from "@/api/ParameterSetAPI.js";
 import { useGrowthParamSetDefault } from "@/api/TopStateGrowth/GEParameterSets/index.js";
 import { useLeafParamSetDefault } from "@/api/TopStateGrowth/LAParameterSets/index.js";
@@ -203,6 +204,7 @@ export default {
       this.paramId = paramId;
       this.selectedTarget = selectedTarget;
       this.initParameterList(true);
+      this.isUpdated = false;
     },
     //*----------------------------
     // パラメータリストの初期化
@@ -212,7 +214,6 @@ export default {
       //* パラメータセットリストの取得
       useParamSetList(this.modelId)
         .then((response) => {
-          console.log(response);
           const paramSetList = response["data"].data;
           let backList = [];
           for (const item of paramSetList) {
@@ -364,16 +365,19 @@ export default {
     // 追加処理
     //*----------------------------
     aliasSave() {
-      this.$refs.refParameterSetName.display();
+      this.isShowParameterSetName = true;
+      if (this.$refs.refParameterSetName != undefined) {
+        this.$refs.refParameterSetName.isDialog = true;
+      }
     },
     //*----------------------------
     // 名前設定
     //*----------------------------
     //パラメータセット名の外部から制御
     handleSubmitParameterSetName: function (name) {
+      this.isShowParameterSetName = false;
       this.afterParameterSetData.parameterName = name;
       this.$refs.refParameterSets.addData(this.afterParameterSetData); // 追加処理
-      this.$refs.refParameterSetName.close();
       this.$emit("changeItem", this.paramId);
     },
     //*----------------------------
@@ -411,6 +415,7 @@ export default {
 </script>
 
 <style>
+@import "@/style/common.css";
 .photosynthesis .v-input__control {
   width: 50px;
   padding: 0%;

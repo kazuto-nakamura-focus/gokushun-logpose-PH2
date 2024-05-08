@@ -62,7 +62,7 @@
 <script>
 import moment from "moment";
 import { mdiExitToApp } from "@mdi/js";
-import InputHeader from "./InputHeader.vue";
+import InputHeader from "../../../components-v1/parts/変数入力画面ヘッダー.vue";
 
 import {
   usePhotosynthesisValuesUpdate,
