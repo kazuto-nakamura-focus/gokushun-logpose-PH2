@@ -1,5 +1,6 @@
 package com.logpose.ph2.api.domain.model;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.List;
 
@@ -7,8 +8,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.configration.DefaultFtageValues;
+import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
+import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.domain.growth.FValueDomain;
 import com.logpose.ph2.api.domain.growth.GrowthModelDomain;
 import com.logpose.ph2.api.domain.leaf.LeafModelDomain;
@@ -24,6 +29,8 @@ public class ModelDataDomain
 	// クラスメンバー
 	// ===============================================
 	@Autowired
+	private DefaultFtageValues fstageValues;
+	@Autowired
 	private GrowthModelDomain growthModelDomain;
 	@Autowired
 	private FValueDomain fValueDomain;
@@ -33,6 +40,8 @@ public class ModelDataDomain
 	private PSModelDataDomain pSModelDataDomain;
 	@Autowired
 	private Ph2ModelDataMapper ph2ModelDataMapper;
+	@Autowired
+	private Ph2RealGrowthFStageMapper ph2RealGrowthFStageMapper;
 	// ===============================================
 	// 公開関数群
 	// ===============================================
@@ -74,7 +83,8 @@ public class ModelDataDomain
 		{
 // * モデルデータを日ごとデータとともに取得する
 		List<ModelAndDailyDataEntity> data = this.get(deviceId, year);
-
+// * FTableの初期化
+		this.setUpFTable(deviceId, year);
 // * 各モデルデータの作成
 		this.growthModelDomain.updateModelData(deviceId, year, data);
 		this.fValueDomain.resetActualDate(deviceId, year);
@@ -182,4 +192,47 @@ public class ModelDataDomain
 // * モデルデータを更新する
 		this.upate(data);		
 		}
+	// ===============================================
+	// 保護関数群
+	// ===============================================
+	// ###############################################
+	/**
+	 * Fデータテーブルの初期化
+	 * 
+	 * @param deviceId-デバイスID
+	 * @param year-対象年度
+	 */
+	// ###############################################
+	public void setUpFTable(Long deviceId, Short year)
+		{
+		// * 検索条件の設定
+		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year);
+		exm.setOrderByClause("stage_start asc");
+		// * 検索実行
+		List<Ph2RealGrowthFStageEntity> records = this.ph2RealGrowthFStageMapper
+				.selectByExample(exm);
+		// * 該当が無い場合
+		if (0 == records.size())
+			{
+			int sum = this.fstageValues.getStart().size();
+			for (int i = 0; i < sum; i++)
+				{
+				// * デフォルトのFStageデータを作成し、DBに登録する。
+				Ph2RealGrowthFStageEntity entity = new Ph2RealGrowthFStageEntity();
+				entity.setDeviceId(deviceId);
+				entity.setYear(year);
+				entity.setAccumulatedF(this.fstageValues.getSig().get(i));
+				entity.setIntervalF(this.fstageValues.getInterval().get(i));
+				entity.setStageStart(this.fstageValues.getStart().get(i));
+				entity.setStageEnd(this.fstageValues.getEnd().get(i));
+				entity.setStageName(this.fstageValues.getName().get(i));
+				entity.setColor(this.fstageValues.getColors().get(i));
+				entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+				this.ph2RealGrowthFStageMapper.insert(entity);
+				}
+			}
+		}
+
 	}
