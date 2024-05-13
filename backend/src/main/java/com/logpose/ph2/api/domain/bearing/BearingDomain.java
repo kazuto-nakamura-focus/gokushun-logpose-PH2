@@ -4,6 +4,7 @@ import java.text.ParseException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntityExample;
@@ -13,6 +14,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealFruitsDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsAreaMapper;
 
+@Component
 public class BearingDomain
 	{
 	// ===============================================

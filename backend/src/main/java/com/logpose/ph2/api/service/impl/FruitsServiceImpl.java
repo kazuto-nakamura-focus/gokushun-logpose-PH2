@@ -1,7 +1,7 @@
 package com.logpose.ph2.api.service.impl;
 
 import java.text.ParseException;
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +15,7 @@ import com.logpose.ph2.api.domain.model.AppliedModel;
 import com.logpose.ph2.api.dto.FruitValuesByDevice;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
 import com.logpose.ph2.api.dto.bearing.BearingDTO;
+import com.logpose.ph2.api.dto.bearing.RealFruitsValueDTO;
 import com.logpose.ph2.api.service.FruitsService;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -46,13 +47,14 @@ public class FruitsServiceImpl implements FruitsService
 	 * @param date
 	 * @param eventId
 	 * @return Ph2RealFruitsDataEntity
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
 	@Transactional(readOnly = true)
-	public Ph2RealFruitsDataEntity getRealFruitsData(Long deviceId, Date date, short eventId)
+	public List<RealFruitsValueDTO> getRealFruitsData(Long deviceId, Short year) throws ParseException
 		{
-		return this.fruitDomain.getRealFruitsData(deviceId, date, eventId);
+		return this.fruitDomain.getRealFruitsData(deviceId, year);
 		}
 
 	// --------------------------------------------------

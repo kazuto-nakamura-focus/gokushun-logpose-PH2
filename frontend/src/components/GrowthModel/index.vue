@@ -15,7 +15,7 @@ import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 
 import ph2GraphContainer from "@/components-v1/parts/graph/ModelGraphContainer.vue";
 import { MountController } from "@/lib/mountController.js";
-import FVActualValueInput from "@/components/TopStageGrowth/actualValueInput/FVInput.vue";
+import FVActualValueInput from "@/components-v1/FruitBearing/着果量着果負担トップ.vue";
 
 export default {
   data() {
