@@ -2,8 +2,6 @@
 <template>
   <v-container dense>
     <v-card elevation="0" class="ma-1">
-      <v-subheader>実測値入力</v-subheader>
-      <v-divider class="divider_center"></v-divider>
       <!-- 入力部分 -->
       <v-row>
         <v-col cols="10">
@@ -50,7 +48,6 @@
                 dense
                 hide-details="auto"
                 outlined
-                @mousedown="showDatePicker('2')"
                 v-model.number="fruitValueSproutTreatment.weight"
               ></v-text-field>
             </v-col>
@@ -60,7 +57,6 @@
                 dense
                 hide-details="auto"
                 outlined
-                @mousedown="showDatePicker('3')"
                 v-model.number="fruitValueSproutTreatment.count"
               ></v-text-field>
             </v-col>
@@ -85,6 +81,7 @@
                 dense
                 hide-details="auto"
                 outlined
+                @mousedown="showDatePicker('2')"
                 v-model.number="fruitValueELStage.date"
               ></v-text-field>
             </v-col>
@@ -124,6 +121,7 @@
                 dense
                 hide-details="auto"
                 outlined
+                @mousedown="showDatePicker('3')"
                 v-model.number="fruitValueBagging.date"
               ></v-text-field>
             </v-col>
@@ -152,7 +150,7 @@
         </v-col>
       </v-row>
     </v-card>
-    <div class="datePicker" ref="dateInput">
+    <v-dialog v-model="isDateDialog" width="auto">
       <v-date-picker
         v-model="dateInfo.date"
         :min="dateInfo.minDate"
@@ -160,7 +158,7 @@
         @change="hideDatePicker"
         locale="jp-ja"
       ></v-date-picker>
-    </div>
+    </v-dialog>
   </v-container>
 </template>
 
@@ -178,6 +176,7 @@ export default {
 
   data() {
     return {
+      isDateDialog: false,
       devicesId: null, // 選ばれたデバイスID
       year: null, //年度
 
@@ -213,6 +212,28 @@ export default {
     this.$emit("mounted");
   },
   methods: {
+    //* ============================================
+    // 入力フィールドの初期化を行う
+    //* ============================================
+    setEmptyData(date) {
+      this.fruitValueSproutTreatment = {
+        date: date, //実測日
+        weight: null, //平均房重
+        count: null, //実測着果数
+      };
+      //E-L 27～31の生育ステージ時
+      this.fruitValueELStage = {
+        date: date, //実測日
+        weight: null, //平均房重
+        count: null, //実測着果数
+      };
+      //袋かけ時
+      this.fruitValueBagging = {
+        date: date, //実測日
+        weight: null, //平均房重
+        count: null, //実測着果数
+      };
+    },
     initialize: function (menu) {
       console.log("aaa");
       this.devicesId = menu.selectedDevice.id;
@@ -229,17 +250,25 @@ export default {
           //成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            for (const item of data) {
+            this.dateInfo.minDate = data.startDate;
+            this.dateInfo.maxDate = data.endDate;
+            let today = moment().format("YYYY-MM-DD");
+            if (this.dateInfo.maxDate > today) {
+              this.setEmptyData(today);
+            } else {
+              this.setEmptyData(data.endDate);
+            }
+            for (const item of data.values) {
               if (item.eventId == 1) {
-                this.fruitValueSproutTreatment.data = item.targetDate;
+                this.fruitValueSproutTreatment.date = item.targetDate;
                 this.fruitValueSproutTreatment.weight = item.average;
                 this.fruitValueSproutTreatment.count = item.count;
               } else if (item.eventId == 2) {
-                this.fruitValueELStage.data = item.targetDate;
+                this.fruitValueELStage.date = item.targetDate;
                 this.fruitValueELStage.weight = item.average;
                 this.fruitValueELStage.count = item.count;
               } else if (item.eventId == 3) {
-                this.fruitValueBagging.data = item.targetDate;
+                this.fruitValueBagging.date = item.targetDate;
                 this.fruitValueBagging.weight = item.average;
                 this.fruitValueBagging.count = item.count;
               }
@@ -315,13 +344,20 @@ export default {
     showDatePicker(eventId) {
       //* 日付入力を表示
       this.dateInfo.eventId = eventId;
-      this.$refs.dateInput.style.display = "inline-block";
+      if (eventId == 1) {
+        this.dateInfo.date = this.fruitValueSproutTreatment.date;
+      } else if (eventId == 2) {
+        this.dateInfo.date = this.fruitValueELStage.date;
+      } else if (eventId == 3) {
+        this.dateInfo.date = this.fruitValueBagging.date;
+      }
+      this.isDateDialog = true;
     },
     //* ============================================
     // 日付を隠す
     //* ============================================
     hideDatePicker() {
-      this.$refs.dateInput.style.display = "none";
+      this.isDateDialog = false;
       if (this.dateInfo.eventId == 1) {
         this.fruitValueSproutTreatment.date = this.dateInfo.date;
       } else if (this.dateInfo.eventId == 2) {

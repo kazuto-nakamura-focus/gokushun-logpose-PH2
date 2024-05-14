@@ -9,13 +9,16 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
+import com.logpose.ph2.api.domain.DeviceDomain;
 import com.logpose.ph2.api.domain.FruitDomain;
 import com.logpose.ph2.api.domain.bearing.BearingDomain;
 import com.logpose.ph2.api.domain.model.AppliedModel;
 import com.logpose.ph2.api.dto.FruitValuesByDevice;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
 import com.logpose.ph2.api.dto.bearing.BearingDTO;
+import com.logpose.ph2.api.dto.bearing.RealFruitesValues;
 import com.logpose.ph2.api.dto.bearing.RealFruitsValueDTO;
+import com.logpose.ph2.api.dto.device.DeviceTermDTO;
 import com.logpose.ph2.api.service.FruitsService;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
@@ -35,6 +38,8 @@ public class FruitsServiceImpl implements FruitsService
 	private BearingDomain bearingDomain;
 	@Autowired
 	private AppliedModel appliedModel;
+	@Autowired
+	private DeviceDomain deviceDomain;
 
 	// ===============================================
 	// パブリック関数(検索系)
@@ -46,15 +51,21 @@ public class FruitsServiceImpl implements FruitsService
 	 * @param deviceId
 	 * @param date
 	 * @param eventId
-	 * @return Ph2RealFruitsDataEntity
+	 * @return RealFruitesValues
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
 	@Override
 	@Transactional(readOnly = true)
-	public List<RealFruitsValueDTO> getRealFruitsData(Long deviceId, Short year) throws ParseException
+	public RealFruitesValues getRealFruitsData(Long deviceId, Short year) throws ParseException
 		{
-		return this.fruitDomain.getRealFruitsData(deviceId, year);
+		RealFruitesValues result = new RealFruitesValues();
+		List<RealFruitsValueDTO> values = this.fruitDomain.getRealFruitsData(deviceId, year);
+		result.setValues(values);
+		DeviceTermDTO term = this.deviceDomain.getTerm(deviceId, year);
+		result.setStartDate(term.getStartDate());
+		result.setEndDate(term.getEndDate());
+		return result;
 		}
 
 	// --------------------------------------------------

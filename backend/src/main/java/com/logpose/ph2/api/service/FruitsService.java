@@ -1,12 +1,11 @@
 package com.logpose.ph2.api.service;
 
 import java.text.ParseException;
-import java.util.List;
 
 import com.logpose.ph2.api.dto.FruitValuesByDevice;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
 import com.logpose.ph2.api.dto.bearing.BearingDTO;
-import com.logpose.ph2.api.dto.bearing.RealFruitsValueDTO;
+import com.logpose.ph2.api.dto.bearing.RealFruitesValues;
 
 /**
  * 着果量着果負担のサービスインターフェスクラス
@@ -27,8 +26,7 @@ public interface FruitsService
 	 * @return Ph2RealFruitsDataEntity
 	 * @throws ParseException 
 	 */
-	// --------------------------------------------------
-	List<RealFruitsValueDTO> getRealFruitsData(Long deviceId, Short year) throws ParseException;
+	RealFruitesValues getRealFruitsData(Long deviceId, Short year) throws ParseException;
 	// --------------------------------------------------
 	/**
 	 * 圃場着果量着果負担詳細取得処理

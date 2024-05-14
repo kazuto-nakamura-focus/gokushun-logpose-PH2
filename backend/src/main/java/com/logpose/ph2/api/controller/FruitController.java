@@ -1,7 +1,5 @@
 package com.logpose.ph2.api.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -17,7 +15,7 @@ import com.logpose.ph2.api.dto.FruitValuesByDevice;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.bearing.BearingDTO;
-import com.logpose.ph2.api.dto.bearing.RealFruitsValueDTO;
+import com.logpose.ph2.api.dto.bearing.RealFruitesValues;
 import com.logpose.ph2.api.service.FruitsService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +56,7 @@ public class FruitController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<RealFruitsValueDTO> as_result = this.fruitService.getRealFruitsData(deviceId,
+			RealFruitesValues as_result = this.fruitService.getRealFruitsData(deviceId,
 					year);
 			as_dto.setSuccess(as_result);
 			}

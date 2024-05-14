@@ -2,8 +2,7 @@
 <template>
   <v-container dense>
     <v-card elevation="0" class="ma-1">
-      <v-subheader>実測値入力</v-subheader>
-      <v-divider class="divider_center"></v-divider>
+      <v-card-title sytle="font-size:11pt">実測値入力</v-card-title>
       <ph-2-fruits-bearing-input
         v-if="this.menu != null"
         ref="ph2FruitsBearingInput"
