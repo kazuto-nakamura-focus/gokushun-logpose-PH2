@@ -118,12 +118,12 @@ public class FValueDomain
 	 * @throws ParseException 
 	 */
 	// ###############################################
-	public List<Ph2RealGrowthFStageEntity> getFStageData(Long deviceId, Short year)
+	public double getSproutFValue(Long deviceId, Short year)
 		{
+		double value = 0;
 		// * 検索条件の設定
 		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year);
-		exm.setOrderByClause("stage_start asc");
+		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year).andStageEndEqualTo((short) 4);
 		// * 検索実行
 		List<Ph2RealGrowthFStageEntity> records = this.ph2RealGrowthFStageMapper
 				.selectByExample(exm);
@@ -145,14 +145,12 @@ public class FValueDomain
 				entity.setColor(this.fstageValues.getColors().get(i));
 				entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-				long id = this.ph2RealGrowthFStageMapper.insert(entity);
-				entity.setId(id);// TODO 必要か？
-				records.add(entity);
+				this.ph2RealGrowthFStageMapper.insert(entity);
+				if(entity.getStageEnd() == 4) value = entity.getAccumulatedF();
 				}
-			return records;
 			}
-		else
-			return records;
+		else value = records.get(0).getAccumulatedF();
+		return value;
 		}
 
 	}

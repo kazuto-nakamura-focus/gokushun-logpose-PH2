@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetGrowthEntity;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
-import com.logpose.ph2.api.domain.model.AppliedModel;
 import com.logpose.ph2.api.dto.GrowthParamSetDTO;
 import com.logpose.ph2.api.formula.Formula;
 
@@ -18,7 +17,7 @@ public class GrowthModelDomain
 	// クラスメンバー
 	// ===============================================
 	@Autowired
-	private AppliedModel appliedModel;
+	private FValueDomain fValueDomain;
 	@Autowired
 	private GrowthParameterDomain growthParameterDomain;
 
@@ -38,9 +37,6 @@ public class GrowthModelDomain
 		{
 		this.updateModelData(deviceId, year, null, data);
 		}
-	// ===============================================
-	// 保護関数群
-	// ===============================================
 	// ###############################################
 	/**
 	 * デバイスのモデルテーブルを更新する
@@ -67,34 +63,37 @@ public class GrowthModelDomain
 				param.setBd(enyity.getBeforeD());
 				param.setBe(enyity.getBeforeE());
 				}
-// * 萌芽日（経過日）を取得する
-			short sproutDay = this.appliedModel.getSproutDay(deviceId, year);
+// * 萌芽日（経過日）のF値を取得する
+			double sproutFvalue = this.fValueDomain.getSproutFValue(deviceId, year);
 
 // * モデルデータの更新
-			this.updateModelData(data, param, sproutDay);
+			this.updateModelData(data, param, sproutFvalue);
 			}
 		}
+	// ===============================================
+	// 保護関数群
+	// ===============================================
 	// ###############################################
 	/**
 	 * F値を算出し、リストに格納する
 	 *
 	 * @param dailyData
 	 * @param param パラメータセット
-	 * @param sproutDay 萌芽日（経過日）
+	 * @param fValue 萌芽日のF値
 	 */
 	// ###############################################
 	private void updateModelData(
 			List<ModelAndDailyDataEntity> dailyData,
 			GrowthParamSetDTO param,
-			short sproutDay)
+			double sprountFvalue)
 		{
 		double lastValue = 0;
 		Double dValue = param.getBd();
 		Double eValue = param.getBe();
 		for (ModelAndDailyDataEntity data : dailyData)
 			{
+			if(lastValue >= sprountFvalue )
 			// * 萌芽後の場合
-			if (data.getLapseDay() >= sproutDay)
 				{
 				dValue = param.getAd();
 				eValue = param.getAe();
