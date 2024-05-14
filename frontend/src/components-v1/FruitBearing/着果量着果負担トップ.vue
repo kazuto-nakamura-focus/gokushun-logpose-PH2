@@ -8,12 +8,19 @@
         ref="ph2FruitsBearingInput"
         @mounted="ph2FruitsBearingInputMounted"
       ></ph-2-fruits-bearing-input>
+      <ph-2-fruits-bearingdetail>
+        v-if="this.menu != null"
+        ref="Ph2FruitsBearingdetail"
+        @mounted="Ph2FruitsBearingdetailMounted"
+        >
+      </ph-2-fruits-bearingdetail>
     </v-card>
   </v-container>
 </template>
 
 <script>
 import Ph2FruitsBearingInput from "@/components-v1/FruitBearing/着果量着果負担入力部分.vue";
+import Ph2FruitsBearingdetail from "@/components-v1/FruitBearing/着果量詳細表示部分.vue";
 
 export default {
   data() {
@@ -23,6 +30,7 @@ export default {
   },
   components: {
     Ph2FruitsBearingInput,
+    Ph2FruitsBearingdetail,
   },
   mounted() {},
   methods: {
@@ -41,6 +49,7 @@ export default {
         });
       }
     },
+    Ph2FruitsBearingdetailMounted() {},
   },
 };
 </script>

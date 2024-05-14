@@ -1,16 +1,14 @@
 <!--着果量着果負担表示画面-->
 <template>
   <v-container dense>
-    <v-data-table
-      :headers="headers"
-      :items="dataList"
-      hide-default-header
-    >
-      <template v-slot:['item.${header}']="{ item }" v-for="header in headers">
-        <tr>
-          <td>{{ header.text }}</td>
-          <td>{{ item[header.value] }}</td>
-        </tr>
+    <v-data-table :items="dataList" hide-default-header>
+      <template v-slot:body="{ items }">
+        <tbody>
+          <tr v-bind:v-for="header in headers">
+            <td>{{ header.text }}</td>
+            <td v-bind:v-for="item in items">{{ item[header.value] }}</td>
+          </tr>
+        </tbody>
       </template>
     </v-data-table>
   </v-container>
@@ -23,13 +21,25 @@ export default {
   data() {
     return {
       headers: [
-        {text :"", value : "name"},
-        {text :"実測日", value : "date"},
-        {text :"収穫時樹冠葉面積(m^2)", value : "harvestCrownLeafArea"},
-        {text :"積算樹冠光合成量(kgCO2vine^-1)", value : "culminatedCrownPhotoSynthesysAmount"},
-        {text :"着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)", value : "bearingWeight"},
-        {text :"積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)", value : "bearingPerPhotoSynthesys"},
-        {text : "実測着果数/収穫時樹冠葉面積(房数/m^2)", value : "bearingCount"},
+        { text: "", value: "name" },
+        { text: "実測日", value: "date" },
+        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea" },
+        {
+          text: "積算樹冠光合成量(kgCO2vine^-1)",
+          value: "culminatedCrownPhotoSynthesysAmount",
+        },
+        {
+          text: "着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)",
+          value: "bearingWeight",
+        },
+        {
+          text: "積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)",
+          value: "bearingPerPhotoSynthesys",
+        },
+        {
+          text: "実測着果数/収穫時樹冠葉面積(房数/m^2)",
+          value: "bearingCount",
+        },
       ],
       dataList: [],
     };
@@ -40,15 +50,20 @@ export default {
   },
   methods: {
     initialize: function (selectedItems) {
-    // * 表示名
-    let name = selectedItems.selectedField.name +
+      // * 表示名
+      let name =
+        selectedItems.selectedField.name +
         "|" +
         selectedItems.selectedDevice.name +
         "|" +
         selectedItems.selectedYear.id;
 
-    // * データの取得
-        this.callUseFruitDetailsAPI(selectedItems.selectedDevice.id, selectedItems.selectedYear.id, name);
+      // * データの取得
+      this.callUseFruitDetailsAPI(
+        selectedItems.selectedDevice.id,
+        selectedItems.selectedYear.id,
+        name
+      );
     },
     //* ============================================
     // 着果量負担の詳細を取得する
@@ -61,24 +76,24 @@ export default {
             // 20:25分 20:50
             // * 名前の検索
             let i = 0;
-            for(const item of dataList){
-                if(item.name == name) {
-                    break;
-                }
-                i++;
+            for (const item of this.dataList) {
+              if (item.name == name) {
+                break;
+              }
+              i++;
             }
-            if(null != target){
-                dataList.splice(i, 1);
+            if (null != this.target) {
+              this.dataList.splice(i, 1);
             }
             // * 値の設定
             data.name = new String(name);
-            dataList.unshift(unshift);
+            this.dataList.unshift(data);
           } else {
-            throw new Error("データの取得ができませんでした。");
+            throw new Error(message);
           }
         })
         .catch((e) => {
-          alert(e.message);
+          alert("データの取得ができませんでした。");
           //失敗時
           console.log(e);
         });
