@@ -1,11 +1,11 @@
 package com.logpose.ph2.api.service;
 
 import java.text.ParseException;
-import java.util.Date;
 
-import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntity;
 import com.logpose.ph2.api.dto.FruitValuesByDevice;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
+import com.logpose.ph2.api.dto.bearing.BearingDTO;
+import com.logpose.ph2.api.dto.bearing.RealFruitesValues;
 
 /**
  * 着果量着果負担のサービスインターフェスクラス
@@ -18,6 +18,17 @@ public interface FruitsService
 	// ===============================================
 	// --------------------------------------------------
 	/**
+	 * 着果実績値取得
+	 *
+	 * @param deviceId
+	 * @param date
+	 * @param eventId
+	 * @return Ph2RealFruitsDataEntity
+	 * @throws ParseException 
+	 */
+	RealFruitesValues getRealFruitsData(Long deviceId, Short year) throws ParseException;
+	// --------------------------------------------------
+	/**
 	 * 圃場着果量着果負担詳細取得処理
 	 *
 	 * @param deviceId - デバイスID
@@ -27,7 +38,18 @@ public interface FruitsService
 	 */
 	// --------------------------------------------------
 	public FruitValuesDTO getFruitValues(Long deviceId, Short year);
-
+	// --------------------------------------------------
+	/**
+	 * 圃場着果量着果負担詳細取得処理Ver2
+	 *
+	 * @param deviceId - デバイスID
+	 * @param year - 対象年度
+	 * @return 着果実績値
+	 * @throws ParseException
+	 */
+	// --------------------------------------------------
+	public BearingDTO getFruitValues2(Long deviceId, Short year) throws ParseException;
+	
 	// ===============================================
 	// パブリック関数(更新系)
 	// ===============================================
@@ -40,15 +62,7 @@ public interface FruitsService
 	 */
 	// --------------------------------------------------
 	public void setFruitValues(FruitValuesByDevice dto) throws ParseException;
-	// --------------------------------------------------
-	/**
-	 * 着果実績値取得
-	 *
-	 * @param deviceId
-	 * @param date
-	 * @param eventId
-	 * @return Ph2RealFruitsDataEntity
-	 */
-	// --------------------------------------------------
-	Ph2RealFruitsDataEntity getRealFruitsData(Long deviceId, Date date, short eventId);
+
+
+
 	}

@@ -39,9 +39,7 @@ public class AppliedModel
 		{
 		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year).andStageEndEqualTo((short) 4);
-
-		List<Ph2RealGrowthFStageEntity> rec = this.realGrowthFStageMapper.selectByExample(exm);
-		Ph2RealGrowthFStageEntity entity = rec.get(0);
+		Ph2RealGrowthFStageEntity entity = this.getRealGrowthFStageEntity(exm);
 
 		List<Integer> sproutDays = this.modelDataMapper.selectLapseDayByFValue(deviceId, year,
 				entity.getActualDate(), entity.getAccumulatedF());
@@ -52,4 +50,30 @@ public class AppliedModel
 		return sproutDays.get(0).shortValue();
 		}
 
+	// ###############################################
+	/**
+	 * 収穫日を取得する
+	 * @param deviceId デバイスID
+	 * @param year 年度
+	 * @return 収穫日情報
+	 */
+	// ###############################################
+	public Ph2RealGrowthFStageEntity getHarvestDate(Long deviceId, Short year)
+		{
+		// * 収穫日のステージ情報を取得する検索条件
+		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year).andStageNameEqualTo("収穫日");
+		Ph2RealGrowthFStageEntity entity = this.getRealGrowthFStageEntity(exm);
+		// 収穫日を返却する
+		return entity;
+		}
+
+	// ===============================================
+	// 保護関数群
+	// ===============================================
+	private Ph2RealGrowthFStageEntity getRealGrowthFStageEntity(Ph2RealGrowthFStageEntityExample exm)
+		{
+		List<Ph2RealGrowthFStageEntity> rec = this.realGrowthFStageMapper.selectByExample(exm);
+		return rec.size() > 0 ? rec.get(0) : null;
+		}
 	}
