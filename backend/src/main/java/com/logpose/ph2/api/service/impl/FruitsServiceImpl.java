@@ -114,20 +114,22 @@ public class FruitsServiceImpl implements FruitsService
 
 // * 果実総重量の取得
 		Ph2RealFruitsDataEntity entity = this.bearingDomain.getFruitsEntity(deviceId, year);
-		result.setDate(DateTimeUtility.getStringFromDate(entity.getTargetDate()));
-		float weightSum = this.bearingDomain.getAllFruitsWeight(entity);
-		result.setBearingWeight(weightSum);
+		if (null != entity)
+			{
+			result.setDate(DateTimeUtility.getStringFromDate(entity.getTargetDate()));
+			float weightSum = this.bearingDomain.getAllFruitsWeight(entity);
+			result.setBearingWeight(weightSum);
 
 // * 着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)
-		result.setBearingWeight(weightSum / havestTimeCrownArea.floatValue());
+			result.setBearingWeight(weightSum / havestTimeCrownArea.floatValue());
 
 // * 積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)
-		result.setBearingPerPhotoSynthesys(weightSum / crownAreaPhotoSynthesis.floatValue());
+			result.setBearingPerPhotoSynthesys(weightSum / crownAreaPhotoSynthesis.floatValue());
 
 // * 着果数の取得
-		float fruitsSum = this.bearingDomain.getRealFruitsSum(entity);
-		result.setBearingCount(fruitsSum / havestTimeCrownArea.floatValue());
-
+			float fruitsSum = this.bearingDomain.getRealFruitsSum(entity);
+			result.setBearingCount(fruitsSum / havestTimeCrownArea.floatValue());
+			}
 		return result;
 		}
 

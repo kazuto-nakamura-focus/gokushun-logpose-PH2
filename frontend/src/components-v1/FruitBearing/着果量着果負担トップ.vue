@@ -8,12 +8,11 @@
         ref="ph2FruitsBearingInput"
         @mounted="ph2FruitsBearingInputMounted"
       ></ph-2-fruits-bearing-input>
-      <ph-2-fruits-bearingdetail>
+      <ph-2-fruits-bearingdetail
         v-if="this.menu != null"
         ref="Ph2FruitsBearingdetail"
         @mounted="Ph2FruitsBearingdetailMounted"
-        >
-      </ph-2-fruits-bearingdetail>
+      ></ph-2-fruits-bearingdetail>
     </v-card>
   </v-container>
 </template>
@@ -40,6 +39,9 @@ export default {
         if (this.$refs.ph2FruitsBearingInput !== undefined) {
           this.$refs.ph2FruitsBearingInput.initialize(this.menu);
         }
+        if (this.$refs.Ph2FruitsBearingdetail !== undefined) {
+          this.$refs.Ph2FruitsBearingdetail.initialize(this.menu);
+        }
       });
     },
     ph2FruitsBearingInputMounted() {
@@ -49,7 +51,13 @@ export default {
         });
       }
     },
-    Ph2FruitsBearingdetailMounted() {},
+    Ph2FruitsBearingdetailMounted() {
+      if (this.menu != null) {
+        this.$nextTick(function () {
+          this.$refs.Ph2FruitsBearingdetail.initialize(this.menu);
+        });
+      }
+    },
   },
 };
 </script>

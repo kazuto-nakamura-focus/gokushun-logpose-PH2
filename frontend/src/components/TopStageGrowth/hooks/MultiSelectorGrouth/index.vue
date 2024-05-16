@@ -5,10 +5,7 @@
         <v-card elevation="0" class="ma-1">
           <v-card-text class="pa-1">{{ label }}</v-card-text>
           <v-card-content>
-            <v-slide-group
-              class="pa-1"
-              multiple
-            >
+            <v-slide-group class="pa-1" multiple>
               <v-slide-item
                 v-for="(item, index) in list"
                 :key="index"
@@ -22,9 +19,7 @@
                     :outlined="active ? false : true"
                     depressed
                     @click="toggle"
-                  >
-                    {{ "title" in item ? item.title : item.name }}
-                  </v-btn>
+                  >{{ "title" in item ? item.title : item.name }}</v-btn>
                 </div>
               </v-slide-item>
             </v-slide-group>
@@ -65,7 +60,6 @@ export default {
 
   methods: {
     onCardClick(item, index, active, toggle) {
-      console.log("onCardClick", toggle);
       this.handleClick(item, index, active);
     },
   },

@@ -519,7 +519,7 @@
 <!-- ************************************************************************** -->
     <select id="selectCrownLeafAreaBySpecificDate" resultType="java.lang.Double">
     SELECT
-        md.crown_leaf_area
+        md.culmitive_cnopy_ps
     FROM
         ph2_device_day dd
     JOIN

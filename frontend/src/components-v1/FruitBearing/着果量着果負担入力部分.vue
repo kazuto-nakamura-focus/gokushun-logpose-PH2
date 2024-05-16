@@ -235,7 +235,6 @@ export default {
       };
     },
     initialize: function (menu) {
-      console.log("aaa");
       this.devicesId = menu.selectedDevice.id;
       this.year = menu.selectedYear.id;
       this.getFruitValue(this.devicesId, this.year);
@@ -244,7 +243,6 @@ export default {
     // 個々の着果負担値を取得し、フィールドに設定する
     //* ============================================
     getFruitValue(device, year) {
-      console.log("aaa");
       useFruitValue(device, year)
         .then((response) => {
           //成功時

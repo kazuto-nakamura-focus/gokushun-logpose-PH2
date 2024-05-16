@@ -1,50 +1,24 @@
 <!--着果量着果負担表示画面-->
 <template>
-  <v-container dense>
-    <v-data-table :items="dataList" hide-default-header>
-      <template v-slot:body="{ items }">
-        <tbody>
-          <tr v-bind:v-for="header in headers">
-            <td>{{ header.text }}</td>
-            <td v-bind:v-for="item in items">{{ item[header.value] }}</td>
-          </tr>
-        </tbody>
-      </template>
-    </v-data-table>
-  </v-container>
+  <v-card>
+    <ph-2-bearling-data ref="ph2BearlingData" @mounted="ph2BearlingDataMounted"></ph-2-bearling-data>
+  </v-card>
 </template>
   
   <script>
 import { useFruitDetails } from "@/api/TopStateGrowth/index";
+import ph2BearlingData from "@/components-v1/FruitBearing/着果量データタブ.vue";
 
 export default {
   data() {
     return {
-      headers: [
-        { text: "", value: "name" },
-        { text: "実測日", value: "date" },
-        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea" },
-        {
-          text: "積算樹冠光合成量(kgCO2vine^-1)",
-          value: "culminatedCrownPhotoSynthesysAmount",
-        },
-        {
-          text: "着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)",
-          value: "bearingWeight",
-        },
-        {
-          text: "積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)",
-          value: "bearingPerPhotoSynthesys",
-        },
-        {
-          text: "実測着果数/収穫時樹冠葉面積(房数/m^2)",
-          value: "bearingCount",
-        },
-      ],
-      dataList: [],
+      name: null,
+      lastData: null,
     };
   },
-
+  components: {
+    ph2BearlingData,
+  },
   mounted() {
     this.$emit("mounted");
   },
@@ -73,21 +47,9 @@ export default {
         .then((response) => {
           const { status, message, data } = response["data"];
           if (status === 0) {
-            // 20:25分 20:50
-            // * 名前の検索
-            let i = 0;
-            for (const item of this.dataList) {
-              if (item.name == name) {
-                break;
-              }
-              i++;
-            }
-            if (null != this.target) {
-              this.dataList.splice(i, 1);
-            }
-            // * 値の設定
-            data.name = new String(name);
-            this.dataList.unshift(data);
+            this.lastData = data;
+            this.name = name;
+            this.ph2BearlingDataMounted();
           } else {
             throw new Error(message);
           }
@@ -98,31 +60,31 @@ export default {
           console.log(e);
         });
     },
+    ph2BearlingDataMounted() {
+      if (this.name != null && this.$refs.ph2BearlingData !== undefined) {
+        this.$nextTick(function () {
+          this.$refs.ph2BearlingData.addData(this.name, this.lastData);
+        });
+      }
+    },
   },
 };
 </script>
   
-  <style lang="scss" scoped>
-@import "@/style/common.css";
-
-.divider_top {
-  margin-bottom: 10px;
-  color: "black";
+<style scoped>
+.wrapper {
+  display: -webkit-flex;
+  display: -moz-flex;
+  display: -ms-flex;
+  display: -o-flex;
+  display: flex;
+  flex-wrap: wrap;
 }
-
-.divider_center {
-  margin-top: 10px;
-  margin-bottom: 10px;
-  color: "black";
-}
-
-.divider_bottom {
-  margin-top: 10px;
-  color: "black";
-}
-
-.text_field_size {
-  min-width: 60px;
+.ph2_data_title {
+  width: 100%;
+  font-size: 9pt;
+  border-bottom: 1px solid #ccc;
+  padding: 3px 0;
 }
 </style>
   
