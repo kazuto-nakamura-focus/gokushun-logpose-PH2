@@ -1,23 +1,39 @@
 <!--着果量着果負担表示画面-->
 <template>
   <v-card>
-    <ph-2-bearling-data ref="ph2BearlingData" @mounted="ph2BearlingDataMounted"></ph-2-bearling-data>
+    <v-data-table :headers="headers" :items="dataList"></v-data-table>
   </v-card>
 </template>
   
   <script>
 import { useFruitDetails } from "@/api/TopStateGrowth/index";
-import ph2BearlingData from "@/components-v1/FruitBearing/着果量データタブ.vue";
 
 export default {
   data() {
     return {
-      name: null,
-      lastData: null,
+      headers: [
+        { text: "", value: "name" },
+        { text: "実測日", value: "date" },
+        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea" },
+        {
+          text: "積算樹冠光合成量(kgCO2vine^-1)",
+          value: "culminatedCrownPhotoSynthesysAmount",
+        },
+        {
+          text: "着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)",
+          value: "bearingWeight",
+        },
+        {
+          text: "積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)",
+          value: "bearingPerPhotoSynthesys",
+        },
+        {
+          text: "実測着果数/収穫時樹冠葉面積(房数/m^2)",
+          value: "bearingCount",
+        },
+      ],
+      dataList: [],
     };
-  },
-  components: {
-    ph2BearlingData,
   },
   mounted() {
     this.$emit("mounted");
@@ -47,9 +63,32 @@ export default {
         .then((response) => {
           const { status, message, data } = response["data"];
           if (status === 0) {
-            this.lastData = data;
-            this.name = name;
-            this.ph2BearlingDataMounted();
+            // 20:25分 20:50
+            // * 名前の検索
+            let i = 0;
+            for (const item of this.dataList) {
+              if (item.name == name) {
+                this.dataList.splice(i, 1);
+                break;
+              }
+              i++;
+            }
+            // * 値の設定
+            data.name = new String(name);
+            if (data.date == null) {
+              data.date = "なし";
+            }
+            if (data.bearingWeight == 0) {
+              data.bearingWeight = "-";
+            }
+            if (data.bearingPerPhotoSynthesys == 0) {
+              data.bearingPerPhotoSynthesys = "-";
+            }
+            if (data.bearingCount == 0) {
+              data.bearingCount = "-";
+            }
+            if (this.dataList.length > 0) this.dataList.splice(1, 0, data);
+            else this.dataList.push(data);
           } else {
             throw new Error(message);
           }
@@ -59,13 +98,6 @@ export default {
           //失敗時
           console.log(e);
         });
-    },
-    ph2BearlingDataMounted() {
-      if (this.name != null && this.$refs.ph2BearlingData !== undefined) {
-        this.$nextTick(function () {
-          this.$refs.ph2BearlingData.addData(this.name, this.lastData);
-        });
-      }
     },
   },
 };
