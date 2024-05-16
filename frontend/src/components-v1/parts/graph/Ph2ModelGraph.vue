@@ -75,7 +75,7 @@ import GEActualValueInput from "@/components-v1/GrowthModel/RealInput/GEMainInpu
 import ParmeterSetDialog from "@/components-v1/parts/パラメータセット編集/パラメータセット編集ダイアログ.vue";
 import ReferenceFValue from "@/components-v1/GrowthModel/RealFValueIput/index.vue";
 import LAActualValueInput from "@/components-v1/LeafModel/RealValueInput/葉面積葉枚数実績値入力画面.vue";
-import PEActualValueInput from "@/components/TopStageGrowth/actualValueInput/PEInput.vue";
+import PEActualValueInput from "@/components/TopStageGrowth/actualValueInput/光合成量実績値入力.vue";
 
 export default {
   props: {

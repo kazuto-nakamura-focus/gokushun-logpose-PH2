@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
-import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsAreaMapper;
 
@@ -20,8 +19,6 @@ public class AppliedModel
 	// ===============================================
 	@Autowired
 	private Ph2RealGrowthFStageMapper realGrowthFStageMapper;
-	@Autowired
-	private Ph2ModelDataMapper modelDataMapper;
 	@Autowired
 	protected Ph2RealLeafShootsAreaMapper ph2RealLeafShootsAreaMapper;
 

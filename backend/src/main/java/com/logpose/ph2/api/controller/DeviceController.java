@@ -25,7 +25,7 @@ import com.logpose.ph2.api.service.DeviceService;
 import jakarta.servlet.http.HttpServletRequest;
 
 @CrossOrigin(
-		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com" },
+		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com", "https://gokushun-ph2-staging-e2e7adc0c3d1.herokuapp.com" },
 		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
 		allowedHeaders ="*", exposedHeaders="*",
 		allowCredentials = "true")
