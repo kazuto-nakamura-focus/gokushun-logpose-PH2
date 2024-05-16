@@ -60,7 +60,7 @@ public class SecurityConfig {
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com"));
+                    config.setAllowedOrigins(List.of("http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com", "https://gokushun-ph2-staging-e2e7adc0c3d1.herokuapp.com"));
                     config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
                     config.setAllowedHeaders(List.of("*"));
                     config.setAllowCredentials(true);
