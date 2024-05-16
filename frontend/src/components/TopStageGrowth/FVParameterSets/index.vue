@@ -104,9 +104,6 @@ export default {
       // const year = this.$store.getters.selectedData.selectedYears
       // this.year = this.selectedYears[0].variable
 
-      console.log("updated", this.devices);
-      console.log("updated", this.year);
-
       for (let i = 0; this.devices.length > i; i++) {
         //圃場着果量着果負担詳細取得
         await useFruitValues(this.devices[i].id, this.year)

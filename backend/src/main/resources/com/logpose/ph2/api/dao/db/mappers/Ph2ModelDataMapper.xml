@@ -519,6 +519,22 @@
 <!-- ************************************************************************** -->
     <select id="selectCrownLeafAreaBySpecificDate" resultType="java.lang.Double">
     SELECT
+        md.culmitive_cnopy_ps
+    FROM
+        ph2_device_day dd
+    JOIN
+        ph2_model_data md ON dd.id = md.day_id
+    WHERE
+        dd.device_id = #{deviceId}
+   	AND
+        dd.year = #{year}
+	AND
+     	dd.date = #{date}
+	limit 1
+  </select>
+  <!-- ************************************************************************** -->
+    <select id="selectPhotosynthesisBySpecificDate" resultType="java.lang.Double">
+    SELECT
         md.crown_leaf_area
     FROM
         ph2_device_day dd

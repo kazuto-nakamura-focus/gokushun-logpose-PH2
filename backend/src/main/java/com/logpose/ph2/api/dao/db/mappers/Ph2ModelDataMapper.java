@@ -111,4 +111,7 @@ public interface Ph2ModelDataMapper
 	Double selectCrownLeafAreaBySpecificDate(@Param("deviceId") Long deviceId,
 			@Param("year") Short year, @Param("date") Date date);
 
+	Double selectPhotosynthesisBySpecificDate(@Param("deviceId") Long deviceId,
+			@Param("year") Short year, @Param("date") Date date);
+
 	}

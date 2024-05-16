@@ -1,11 +1,7 @@
 <template>
   <v-app>
     <v-container class="spacing-playground pa-5" fluid>
-      <targetMenu
-        ref="targetMenu"
-        :shared="sharedMenu"
-        :model="isModel"
-      ></targetMenu>
+      <targetMenu ref="targetMenu" :shared="sharedMenu" :model="isModel"></targetMenu>
       <v-expand-transition>
         <div v-if="bodyStatus">
           <template>
@@ -29,15 +25,13 @@
                         v-on="on"
                         v-model="startDate"
                         append-icon="mdi-calendar-blank"
-                      >
-                      </v-text-field>
+                      ></v-text-field>
                     </template>
                     <v-date-picker
                       v-model="startDate"
                       @input="menu1 = false"
                       @change="handleChangeDate()"
-                    >
-                    </v-date-picker>
+                    ></v-date-picker>
                   </v-menu>
                 </v-col>
                 <div class="mt-5">&nbsp;～&nbsp;</div>
@@ -59,15 +53,13 @@
                         v-on="on"
                         v-model="endDate"
                         append-icon="mdi-calendar-blank"
-                      >
-                      </v-text-field>
+                      ></v-text-field>
                     </template>
                     <v-date-picker
                       v-model="endDate"
                       @input="menu2 = false"
                       @change="handleChangeDate()"
-                    >
-                    </v-date-picker>
+                    ></v-date-picker>
                   </v-menu>
                 </v-col>
               </v-row>
@@ -96,9 +88,7 @@
               </v-col>
             </v-row>
             <v-row class="pt-1 pr-2 justify-end">
-              <v-btn color="primary" outlined @click="handleDownloadCSV()">
-                Download
-              </v-btn>
+              <v-btn color="primary" outlined @click="handleDownloadCSV()">Download</v-btn>
             </v-row>
           </v-container>
         </template>
@@ -275,7 +265,6 @@ export default {
         ];
         arrayDatas.push(data);
       });
-      console.log("DownloadData", arrayDatas);
 
       const date = moment().format("YYYYMMDD_HHmmss");
       const fileName = "download_" + date + ".csv";

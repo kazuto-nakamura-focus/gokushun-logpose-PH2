@@ -1,13 +1,15 @@
 package com.logpose.ph2.api.domain;
 
 import java.sql.Timestamp;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.logpose.ph2.api.algorythm.DateTimeUtility;
 import com.logpose.ph2.api.dao.db.entity.Ph2ParamsetLeafCountEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealFruitsDataEntityExample;
@@ -16,6 +18,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2ParamsetLeafCountMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealFruitsDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FruitsModelMapper;
 import com.logpose.ph2.api.dto.FruitValuesDTO;
+import com.logpose.ph2.api.dto.bearing.RealFruitsValueDTO;
 
 @Component
 public class FruitDomain
@@ -43,15 +46,25 @@ public class FruitDomain
 	 * @param date
 	 * @param eventId
 	 * @return Ph2RealFruitsDataEntity
+	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public Ph2RealFruitsDataEntity getRealFruitsData(Long deviceId, Date date, short eventId)
+	public List<RealFruitsValueDTO> getRealFruitsData(Long deviceId, short year) throws ParseException
 		{
 		Ph2RealFruitsDataEntityExample exm = new Ph2RealFruitsDataEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId).andEventIdEqualTo(eventId)
-				.andTargetDateEqualTo(date);
-		List<Ph2RealFruitsDataEntity> entity = ph2RealFruitsDataMapper.selectByExample(exm);
-		return (entity.size() == 0) ? null : entity.get(0);
+		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year);
+		List<Ph2RealFruitsDataEntity> records =  ph2RealFruitsDataMapper.selectByExample(exm);
+		List<RealFruitsValueDTO> result = new ArrayList<>();
+		for(final Ph2RealFruitsDataEntity entity : records)
+			{
+			RealFruitsValueDTO data = new RealFruitsValueDTO();
+			data.setAverage(entity.getAverage());
+			data.setCount(entity.getCount());
+			data.setEventId(entity.getEventId());
+			data.setTargetDate(DateTimeUtility.getStringFromDate(entity.getTargetDate()));
+			result.add(data);
+			}
+		return result;
 		}
 
 	// --------------------------------------------------
