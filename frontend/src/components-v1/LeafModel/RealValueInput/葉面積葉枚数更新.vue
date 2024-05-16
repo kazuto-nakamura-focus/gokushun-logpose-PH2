@@ -36,7 +36,7 @@
       <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="reset()">元に戻す</v-btn>
       <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
     </div>
-    <div class="datePicker" ref="dateInput">
+    <v-dialog v-model="isDateDialog" width="auto">
       <v-date-picker
         v-model="dateInfo.date"
         :min="dateInfo.minDate"
@@ -44,7 +44,7 @@
         @change="handleChangeDate"
         locale="jp-ja"
       ></v-date-picker>
-    </div>
+    </v-dialog>
   </v-container>
 </template>
 <script>
@@ -129,6 +129,7 @@ export default {
       messages: messages,
       errormessage: "",
       agGridInputErrCount: 0,
+      isDateDialog: false,
       dateInfo: {
         date: null,
         minDate: null,
@@ -353,7 +354,7 @@ export default {
     // 日付設定処理
     //* ============================================
     handleChangeDate() {
-      this.hideDatePicker();
+      this.isDateDialog = false;
       // * モデル値を得て、セルに設定する
       useLeafModelValue(this.deviceId, this.year, this.dateInfo.date)
         .then((response) => {
@@ -437,7 +438,7 @@ export default {
       if (params.column.colId == "date") {
         this.dateInfo.params = params;
         this.dateInfo.date = this.rowData[params.rowIndex].date;
-        this.showDatePicker();
+        this.isDateDialog = true;
       }
     },
     //* ============================================
@@ -453,28 +454,10 @@ export default {
       this.$refs.guideComment.style.display = "inline-block";
     },
     //* ============================================
-    // マウスの座標軸上に日付入力を表示
-    //* ============================================
-    showDatePicker() {
-      //* コメント位置を設定
-      let y = this.mouseY + 10;
-      let x = this.mouseX - 10;
-      this.$refs.dateInput.style.top = "" + y + "px";
-      this.$refs.dateInput.style.left = "" + x + "px";
-      //* 日付入力を表示
-      this.$refs.dateInput.style.display = "inline-block";
-    },
-    //* ============================================
     // コメントを隠す
     //* ============================================
     hideComment() {
       this.$refs.guideComment.style.display = "none";
-    },
-    //* ============================================
-    // 日付を隠す
-    //* ============================================
-    hideDatePicker() {
-      this.$refs.dateInput.style.display = "none";
     },
     //* ============================================
     // 閉じるアクション

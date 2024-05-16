@@ -39,7 +39,7 @@
                 hide-details="auto"
                 outlined
                 @mousedown="showDatePicker('1')"
-                v-model.number="fruitValueSproutTreatment.date"
+                v-model="fruitValueSproutTreatment.date"
               ></v-text-field>
             </v-col>
             <v-col cols="2">
@@ -82,7 +82,7 @@
                 hide-details="auto"
                 outlined
                 @mousedown="showDatePicker('2')"
-                v-model.number="fruitValueELStage.date"
+                v-model="fruitValueELStage.date"
               ></v-text-field>
             </v-col>
             <v-col cols="2">
@@ -122,7 +122,7 @@
                 hide-details="auto"
                 outlined
                 @mousedown="showDatePicker('3')"
-                v-model.number="fruitValueBagging.date"
+                v-model="fruitValueBagging.date"
               ></v-text-field>
             </v-col>
             <v-col cols="2">
