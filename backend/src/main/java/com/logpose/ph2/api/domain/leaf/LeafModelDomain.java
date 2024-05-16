@@ -80,7 +80,7 @@ public class LeafModelDomain
 // * 萌芽日の取得
 			if (null == sproutDay)
 				{
-				sproutDay = this.appliedModel.getSproutDay(deviceId, year);
+				sproutDay = this.appliedModel.getSproutDay(deviceId, year, data);
 				}
 
 // * 新梢数が無い場合は取得する

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
+import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealLeafShootsAreaMapper;
@@ -32,22 +33,39 @@ public class AppliedModel
 	 * 萌芽日を取得する
 	 * @param deviceId デバイスID
 	 * @param year 年度
+	 * @param data 更新対象となる日ごととモデルのデータ 
 	 * @return 萌芽の経過日
 	 */
 	// ###############################################
-	public short getSproutDay(Long deviceId, Short year)
+	public short getSproutDay(Long deviceId, Short year, List<ModelAndDailyDataEntity> data)
 		{
 		Ph2RealGrowthFStageEntityExample exm = new Ph2RealGrowthFStageEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year).andStageEndEqualTo((short) 4);
 		Ph2RealGrowthFStageEntity entity = this.getRealGrowthFStageEntity(exm);
 
-		List<Integer> sproutDays = this.modelDataMapper.selectLapseDayByFValue(deviceId, year,
-				entity.getActualDate(), entity.getAccumulatedF());
-		if (sproutDays.size() == 0)
+		if (null != entity.getActualDate())
 			{
-			sproutDays = this.modelDataMapper.selectLapseDayByFValue(deviceId, year, null, (double) 15);
+			if ((entity.getActualDate().getTime() >= data.get(0).getDate().getTime()) &&
+					(entity.getActualDate().getTime() <= data.get(data.size() - 1).getDate().getTime()))
+				{
+				for (ModelAndDailyDataEntity dayData : data)
+					{
+					if (dayData.getDate().getTime() == entity.getActualDate().getTime())
+						{
+						return dayData.getLapseDay();
+						}
+					}
+				}
 			}
-		return sproutDays.get(0).shortValue();
+
+		for (ModelAndDailyDataEntity dayData : data)
+			{
+			if (dayData.getfValue() >= entity.getAccumulatedF())
+				{
+				return dayData.getLapseDay();
+				}
+			}
+		throw new RuntimeException("萌芽日を決められません。");
 		}
 
 	// ###############################################
