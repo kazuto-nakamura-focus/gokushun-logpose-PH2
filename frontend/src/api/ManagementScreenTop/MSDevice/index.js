@@ -8,6 +8,14 @@ const useDeviceList = () => {
   return axios.get("/device/list", config);
 };
 
+//デバイス一覧取得
+const useDeviceShortList = () => {
+  const config = {
+    params: {},
+  };
+  return axios.get("/device/list-short", config);
+};
+
 //デバイス情報追加
 const useDeviceInfoAdd = (data) => {
   const config = {
@@ -75,6 +83,7 @@ const useGetAllDataLoadStatus = (date) => {
 
 export {
   useDeviceList,
+  useDeviceShortList,
   useDeviceInfoRemove,
   useDeviceInfo,
   useDeviceInfoAdd,

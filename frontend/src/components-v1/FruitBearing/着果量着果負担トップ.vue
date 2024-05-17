@@ -25,6 +25,7 @@ export default {
   data() {
     return {
       menu: null,
+      FruitsBearingdetailMounted : false
     };
   },
   components: {
@@ -39,7 +40,7 @@ export default {
         if (this.$refs.ph2FruitsBearingInput !== undefined) {
           this.$refs.ph2FruitsBearingInput.initialize(this.menu);
         }
-        if (this.$refs.Ph2FruitsBearingdetail !== undefined) {
+        if(this.FruitsBearingdetailMounted){
           this.$refs.Ph2FruitsBearingdetail.initialize(this.menu);
         }
       });
@@ -52,10 +53,11 @@ export default {
       }
     },
     Ph2FruitsBearingdetailMounted() {
+      if(!this.FruitsBearingdetailMounted) {
+        this.FruitsBearingdetailMounted = true;
       if (this.menu != null) {
-        this.$nextTick(function () {
           this.$refs.Ph2FruitsBearingdetail.initialize(this.menu);
-        });
+        }
       }
     },
   },

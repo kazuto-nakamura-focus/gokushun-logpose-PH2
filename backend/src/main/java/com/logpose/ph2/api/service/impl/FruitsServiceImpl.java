@@ -100,13 +100,18 @@ public class FruitsServiceImpl implements FruitsService
 	public BearingDTO getFruitValues2(Long deviceId, Short year) throws ParseException
 		{
 		BearingDTO result = new BearingDTO();
+		result.setId(deviceId);
+		result.setYear(year);
 
 // * 収穫時のステージを得る
 		Ph2RealGrowthFStageEntity harvestDate = this.appliedModel.getHarvestDate(deviceId, year);
 
 // * 収穫時樹冠葉面積(m^2)を得る
 		Double havestTimeCrownArea = this.bearingDomain.getHarvestTimeCrownArea(deviceId, year, harvestDate);
-		result.setHarvestCrownLeafArea(havestTimeCrownArea.floatValue());
+		if (null != havestTimeCrownArea)
+			{
+			result.setHarvestCrownLeafArea(havestTimeCrownArea.floatValue());
+			}
 
 // * 積算樹冠光合成量(kgCO2vine^-1)
 		Double crownAreaPhotoSynthesis = this.bearingDomain.getCrownAreaPhotoSynthesis(deviceId, year, harvestDate);

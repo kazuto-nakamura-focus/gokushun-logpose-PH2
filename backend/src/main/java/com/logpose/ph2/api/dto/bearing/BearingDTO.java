@@ -5,6 +5,10 @@ import lombok.Data;
 @Data
 public class BearingDTO
 	{
+// * デバイスID
+	private Long id;
+// * 対象年度
+	private Short year;
 // * 実測日
 	private String date;
 // * 収穫時樹冠葉面積(m^2)

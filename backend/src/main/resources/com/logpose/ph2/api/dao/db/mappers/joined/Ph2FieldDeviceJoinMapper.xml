@@ -51,7 +51,35 @@
 		ph2_fields f on d.field_id = f.id
 		ORDER BY name DESC
 	</select>
+<!-- ************************************************************************** -->
+	<resultMap id="DeviceShortDTO"
+		type="com.logpose.ph2.api.dto.device.DeviceShortDTO">
+		<result column="id" property="id"></result>
+		<result column="name" property="name"></result>
+		<result column="field" property="fieldName"></result>
+		<result column="year" property="year"></result>
+		<result column="brand" property="brand"></result>
+		<result column="baseDate" property="baseDate"></result>
+	</resultMap>
 	
+	<select id="selectDeviceShortList" resultMap="DeviceShortDTO">
+		SELECT
+			d.id as id,
+			d.name as name,
+			f.name as field,
+			d.brand as brand,
+			day.year as year,
+			to_char(d.base_date, 'mm/dd') as baseDate
+		FROM
+			ph2_devices d
+		JOIN
+			ph2_fields f on d.field_id = f.id
+		JOIN
+			ph2_device_day day on d.id = day.device_id
+		where
+			day.lapse_day = 1
+		ORDER BY field, name, year
+	</select>
 <!-- ************************************************************************** -->
 	<resultMap id="DeviceDetailDTO"
 		type="com.logpose.ph2.api.dto.device.DeviceDetailDTO">

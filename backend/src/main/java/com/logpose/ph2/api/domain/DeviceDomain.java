@@ -17,6 +17,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
+import com.logpose.ph2.api.dto.device.DeviceShortDTO;
 import com.logpose.ph2.api.dto.device.DeviceTermDTO;
 import com.logpose.ph2.api.dto.device.DeviceUpdateDTO;
 
@@ -49,7 +50,17 @@ public class DeviceDomain
 		{
 		return this.fieldDeviceJoinMapper.selectDeviceList();
 		}
-
+	// --------------------------------------------------
+	/**
+	 * デバイス簡易一覧取得
+	 *
+	 * @return List<DeviceShortDTO>
+	 */
+	// --------------------------------------------------
+	public List<DeviceShortDTO> getDeviceShortList()
+		{
+		return this.fieldDeviceJoinMapper.selectDeviceShortList();
+		}
 	// --------------------------------------------------
 	/**
 	 * デバイスの詳細取得

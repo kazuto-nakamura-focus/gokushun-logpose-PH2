@@ -21,6 +21,7 @@ import com.logpose.ph2.api.domain.SensorDomain;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
 import com.logpose.ph2.api.dto.device.DeviceMastersDTO;
+import com.logpose.ph2.api.dto.device.DeviceShortDTO;
 import com.logpose.ph2.api.dto.device.DeviceTransitInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceUpdateDTO;
 import com.logpose.ph2.api.dto.senseor.SensorUnitReference;
@@ -78,7 +79,19 @@ public class DeviceServiceImpl implements DeviceService
 		{
 		return this.deviceDomain.getDeviceList();
 		}
-
+	// --------------------------------------------------
+	/**
+	 * デバイス簡易一覧取得
+	 *
+	 * @return List<DeviceShortDTO>
+	 */
+	// --------------------------------------------------
+	@Override
+	@Transactional(readOnly = true)
+	public List<DeviceShortDTO> listShort()
+		{
+		return this.deviceDomain.getDeviceShortList();
+		}
 	// --------------------------------------------------
 	/**
 	 * デバイス情報詳細取得
