@@ -4,12 +4,7 @@
     <v-container fill-height v-if="isLoading">
       <v-row justify="center" align-content="center">
         <v-col class="text-center">
-          <v-progress-circular
-            indeterminate
-            size="70"
-            width="7"
-            color="primary"
-          />
+          <v-progress-circular indeterminate size="70" width="7" color="primary" />
         </v-col>
       </v-row>
     </v-container>
@@ -20,10 +15,7 @@
       </v-navigation-drawer>
 
       <v-app-bar v-if="isLoggedIn" app height="40">
-        <v-app-bar-nav-icon
-          color="white"
-          @click="drawer = !drawer"
-        ></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon color="white" @click="drawer = !drawer"></v-app-bar-nav-icon>
         <v-toolbar-title class="cm_TopTitle">極旬ログポース</v-toolbar-title>
       </v-app-bar>
 
@@ -58,16 +50,17 @@ export default {
       if (document.visibilityState === "visible") {
         // ブラウザが表示されたときに実行される処理
         store.dispatch("checkSession").then((isLoggedIn) => {
-          console.log("ブラウザが表示されました。APIを呼び出します。");
           console.log(isLoggedIn);
-          console.log(pathName)
-          if(!isLoggedIn){
-            if(!pathName.includes(loginUrl)){
-              alert("ログインセッションがタイムアウトしました。再ログインしてください");
+          console.log(pathName);
+          if (!isLoggedIn) {
+            if (!pathName.includes(loginUrl)) {
+              alert(
+                "ログインセッションがタイムアウトしました。再ログインしてください"
+              );
               window.location.href = loginUrl;
             }
-          }else{
-            if(pathName.includes(loginUrl)){
+          } else {
+            if (pathName.includes(loginUrl)) {
               window.location.href = "/";
             }
           }

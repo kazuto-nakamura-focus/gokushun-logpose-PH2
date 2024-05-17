@@ -6,6 +6,7 @@ import java.util.List;
 import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
 import com.logpose.ph2.api.dto.device.DeviceMastersDTO;
+import com.logpose.ph2.api.dto.device.DeviceShortDTO;
 import com.logpose.ph2.api.dto.device.DeviceUpdateDTO;
 
 /**
@@ -25,6 +26,15 @@ public interface DeviceService
 	 */
 	// --------------------------------------------------
 	public List<DeviceInfoDTO> list();
+	
+	// --------------------------------------------------
+	/**
+	 * デバイス簡易一覧取得
+	 *
+	 * @return List<DeviceShortDTO>
+	 */
+	// --------------------------------------------------
+	public List<DeviceShortDTO> listShort();
 
 	// --------------------------------------------------
 	/**

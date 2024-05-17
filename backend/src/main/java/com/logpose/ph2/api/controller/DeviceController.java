@@ -19,6 +19,7 @@ import com.logpose.ph2.api.dto.DeviceInfoDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.device.DeviceDetailDTO;
 import com.logpose.ph2.api.dto.device.DeviceMastersDTO;
+import com.logpose.ph2.api.dto.device.DeviceShortDTO;
 import com.logpose.ph2.api.dto.device.DeviceUpdateDTO;
 import com.logpose.ph2.api.service.DeviceService;
 
@@ -82,7 +83,27 @@ public class DeviceController
 			}
 		return as_dto;
 		}
-
+	/** --------------------------------------------------
+	 * デバイス簡易一覧取得
+	 *
+	 * @return ResponseDTO(List<DeviceShortDTO>)
+	 ------------------------------------------------------ */
+	@GetMapping("/list-short")
+	public ResponseDTO listShort(HttpServletRequest httpReq)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			List<DeviceShortDTO> result = this.deviceService.listShort();
+			as_dto.setSuccess(result);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+	
 	// --------------------------------------------------
 	/**
 	 * デバイス削除
