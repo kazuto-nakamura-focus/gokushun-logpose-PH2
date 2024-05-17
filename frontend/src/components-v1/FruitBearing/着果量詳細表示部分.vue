@@ -1,7 +1,7 @@
 <!--着果量着果負担表示画面-->
 <template>
   <v-card>
-    <v-data-table :headers="headers" :items="dataList"></v-data-table>
+    <v-data-table :headers="headers" :items="dataList" :item-class="itemClass"></v-data-table>
   </v-card>
 </template>
   
@@ -87,8 +87,13 @@ export default {
             if (data.bearingCount == 0) {
               data.bearingCount = "-";
             }
-            if (this.dataList.length > 0) this.dataList.splice(1, 0, data);
-            else this.dataList.push(data);
+            if (this.dataList.length > 0) {
+              data.keyDevice = new Boolean(false);
+              this.dataList.splice(1, 0, data);
+            } else {
+              data.keyDevice = new Boolean(true);
+              this.dataList.push(data);
+            }
           } else {
             throw new Error(message);
           }
@@ -99,11 +104,18 @@ export default {
           console.log(e);
         });
     },
+    itemClass(item) {
+      return item.keyDevice == true ? "first-row" : "";
+    },
   },
 };
 </script>
   
-<style scoped>
+<style lang="css">
+.first-row {
+  background-color: #f4fce0;
+  color: #000;
+}
 .wrapper {
   display: -webkit-flex;
   display: -moz-flex;
