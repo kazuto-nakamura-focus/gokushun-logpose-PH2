@@ -1,7 +1,7 @@
 <!--着果量着果負担表示画面-->
 <template>
-  <v-card>
-    <v-container>
+  <v-card width="auto">
+    <v-container width="auto">
       <v-row>
         <v-col cols="6">
           <v-select
@@ -18,7 +18,7 @@
             style="font-size:10pt;"
           ></v-select>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="2">
           <v-text-field v-model="baseDate" label="基準日" disabled style="font-size:9pt;"></v-text-field>
         </v-col>
         <v-col cols="3">
@@ -27,16 +27,22 @@
       </v-row>
     </v-container>
     <v-data-table
-      width="100%"
-      min-width="800px"
+      min-width="960px"
       :headers="headers"
       :items="dataList"
       :item-class="itemClass"
       :disable-sort="!sortable"
       @pagination="onPaginationUpdate"
     > 
+    <template v-slot:headers="{ props }">
+      <thead>
+      <th v-for="header in props.headers" :key="header.text" class="header">
+        {{ header.text }}
+      </th>
+      </thead>
+    </template>
       <template v-slot:[`item.name`]="{ item }">
-        <td style="font-size:9pt;padding:2px;border-right:1px dotted #ccc;">{{ item.name }}</td>
+        <td style="font-size:9pt;padding:2px;border-right:1px dotted #ccc;">{{ item.name }}<br>{{ item.year }}</td>
       </template>
 
       <template v-slot:[`item.date`]="{ item }">
@@ -70,22 +76,26 @@ export default {
       headers: [
         { text: "", value: "name", width: 180 },
         { text: "実測日", value: "date", width: 100 },
-        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea" },
+        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea", width: 100 },
         {
           text: "積算樹冠光合成量(kgCO2vine^-1)",
-          value: "culminatedCrownPhotoSynthesysAmount"
+          value: "culminatedCrownPhotoSynthesysAmount",
+          width: 124
         },
         {
           text: "着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)",
-          value: "bearingWeight"
+          value: "bearingWeight",
+          width: 124
         },
         {
           text: "積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)",
-          value: "bearingPerPhotoSynthesys"
+          value: "bearingPerPhotoSynthesys",
+          width: 124
         },
         {
           text: "実測着果数/収穫時樹冠葉面積(房数/m^2)",
-          value: "bearingCount"
+          value: "bearingCount",
+          width: 124
         },
       ],
       dataList: [],
@@ -107,7 +117,7 @@ export default {
               id : createId(row.id, row.year),
               deviceId : row.id,
               year: row.year,
-              name: row.fieldName + "|" + row.name + "|" + row.year,
+              name: row.fieldName + "|" + row.name,
               baseDate: row.baseDate,
               brand: row.brand,
             };
@@ -271,6 +281,10 @@ export default {
   font-size: 9pt;
   border-bottom: 1px solid #ccc;
   padding: 3px 0;
+}
+.header {
+  font-size:9pt;
+
 }
 </style>
   
