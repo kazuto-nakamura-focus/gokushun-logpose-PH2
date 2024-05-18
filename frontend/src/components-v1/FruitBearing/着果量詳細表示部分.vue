@@ -31,7 +31,6 @@
       :headers="headers"
       :items="dataList"
       :item-class="itemClass"
-      :disable-sort="!sortable"
       @pagination="onPaginationUpdate"
     > 
     <template v-slot:headers="{ props }">
@@ -42,7 +41,7 @@
       </thead>
     </template>
       <template v-slot:[`item.name`]="{ item }">
-        <td style="font-size:9pt;padding:2px;border-right:1px dotted #ccc;">{{ item.name }}<br>{{ item.year }}</td>
+        <td style="font-size:9pt;padding:2px;border-right:1px dotted #ccc;">{{ item.name }}</td>
       </template>
 
       <template v-slot:[`item.date`]="{ item }">
@@ -69,33 +68,32 @@ export default {
   data() {
     return {
       baseDevice: createId(53, 2023),
-      sortable: true,
       baseDate: null,
       brand: null,
       devices: [],
       headers: [
-        { text: "", value: "name", width: 180 },
-        { text: "実測日", value: "date", width: 100 },
-        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea", width: 100 },
+        { text: "", value: "name", width: 180, align:"center" },
+        { text: "実測日", value: "date", width: 100, align:"center" },
+        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea", width: 100, align:"right"},
         {
           text: "積算樹冠光合成量(kgCO2vine^-1)",
           value: "culminatedCrownPhotoSynthesysAmount",
-          width: 124
+          width: 124, align:"right"
         },
         {
           text: "着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)",
           value: "bearingWeight",
-          width: 124
+          width: 124, align:"right"
         },
         {
           text: "積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)",
           value: "bearingPerPhotoSynthesys",
-          width: 124
+          width: 124, align:"right"
         },
         {
           text: "実測着果数/収穫時樹冠葉面積(房数/m^2)",
           value: "bearingCount",
-          width: 124
+          width: 124, align:"right"
         },
       ],
       dataList: [],
@@ -228,7 +226,6 @@ export default {
             } else {
               this.dataList.unshift(data);
             }
-            this.sortable = true;
           } else {
             throw new Error(message);
           }
@@ -253,7 +250,6 @@ export default {
       }
     },
     handleChangeDevice(item) {
-      this.sortable = false;
       this.baseDate = item.baseDate;
       this.brand = item.brand;
       this.baseDevice = item.id;
