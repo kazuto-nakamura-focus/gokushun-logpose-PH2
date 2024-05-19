@@ -7,7 +7,7 @@
           <v-select
             v-model="baseDevice"
             :items="devices"
-            item-text="name"
+            item-text="text"
             item-value="id"
             width="300"
             dense
@@ -32,16 +32,27 @@
       :items="dataList"
       :item-class="itemClass"
       @pagination="onPaginationUpdate"
+      hide-default-header
     > 
-    <template v-slot:headers="{ props }">
+    <template v-slot:header="{ props }">
       <thead>
-      <th v-for="header in props.headers" :key="header.value" class="header">
-        {{ header.text}}
-      </th>
+        <tr>
+          <th v-for="header in props.headers" :key="header.value" class="header">
+            <div style="height:70px;padding:0;margin:0;text-align:left;font-weight:550">{{ header.text.split(';')[0] }}
+              <br>{{ header.text.split(';')[1] }}<br>{{ header.text.split(';')[2] }}
+            </div>
+            <div style="text-align:center;margin:4px">{{ header.text.split(';')[3] }}</div>
+          </th>
+        </tr>
       </thead>
     </template>
       <template v-slot:[`item.name`]="{ item }">
-        <td style="font-size:9pt;padding:2px;border-right:1px dotted #ccc;">{{ item.name }}</td>
+        <td style="font-size:9pt;padding:2px;border-right:1px dotted #ccc;">
+          {{ item.name }} [{{ item.year }}]
+          <div style="padding:3px;margin:0;">
+            実測日 : {{ item.date }}
+          </div>
+        </td>
       </template>
 
       <template v-slot:[`item.date`]="{ item }">
@@ -68,32 +79,33 @@ export default {
   data() {
     return {
       baseDevice: createId(53, 2023),
+      selectedDevice:null,
+      selectedBase:null,
       baseDate: null,
       brand: null,
       devices: [],
       headers: [
         { text: "", value: "name", width: 180, align:"center" },
-        { text: "実測日", value: "date", width: 100, align:"center" },
-        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea", width: 124, align:"right"},
+        { text: ";収穫時樹冠葉面積;;(m^2)", value: "harvestCrownLeafArea", width: 156, align:"right"},
         {
-          text: "積算樹冠光合成量(kgCO2vine^-1)",
+          text: ";積算樹冠光合成量;;(kgCO2vine^-1)",
           value: "culminatedCrownPhotoSynthesysAmount",
-          width: 124, align:"right"
+          width: 156, align:"right"
         },
         {
-          text: "着果負担（果実総重量/収穫時樹冠葉面積）(g/m^2)",
+          text: "着果負担;(果実総重量;/収穫時樹冠葉面積);(g/m^2)",
           value: "bearingWeight",
-          width: 124, align:"right"
+          width: 156, align:"right"
         },
         {
-          text: "積算樹冠光合成量あたりの着果量（果実総重量/積算樹冠光合成量）(g/kgCO2 vine^-1)",
+          text: "積算樹冠光合成量あたりの着果量;(果実総重量;/積算樹冠光合成量);(g/kgCO2 vine^-1)",
           value: "bearingPerPhotoSynthesys",
-          width: 124, align:"right"
+          width: 156, align:"right"
         },
         {
-          text: "実測着果数/収穫時樹冠葉面積(房数/m^2)",
+          text: "実測着果数;/収穫時樹冠葉面積;;(房数/m^2)",
           value: "bearingCount",
-          width: 124, align:"right"
+          width: 156, align:"right"
         },
       ],
       dataList: [],
@@ -106,6 +118,9 @@ export default {
   },
 
   mounted() {
+    //* ============================================
+    // 基準デバイス選択メニューを作成する
+    //* ============================================
     useDeviceShortList()
       .then((response) => {
         const { status, message, data } = response["data"];
@@ -115,11 +130,13 @@ export default {
               id : createId(row.id, row.year),
               deviceId : row.id,
               year: row.year,
-              name: row.fieldName + "|" + row.name,
+              text:row.fieldName + "|" + row.name + " [" + row.year +"]", // セレクタで表示する名前
+              name: row.fieldName + "|" + row.name, // テーブル内で表示する名前、yearと併用
               baseDate: row.baseDate,
               brand: row.brand,
             };
             this.devices.push(item);
+            // * 基準デバイスの場合、データを取得する
             if (item.id == this.baseDevice) {
               this.baseDate = row.baseDate;
               this.brand = row.brand;
@@ -148,9 +165,7 @@ export default {
       let name =
         selectedItems.selectedField.name +
         "|" +
-        selectedItems.selectedDevice.name +
-        "|" +
-        selectedItems.selectedYear.id;
+        selectedItems.selectedDevice.name
 
       // * データの取得
       this.callUseFruitDetailsAPI(
@@ -222,8 +237,10 @@ export default {
             }
             // * デバイスのキー設定と表示設定
             if(id != this.baseDevice){
+              this.selectedDevice = id;
               this.dataList.splice(1, 0, data);
             } else {
+              this.selectedBase = id;
               this.dataList.unshift(data);
             }
           } else {
@@ -240,7 +257,12 @@ export default {
     // キーデバイスの背景色を変更する
     //* ============================================
     itemClass(item) {
-      return item.id == this.baseDevice ? "first-row" : "";
+      if(item.id == this.baseDevice){
+        return "first-row";
+      } else if (item.id == this.selectedDevice){
+        return "second-row";
+      }
+     else return "";
     },
 
     onPaginationUpdate(newPagination) {
@@ -250,6 +272,15 @@ export default {
       }
     },
     handleChangeDevice(item) {
+      let i=0;
+      console.log(this.baseDevice);
+      for (const old of this.dataList) {
+        if (old.id == this.selectedBase) {
+          this.dataList.splice(i, 1);
+          break;
+        }
+        i++;
+      }
       this.baseDate = item.baseDate;
       this.brand = item.brand;
       this.baseDevice = item.id;
@@ -263,6 +294,10 @@ export default {
 .first-row {
   background-color: #f4fce0;
   color: #000;
+}
+.second-row {
+  color: #058d1e;
+  font-weight:550;
 }
 .wrapper {
   display: -webkit-flex;
@@ -279,8 +314,10 @@ export default {
   padding: 3px 0;
 }
 .header {
-  font-size:9pt;
+  font-size:8pt;
   text-align: left;
+  width:156px;
+  border-left: #ccc dotted 1px;
 }
 </style>
   
