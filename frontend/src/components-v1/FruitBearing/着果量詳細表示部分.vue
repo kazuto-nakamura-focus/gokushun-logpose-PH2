@@ -35,8 +35,8 @@
     > 
     <template v-slot:headers="{ props }">
       <thead>
-      <th v-for="header in props.headers" :key="header.text" class="header">
-        {{ header.text }}
+      <th v-for="header in props.headers" :key="header.value" class="header">
+        {{ header.text}}
       </th>
       </thead>
     </template>
@@ -74,7 +74,7 @@ export default {
       headers: [
         { text: "", value: "name", width: 180, align:"center" },
         { text: "実測日", value: "date", width: 100, align:"center" },
-        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea", width: 100, align:"right"},
+        { text: "収穫時樹冠葉面積(m^2)", value: "harvestCrownLeafArea", width: 124, align:"right"},
         {
           text: "積算樹冠光合成量(kgCO2vine^-1)",
           value: "culminatedCrownPhotoSynthesysAmount",
@@ -280,7 +280,7 @@ export default {
 }
 .header {
   font-size:9pt;
-
+  text-align: left;
 }
 </style>
   
