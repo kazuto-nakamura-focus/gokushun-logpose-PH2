@@ -80,33 +80,27 @@
 
 	<select id="selectHistory" resultMap="HistoryDTO">
 		SELECT
-		h.updated_at as date,
-		u.id as userId,
-		u.username as name,
-		h.comment as comment
+			h.updated_at as date,
+			COALESCE(h.user_name , 'システム') as name,
+			h.comment as comment
 		FROM
-		ph2_paramset_history h
-		JOIN
-		ph2_users u on h.user_id = u.id
+			ph2_paramset_history h
 		WHERE
-		h.paramset_id = #{paramsetId}
+			h.paramset_id = #{paramsetId}
 		ORDER BY date DESC
 	</select>
 
 	<select id="selectLatestHistory" resultMap="HistoryDTO">
 		SELECT
-		h.updated_at as date,
-		u.id as userId,
-		u.username as name,
-		h.comment as comment
+			h.updated_at as date,
+			COALESCE(h.user_name , 'システム') as name,
+			h.comment as comment
 		FROM
-		ph2_paramset_history h
-		JOIN
-		ph2_users u on h.user_id = u.id
+			ph2_paramset_history h
 		WHERE
-		h.paramset_id = #{paramsetId}
+			h.paramset_id = #{paramsetId}
 		AND
-		h.latest = true
+			h.latest = true
 	</select>
 
 	<select id="selectLatestComment" resultType="java.lang.String">

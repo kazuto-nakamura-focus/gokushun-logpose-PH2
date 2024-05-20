@@ -115,8 +115,11 @@ public class FruitsServiceImpl implements FruitsService
 
 // * 積算樹冠光合成量(kgCO2vine^-1)
 		Double crownAreaPhotoSynthesis = this.bearingDomain.getCrownAreaPhotoSynthesis(deviceId, year, harvestDate);
-		result.setCulminatedCrownPhotoSynthesysAmount(crownAreaPhotoSynthesis.floatValue());
-
+		if (null != crownAreaPhotoSynthesis)
+			{
+			result.setCulminatedCrownPhotoSynthesysAmount(crownAreaPhotoSynthesis.floatValue());
+			}
+		
 // * 果実総重量の取得
 		Ph2RealFruitsDataEntity entity = this.bearingDomain.getFruitsEntity(deviceId, year);
 		if (null != entity)

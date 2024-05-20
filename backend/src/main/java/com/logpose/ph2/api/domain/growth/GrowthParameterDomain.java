@@ -168,6 +168,10 @@ public class GrowthParameterDomain
 			dto.setDefaultFlg(false);
 			parentId = parameterSetDomain.add(dto, ModelMaster.GROWTH);
 			}
+		else
+			{
+			parameterSetDomain.addHistory(dto, parentId);
+			}
 // * テーブル:成長予測パラメータセット(ph2_paramset_growth)に新しいパラメータセットレコードを追加する。
 		Ph2ParamsetGrowthEntity entity = new Ph2ParamsetGrowthEntity();
 		entity.setParamsetId(parentId);

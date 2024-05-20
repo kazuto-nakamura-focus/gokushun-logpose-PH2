@@ -74,6 +74,7 @@ public class ParameterSetDomain
 	 *
 	 * @param paramSetId
 	 * @return List<HistoryDTO>
+	 * @version 1.1 --- 履歴テーブルに直接ユーザー名を記録する変更に対する修正
 	 */
 	// --------------------------------------------------
 	public List<HistoryDTO> getHistory(Long paramSetId)
@@ -128,6 +129,7 @@ public class ParameterSetDomain
 	 *
 	 * @param paramSetId パラメータセットID
 	 * @return Ph2ParamsetCatalogEntity
+	 * @version 1.1 --- 履歴テーブルに直接ユーザー名を記録する変更に対する修正
 	 */
 	// --------------------------------------------------
 	public void fetchDetail(Long paramSetId, ParamSetDTO dto)
@@ -220,7 +222,7 @@ public class ParameterSetDomain
 		//dto.setDate(new Date());
 		dto.setComment("パラメータはシステムによるデフォルトの初期設定を使用しています。");
 		dto.setUserId((long) 1);
-		dto.setName("system");
+		dto.setName("システム");
 		dto.setDeviceId(deviceId);
 		dto.setYear(year);
 		dto.setParameterName("Default Parameters");
@@ -255,7 +257,7 @@ public class ParameterSetDomain
 	 * @param paramSetId 追加先のパラメータセットID
 	 */
 	// --------------------------------------------------
-	private void addHistory(ParamSetDTO dto, Long paramSetId)
+	public void addHistory(ParamSetDTO dto, Long paramSetId)
 		{
 		Ph2ParamsetHistoryEntityExample exm = new Ph2ParamsetHistoryEntityExample();
 		exm.createCriteria().andLatestEqualTo(true).andParamsetIdEqualTo(paramSetId);
@@ -272,6 +274,7 @@ public class ParameterSetDomain
 		history.setComment(dto.getComment());
 		history.setLatest(true);
 		history.setUserId(dto.getUserId());
+		history.setUserName(dto.getName());
 		history.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 		history.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
 		this.ph2ParamsetHistoryMapper.insert(history);

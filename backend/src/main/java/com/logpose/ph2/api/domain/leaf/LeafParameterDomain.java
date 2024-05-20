@@ -205,6 +205,10 @@ public class LeafParameterDomain
 			dto.setDefaultFlg(false);
 			id = parameterSetDomain.add(dto, ModelMaster.LEAF);
 			}
+		else
+			{
+			parameterSetDomain.addHistory(dto, id);
+			}
 		Ph2ParamsetLeafAreaEntity area = new Ph2ParamsetLeafAreaEntity();
 		area.setParamsetId(id);
 		area.setCreatedAt(new Timestamp(System.currentTimeMillis()));

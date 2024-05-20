@@ -122,10 +122,13 @@
 			</table> <table tableName="ph2_paramset_catalog" domainObjectName="Ph2ParamsetCatalogEntity" 
 			mapperName="Ph2ParamsetCatalogMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> <table tableName="ph2_paramset_history" domainObjectName="Ph2ParamsetHistoryEntity" 
+			</table> -->
+
+			<table tableName="ph2_paramset_history" domainObjectName="Ph2ParamsetHistoryEntity" 
 			mapperName="Ph2ParamsetHistoryMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
-			</table> <table tableName="ph2_paramset_growth" domainObjectName="Ph2ParamsetGrowthEntity" 
+			</table>
+			<!-- <table tableName="ph2_paramset_growth" domainObjectName="Ph2ParamsetGrowthEntity" 
 			mapperName="Ph2ParamsetGrowthMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> <table tableName="ph2_paramset_leaf_area" domainObjectName="Ph2ParamsetLeafAreaEntity" 
@@ -156,11 +159,13 @@
 			mapperName="Ph2RealFruitsDataMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> 
-			 -->			
+			 -->		
+			 <!--	
 			<table tableName="ph2_real_ps_amount" domainObjectName="Ph2RealPsAmountEntity" 
 			mapperName="Ph2RealPsAmountMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
+			-->
 			<!--
 			<table tableName="ph2_real_growth_f_stage" domainObjectName="Ph2RealGrowthFStageEntity" 
 			mapperName="Ph2RealGrowthFStageMapper" enableInsert="true" enableSelectByPrimaryKey="true" 

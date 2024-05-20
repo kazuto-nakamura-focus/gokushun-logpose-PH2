@@ -133,6 +133,10 @@ public class PSParameterSetDomain
 			dto.setDefaultFlg(false);
 			id = parameterSetDomain.add(dto, ModelMaster.PHOTO);
 			}
+		else
+			{
+			parameterSetDomain.addHistory(dto, id);
+			}
 		Ph2ParamsetPsFieldEntity field = new Ph2ParamsetPsFieldEntity();
 		field.setParamsetId(id);
 		field.setCreatedAt(new Timestamp(System.currentTimeMillis()));
