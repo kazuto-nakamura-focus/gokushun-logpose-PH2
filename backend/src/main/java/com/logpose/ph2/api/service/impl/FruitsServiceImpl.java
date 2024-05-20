@@ -166,5 +166,19 @@ public class FruitsServiceImpl implements FruitsService
 
 		this.fruitDomain.setFruitValue(entity);
 		}
+	// --------------------------------------------------
+	/**
+	 * 実績値のクリア
+	 *
+	 * @return Ph2RealFruitsDataEntity
+	 * @throws ParseException 
+	 */
+	// --------------------------------------------------
+	@Override
+	@Transactional(rollbackFor = Exception.class)
+	public void deletetRealFruitsData(Long deviceId, Short year, Short eventId) throws ParseException
+		{
+		this.fruitDomain.delete(deviceId, year, eventId);
+		}
 
 	}

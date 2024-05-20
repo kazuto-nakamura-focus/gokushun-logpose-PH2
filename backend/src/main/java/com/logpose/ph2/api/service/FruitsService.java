@@ -62,7 +62,12 @@ public interface FruitsService
 	 */
 	// --------------------------------------------------
 	public void setFruitValues(FruitValuesByDevice dto) throws ParseException;
-
-
-
+	// --------------------------------------------------
+	/**
+	 * 実績値のクリア
+	 *
+	 * @return Ph2RealFruitsDataEntity
+	 */
+	// --------------------------------------------------
+	public void deletetRealFruitsData(Long deviceId, Short year, Short eventId) throws ParseException;
 	}

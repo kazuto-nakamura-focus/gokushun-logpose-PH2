@@ -154,7 +154,13 @@ const useFruitValueUpdate = (data) => {
   };
   return axios.post("/fruit/value", data, config);
 };
-
+//実績値クリア
+const useFruitValueDelete = (deviceId, year, eventId) => {
+  const config = {
+    params: { deviceId, year, eventId },
+  };
+  return axios.delete("/fruit/value", config);
+};
 
 export {
   useModelData,
@@ -171,4 +177,5 @@ export {
   useFruitValues,
   useFruitValueUpdate,
   useFruitDetails,
+  useFruitValueDelete
 };

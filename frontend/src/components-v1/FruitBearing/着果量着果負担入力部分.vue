@@ -4,149 +4,156 @@
     <v-card elevation="0" class="ma-1">
       <!-- 入力部分 -->
       <v-row>
-        <v-col cols="10">
-          <v-row>
-            <v-col cols="3">
-              <v-subheader class="ma-0 mt-n5 pa-0"></v-subheader>
-            </v-col>
-            <v-col cols="3">
-              <v-subheader class="ma-0 mt-n5 pa-0">実測日</v-subheader>
-            </v-col>
-            <v-col cols="2">
-              <v-subheader class="ma-0 mt-n5 pa-0">
-                <small>平均房重（ｇ）</small>
-              </v-subheader>
-            </v-col>
-            <v-col cols="2">
-              <v-subheader class="ma-0 mt-n5 pa-0">実測着果数</v-subheader>
-            </v-col>
-            <v-col cols="2">
-              <v-subheader class="ma-0 mt-n5 pa-0"></v-subheader>
-            </v-col>
-          </v-row>
+        <v-col cols="3">
+          <div class="ma-0 mt-n5 pa-0 pl-4">着生後芽かき処理時</div>
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            label="実測日"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            background-color="#F4FCE0"
+            @mousedown="showDatePicker('1')"
+            v-model="fruitValueSproutTreatment.date"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            label="平均房重(g)"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            background-color="#F4FCE0"
+            v-model.number="fruitValueSproutTreatment.weight"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            label="実測着果数"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            background-color="#F4FCE0"
+            v-model.number="fruitValueSproutTreatment.count"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="1">
+          <v-btn
+            class="primary ma-0 mt-n12 pl-1 pr-1"
+            @click="saveUseFruitValueSproutTreatment"
+            >保存</v-btn
+          >
+        </v-col>
+        <v-col cols="1">
+          <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="deleteData(1)"
+            >取消</v-btn
+          >
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="10">
-          <v-row>
-            <v-col cols="3">
-              <div class="ma-0 mt-n5 pa-0 pl-4">着生後芽かき処理時</div>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                @mousedown="showDatePicker('1')"
-                v-model="fruitValueSproutTreatment.date"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                v-model.number="fruitValueSproutTreatment.weight"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                v-model.number="fruitValueSproutTreatment.count"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-btn
-                class="primary ma-0 mt-n12 pl-1 pr-1"
-                @click="saveUseFruitValueSproutTreatment"
-              >保存</v-btn>
-            </v-col>
-          </v-row>
+        <v-col cols="3">
+          <div class="ma-0 mt-n5 pa-0 pl-4">結実期</div>
+        </v-col>
+        <v-col cols="3">
+          <v-text-field
+            label="実測日"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            @mousedown="showDatePicker('2')"
+            v-model="fruitValueELStage.date"
+            background-color="#F4FCE0"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            label="平均房重(g)"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            v-model.number="fruitValueELStage.weight"
+            background-color="#F4FCE0"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            label="実測着果数"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            v-model.number="fruitValueELStage.count"
+            background-color="#F4FCE0"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="1">
+          <v-btn
+            class="primary ma-0 mt-n12 pl-1 pr-1"
+            @click="saveUseFruitValueELStage"
+            >保存</v-btn
+          >
+        </v-col>
+        <v-col cols="1">
+          <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="deleteData(2)"
+            >取消</v-btn
+          >
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="10">
-          <v-row>
-            <v-col cols="3">
-              <div class="ma-0 mt-n5 pa-0 pl-4">結実期</div>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                @mousedown="showDatePicker('2')"
-                v-model="fruitValueELStage.date"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                v-model.number="fruitValueELStage.weight"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                v-model.number="fruitValueELStage.count"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="saveUseFruitValueELStage">保存</v-btn>
-            </v-col>
-          </v-row>
+        <v-col cols="3">
+          <div class="ma-0 mt-n5 pa-0 pl-4">袋かけ時</div>
         </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="10">
-          <v-row>
-            <v-col cols="3">
-              <div class="ma-0 mt-n5 pa-0 pl-4">袋かけ時</div>
-            </v-col>
-            <v-col cols="3">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                @mousedown="showDatePicker('3')"
-                v-model="fruitValueBagging.date"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                v-model.number="fruitValueBagging.weight"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-text-field
-                class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
-                dense
-                hide-details="auto"
-                outlined
-                v-model.number="fruitValueBagging.count"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="2">
-              <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="saveUseFruitValueBagging">保存</v-btn>
-            </v-col>
-          </v-row>
+        <v-col cols="3">
+          <v-text-field
+            label="実測日"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            @mousedown="showDatePicker('3')"
+            v-model="fruitValueBagging.date"
+            background-color="#F4FCE0"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            label="平均房重(g)"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            v-model.number="fruitValueBagging.weight"
+            background-color="#F4FCE0"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="2">
+          <v-text-field
+            label="実測着果数"
+            class="ma-0 mt-n8 pl-1 pr-1 text_field_size"
+            dense
+            hide-details="auto"
+            outlined
+            v-model.number="fruitValueBagging.count"
+            background-color="#F4FCE0"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="1">
+          <v-btn
+            class="primary ma-0 mt-n12 pl-1 pr-1"
+            @click="saveUseFruitValueBagging"
+            >保存</v-btn
+          >
+        </v-col>
+        <v-col cols="1">
+          <v-btn class="primary ma-0 mt-n12 pl-1 pr-1" @click="deleteData(3)"
+            >取消</v-btn
+          >
         </v-col>
       </v-row>
     </v-card>
@@ -163,7 +170,11 @@
 </template>
 
 <script>
-import { useFruitValue, useFruitValueUpdate } from "@/api/TopStateGrowth/index";
+import {
+  useFruitValue,
+  useFruitValueUpdate,
+  useFruitValueDelete,
+} from "@/api/TopStateGrowth/index";
 import moment from "moment";
 
 export default {
@@ -363,6 +374,35 @@ export default {
       } else if (this.dateInfo.eventId == 3) {
         this.fruitValueBagging.date = this.dateInfo.date;
       }
+    },
+    //* ============================================
+    // 実測値をクリアする
+    //* ============================================
+    deleteData(eventId) {
+      //袋かけ時実績値更新処理
+      useFruitValueDelete(this.devicesId, this.year, eventId)
+        .then((response) => {
+          const { status, message } = response["data"];
+          if (status === 0) {
+            alert("値を取消ました。");
+            if (eventId == 1) {
+              this.fruitValueSproutTreatment.weight = null;
+              this.fruitValueSproutTreatment.count = null;
+            } else if (eventId == 2) {
+              this.fruitValueELStage.weight = null;
+              this.fruitValueELStage.count = null;
+            } else if (eventId == 3) {
+              this.fruitValueBagging.weight = null;
+              this.fruitValueBagging.count = null;
+            }
+          } else {
+            throw new Error(message);
+          }
+        })
+        .catch((error) => {
+          alert("取消に失敗しました。");
+          console.log(error);
+        });
     },
   },
 };

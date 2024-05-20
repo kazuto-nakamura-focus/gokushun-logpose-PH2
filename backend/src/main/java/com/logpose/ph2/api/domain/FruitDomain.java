@@ -53,9 +53,9 @@ public class FruitDomain
 		{
 		Ph2RealFruitsDataEntityExample exm = new Ph2RealFruitsDataEntityExample();
 		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year);
-		List<Ph2RealFruitsDataEntity> records =  ph2RealFruitsDataMapper.selectByExample(exm);
+		List<Ph2RealFruitsDataEntity> records = ph2RealFruitsDataMapper.selectByExample(exm);
 		List<RealFruitsValueDTO> result = new ArrayList<>();
-		for(final Ph2RealFruitsDataEntity entity : records)
+		for (final Ph2RealFruitsDataEntity entity : records)
 			{
 			RealFruitsValueDTO data = new RealFruitsValueDTO();
 			data.setAverage(entity.getAverage());
@@ -124,9 +124,9 @@ public class FruitDomain
 		if ((source.getFruitsCount() != null) && (source.getCrownLeafArea() != null))
 			count = source.getFruitsCount() / source.getCrownLeafArea();
 
-		return_value.setAmount(Double.isNaN(amount)?0:amount);
-		return_value.setBurden(Double.isNaN(burden)?0:burden);
-		return_value.setCount(Double.isNaN(count)?0:count);
+		return_value.setAmount(Double.isNaN(amount) ? 0 : amount);
+		return_value.setBurden(Double.isNaN(burden) ? 0 : burden);
+		return_value.setCount(Double.isNaN(count) ? 0 : count);
 
 		return return_value;
 		}
@@ -169,5 +169,22 @@ public class FruitDomain
 			entity.setCreatedAt(new Timestamp(System.currentTimeMillis()));
 			this.ph2RealFruitsDataMapper.insert(entity);
 			}
+		}
+
+	// --------------------------------------------------
+	/**
+	 * 実績値のクリア
+	 *
+	 * @param dto FruitAmountDTO
+	 */
+	// --------------------------------------------------
+	public void delete(Long deviceId, Short year, Short eventId)
+		{
+		// *
+		// 条件設定
+		// *
+		Ph2RealFruitsDataEntityExample exm = new Ph2RealFruitsDataEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId).andYearEqualTo(year).andEventIdEqualTo(eventId);
+		this.ph2RealFruitsDataMapper.deleteByExample(exm);
 		}
 	}

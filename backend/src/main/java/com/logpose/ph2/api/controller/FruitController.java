@@ -3,6 +3,7 @@ package com.logpose.ph2.api.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -59,6 +60,31 @@ public class FruitController
 			RealFruitesValues as_result = this.fruitService.getRealFruitsData(deviceId,
 					year);
 			as_dto.setSuccess(as_result);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+	// --------------------------------------------------
+	/**
+	 * 実績値のクリア
+	 *
+	 * @return Ph2RealFruitsDataEntity
+	 */
+	// --------------------------------------------------
+	@DeleteMapping("/value")
+	public ResponseDTO deleteValue(HttpServletRequest httpReq,
+			@RequestParam("deviceId") Long deviceId,
+			@RequestParam("year") Short year,
+			@RequestParam("eventId") Short eventId)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			 this.fruitService.deletetRealFruitsData(deviceId,year, eventId);
+			 as_dto.setSuccess(null);
 			}
 		catch (Exception e)
 			{

@@ -11,18 +11,28 @@
             item-value="id"
             width="300"
             dense
-            label="基準デバイス"
+            label="基準デバイス選択"
             @change="handleChangeDevice"
             return-object
             height="45px"
-            style="font-size:10pt;"
+            style="font-size: 10pt"
           ></v-select>
         </v-col>
         <v-col cols="2">
-          <v-text-field v-model="baseDate" label="基準日" disabled style="font-size:9pt;"></v-text-field>
+          <v-text-field
+            v-model="baseDate"
+            label="基準日"
+            disabled
+            style="font-size: 9pt"
+          ></v-text-field>
         </v-col>
         <v-col cols="3">
-          <v-text-field v-model="brand" label="品種" disabled style="font-size:9pt;"></v-text-field>
+          <v-text-field
+            v-model="brand"
+            label="品種"
+            disabled
+            style="font-size: 9pt"
+          ></v-text-field>
         </v-col>
       </v-row>
     </v-container>
@@ -33,30 +43,91 @@
       :item-class="itemClass"
       @pagination="onPaginationUpdate"
       hide-default-header
-    > 
-    <template v-slot:header="{ props }">
-      <thead>
-        <tr>
-          <th v-for="header in props.headers" :key="header.value" class="header">
-            <div style="height:70px;padding:0;margin:0;text-align:left;font-weight:550">{{ header.text.split(';')[0] }}
-              <br>{{ header.text.split(';')[1] }}<br>{{ header.text.split(';')[2] }}
-            </div>
-            <div style="text-align:center;margin:4px">{{ header.text.split(';')[3] }}</div>
-          </th>
-        </tr>
-      </thead>
-    </template>
+    >
+      <template v-slot:header="{ props }">
+        <thead>
+          <tr>
+            <th
+              v-for="header in props.headers"
+              :key="header.value"
+              class="header"
+            >
+              <div
+                style="
+                  height: 70px;
+                  padding: 0;
+                  margin: 0;
+                  text-align: left;
+                  font-weight: 550;
+                "
+              >
+                {{ header.text.split(";")[0] }} <br />{{
+                  header.text.split(";")[1]
+                }}<br />{{ header.text.split(";")[2] }}
+              </div>
+              <div style="text-align: center; margin: 4px">
+                {{ header.text.split(";")[3] }}
+              </div>
+            </th>
+          </tr>
+        </thead>
+      </template>
       <template v-slot:[`item.name`]="{ item }">
-        <td style="font-size:9pt;padding:2px;border-right:1px dotted #ccc;">
+        <td style="font-size: 9pt; padding: 2px; border-right: 1px dotted #ccc">
           {{ item.name }} [{{ item.year }}]
-          <div style="padding:3px;margin:0;">
-            実測日 : {{ item.date }}
-          </div>
+          <div style="padding: 3px; margin: 0">実測日 : {{ item.date }}</div>
         </td>
       </template>
 
       <template v-slot:[`item.date`]="{ item }">
-        <td style="font-size:9pt;padding:4px">{{ item.date }}</td>
+        <td style="font-size: 9pt; padding: 4px">{{ item.date }}</td>
+      </template>
+      <template v-slot:[`item.harvestCrownLeafArea`]="{ item }">
+        <td style="font-size: 9pt; padding: 4px; text-align: right">
+          <span
+            v-bind:class="
+              check('harvestCrownLeafArea', item.harvestCrownLeafArea)
+            "
+            >{{ item.harvestCrownLeafArea }}</span
+          >
+        </td>
+      </template>
+      <template v-slot:[`item.culminatedCrownPhotoSynthesysAmount`]="{ item }">
+        <td style="font-size: 9pt; padding: 4px; text-align: right">
+          <span
+            v-bind:class="
+              check(
+                'culminatedCrownPhotoSynthesysAmount',
+                item.culminatedCrownPhotoSynthesysAmount
+              )
+            "
+            >{{ item.harvestCrownLeafArea }}</span
+          >
+        </td>
+      </template>
+      <template v-slot:[`item.bearingWeight`]="{ item }">
+        <td style="font-size: 9pt; padding: 4px; text-align: right">
+          <span v-bind:class="check('bearingWeight', item.bearingWeight)">{{
+            item.bearingWeight
+          }}</span>
+        </td>
+      </template>
+      <template v-slot:[`item.bearingPerPhotoSynthesys`]="{ item }">
+        <td style="font-size: 9pt; padding: 4px; text-align: right">
+          <span
+            v-bind:class="
+              check('bearingPerPhotoSynthesys', item.bearingPerPhotoSynthesys)
+            "
+            >{{ item.bearingPerPhotoSynthesys }}</span
+          >
+        </td>
+      </template>
+      <template v-slot:[`item.bearingCount`]="{ item }">
+        <td style="font-size: 9pt; padding: 4px; text-align: right">
+          <span v-bind:class="check('bearingCount', item.bearingCount)">{{
+            item.bearingCount
+          }}</span>
+        </td>
       </template>
       <!--       <template v-slot:[`item.name`]="{ item }">
         <td style="font-size:9pt">{{ item.name }}</td>
@@ -73,40 +144,52 @@ import moment from "moment";
 import { useFruitDetails } from "@/api/TopStateGrowth/index";
 import { useDeviceShortList } from "@/api/ManagementScreenTop/MSDevice/index";
 
-function createId(id, year){
+function createId(id, year) {
   return id + "+" + year;
 }
 export default {
   data() {
     return {
       baseDevice: createId(1221, moment().year()),
-      selectedDevice:null,
-      selectedBase:null,
+      selectedDevice: null,
+      selectedBase: null,
       baseDate: null,
       brand: null,
       devices: [],
+
+      baseObject: null,
+
       headers: [
-        { text: "", value: "name", width: 180, align:"center" },
-        { text: ";収穫時樹冠葉面積;;(m^2)", value: "harvestCrownLeafArea", width: 156, align:"right"},
+        { text: "", value: "name", width: 180, align: "center" },
+        {
+          text: ";収穫時樹冠葉面積;;(m^2)",
+          value: "harvestCrownLeafArea",
+          width: 156,
+          align: "right",
+        },
         {
           text: ";積算樹冠光合成量;;(kgCO2vine^-1)",
           value: "culminatedCrownPhotoSynthesysAmount",
-          width: 156, align:"right"
+          width: 156,
+          align: "right",
         },
         {
           text: "着果負担;(果実総重量;/収穫時樹冠葉面積);(g/m^2)",
           value: "bearingWeight",
-          width: 156, align:"right"
+          width: 156,
+          align: "right",
         },
         {
           text: "積算樹冠光合成量あたりの着果量;(果実総重量;/積算樹冠光合成量);(g/kgCO2 vine^-1)",
           value: "bearingPerPhotoSynthesys",
-          width: 156, align:"right"
+          width: 156,
+          align: "right",
         },
         {
           text: "実測着果数;/収穫時樹冠葉面積;;(房数/m^2)",
           value: "bearingCount",
-          width: 156, align:"right"
+          width: 156,
+          align: "right",
         },
       ],
       dataList: [],
@@ -128,10 +211,10 @@ export default {
         if (status === 0) {
           for (const row of data) {
             let item = {
-              id : createId(row.id, row.year),
-              deviceId : row.id,
+              id: createId(row.id, row.year),
+              deviceId: row.id,
               year: row.year,
-              text:row.fieldName + "|" + row.name + " [" + row.year +"]", // セレクタで表示する名前
+              text: row.fieldName + "|" + row.name + " [" + row.year + "]", // セレクタで表示する名前
               name: row.fieldName + "|" + row.name, // テーブル内で表示する名前、yearと併用
               baseDate: row.baseDate,
               brand: row.brand,
@@ -141,11 +224,10 @@ export default {
             if (item.id == this.baseDevice) {
               this.baseDate = row.baseDate;
               this.brand = row.brand;
-              this.callUseFruitDetailsAPI(item.deviceId,item.year,item.name);
+              this.callUseFruitDetailsAPI(item.deviceId, item.year, item.name);
               this.$emit("mounted");
             }
           }
-
         } else {
           throw new Error(message);
         }
@@ -155,7 +237,6 @@ export default {
         //失敗時
         console.log(e);
       });
-    
   },
   methods: {
     //* ============================================
@@ -166,7 +247,7 @@ export default {
       let name =
         selectedItems.selectedField.name +
         "|" +
-        selectedItems.selectedDevice.name
+        selectedItems.selectedDevice.name;
 
       // * データの取得
       this.callUseFruitDetailsAPI(
@@ -237,10 +318,11 @@ export default {
               data.bearingCount = Math.round(data.bearingCount * 100) / 100;
             }
             // * デバイスのキー設定と表示設定
-            if(id != this.baseDevice){
+            if (id != this.baseDevice) {
               this.selectedDevice = id;
               this.dataList.splice(1, 0, data);
             } else {
+              this.baseObject = data;
               this.selectedBase = id;
               this.dataList.unshift(data);
             }
@@ -258,12 +340,11 @@ export default {
     // キーデバイスの背景色を変更する
     //* ============================================
     itemClass(item) {
-      if(item.id == this.baseDevice){
+      if (item.id == this.baseDevice) {
         return "first-row";
-      } else if (item.id == this.selectedDevice){
+      } else if (item.id == this.selectedDevice) {
         return "second-row";
-      }
-     else return "";
+      } else return "";
     },
 
     onPaginationUpdate(newPagination) {
@@ -273,7 +354,7 @@ export default {
       }
     },
     handleChangeDevice(item) {
-      let i=0;
+      let i = 0;
       console.log(this.baseDevice);
       for (const old of this.dataList) {
         if (old.id == this.selectedBase) {
@@ -285,7 +366,14 @@ export default {
       this.baseDate = item.baseDate;
       this.brand = item.brand;
       this.baseDevice = item.id;
-      this.callUseFruitDetailsAPI(item.deviceId,item.year,item.name);
+      this.callUseFruitDetailsAPI(item.deviceId, item.year, item.name);
+    },
+    check(name, value) {
+      if ("-" == value) return "equal";
+      let base = this.baseObject[name];
+      if (base > value) return "less";
+      else if (base < value) return "more";
+      else return "equal";
     },
   },
 };
@@ -293,12 +381,12 @@ export default {
   
 <style lang="css">
 .first-row {
-  background-color: #f4fce0;
+  background-color: #fcfce0;
   color: #000;
 }
 .second-row {
   color: #058d1e;
-  font-weight:550;
+  font-weight: 550;
 }
 .wrapper {
   display: -webkit-flex;
@@ -315,10 +403,19 @@ export default {
   padding: 3px 0;
 }
 .header {
-  font-size:8pt;
+  font-size: 8pt;
   text-align: left;
-  width:156px;
+  width: 156px;
   border-left: #ccc dotted 1px;
+}
+.equal {
+  color: #000;
+}
+.more {
+  color: #44f;
+}
+.less {
+  color: #f44;
 }
 </style>
   
