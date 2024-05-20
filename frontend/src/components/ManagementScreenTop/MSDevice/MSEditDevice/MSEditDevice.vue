@@ -352,7 +352,7 @@ export default {
           singleClickEdit: true,
           resizable: true,
           editable: true,
-          width: 90,
+          width: 106,
           cellEditor: "agSelectCellEditor",
           cellEditorParams: {
             values: [
@@ -386,7 +386,7 @@ export default {
           headerName: "センサ―名",
           editable: true,
           resizable: true,
-          width: 100,
+          width: 106,
           cellStyle: (params) => {
             return setBackground(params, 8, params.data.name);
           },
@@ -441,7 +441,7 @@ export default {
           colId: "stemDiameter",
           headerName: "茎径(mm)",
           resizable: true,
-          width: 80,
+          width: 106,
           editable: (params) =>
             params.data.displayId == "4" || params.data.displayId == null,
           cellStyle: (params) => {

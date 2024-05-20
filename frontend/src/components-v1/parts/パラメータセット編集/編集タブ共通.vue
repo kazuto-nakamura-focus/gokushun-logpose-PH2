@@ -277,8 +277,8 @@ export default {
     //*----------------------------
     // 子コンポーネントからの追加実施
     //*----------------------------
-    addData(id) {
-      this.initialize(id, this.selectedTarget);
+    addData(data) {
+      this.initialize(data.id, this.selectedTarget);
       this.isUpdated = true;
     },
     //*----------------------------
@@ -378,7 +378,7 @@ export default {
       this.isShowParameterSetName = false;
       this.afterParameterSetData.parameterName = name;
       this.$refs.refParameterSets.addData(this.afterParameterSetData); // 追加処理
-      this.$emit("changeItem", this.paramId);
+    //  this.$emit("changeItem", this.paramId);
     },
     //*----------------------------
     // 削除

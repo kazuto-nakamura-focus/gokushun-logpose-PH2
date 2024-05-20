@@ -68,7 +68,8 @@
   </v-card>
 </template>
   
-  <script>
+<script>
+import moment from "moment";
 import { useFruitDetails } from "@/api/TopStateGrowth/index";
 import { useDeviceShortList } from "@/api/ManagementScreenTop/MSDevice/index";
 
@@ -78,7 +79,7 @@ function createId(id, year){
 export default {
   data() {
     return {
-      baseDevice: createId(53, 2023),
+      baseDevice: createId(1221, moment().year()),
       selectedDevice:null,
       selectedBase:null,
       baseDate: null,
