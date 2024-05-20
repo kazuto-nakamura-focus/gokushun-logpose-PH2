@@ -101,7 +101,7 @@
                 item.culminatedCrownPhotoSynthesysAmount
               )
             "
-            >{{ item.harvestCrownLeafArea }}</span
+            >{{ item.culminatedCrownPhotoSynthesysAmount }}</span
           >
         </td>
       </template>
