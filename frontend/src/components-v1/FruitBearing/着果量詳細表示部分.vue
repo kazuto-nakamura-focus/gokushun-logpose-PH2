@@ -89,7 +89,7 @@
               check('harvestCrownLeafArea', item.harvestCrownLeafArea)
             "
             >{{ item.harvestCrownLeafArea }}<br />{{
-              item.harvestCrownLeafArea_diff
+              showDiff("harvestCrownLeafArea", item)
             }}</span
           >
         </td>
@@ -104,7 +104,7 @@
               )
             "
             >{{ item.culminatedCrownPhotoSynthesysAmount }}<br />{{
-              item.culminatedCrownPhotoSynthesysAmount_diff
+              showDiff("culminatedCrownPhotoSynthesysAmount", item)
             }}</span
           >
         </td>
@@ -112,7 +112,9 @@
       <template v-slot:[`item.bearingWeight`]="{ item }">
         <td style="font-size: 9pt; padding: 4px; text-align: right">
           <span v-bind:class="check('bearingWeight', item.bearingWeight)"
-            >{{ item.bearingWeight }}<br />{{ item.bearingWeight_diff }}</span
+            >{{ item.bearingWeight }}<br />{{
+              showDiff("bearingWeight", item)
+            }}</span
           >
         </td>
       </template>
@@ -123,7 +125,7 @@
               check('bearingPerPhotoSynthesys', item.bearingPerPhotoSynthesys)
             "
             >{{ item.bearingPerPhotoSynthesys }}<br />{{
-              item.bearingPerPhotoSynthesys_diff
+              showDiff("bearingPerPhotoSynthesys", item)
             }}</span
           >
         </td>
@@ -131,7 +133,9 @@
       <template v-slot:[`item.bearingCount`]="{ item }">
         <td style="font-size: 9pt; padding: 4px; text-align: right">
           <span v-bind:class="check('bearingCount', item.bearingCount)"
-            >{{ item.bearingCount }}<br />{{ item.bearingCount_diff }}</span
+            >{{ item.bearingCount }}<br />{{
+              showDiff("bearingCount", item)
+            }}</span
           >
         </td>
       </template>
@@ -299,11 +303,6 @@ export default {
             } else {
               data.harvestCrownLeafArea =
                 Math.round(data.harvestCrownLeafArea * 100) / 100;
-              if (i != 0)
-                data.harvestCrownLeafArea_diff = createDiff(
-                  data.harvestCrownLeafArea,
-                  this.baseObject.harvestCrownLeafArea
-                );
             }
 
             if (data.culminatedCrownPhotoSynthesysAmount == 0) {
@@ -312,22 +311,12 @@ export default {
               data.culminatedCrownPhotoSynthesysAmount =
                 Math.round(data.culminatedCrownPhotoSynthesysAmount * 100) /
                 100;
-              if (i != 0)
-                data.culminatedCrownPhotoSynthesysAmount_diff = createDiff(
-                  data.culminatedCrownPhotoSynthesysAmount,
-                  this.baseObject.culminatedCrownPhotoSynthesysAmount
-                );
             }
 
             if (data.bearingWeight == 0) {
               data.bearingWeight = "-";
             } else {
               data.bearingWeight = Math.round(data.bearingWeight * 100) / 100;
-              if (i != 0)
-                data.bearingWeight_diff = createDiff(
-                  data.bearingWeight,
-                  this.baseObject.bearingWeight
-                );
             }
 
             if (data.bearingPerPhotoSynthesys == 0) {
@@ -335,22 +324,12 @@ export default {
             } else {
               data.bearingPerPhotoSynthesys =
                 Math.round(data.bearingPerPhotoSynthesys * 100) / 100;
-              if (i != 0)
-                data.bearingPerPhotoSynthesys_diff = createDiff(
-                  data.bearingPerPhotoSynthesys,
-                  this.baseObject.bearingPerPhotoSynthesys
-                );
             }
 
             if (data.bearingCount == 0) {
               data.bearingCount = "-";
             } else {
               data.bearingCount = Math.round(data.bearingCount * 100) / 100;
-              if (i != 0)
-                data.bearingCount_diff = createDiff(
-                  data.bearingCount,
-                  this.baseObject.bearingCount
-                );
             }
             // * デバイスのキー設定と表示設定
             if (id != this.baseDevice) {
@@ -409,6 +388,12 @@ export default {
       if (base > value) return "less";
       else if (base < value) return "more";
       else return "equal";
+    },
+    showDiff(name, item) {
+      if (item !== this.baseObject) {
+        if (item[name] != "-" && this.baseObject[name] != "-")
+          return createDiff(item[name], this.baseObject[name]);
+      }
     },
   },
 };
