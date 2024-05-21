@@ -88,7 +88,9 @@
             v-bind:class="
               check('harvestCrownLeafArea', item.harvestCrownLeafArea)
             "
-            >{{ item.harvestCrownLeafArea }}</span
+            >{{ item.harvestCrownLeafArea }}<br />{{
+              item.harvestCrownLeafArea_diff
+            }}</span
           >
         </td>
       </template>
@@ -101,15 +103,17 @@
                 item.culminatedCrownPhotoSynthesysAmount
               )
             "
-            >{{ item.culminatedCrownPhotoSynthesysAmount }}</span
+            >{{ item.culminatedCrownPhotoSynthesysAmount }}<br />{{
+              item.culminatedCrownPhotoSynthesysAmount_diff
+            }}</span
           >
         </td>
       </template>
       <template v-slot:[`item.bearingWeight`]="{ item }">
         <td style="font-size: 9pt; padding: 4px; text-align: right">
-          <span v-bind:class="check('bearingWeight', item.bearingWeight)">{{
-            item.bearingWeight
-          }}</span>
+          <span v-bind:class="check('bearingWeight', item.bearingWeight)"
+            >{{ item.bearingWeight }}<br />{{ item.bearingWeight_diff }}</span
+          >
         </td>
       </template>
       <template v-slot:[`item.bearingPerPhotoSynthesys`]="{ item }">
@@ -118,15 +122,17 @@
             v-bind:class="
               check('bearingPerPhotoSynthesys', item.bearingPerPhotoSynthesys)
             "
-            >{{ item.bearingPerPhotoSynthesys }}</span
+            >{{ item.bearingPerPhotoSynthesys }}<br />{{
+              item.bearingPerPhotoSynthesys_diff
+            }}</span
           >
         </td>
       </template>
       <template v-slot:[`item.bearingCount`]="{ item }">
         <td style="font-size: 9pt; padding: 4px; text-align: right">
-          <span v-bind:class="check('bearingCount', item.bearingCount)">{{
-            item.bearingCount
-          }}</span>
+          <span v-bind:class="check('bearingCount', item.bearingCount)"
+            >{{ item.bearingCount }}<br />{{ item.bearingCount_diff }}</span
+          >
         </td>
       </template>
       <!--       <template v-slot:[`item.name`]="{ item }">
@@ -146,6 +152,10 @@ import { useDeviceShortList } from "@/api/ManagementScreenTop/MSDevice/index";
 
 function createId(id, year) {
   return id + "+" + year;
+}
+function createDiff(value, base) {
+  let diff = Math.round((value - base) * 100) / 100;
+  return "(" + diff + ")";
 }
 export default {
   data() {
@@ -289,6 +299,11 @@ export default {
             } else {
               data.harvestCrownLeafArea =
                 Math.round(data.harvestCrownLeafArea * 100) / 100;
+              if (i != 0)
+                data.harvestCrownLeafArea_diff = createDiff(
+                  data.harvestCrownLeafArea,
+                  this.baseObject.harvestCrownLeafArea
+                );
             }
 
             if (data.culminatedCrownPhotoSynthesysAmount == 0) {
@@ -297,12 +312,22 @@ export default {
               data.culminatedCrownPhotoSynthesysAmount =
                 Math.round(data.culminatedCrownPhotoSynthesysAmount * 100) /
                 100;
+              if (i != 0)
+                data.culminatedCrownPhotoSynthesysAmount_diff = createDiff(
+                  data.culminatedCrownPhotoSynthesysAmount,
+                  this.baseObject.culminatedCrownPhotoSynthesysAmount
+                );
             }
 
             if (data.bearingWeight == 0) {
               data.bearingWeight = "-";
             } else {
               data.bearingWeight = Math.round(data.bearingWeight * 100) / 100;
+              if (i != 0)
+                data.bearingWeight_diff = createDiff(
+                  data.bearingWeight,
+                  this.baseObject.bearingWeight
+                );
             }
 
             if (data.bearingPerPhotoSynthesys == 0) {
@@ -310,12 +335,22 @@ export default {
             } else {
               data.bearingPerPhotoSynthesys =
                 Math.round(data.bearingPerPhotoSynthesys * 100) / 100;
+              if (i != 0)
+                data.bearingPerPhotoSynthesys_diff = createDiff(
+                  data.bearingPerPhotoSynthesys,
+                  this.baseObject.bearingPerPhotoSynthesys
+                );
             }
 
             if (data.bearingCount == 0) {
               data.bearingCount = "-";
             } else {
               data.bearingCount = Math.round(data.bearingCount * 100) / 100;
+              if (i != 0)
+                data.bearingCount_diff = createDiff(
+                  data.bearingCount,
+                  this.baseObject.bearingCount
+                );
             }
             // * デバイスのキー設定と表示設定
             if (id != this.baseDevice) {
