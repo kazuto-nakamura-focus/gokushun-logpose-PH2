@@ -20,10 +20,14 @@
                     <div class="data-contents">
                       <div class="table_header pt-5 pb-5 pl-3 pr-3">
                         <div class="table_header_title">{{ item.title }}</div>
-                        <div class="table_header_comment">{{ item.comment }}</div>
+                        <div class="table_header_comment">
+                          {{ item.comment }}
+                        </div>
                       </div>
                       <div class="device_info">
-                        <div style="margin: 4px 0">最終更新時刻:{{ item.date }}</div>
+                        <div style="margin: 4px 0">
+                          最終更新時刻:{{ item.date }}
+                        </div>
                         <div v-if="item.forecast.length == 0">
                           <img src="@/assets/suspend-icon.png" width="40px" />
                         </div>
@@ -60,14 +64,21 @@
                         </div>
                       </div>
                       <div class="flexbox">
-                        <div v-for="komoku in item.items" :key="komoku.idx" class="box-item">
+                        <div
+                          v-for="komoku in item.items"
+                          :key="komoku.idx"
+                          class="box-item"
+                        >
                           <div v-if="komoku.variable == ''">
                             {{ komoku.name }}
                             <br />
                             {{ komoku.value }}
                           </div>
 
-                          <a v-if="komoku.variable != ''" @click="openModel(komoku)">
+                          <a
+                            v-if="komoku.variable != ''"
+                            @click="openModel(komoku)"
+                          >
                             {{ komoku.name }}
                             <br />
                             {{ komoku.value }}
@@ -86,7 +97,11 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <SpecificDataAggregation v-show="isAggregated" ref="sa" :shared="sharedAggregation" />
+          <SpecificDataAggregation
+            v-show="isAggregated"
+            ref="sa"
+            :shared="sharedAggregation"
+          />
         </v-col>
       </v-row>
     </v-container>
@@ -143,7 +158,6 @@ export default {
         this.sourceData = this.TopDataParser.parse(results.data);
         //console.log("created", this.sourceData);
         for (const item of this.sourceData) {
-          console.log(item);
           item.visible = new Object();
           item.visible = true;
           this.displayData.push(item);
