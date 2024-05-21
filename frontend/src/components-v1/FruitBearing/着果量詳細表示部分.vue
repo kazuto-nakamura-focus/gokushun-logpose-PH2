@@ -53,6 +53,15 @@
               class="header"
             >
               <div
+                v-if="canGraph(header.value)"
+                style="width: 100%; text-align: cener; margin-bottom: 10px"
+              >
+                <v-btn height="20px" @click="showGraph(header)"
+                  ><span style="font-size: 9pt">グラフ表示</span></v-btn
+                >
+              </div>
+
+              <div
                 style="
                   height: 70px;
                   padding: 0;
@@ -146,6 +155,9 @@
         <td style="font-size:9pt">{{ item.date }}</td>
       </template> -->
     </v-data-table>
+    <v-dialog v-model="isDiffDialog" width="700px">
+      <ph-2-diff-graph ref="refph2DiffGraph"></ph-2-diff-graph>
+    </v-dialog>
   </v-card>
 </template>
   
@@ -153,6 +165,7 @@
 import moment from "moment";
 import { useFruitDetails } from "@/api/TopStateGrowth/index";
 import { useDeviceShortList } from "@/api/ManagementScreenTop/MSDevice/index";
+import ph2DiffGraph from "@/components-v1/FruitBearing/比較グラフ.vue";
 
 function createId(id, year) {
   return id + "+" + year;
@@ -170,6 +183,7 @@ export default {
       baseDate: null,
       brand: null,
       devices: [],
+      isDiffDialog: false,
 
       baseObject: null,
 
@@ -214,7 +228,9 @@ export default {
       },
     };
   },
-
+  components: {
+    ph2DiffGraph,
+  },
   mounted() {
     //* ============================================
     // 基準デバイス選択メニューを作成する
@@ -394,6 +410,22 @@ export default {
         if (item[name] != "-" && this.baseObject[name] != "-")
           return createDiff(item[name], this.baseObject[name]);
       }
+    },
+    canGraph(name) {
+      return this.dataList.length > 1 && name != "name";
+    },
+    showGraph(item) {
+      console.log("ddd");
+      this.isDiffDialog = true;
+      let title = item.text.replace(/;/g, "");
+      this.$nextTick(function () {
+        this.$refs.refph2DiffGraph.initialize(
+          title,
+          item.value,
+          this.baseObject[item.value],
+          this.dataList
+        );
+      });
     },
   },
 };
