@@ -1,15 +1,24 @@
 <template>
-  <v-card>
-    <div style="margin: 10px; color: black">
-      <b>{{ title }}</b>
-    </div>
-    <apexchart
-      type="bar"
-      width="90%"
-      :options="options"
-      :series="series"
-      ref="refChart"
-    ></apexchart>
+  <v-card width="100%">
+    <v-container>
+      <v-row>
+        <div style="margin: 10px; color: black">
+          <b>{{ title }}</b>
+        </div>
+      </v-row>
+      <v-row>
+        <div style="width: 100%; text-align: right; margin-left: 60px">
+          <apexchart
+            v-if="isCharts"
+            type="bar"
+            width="90%"
+            :options="options"
+            :series="series"
+            ref="refChart"
+          ></apexchart>
+        </div>
+      </v-row>
+    </v-container>
   </v-card>
 </template>
 <script>
@@ -19,38 +28,29 @@ export default {
   data() {
     return {
       title: null,
+      isCharts: false,
       options: {
         chart: {
           type: "bar",
         },
         plotOptions: {
           bar: {
-            horizontal: true,
             barhegiht: "30px",
           },
         },
         yaxis: {
           labels: {
             trim: false,
-            style: {
-              fontSize: "12px",
-              whiteSpace: "nowrap", // 改行せずに表示
-              overflow: "visible", // オーバーフローを表示
-            },
           },
         },
         xaxis: {
           labels: {
             trim: false,
-            style: {
-              fontSize: "12px",
-              whiteSpace: "pre-wrap", // 改行を保持する
-            },
           },
-          categories: [],
+          categories: [""],
         },
         annotations: {
-          xaxis: [
+          yaxis: [
             {
               borderColor: "#00E396",
               borderWidth: 3,
@@ -72,20 +72,25 @@ export default {
       this.options.xaxis.categories.length = 0;
       this.series[0].data.length = 0;
 
-      this.options.annotations.xaxis[0].x = baseVaue;
+      this.options.annotations.yaxis[0].y = baseVaue;
       this.title = title;
       for (const item of datalist) {
-        this.options.xaxis.categories.push(
-          item.name + " \n[" + item.year + "]"
-        );
+        let parts = item.name.split("|");
+        this.options.xaxis.categories.push([parts[0], parts[1], item.year]);
         this.series[0].data.push(item[name]);
       }
-      this.$refs.refChart.updateOptions(this.options);
-      this.$refs.refChart.updateSeries(this.series);
-      this.$refs.refChart.refresh();
+      this.isCharts = true;
+      this.$nextTick(function () {
+        this.$refs.refChart.updateOptions(this.options);
+        this.$refs.refChart.updateSeries(this.series);
+        this.$refs.refChart.refresh();
+      });
     },
   },
 };
 </script>
-<style lang="css">
+<style lang="css" scoped>
+.apexcharts-canvas .apexcharts2730mfpj .apexcharts-theme-light {
+  width: 700px;
+}
 </style>
