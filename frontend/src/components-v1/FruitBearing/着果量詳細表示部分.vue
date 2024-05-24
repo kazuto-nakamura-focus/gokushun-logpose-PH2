@@ -1,164 +1,170 @@
 <!--着果量着果負担表示画面-->
 <template>
-  <v-card width="auto">
-    <v-container width="auto">
-      <v-row>
-        <v-col cols="6">
-          <v-select
-            v-model="baseDevice"
-            :items="devices"
-            item-text="text"
-            item-value="id"
-            width="300"
-            dense
-            label="基準デバイス選択"
-            @change="handleChangeDevice"
-            return-object
-            height="45px"
-            style="font-size: 10pt"
-          ></v-select>
-        </v-col>
-        <v-col cols="2">
-          <v-text-field
-            v-model="baseDate"
-            label="基準日"
-            disabled
-            style="font-size: 9pt"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="3">
-          <v-text-field
-            v-model="brand"
-            label="品種"
-            disabled
-            style="font-size: 9pt"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
-    <v-data-table
-      min-width="960px"
-      :headers="headers"
-      :items="dataList"
-      :item-class="itemClass"
-      @pagination="onPaginationUpdate"
-      hide-default-header
-    >
-      <template v-slot:header="{ props }">
-        <thead>
-          <tr>
-            <th
-              v-for="header in props.headers"
-              :key="header.value"
-              class="header"
-            >
-              <div
-                v-if="canGraph(header.value)"
-                style="width: 100%; text-align: cener; margin-bottom: 10px"
+  <div>
+    <v-card width="auto">
+      <v-container width="auto">
+        <v-row>
+          <v-col cols="6">
+            <v-select
+              v-model="baseDevice"
+              :items="devices"
+              item-text="text"
+              item-value="id"
+              width="300"
+              dense
+              label="基準デバイス選択"
+              @change="handleChangeDevice"
+              return-object
+              height="45px"
+              style="font-size: 10pt"
+            ></v-select>
+          </v-col>
+          <v-col cols="2">
+            <v-text-field
+              v-model="baseDate"
+              label="基準日"
+              disabled
+              style="font-size: 9pt"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="3">
+            <v-text-field
+              v-model="brand"
+              label="品種"
+              disabled
+              style="font-size: 9pt"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-container>
+      <v-data-table
+        min-width="960px"
+        :headers="headers"
+        :items="dataList"
+        :item-class="itemClass"
+        @pagination="onPaginationUpdate"
+        hide-default-header
+      >
+        <template v-slot:header="{ props }">
+          <thead>
+            <tr>
+              <th
+                v-for="header in props.headers"
+                :key="header.value"
+                class="header"
               >
-                <v-btn height="20px" @click="showGraph(header)"
-                  ><span style="font-size: 9pt">グラフ表示</span></v-btn
+                <div
+                  v-if="canGraph(header.value)"
+                  style="width: 100%; text-align: cener; margin-bottom: 10px"
                 >
-              </div>
+                  <v-btn height="20px" @click="showGraph(header)"
+                    ><span style="font-size: 9pt">グラフ表示</span></v-btn
+                  >
+                </div>
 
-              <div
-                style="
-                  height: 70px;
-                  padding: 0;
-                  margin: 0;
-                  text-align: left;
-                  font-weight: 550;
-                "
-              >
-                {{ header.text.split(";")[0] }} <br />{{
-                  header.text.split(";")[1]
-                }}<br />{{ header.text.split(";")[2] }}
-              </div>
-              <div style="text-align: center; margin: 4px">
-                {{ header.text.split(";")[3] }}
-              </div>
-            </th>
-          </tr>
-        </thead>
-      </template>
-      <template v-slot:[`item.name`]="{ item }">
-        <td style="font-size: 9pt; padding: 2px; border-right: 1px dotted #ccc">
-          {{ item.name }} [{{ item.year }}]
-          <div style="padding: 3px; margin: 0">実測日 : {{ item.date }}</div>
-        </td>
-      </template>
+                <div
+                  style="
+                    height: 70px;
+                    padding: 0;
+                    margin: 0;
+                    text-align: left;
+                    font-weight: 550;
+                  "
+                >
+                  {{ header.text.split(";")[0] }} <br />{{
+                    header.text.split(";")[1]
+                  }}<br />{{ header.text.split(";")[2] }}
+                </div>
+                <div style="text-align: center; margin: 4px">
+                  {{ header.text.split(";")[3] }}
+                </div>
+              </th>
+            </tr>
+          </thead>
+        </template>
+        <template v-slot:[`item.name`]="{ item }">
+          <td
+            style="font-size: 9pt; padding: 2px; border-right: 1px dotted #ccc"
+          >
+            {{ item.name }} [{{ item.year }}]
+            <div style="padding: 3px; margin: 0">実測日 : {{ item.date }}</div>
+          </td>
+        </template>
 
-      <template v-slot:[`item.date`]="{ item }">
-        <td style="font-size: 9pt; padding: 4px">{{ item.date }}</td>
-      </template>
-      <template v-slot:[`item.harvestCrownLeafArea`]="{ item }">
-        <td style="font-size: 9pt; padding: 4px; text-align: right">
-          <span
-            v-bind:class="
-              check('harvestCrownLeafArea', item.harvestCrownLeafArea)
-            "
-            >{{ item.harvestCrownLeafArea }}<br />{{
-              showDiff("harvestCrownLeafArea", item)
-            }}</span
-          >
-        </td>
-      </template>
-      <template v-slot:[`item.culminatedCrownPhotoSynthesysAmount`]="{ item }">
-        <td style="font-size: 9pt; padding: 4px; text-align: right">
-          <span
-            v-bind:class="
-              check(
-                'culminatedCrownPhotoSynthesysAmount',
-                item.culminatedCrownPhotoSynthesysAmount
-              )
-            "
-            >{{ item.culminatedCrownPhotoSynthesysAmount }}<br />{{
-              showDiff("culminatedCrownPhotoSynthesysAmount", item)
-            }}</span
-          >
-        </td>
-      </template>
-      <template v-slot:[`item.bearingWeight`]="{ item }">
-        <td style="font-size: 9pt; padding: 4px; text-align: right">
-          <span v-bind:class="check('bearingWeight', item.bearingWeight)"
-            >{{ item.bearingWeight }}<br />{{
-              showDiff("bearingWeight", item)
-            }}</span
-          >
-        </td>
-      </template>
-      <template v-slot:[`item.bearingPerPhotoSynthesys`]="{ item }">
-        <td style="font-size: 9pt; padding: 4px; text-align: right">
-          <span
-            v-bind:class="
-              check('bearingPerPhotoSynthesys', item.bearingPerPhotoSynthesys)
-            "
-            >{{ item.bearingPerPhotoSynthesys }}<br />{{
-              showDiff("bearingPerPhotoSynthesys", item)
-            }}</span
-          >
-        </td>
-      </template>
-      <template v-slot:[`item.bearingCount`]="{ item }">
-        <td style="font-size: 9pt; padding: 4px; text-align: right">
-          <span v-bind:class="check('bearingCount', item.bearingCount)"
-            >{{ item.bearingCount }}<br />{{
-              showDiff("bearingCount", item)
-            }}</span
-          >
-        </td>
-      </template>
-      <!--       <template v-slot:[`item.name`]="{ item }">
+        <template v-slot:[`item.date`]="{ item }">
+          <td style="font-size: 9pt; padding: 4px">{{ item.date }}</td>
+        </template>
+        <template v-slot:[`item.harvestCrownLeafArea`]="{ item }">
+          <td style="font-size: 9pt; padding: 4px; text-align: right">
+            <span
+              v-bind:class="
+                check('harvestCrownLeafArea', item.harvestCrownLeafArea)
+              "
+              >{{ item.harvestCrownLeafArea }}<br />{{
+                showDiff("harvestCrownLeafArea", item)
+              }}</span
+            >
+          </td>
+        </template>
+        <template
+          v-slot:[`item.culminatedCrownPhotoSynthesysAmount`]="{ item }"
+        >
+          <td style="font-size: 9pt; padding: 4px; text-align: right">
+            <span
+              v-bind:class="
+                check(
+                  'culminatedCrownPhotoSynthesysAmount',
+                  item.culminatedCrownPhotoSynthesysAmount
+                )
+              "
+              >{{ item.culminatedCrownPhotoSynthesysAmount }}<br />{{
+                showDiff("culminatedCrownPhotoSynthesysAmount", item)
+              }}</span
+            >
+          </td>
+        </template>
+        <template v-slot:[`item.bearingWeight`]="{ item }">
+          <td style="font-size: 9pt; padding: 4px; text-align: right">
+            <span v-bind:class="check('bearingWeight', item.bearingWeight)"
+              >{{ item.bearingWeight }}<br />{{
+                showDiff("bearingWeight", item)
+              }}</span
+            >
+          </td>
+        </template>
+        <template v-slot:[`item.bearingPerPhotoSynthesys`]="{ item }">
+          <td style="font-size: 9pt; padding: 4px; text-align: right">
+            <span
+              v-bind:class="
+                check('bearingPerPhotoSynthesys', item.bearingPerPhotoSynthesys)
+              "
+              >{{ item.bearingPerPhotoSynthesys }}<br />{{
+                showDiff("bearingPerPhotoSynthesys", item)
+              }}</span
+            >
+          </td>
+        </template>
+        <template v-slot:[`item.bearingCount`]="{ item }">
+          <td style="font-size: 9pt; padding: 4px; text-align: right">
+            <span v-bind:class="check('bearingCount', item.bearingCount)"
+              >{{ item.bearingCount }}<br />{{
+                showDiff("bearingCount", item)
+              }}</span
+            >
+          </td>
+        </template>
+        <!--       <template v-slot:[`item.name`]="{ item }">
         <td style="font-size:9pt">{{ item.name }}</td>
       </template>
             <template v-slot:[`item.date`]="{ item }">
         <td style="font-size:9pt">{{ item.date }}</td>
       </template> -->
-    </v-data-table>
-    <v-dialog v-model="isDiffDialog" width="700px">
+      </v-data-table>
+    </v-card>
+    <v-dialog v-model="isDiffDialog" width="80%" maxHeight="400px">
       <ph-2-diff-graph ref="refph2DiffGraph"></ph-2-diff-graph>
     </v-dialog>
-  </v-card>
+  </div>
 </template>
   
 <script>

@@ -7,11 +7,18 @@
         </div>
       </v-row>
       <v-row>
-        <div style="width: 100%; text-align: right; margin-left: 60px">
+        <div style="margin: 10px; color: black">
+          <Small
+            >表示文字列が切れてしまう場合は、画面サイズを変更してみてください。</Small
+          >
+        </div>
+      </v-row>
+      <v-row>
+        <div style="width: 100%; display: block; margin-left: 60px">
           <apexchart
-            v-if="isCharts"
             type="bar"
             width="90%"
+            :height="heightCalc()"
             :options="options"
             :series="series"
             ref="refChart"
@@ -35,12 +42,14 @@ export default {
         },
         plotOptions: {
           bar: {
-            barhegiht: "30px",
+            horizontal: true,
+            columnWidth: "90%",
+            barHeight: "30%",
           },
         },
         yaxis: {
           labels: {
-            trim: false,
+            fontSize: "12px",
           },
         },
         xaxis: {
@@ -50,7 +59,7 @@ export default {
           categories: [""],
         },
         annotations: {
-          yaxis: [
+          xaxis: [
             {
               borderColor: "#00E396",
               borderWidth: 3,
@@ -72,25 +81,24 @@ export default {
       this.options.xaxis.categories.length = 0;
       this.series[0].data.length = 0;
 
-      this.options.annotations.yaxis[0].y = baseVaue;
+      this.options.annotations.xaxis[0].x = baseVaue;
       this.title = title;
       for (const item of datalist) {
         let parts = item.name.split("|");
         this.options.xaxis.categories.push([parts[0], parts[1], item.year]);
         this.series[0].data.push(item[name]);
       }
-      this.isCharts = true;
       this.$nextTick(function () {
         this.$refs.refChart.updateOptions(this.options);
         this.$refs.refChart.updateSeries(this.series);
         this.$refs.refChart.refresh();
       });
     },
+    heightCalc() {
+      return "" + (this.series[0].data.length * 80 + 200) + "px";
+    },
   },
 };
 </script>
 <style lang="css" scoped>
-.apexcharts-canvas .apexcharts2730mfpj .apexcharts-theme-light {
-  width: 700px;
-}
 </style>
