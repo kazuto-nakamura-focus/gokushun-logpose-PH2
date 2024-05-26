@@ -102,10 +102,6 @@ export default {
   },
   mounted() {},
   methods: {
-    initialize() {
-      console.log("showList", this.showList);
-      console.log("hideList", this.hideList);
-    },
     saveData() {
       localStorage.setItem("showList", JSON.stringify(this.showList));
       this.$emit("save", this.showList);
