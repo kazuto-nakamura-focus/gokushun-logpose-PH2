@@ -16,6 +16,7 @@
       <v-row>
         <div style="width: 100%; display: block; margin-left: 60px">
           <apexchart
+            v-show="isCharts"
             type="bar"
             width="90%"
             :height="heightCalc()"
@@ -50,6 +51,9 @@ export default {
         yaxis: {
           labels: {
             fontSize: "12px",
+            maxWidth: 250,
+            textAlign: "left",
+            fontWeight: 550,
           },
         },
         xaxis: {
@@ -84,15 +88,30 @@ export default {
       this.options.annotations.xaxis[0].x = baseVaue;
       this.title = title;
       for (const item of datalist) {
-        let parts = item.name.split("|");
-        this.options.xaxis.categories.push([parts[0], parts[1], item.year]);
+        let parts = this.createName(item.name);
+        parts.push("[" + item.year + "]");
+
+        this.options.xaxis.categories.push(parts);
         this.series[0].data.push(item[name]);
       }
+      this.isCharts = true;
       this.$nextTick(function () {
-        this.$refs.refChart.updateOptions(this.options);
-        this.$refs.refChart.updateSeries(this.series);
+        //  this.$refs.refChart.updateOptions(this.options);
+        //  this.$refs.refChart.updateSeries(this.series);
         this.$refs.refChart.refresh();
       });
+    },
+    createName(name) {
+      let list = [];
+      // * タイプで分ける
+      let types = name.split("|");
+      /*   const regex = /.{1,8}/g;
+      for (const type of types) {
+        let parts = type.match(regex);
+        list.push(...parts);
+      }*/
+      list.push(...types);
+      return list;
     },
     heightCalc() {
       return "" + (this.series[0].data.length * 80 + 200) + "px";

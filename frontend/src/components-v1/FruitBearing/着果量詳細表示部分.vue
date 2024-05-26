@@ -161,7 +161,7 @@
       </template> -->
       </v-data-table>
     </v-card>
-    <v-dialog v-model="isDiffDialog" width="80%" maxHeight="400px">
+    <v-dialog v-model="isDiffDialog" width="70%" maxHeight="400px">
       <ph-2-diff-graph ref="refph2DiffGraph"></ph-2-diff-graph>
     </v-dialog>
   </div>

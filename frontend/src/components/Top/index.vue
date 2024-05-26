@@ -116,7 +116,7 @@
       </v-row>
     </v-container>
     <wait-dialog ref="wait" />
-    <v-dialog v-model="isOrderSettingDialog" width="70%" maxHeight="400px">
+    <v-dialog v-model="isOrderSettingDialog" width="auto" maxHeight="400px">
       <ph-2-setting-order
         :displayData="displayData"
         :unDisplayData="unDisplayData"
@@ -227,9 +227,6 @@ export default {
     //* ============================================
     displaySettingDialog() {
       this.isOrderSettingDialog = true;
-      this.$nextTick(function () {
-        this.$refs.refPh2SettingOrder.initialize();
-      });
     },
     //* ============================================
     // 並び順設定画面を閉じる
@@ -241,32 +238,33 @@ export default {
     // 表示順を決めながらリストを設定する
     //* ============================================
     setDisplayList() {
+      this.isOrderSettingDialog = false;
       let dataList = this.sourceData;
       this.displayData.length = 0;
       this.unDisplayData.length = 0;
+      for (const srcItem of dataList) {
+        srcItem.visible = new Object();
+        srcItem.visible = false;
+      }
       // * ローカルから順序情報を得る
-      let savedList = localStorage.getItem("dashboardList");
+      let savedList = JSON.parse(localStorage.getItem("showList"));
       if (savedList !== undefined && null != savedList) {
         for (const savedItem of savedList) {
           for (const srcItem of dataList) {
             if (savedItem.deviceId == srcItem.deviceId) {
-              savedItem.visible = new Object();
-              savedItem.visible = true;
+              srcItem.visible = true;
               this.displayData.push(srcItem);
               break;
             }
           }
         }
         for (const srcItem of dataList) {
-          if (srcItem.visible !== undefined) {
-            srcItem.visible = new Object();
-            srcItem.visible = false;
+          if (srcItem.visible != true) {
             this.unDisplayData.push(srcItem);
           }
         }
       } else {
         for (const srcItem of dataList) {
-          srcItem.visible = new Object();
           srcItem.visible = true;
           this.displayData.push(srcItem);
         }
