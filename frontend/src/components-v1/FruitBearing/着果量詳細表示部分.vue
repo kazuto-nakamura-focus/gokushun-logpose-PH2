@@ -61,7 +61,14 @@
                     ><span style="font-size: 9pt">グラフ表示</span></v-btn
                   >
                 </div>
-
+                <div
+                  v-if="canSort(header.value)"
+                  style="width: 100%; text-align: cener; margin-bottom: 10px"
+                >
+                  <v-btn height="20px" @click="sortList(header)"
+                    ><span style="font-size: 9pt">ソート</span></v-btn
+                  >
+                </div>
                 <div
                   style="
                     height: 70px;
@@ -190,9 +197,8 @@ export default {
       brand: null,
       devices: [],
       isDiffDialog: false,
-
       baseObject: null,
-
+      headerSortMap: new Map(),
       headers: [
         { text: "", value: "name", width: 180, align: "center" },
         {
@@ -420,6 +426,9 @@ export default {
     canGraph(name) {
       return this.dataList.length > 1 && name != "name";
     },
+    canSort(name) {
+      return this.dataList.length > 2 && name != "name";
+    },
     showGraph(item) {
       console.log("ddd");
       this.isDiffDialog = true;
@@ -432,6 +441,34 @@ export default {
           this.dataList
         );
       });
+    },
+    sortList(item) {
+      console.log(item);
+      let top = this.dataList[0];
+      this.dataList.splice(0, 1);
+      for (const data of this.dataList) {
+        if (data[item.value] == "-") {
+          data[item.value] = 0;
+        }
+      }
+      if (
+        this.headerSortMap[item.value] === undefined ||
+        this.headerSortMap[item.value] == "asc"
+      ) {
+        this.headerSortMap[item.value] = new Object();
+        this.headerSortMap[item.value] = "desc";
+        this.dataList.sort((a, b) => a[item.value] - b[item.value]);
+      } else {
+        this.headerSortMap[item.value] = "asc";
+        this.dataList.sort((a, b) => b[item.value] - a[item.value]);
+      }
+
+      this.dataList.unshift(top);
+      for (const data of this.dataList) {
+        if (data[item.value] == 0) {
+          data[item.value] = "-";
+        }
+      }
     },
   },
 };

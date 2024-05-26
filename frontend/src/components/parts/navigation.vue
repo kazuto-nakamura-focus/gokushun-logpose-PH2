@@ -67,6 +67,19 @@
         </v-list-item>
       </v-list>
     </v-list>
+    <v-card style="margin: 5px; background-color: #ffedff">
+      <div style="margin: 5px; padding: 5px; font-size: 9pt">
+        <h4>変更点</h4>
+        <i>2024/05/26</i>
+        <div style="margin-left: 8px">
+          [トップ画面]<br />
+          ●&nbsp;表示設定機能の追加<br />
+          [成長予測]着果量・着果負担<br />
+          ●&nbsp;グラフ表示機能の追加<br />
+          ●&nbsp;ソート機能の追加<br />
+        </div>
+      </div>
+    </v-card>
   </div>
 </template>
 
@@ -93,9 +106,9 @@ export default {
       })
       .then((user) => {
         if (user == null) throw Error("Not exists user");
-        
+
         let name = user["name"];
-        if(name == null){
+        if (name == null) {
           name = user["email"];
         }
         this.userName = name;
