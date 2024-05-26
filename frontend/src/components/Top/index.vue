@@ -93,6 +93,16 @@
               </carousel>
             </v-row>
           </v-container>
+          <div style="width: 100%; text-align: center">
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              height="27px"
+              @click="displaySettingDialog"
+              ><span style="font-size: 9pt">表示設定</span></v-btn
+            >
+          </div>
         </v-col>
       </v-row>
       <v-row>
@@ -106,6 +116,16 @@
       </v-row>
     </v-container>
     <wait-dialog ref="wait" />
+    <v-dialog v-model="isOrderSettingDialog" width="70%" maxHeight="400px">
+      <ph-2-setting-order
+        :displayData="displayData"
+        :unDisplayData="unDisplayData"
+        @save="setDisplayList"
+        @close="closeSettingDialog"
+        ref="refPh2SettingOrder"
+      >
+      </ph-2-setting-order>
+    </v-dialog>
   </v-app>
 </template>
 
@@ -121,6 +141,7 @@ import { useFields } from "@/api/Top";
 import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 // import unselected from "@/components/parts/menu.vue";
 import SpecificDataAggregation from "./SpecificDataAggregation.vue";
+import Ph2SettingOrder from "@/components/Top/並び順設定.vue";
 import { AuthCookies } from "@/lib/AuthCookies.js";
 
 export default {
@@ -132,9 +153,12 @@ export default {
       TopDataParser: new TopDataParser(),
       sourceData: [],
       displayData: [],
+      unDisplayData: [],
 
       sharedAggregation: new MountController(),
       isAggregated: false,
+
+      isOrderSettingDialog: false,
     };
   },
 
@@ -143,8 +167,7 @@ export default {
     Slide,
     SpecificDataAggregation,
     WaitDialog,
-
-    // unselected,
+    Ph2SettingOrder,
   },
 
   mounted: function () {
@@ -153,17 +176,9 @@ export default {
     //console.log(this.displayOrder);
     useFields()
       .then((response) => {
-        //成功時
         const results = response["data"];
         this.sourceData = this.TopDataParser.parse(results.data);
-        //console.log("created", this.sourceData);
-        for (const item of this.sourceData) {
-          item.visible = new Object();
-          item.visible = true;
-          this.displayData.push(item);
-        }
-        //console.log(this.sourceData);
-        this.$store.dispatch("changeSourceData", this.sourceData);
+        this.setDisplayList();
         var koumoku = {
           variable: 1,
           name: "温度",
@@ -207,21 +222,55 @@ export default {
         function () {}.bind(this)
       );
     },
-
-    hide: function (item) {
-      var backup = this.displayData;
-      this.displayData = [];
-      item.visible = false;
-      for (const elem of backup) {
-        if (elem === item) continue;
-        this.displayData.push(elem);
-      }
-      this.$refs.mn.items.push(item);
+    //* ============================================
+    // 並び順設定画面を表示する
+    //* ============================================
+    displaySettingDialog() {
+      this.isOrderSettingDialog = true;
+      this.$nextTick(function () {
+        this.$refs.refPh2SettingOrder.initialize();
+      });
     },
-
-    recover: function (item) {
-      item.visible = true;
-      this.displayData.unshift(item);
+    //* ============================================
+    // 並び順設定画面を閉じる
+    //* ============================================
+    closeSettingDialog() {
+      this.isOrderSettingDialog = false;
+    },
+    //* ============================================
+    // 表示順を決めながらリストを設定する
+    //* ============================================
+    setDisplayList() {
+      let dataList = this.sourceData;
+      this.displayData.length = 0;
+      this.unDisplayData.length = 0;
+      // * ローカルから順序情報を得る
+      let savedList = localStorage.getItem("dashboardList");
+      if (savedList !== undefined && null != savedList) {
+        for (const savedItem of savedList) {
+          for (const srcItem of dataList) {
+            if (savedItem.deviceId == srcItem.deviceId) {
+              savedItem.visible = new Object();
+              savedItem.visible = true;
+              this.displayData.push(srcItem);
+              break;
+            }
+          }
+        }
+        for (const srcItem of dataList) {
+          if (srcItem.visible !== undefined) {
+            srcItem.visible = new Object();
+            srcItem.visible = false;
+            this.unDisplayData.push(srcItem);
+          }
+        }
+      } else {
+        for (const srcItem of dataList) {
+          srcItem.visible = new Object();
+          srcItem.visible = true;
+          this.displayData.push(srcItem);
+        }
+      }
     },
   },
 };
