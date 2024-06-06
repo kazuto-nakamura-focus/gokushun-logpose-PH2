@@ -10,7 +10,6 @@
 <script>
 import { GrowthChart } from "@/lib/graph/ApexCharts/GrowthChart.js";
 import Ph2GraphTabs from "@/components-v1/parts/graph/Ph2GraphTab.vue";
-
 import {
   useModelData,
   useLeafGraphAreaByParamSet,
@@ -61,6 +60,9 @@ export default {
 
       this.modelId = selectedItems.selectedModel.id;
       const year = selectedItems.selectedYear.id;
+
+      // モデルグラフオブジェクト
+
       if (this.modelId == 1) {
         this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         useModelData(

@@ -132,25 +132,27 @@ export class GrowthChart {
   }
   setOptions(title, xtitle, ytitle, source, year, digits) {
     if (title == "生育ステージ推定モデル") {
-      this.data.chartOptions.chart.height = 500;
+      this.data.chartOptions.chart.height = 500; // 不要
     }
     if (digits != null) {
       this.data.chartOptions.yaxis.labels.formatter = (value) => {
-        return Number.parseFloat(value).toFixed(digits);
+        return Number.parseFloat(value).toFixed(digits); // 不要
       }
     }
     //* タイトル
-    this.data.chartOptions.title.text = title;
+    this.data.chartOptions.title.text = title; // setGraphTitle
     // * サブタイトル
     if (null != source.estimated) {
+      //--- addSubTitleElement createSubtitle
       let yesterday = new moment().add(-1, 'day').format("MM / DD");
       let value = Math.round(source.estimated * 100) / 100;
       this.data.chartOptions.subtitle.text = ytitle + " " + value + " ( " + yesterday + " )";
+      //---- END ----
     }
     //* X軸タイトル
-    this.data.chartOptions.xaxis.title.text = xtitle;
+    this.data.chartOptions.xaxis.title.text = xtitle; // setXScaleTitle
     //* Y軸タイトル
-    this.data.chartOptions.yaxis.title.text = ytitle;
+    this.data.chartOptions.yaxis.title.text = ytitle; // setYScaleTitle
     //* Y軸の最高値
     let max = source.yend;
     //* アノテーション
