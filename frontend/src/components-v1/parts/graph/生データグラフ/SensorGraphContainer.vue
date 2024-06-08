@@ -7,7 +7,11 @@
     <div class="modal-mask" v-if="isLoading">
       <div style="text-align: center">描画中です。</div>
       <div class="loading">
-        <vue-loading type="spin" color="#ff0" :size="{ width: '50px', height: '50px' }"></vue-loading>
+        <vue-loading
+          type="spin"
+          color="#ff0"
+          :size="{ width: '50px', height: '50px' }"
+        ></vue-loading>
       </div>
     </div>
     <wait-dialog ref="wait" />
@@ -15,7 +19,7 @@
 </template>
   
   <script>
-import { SensorChart } from "@/lib/graph/ApexCharts/SensorChart.js";
+import { RawDataSettings } from "@/components-v1/parts/graph/生データグラフ/生データグラフ設定.vue";
 import Ph2GraphArea from "@/components-v1/parts/graph/Ph2GraphTab.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
@@ -96,15 +100,14 @@ export default {
           const { status, message, data } = response["data"];
           if (status === 0) {
             // グラフの表示オプションを設定
-            let gc = new SensorChart();
-            gc.setOptions(
+            let settings = new RawDataSettings();
+            settings.setGrowthGraph(
               title,
               this.xTitle[0].text,
               this.yTitle[contentId - 1].text,
               data
             );
             // グラフ表示を行う
-            gc.setLoadingParent(this);
             this.$refs.chr.addGraph(
               titlePaths,
               gc.data.chartOptions,

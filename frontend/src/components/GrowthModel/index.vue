@@ -1,9 +1,19 @@
 <template>
   <v-app>
     <v-container class="spacing-playground pa-5" fluid>
-      <targetMenu ref="targetMenu" :shared="sharedMenu" :model="isModel"></targetMenu>
-      <ph2GraphContainer ref="gfa" v-show="bodyStatus && selectedMenu.selectedModel.id != 4"></ph2GraphContainer>
-      <div v-if="isFVDisplayed" v-show="bodyStatus && selectedMenu.selectedModel.id == 4">
+      <targetMenu
+        ref="targetMenu"
+        :shared="sharedMenu"
+        :model="isModel"
+      ></targetMenu>
+      <ph2GraphContainer
+        ref="gfa"
+        v-show="bodyStatus && selectedMenu.selectedModel.id != 4"
+      ></ph2GraphContainer>
+      <div
+        v-if="isFVDisplayed"
+        v-show="bodyStatus && selectedMenu.selectedModel.id == 4"
+      >
         <FVActualValueInput ref="refFVActualValueInput" />
       </div>
     </v-container>
@@ -13,7 +23,7 @@
 <script>
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 
-import ph2GraphContainer from "@/components-v1/parts/graph/ModelGraphContainer.vue";
+import ph2GraphContainer from "@/components-v1/parts/graph/モデルグラフ/ModelGraphContainer.vue";
 import { MountController } from "@/lib/mountController.js";
 import FVActualValueInput from "@/components-v1/FruitBearing/着果量着果負担トップ.vue";
 

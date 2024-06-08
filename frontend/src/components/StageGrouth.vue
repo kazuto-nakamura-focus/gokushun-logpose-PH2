@@ -2,7 +2,11 @@
   <v-app>
     <v-container class="spacing-playground pa-5" fluid>
       <!-- ボタン選択エリア -->
-      <targetMenu ref="targetMenu" :shared="sharedMenu" :model="isModel"></targetMenu>
+      <targetMenu
+        ref="targetMenu"
+        :shared="sharedMenu"
+        :model="isModel"
+      ></targetMenu>
       <div v-show="CanShowSublist == true">
         <ButtonSelector
           :titleWidth="100"
@@ -14,7 +18,7 @@
       </div>
 
       <v-expand-transition>
-        <div v-if="bodyStatus==true">
+        <div v-if="bodyStatus == true">
           <template>
             <v-container>
               <v-row class="ma-1">
@@ -88,7 +92,7 @@
 import moment from "moment";
 import targetMenu from "@/components/parts/Ph2TargetMenu.vue";
 import ButtonSelector from "@/components/parts/Ph2ButtonSelector.vue";
-import sensorGraphContainer from "@/components-v1/parts/graph/SensorGraphContainer.vue";
+import sensorGraphContainer from "@/components-v1/parts/graph/生データグラフ/SensorGraphContainer.vue";
 import { MountController } from "@/lib/mountController.js";
 import { useSensoreList /*, useSensoreData*/ } from "@/api/SensorDataAPI.js";
 

@@ -1,13 +1,10 @@
-export class ModelLineGraphOptions {
+import moment from "moment";
+
+export class LineGraphOptions {
     constructor() {
         this.subtitles = [];
         // * 仮の基本設定
         this.data = {
-            parent: null,
-            series: [{
-                name: null,
-                data: []
-            }],
             chartOptions: {
                 chart: {
                     type: 'line',
@@ -24,16 +21,11 @@ export class ModelLineGraphOptions {
                     toolbar: {
                         autoSelected: 'zoom'
                     },
-                    events: {
-                        parent: null,
-                        mounted: function () {
-                            this.data.parent.isLoading = false;
-                        }.bind(this)
-                    }
                 },
                 dataLabels: {
                     enabled: false
                 },
+                colors: ['#2196f3', '#00b428', '#fb8c00'],
                 markers: {
                     size: 0,
                 },
@@ -113,15 +105,6 @@ export class ModelLineGraphOptions {
     // オブジェクトリファレンス
     //* ============================================
     getChartOptions() { return this.data.chartOptions; }
-    getSeries() { return this.data.series; }
-    getParent() { return this.data.parent; }
-    //* ============================================
-    // ローディングの親情報を設定する
-    //* ============================================
-    setLoadingParent(parent) {
-        parent.isLoading = true;
-        this.data.parent = parent;
-    }
     //* ============================================
     // グラフのタイトルを設定する
     //* ============================================
@@ -132,7 +115,7 @@ export class ModelLineGraphOptions {
     // サブタイトルを追加する
     //* ============================================
     addSubTitleElement(name, value) {
-        let value = Math.round(source.estimated * 100) / 100;
+        value = Math.round(value * 100) / 100;
         this.data.chartOptions.subtitle.text = name + " " + value;
     }
     //* ============================================
@@ -155,6 +138,32 @@ export class ModelLineGraphOptions {
     // Y軸のタイトルを作成する
     //* ============================================ 
     setYScaleTitle(ytitle) { this.data.chartOptions.yaxis.title.text = ytitle; }
+    //* ============================================
+    // Y軸の逆タイトルを作成する
+    //* ============================================ 
+    setYScaleOppositeTitle(titleA, titleB) {
+        this.data.chartOptions.yaxis = [{
+            title: {
+                text: titleA,
+            },
+            labels: {
+                formatter: function (val) {
+                    return Math.round(val * 100) / 100;
+                },
+            },
+
+        }, {
+            opposite: true,
+            title: {
+                text: titleB,
+            },
+            labels: {
+                formatter: function (val) {
+                    return Math.round(val * 100) / 100;
+                },
+            },
+        }];
+    }
     // ======================================================
     // X軸のカテゴリー設定
     // ======================================================
@@ -175,6 +184,12 @@ export class ModelLineGraphOptions {
         let unit = this.#setStep(max);
         this.data.chartOptions.yaxis.stepSize = unit;
         this.data.chartOptions.yaxis.max = this.#setMax(max, unit);
+    }
+    // ======================================================
+    // 色の指定の追加
+    // ======================================================
+    addColor(color) {
+        this.data.chartOptions.colors.push(color);
     }
     // ======================================================
     // Y軸の目盛りの最大値設定する

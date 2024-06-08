@@ -1,3 +1,5 @@
+import moment from "moment";
+
 const todayXaxisAnnotation = [{
     x: new Date().getTime(),
     borderColor: '#FF0000',
@@ -46,7 +48,7 @@ export class GraphAnnotation {
                     },
                 }
             }
-            annotations.push(annotation);
+            this.annotations.push(annotation);
         }
         return max;
     }

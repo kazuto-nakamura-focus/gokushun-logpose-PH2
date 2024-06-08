@@ -219,55 +219,6 @@ export default {
           console.log(error);
         });
     },
-    // initialize: function (selectedInfo, arg) {
-
-    //   this.modelItem = arg;
-    //   this.selectedInfo = selectedInfo;
-
-    //   if (!this.sharedGraph.initialized) {
-    //     this.sharedGraph.setUp(
-    //       this.$refs.gr,
-    //       function (gr) {
-    //         gr.initialize(
-    //           selectedInfo.title,
-    //           selectedInfo.fields,
-    //           selectedInfo.dates,
-    //           arg.expression
-    //         );
-    //       }.bind(this),
-    //       function () { }.bind(this)
-    //     );
-    //   } else {
-    //     this.$refs.gr.initialize(
-    //       selectedInfo.title,
-    //       selectedInfo.fields,
-    //       selectedInfo.dates,
-    //       arg.expression
-    //     );
-    //   }
-
-    // const title = data.title;
-    // const fields = data.fields;
-    // const params = data.params;
-
-    // タイトル
-    // this.title = title;
-    // this.titleName = "生育ステージパラメータリスト";
-    // 圃場リスト
-    // this.fields = fields;
-    // for (const item of fields) {
-    //   if (item.state) this.fields.push(item.title);
-    // }
-    //  this.selected = this.fields[0];
-    // デバイス
-    // this.params = params;
-    // this.param = this.params[0];
-    // this.isDialog = true;
-
-    //  if (this.tabModel == "tab-2") {
-    //    this.$refs.refParameterSetGraph.initialize();
-    //  }
-    // },
 
     deleteItem: function () {
       this.isDialog = false;
