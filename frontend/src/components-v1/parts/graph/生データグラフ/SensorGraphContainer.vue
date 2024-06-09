@@ -19,7 +19,8 @@
 </template>
   
   <script>
-import { RawDataSettings } from "@/components-v1/parts/graph/生データグラフ/生データグラフ設定.vue";
+import { RawDataSettings } from "@/components-v1/parts/graph/生データグラフ/生データグラフ設定.js";
+import { RawDataGraphPanel } from "@/components-v1/parts/graph/生データグラフ/生データパネル設定.js";
 import Ph2GraphArea from "@/components-v1/parts/graph/Ph2GraphTab.vue";
 import { VueLoading } from "vue-loading-template";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
@@ -29,7 +30,6 @@ import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 export default {
   data() {
     return {
-      selectedItem: {},
       isLoading: false, // ローダー
 
       yTitle: [
@@ -107,15 +107,15 @@ export default {
               this.yTitle[contentId - 1].text,
               data
             );
-            // グラフ表示を行う
-            this.$refs.chr.addGraph(
-              titlePaths,
-              gc.data.chartOptions,
-              data.values,
-              false,
-              name,
-              null
-            );
+            console.log("aaa");
+            // モデルパネルオブジェクト
+            let graphPanel = new RawDataGraphPanel();
+            // パネルタイトルの作成
+            graphPanel.setPanelTitle(titlePaths);
+            // グラフデータの作成
+            graphPanel.setGraphData(settings);
+            // タブに追加する
+            this.$refs.chr.addGraph(graphPanel);
           } else {
             throw new Error(message);
           }

@@ -21,7 +21,7 @@
           <ph-2-sensor-graph
             v-if="graphType == '2'"
             :key="item.id"
-            :target="item.graph"
+            :target="item"
             @delete="deleteItem"
           />
         </v-tab-item>
