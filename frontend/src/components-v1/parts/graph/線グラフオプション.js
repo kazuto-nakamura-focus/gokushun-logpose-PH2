@@ -141,11 +141,19 @@ export class LineGraphOptions {
     //* ============================================
     // Y軸の逆タイトルを作成する
     //* ============================================ 
-    setYScaleOppositeTitle(titleA, titleB) {
+    setYScaleOppositeTitle(nameA, titleA, maxA, nameB, titleB, maxB) {
+        let unitA = this.#setStep(maxA);
+        let stepA = this.#setMax(maxA, unitA);
+        let unitB = this.#setStep(maxB);
+        let stepB = this.#setMax(maxB, unitB);
+
         this.data.chartOptions.yaxis = [{
+            seriesName: nameA,
             title: {
                 text: titleA,
             },
+            stepSize: unitA,
+            max: stepA,
             labels: {
                 formatter: function (val) {
                     return Math.round(val * 100) / 100;
@@ -154,9 +162,12 @@ export class LineGraphOptions {
 
         }, {
             opposite: true,
+            seriesName: nameB,
             title: {
                 text: titleB,
             },
+            stepSize: unitB,
+            max: stepB,
             labels: {
                 formatter: function (val) {
                     return Math.round(val * 100) / 100;
@@ -180,7 +191,7 @@ export class LineGraphOptions {
     // Y軸の目盛りの値
     // ======================================================
     setYScale(max) {
-        this.data.chartOptions.yaxis.min = 0;
+        // this.data.chartOptions.yaxis.min = 0;
         let unit = this.#setStep(max);
         this.data.chartOptions.yaxis.stepSize = unit;
         this.data.chartOptions.yaxis.max = this.#setMax(max, unit);
@@ -196,23 +207,45 @@ export class LineGraphOptions {
     // ======================================================
     #setMax(max, unit) {
         let value = Math.trunc(max / unit) + 1;
-        return unit * value;
+        return unit * value + unit;
     }
     // ======================================================
     // Y軸の目盛りのステップサイズを設定する
     // ======================================================
     #setStep(max) {
-        // * 計算を簡単にするため、桁をそろえる
-        let munit = 10 * 15;
-        if (max > munit) return 20;
-        munit = 5 * 15;
-        if (max > munit) return 10;
-        munit = 1 * 15;
-        if (max > munit) return 5;
-        munit = 0.5 * 15;
-        if (max > munit) return 1;
-        munit = 0.1 * 15;
-        if (max > munit) return 0.5;
-        return 0.1;
+        if (max >= 0) {
+            // 桁数の算出
+            let numberDigit = String(Math.floor(max)).length;
+            // 2桁に変更する
+            let tmp = max / Math.pow(10, (numberDigit - 2));
+            // 目盛単位の設定
+            let scale = 0;
+            if ((tmp >= 10) && (tmp < 20)) scale = 1;
+            else if ((tmp >= 20) && (tmp < 40)) scale = 2;
+            else scale = 5;
+            // 単位を戻して返却
+            return scale * Math.pow(10, (numberDigit - 2));
+
+        } else {
+            // 数値を文字列に変換
+            let numStr = max.toString();
+            // 小数点の位置を見つける
+            let decimalIndex = numStr.indexOf('.');
+            // 小数点以下の部分を取得
+            let decimalPart = numStr.slice(decimalIndex + 1);
+            let numberDigit = 0;
+            for (; numberDigit < decimalPart.length; numberDigit++) {
+                if (decimalPart[numberDigit] !== '0') numberDigit++;
+            }
+            // 2桁に変更する
+            let tmp = max * Math.pow(10, (numberDigit + 1));
+            // 目盛単位の設定
+            let scale = 0;
+            if ((tmp >= 10) && (tmp < 20)) scale = 1;
+            else if ((tmp >= 20) && (tmp < 40)) scale = 2;
+            else scale = 5;
+            // 単位を戻して返却
+            return scale / Math.pow(10, (numberDigit - 1));
+        }
     }
 }

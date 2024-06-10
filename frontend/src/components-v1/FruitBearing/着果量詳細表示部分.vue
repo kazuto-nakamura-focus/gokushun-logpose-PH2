@@ -57,9 +57,9 @@
                   v-if="canGraph(header.value)"
                   style="width: 100%; text-align: cener; margin-bottom: 10px"
                 >
-                  <v-btn height="20px" @click="showGraph(header)"
+                  <!--   <v-btn height="20px" @click="showGraph(header)"
                     ><span style="font-size: 9pt">グラフ表示</span></v-btn
-                  >
+                  >-->
                 </div>
                 <div
                   v-if="canSort(header.value)"

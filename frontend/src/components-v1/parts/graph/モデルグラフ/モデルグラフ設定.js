@@ -65,7 +65,7 @@ export class ModelGraphSettings {
     //* ============================================
     setLeafAreaGraph(area, count) {
         // タイトル
-        this.optionsMapper.setGraphTitle("葉面積と出葉枚");
+        this.optionsMapper.setGraphTitle("葉面積と出葉枚数");
         // サブタイトル
         let subtitleCount = 0;
         if (null != area.estimated) {
@@ -77,9 +77,15 @@ export class ModelGraphSettings {
             subtitleCount++;
         }
         if (subtitleCount > 0) this.optionsMapper.createSubtitle();
+
+
+        // アノテーション
+        this.optionsMapper.setXAnnotations(this.annotationMapper.getTodayAnnotation());
+        // カテゴリー
+        this.optionsMapper.setXCategory(area.category);
+
         // Y軸複合タイトル
-        this.optionsMapper.setYScaleOppositeTitle("葉面積(㎡)", "出葉枚");
-        this.#setAnnotationAndScale(area);
+        // this.graphDataSeries.addDataSeries("実績値-葉面積(㎡)", area.values);
         this.graphDataSeries.addDataSeries("実績値-葉面積(㎡)", area.values);
         this.graphDataSeries.addDataSeries("推定値-葉面積(㎡)", area.predictValues);
         this.graphDataSeries.addDataSeries("実測値-葉面積(㎡)", area.meauredValues);
@@ -89,6 +95,8 @@ export class ModelGraphSettings {
         this.graphDataSeries.addDataSeries("推定値-出葉枚", count.predictValues);
         this.optionsMapper.addColor("#91621a");
         this.graphDataSeries.addDataSeries("実測値-出葉枚", count.meauredValues);
+        this.optionsMapper.setYScaleOppositeTitle("実績値-葉面積(㎡)", "葉面積(㎡)", area.yend, "実績値-出葉枚", "出葉枚", count.yend);
+
     }
     //* ============================================
     // 光合成推定グラフ設定

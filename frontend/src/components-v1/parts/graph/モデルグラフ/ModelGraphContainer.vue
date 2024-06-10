@@ -2,7 +2,6 @@
   <v-app>
     <v-container>
       <Ph2GraphTabs graphType="1" ref="chr" @doAction="setData" />
-      <wait-dialog ref="wait" />
     </v-container>
   </v-app>
 </template>
@@ -14,7 +13,6 @@ import {
   useLeafGraphAreaByParamSet,
   usePhotosynthesisGraphByParamSet,
 } from "@/api/TopStateGrowth";
-import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 import { ModelGraphSettings } from "@/components-v1/parts/graph/モデルグラフ/モデルグラフ設定.js";
 import { GraphPanel } from "@/components-v1/parts/graph/モデルグラフ/グラフパネル設定.js";
 
@@ -26,7 +24,6 @@ export default {
   },
   components: {
     Ph2GraphTabs,
-    WaitDialog,
   },
   methods: {
     //* --------------------------------------------
@@ -77,7 +74,6 @@ export default {
       let deviceId = selectedItems.selectedDevice.id;
       // モデルによって表示を変更する
       if (this.modelId == 1) {
-        this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         useModelData(deviceId, year)
           .then((response) => {
             // 成功時
@@ -93,12 +89,8 @@ export default {
           })
           .catch((error) => {
             console.log(error);
-          })
-          .finally(() => {
-            this.$refs.wait.finish();
           });
       } else if (this.modelId == 2) {
-        this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         useLeafGraphAreaByParamSet(deviceId, year)
           .then((response) => {
             const results = response["data"].data;
@@ -114,12 +106,8 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
-          })
-          .finally(() => {
-            this.$refs.wait.finish();
           });
       } else if (this.modelId == 3) {
-        this.$refs.wait.start("描画中です。しばらくお待ちください。", false);
         usePhotosynthesisGraphByParamSet(deviceId, year)
           .then((response) => {
             //成功時
@@ -136,9 +124,6 @@ export default {
           .catch((error) => {
             //失敗時
             console.log(error);
-          })
-          .finally(() => {
-            this.$refs.wait.finish();
           });
       }
     },

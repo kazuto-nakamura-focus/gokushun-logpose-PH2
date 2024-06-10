@@ -30,7 +30,6 @@ export class RawDataSettings {
     #setAnnotationAndScale(source) {
         // Y軸の最高値
         let max = source.yend;
-        this.optionsMapper.setXAnnotations(this.annotationMapper.getTodayAnnotation());
         // カテゴリー
         this.optionsMapper.setXCategory(source.category);
         // 目盛
