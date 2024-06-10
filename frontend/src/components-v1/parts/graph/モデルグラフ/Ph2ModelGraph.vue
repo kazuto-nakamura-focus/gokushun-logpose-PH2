@@ -12,7 +12,8 @@
               elevation="3"
               :key="index"
               @click="openDialog(button)"
-            >{{ button.name }}</v-btn>
+              >{{ button.name }}</v-btn
+            >
           </v-col>
           <v-col align="right" cols="1">
             <div>
@@ -25,17 +26,22 @@
             <div
               v-if="annotationLabel"
               style="
-            text-align: left;
-              margin-left: 3px;
-              padding: 5px;
-              font-size: 10pt; font-family:Yu Gothic"
+                text-align: left;
+                margin-left: 3px;
+                padding: 5px;
+                font-size: 10pt;
+                font-family: Yu Gothic;
+              "
             >
               <b>{{ annotationLabel }}</b>
             </div>
           </v-col>
         </v-row>
         <v-row style="padding-bottom: 20px">
-          <v-col align="left" style="font-size: 10pt; font-family: Yu Gothic;margin-left:6px">
+          <v-col
+            align="left"
+            style="font-size: 10pt; font-family: Yu Gothic; margin-left: 6px"
+          >
             <b>{{ comment }}</b>
           </v-col>
         </v-row>
@@ -47,20 +53,41 @@
         :series="chart.series"
       ></ph-2-graphic-tool>
     </v-card>
-    <div v-if="modelId==1">
-      <GEActualValueInput ref="refGEActualValueInput" :shared="sharedParam[0]" />
+    <div v-if="modelId == 1">
+      <GEActualValueInput
+        ref="refGEActualValueInput"
+        :shared="sharedParam[0]"
+      />
       <ReferenceFValue ref="refReferenceFValue" :shared="sharedParam[1]" />
-      <parmeter-set-dialog ref="refGEParameterSets" :shared="sharedParam[2]" :modelId="modelId" />
+      <parmeter-set-dialog
+        ref="refGEParameterSets"
+        :shared="sharedParam[2]"
+        :modelId="modelId"
+      />
     </div>
 
-    <div v-if="modelId==2">
-      <LAActualValueInput ref="refLAActualValueInput" :shared="sharedParam[0]" />
-      <parmeter-set-dialog ref="refLAParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
+    <div v-if="modelId == 2">
+      <LAActualValueInput
+        ref="refLAActualValueInput"
+        :shared="sharedParam[0]"
+      />
+      <parmeter-set-dialog
+        ref="refLAParameterSets"
+        :shared="sharedParam[1]"
+        :modelId="modelId"
+      />
     </div>
 
-    <div v-if="modelId==3">
-      <PEActualValueInput ref="refPEActualValueInput" :shared="sharedParam[0]" />
-      <parmeter-set-dialog ref="refPEParameterSets" :shared="sharedParam[1]" :modelId="modelId" />
+    <div v-if="modelId == 3">
+      <PEActualValueInput
+        ref="refPEActualValueInput"
+        :shared="sharedParam[0]"
+      />
+      <parmeter-set-dialog
+        ref="refPEParameterSets"
+        :shared="sharedParam[1]"
+        :modelId="modelId"
+      />
     </div>
   </v-app>
 </template>
@@ -68,8 +95,7 @@
 <script>
 import Ph2GraphicTool from "@/components-v1/parts/graph/Ph2GraphicTool.vue";
 import "@mdi/font/css/materialdesignicons.css";
-import moment from "moment";
-import allEditButtons from "@/components-v1/parts/graph/editButtons.json";
+import allEditButtons from "@/components-v1/parts/graph/モデルグラフ/editButtons.json";
 import { DialogController } from "@/lib/mountController.js";
 import GEActualValueInput from "@/components-v1/GrowthModel/RealInput/GEMainInput.vue";
 import ParmeterSetDialog from "@/components-v1/parts/パラメータセット編集/パラメータセット編集ダイアログ.vue";
@@ -80,7 +106,7 @@ import PEActualValueInput from "@/components-v1/Photosynthesis/光合成量実�
 export default {
   props: {
     target: {
-      type: Object,
+      type: Object, // GraphPanel
       required: true,
     },
   },
@@ -120,53 +146,15 @@ export default {
     // 推定・実績グラフを作成する
     //* ============================================
     initialize() {
-      this.comment = this.target.data.comment;
-      if (null != this.comment) {
-        this.comment = "コメント:" + this.comment;
-      }
+      this.comment = this.target.comment;
       this.selectedMenu = this.target.selectedItems;
-      console.log(this.selectedMenu);
-      this.modelId = this.selectedMenu.selectedModel.id;
+      this.modelId = this.target.modelId;
+      this.annotationLabel = this.target.annotationLabel;
       // * ボタンの表示
-      this.editButtons =
-        allEditButtons[this.target.selectedItems.selectedModel.id].buttons;
-      //「実績」値の一覧
-      const values = this.target.data?.values;
-      //「推定」値の一覧
-      const predictValues = this.target.data?.predictValues;
-      // 「実測値」値の一覧
-      const meauredValues = this.target.data?.meauredValues;
-      //生育名毎の閾値
-      const annotations = this.target.data?.annotations;
+      this.editButtons = allEditButtons[this.modelId].buttons;
 
-      //生育名の値を順番に比較するためのインデックス
-      const tempLabels = [];
-      if (annotations !== undefined && annotations !== null) {
-        annotations.forEach((annotation) => {
-          let date = "未達";
-          if (annotation.date != null) {
-            date = new moment(annotation.date).format("YYYY-MM-DD");
-          }
-          tempLabels.push(annotation.name + ":" + date);
-        });
-        if (tempLabels.length > 0) this.annotationLabel = tempLabels.join(", ");
-      }
-      this.chart.options = this.target.options;
-      this.chart.series = [
-        {
-          name: "実績値",
-          data: values,
-        },
-        {
-          name: "推定値",
-          data: predictValues,
-        },
-        {
-          name: "実測値",
-          data: meauredValues,
-        },
-      ];
-
+      this.chart.options = this.target.charOption;
+      this.chart.series = this.target.chartData;
       this.chartDisplay = true;
     },
     //* ============================================
@@ -174,9 +162,8 @@ export default {
     //* ============================================
     openDialog: function (item) {
       const selectedData = {
-        title: this.selectedMenu.selectedModel.name,
+        title: this.target.modelName,
         menu: this.selectedMenu,
-        dates: this.dates,
       };
       this.sharedParam[item.type].setUp(
         this.$refs[item.key],

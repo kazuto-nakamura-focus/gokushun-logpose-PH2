@@ -10,7 +10,11 @@
       </v-row>
     </v-container>
     <!-- グラフ表示 -->
-    <ph-2-graphic-tool v-if="chartDisplay == true" :options="chart.options" :series="chart.series"></ph-2-graphic-tool>
+    <ph-2-graphic-tool
+      v-if="chartDisplay == true"
+      :options="chart.options"
+      :series="chart.series"
+    ></ph-2-graphic-tool>
   </v-card>
 </template>
     
@@ -47,10 +51,8 @@ export default {
     // 単一グラフを作成する
     //* ============================================
     initialize() {
-      this.chart.options = this.arguments.options;
-      this.chart.series = [
-        { name: this.arguments.name, data: this.arguments.data },
-      ];
+      this.chart.options = this.arguments.chartOption;
+      this.chart.series = this.arguments.chartData;
       this.chartDisplay = true;
     },
     //* ============================================

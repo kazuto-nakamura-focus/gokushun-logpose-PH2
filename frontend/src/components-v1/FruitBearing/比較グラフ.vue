@@ -81,7 +81,6 @@ export default {
   components: { apexchart: VueApexCharts },
   methods: {
     initialize(title, name, baseVaue, datalist) {
-      console.log("aaa");
       this.options.xaxis.categories.length = 0;
       this.series[0].data.length = 0;
 

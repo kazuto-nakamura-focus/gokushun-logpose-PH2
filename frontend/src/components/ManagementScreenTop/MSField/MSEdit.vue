@@ -14,13 +14,19 @@
               v-bind:background-color="bgcolor"
               v-model.trim="fieldInfoData.name"
             ></v-text-field>
-            <p v-if="!isFieldNameNotNull" class="error">{{this.fieldError}}</p>
+            <p v-if="!isFieldNameNotNull" class="error">
+              {{ this.fieldError }}
+            </p>
           </v-col>
           <v-col cols="6" align="right">
             <div v-if="!isAddMode">
               <!--  更新モードボタン -->
-              <v-icon right icon="mdi-vuetify" @click="changeMode()">mdi-pencil-outline</v-icon>
-              <v-icon right icon="mdi-vuetify" @click="deleteFieldInfo()">mdi-trash-can-outline</v-icon>
+              <v-icon right icon="mdi-vuetify" @click="changeMode()"
+                >mdi-pencil-outline</v-icon
+              >
+              <v-icon right icon="mdi-vuetify" @click="deleteFieldInfo()"
+                >mdi-trash-can-outline</v-icon
+              >
             </div>
           </v-col>
         </v-row>
@@ -35,9 +41,9 @@
                 <v-sheet
                   id="deviceDetailMap"
                   v-bind:class="{
-                'v-sheet--readonly': !isEditMode,
-                'pa-0': isEditMode,
-              }"
+                    'v-sheet--readonly': !isEditMode,
+                    'pa-0': isEditMode,
+                  }"
                   :light="true"
                   style="width: 100%; height: 400px"
                 />
@@ -45,10 +51,12 @@
             </v-container>
             <v-container>
               <!-- *********** 緯度経度入力 ********** -->
-              <div style="display:flex;width:100%;">
-                <div style="width:30%;display:flex;align-items:center;">GPS Code入力</div>
-                <div style="width:70%">
-                  <div style="margin-bottom:12px">
+              <div style="display: flex; width: 100%">
+                <div style="width: 30%; display: flex; align-items: center">
+                  GPS Code入力
+                </div>
+                <div style="width: 70%">
+                  <div style="margin-bottom: 12px">
                     <v-text-field
                       label="緯度（Latitude）【必須】"
                       dense
@@ -59,7 +67,9 @@
                       v-model.trim="mapHandler.latitude"
                       v-bind:background-color="bgcolor"
                     ></v-text-field>
-                    <p v-if="!checkLatitude" class="error">{{this.latitudeError}}</p>
+                    <p v-if="!checkLatitude" class="error">
+                      {{ this.latitudeError }}
+                    </p>
                   </div>
                   <div>
                     <v-text-field
@@ -72,7 +82,9 @@
                       :readonly="!isEditMode"
                       v-model.trim="mapHandler.longitude"
                     ></v-text-field>
-                    <p v-if="!checkLongitude" class="error">{{this.longitudeError}}</p>
+                    <p v-if="!checkLongitude" class="error">
+                      {{ this.longitudeError }}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -102,7 +114,8 @@
                   class="white--text"
                   elevation="2"
                   @click="changeFocusLatLng()"
-                >住所から座標へ</v-btn>
+                  >住所から座標へ</v-btn
+                >
               </v-col>
               <v-col cols="6">
                 <v-btn
@@ -110,7 +123,8 @@
                   class="white--text"
                   elevation="2"
                   @click="setAddress()"
-                >座標から住所へ</v-btn>
+                  >座標から住所へ</v-btn
+                >
               </v-col>
             </v-row>
             <p></p>
@@ -166,7 +180,13 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <div v-if="!isEditMode" class="GS_ButtonArea">
-            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">キャンセル</v-btn>
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              @click="back()"
+              >キャンセル</v-btn
+            >
           </div>
           <div v-if="isEditMode" class="GS_ButtonArea">
             <v-btn
@@ -176,7 +196,8 @@
               elevation="2"
               :disabled="!isValid()"
               @click="update()"
-            >更新</v-btn>
+              >更新</v-btn
+            >
             <v-btn
               v-show="isAddMode"
               color="primary"
@@ -184,8 +205,15 @@
               elevation="2"
               :disabled="!isValid()"
               @click="add()"
-            >追加</v-btn>
-            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">閉じる</v-btn>
+              >追加</v-btn
+            >
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              @click="back()"
+              >閉じる</v-btn
+            >
           </div>
         </v-card-actions>
       </template>
@@ -635,8 +663,6 @@ export default {
       if (confirm("追加してもよろしいですか？")) {
         // 更新オブジェクトの作成
         const data = createFieldObject(this.fieldInfoData, this.mapHandler);
-
-        console.log("update_data", data);
 
         //圃場情報更新(API)
         useFieldInfoAdd(data)
