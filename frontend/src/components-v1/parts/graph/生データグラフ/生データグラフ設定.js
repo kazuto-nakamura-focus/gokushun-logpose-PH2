@@ -38,9 +38,9 @@ export class RawDataSettings {
     //* ============================================
     // データ設定
     //* ============================================
-    #setData(values, predictValues) {
-        this.graphDataSeries.addDataSeries("実績値", values);
-        this.graphDataSeries.addDataSeries("推定値", predictValues);
+    #setData(values) {
+        this.optionsMapper.addColor("#2196f3");
+        this.graphDataSeries.addDataSeries("センサー値", values);
     }
     //* ============================================
     // 生データグラフ設定
@@ -48,7 +48,7 @@ export class RawDataSettings {
     setGrowthGraph(title, xtitle, ytitle, source) {
         this.#setTitles(title, xtitle, ytitle);
         this.#setAnnotationAndScale(source);
-        this.#setData(source.values, source.predictValues, source.meauredValues);
+        this.#setData(source.values);
     }
 
 }

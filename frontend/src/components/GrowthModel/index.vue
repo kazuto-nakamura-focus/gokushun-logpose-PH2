@@ -89,7 +89,6 @@ export default {
           this.selectedField.push(item);
         }
       }
-      console.log("setSelectedList", this.sourceData);
       if (this.selectedField.length == 0) this.selectedField = [];
     },
     setSelectedMenu: function () {

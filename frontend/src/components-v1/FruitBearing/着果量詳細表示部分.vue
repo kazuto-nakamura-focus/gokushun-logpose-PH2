@@ -430,7 +430,6 @@ export default {
       return this.dataList.length > 2 && name != "name";
     },
     showGraph(item) {
-      console.log("ddd");
       this.isDiffDialog = true;
       let title = item.text.replace(/;/g, "");
       this.$nextTick(function () {

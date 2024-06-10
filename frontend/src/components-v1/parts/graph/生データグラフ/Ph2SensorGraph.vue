@@ -44,7 +44,6 @@ export default {
   // グラフの表示を行う下位関数をコールする
   //* ============================================
   mounted() {
-    console.log("aaa");
     this.initialize();
   },
   methods: {

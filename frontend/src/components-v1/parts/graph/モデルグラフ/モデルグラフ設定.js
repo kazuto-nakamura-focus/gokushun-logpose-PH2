@@ -48,8 +48,11 @@ export class ModelGraphSettings {
     // データ設定
     //* ============================================
     #setData(values, predictValues, meauredValues) {
+        this.optionsMapper.addColor("#2196f3");
         this.graphDataSeries.addDataSeries("実績値", values);
+        this.optionsMapper.addColor("#00b428");
         this.graphDataSeries.addDataSeries("推定値", predictValues);
+        this.optionsMapper.addColor("#fb8c00");
         this.graphDataSeries.addDataSeries("実測値", meauredValues);
     }
     //* ============================================
@@ -77,25 +80,38 @@ export class ModelGraphSettings {
             subtitleCount++;
         }
         if (subtitleCount > 0) this.optionsMapper.createSubtitle();
-
-
         // アノテーション
         this.optionsMapper.setXAnnotations(this.annotationMapper.getTodayAnnotation());
         // カテゴリー
         this.optionsMapper.setXCategory(area.category);
 
         // Y軸複合タイトル
-        // this.graphDataSeries.addDataSeries("実績値-葉面積(㎡)", area.values);
+        this.optionsMapper.declareMultiGraph();
+
+        this.optionsMapper.declareYScaleTitle("実績値-出葉枚数", count.yend, true);
+        this.optionsMapper.addColor("rgba(34,83,125, 0.5)");
+        this.graphDataSeries.addDataSeries("実績値-出葉枚数", count.values);
+
+        this.optionsMapper.addYScaleTitle("実績値-葉面積(㎡)");
+        this.optionsMapper.addColor("rgba(20,120,47,0.5)");
+        this.graphDataSeries.addDataSeries("推定値-出葉枚数", count.predictValues);
+
+        this.optionsMapper.addYScaleTitle("実績値-葉面積(㎡)");
+        this.optionsMapper.addColor("rgba(145,98,26, 0.5)");
+        this.graphDataSeries.addDataSeries("実測値-出葉枚数", count.meauredValues);
+
+
+        this.optionsMapper.declareYScaleTitle("実績値-葉面積(㎡)", area.yend, false);
+        this.optionsMapper.addColor("#2196f3");
         this.graphDataSeries.addDataSeries("実績値-葉面積(㎡)", area.values);
+
+        this.optionsMapper.addYScaleTitle("実績値-葉面積(㎡)");
+        this.optionsMapper.addColor("#00b428");
         this.graphDataSeries.addDataSeries("推定値-葉面積(㎡)", area.predictValues);
+
+        this.optionsMapper.addYScaleTitle("実績値-葉面積(㎡)");
+        this.optionsMapper.addColor("#fb8c00");
         this.graphDataSeries.addDataSeries("実測値-葉面積(㎡)", area.meauredValues);
-        this.optionsMapper.addColor("#223c7d");
-        this.graphDataSeries.addDataSeries("実績値-出葉枚", count.values);
-        this.optionsMapper.addColor("#14782f");
-        this.graphDataSeries.addDataSeries("推定値-出葉枚", count.predictValues);
-        this.optionsMapper.addColor("#91621a");
-        this.graphDataSeries.addDataSeries("実測値-出葉枚", count.meauredValues);
-        this.optionsMapper.setYScaleOppositeTitle("実績値-葉面積(㎡)", "葉面積(㎡)", area.yend, "実績値-出葉枚", "出葉枚", count.yend);
 
     }
     //* ============================================

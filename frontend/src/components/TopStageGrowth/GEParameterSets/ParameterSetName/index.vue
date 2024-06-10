@@ -295,7 +295,6 @@ export default {
         .then((response) => {
           //成功時
           const results = response["data"];
-          console.log("useGrowthParamSetList", results);
           this.parameterList = results.data.list;
           //APIエラーのためmock
           // this.parameterList = ParamSetLabel //削除
@@ -377,13 +376,11 @@ export default {
     },
     //削除
     deleteParameterSet() {
-      console.log("削除:", this.selected.id);
       //生育推定パラメータセット削除
       useGrowthParamSetRemove(this.selected.id)
         .then((response) => {
           //成功時
           const results = response["data"];
-          console.log("useGrowthParamSetRemove", results);
           this.reset();
           this.getUseGrowthParamSetList();
         })

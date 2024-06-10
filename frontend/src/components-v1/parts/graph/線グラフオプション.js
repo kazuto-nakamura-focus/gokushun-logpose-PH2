@@ -25,13 +25,13 @@ export class LineGraphOptions {
                 dataLabels: {
                     enabled: false
                 },
-                colors: ['#2196f3', '#00b428', '#fb8c00'],
+                colors: [],
                 markers: {
                     size: 0,
                 },
                 stroke: {
                     width: 2,
-                    curve: 'straight',
+                    curve: 'smooth',
                     //        dashArray: [0, 3]
                 },
                 title: {
@@ -59,7 +59,7 @@ export class LineGraphOptions {
                     },
                 },
                 fill: {
-                    colors: ['#1A73E8', '#1A73E8']
+                    colors: []
                 },
                 yaxis: {
                     labels: {
@@ -116,7 +116,7 @@ export class LineGraphOptions {
     //* ============================================
     addSubTitleElement(name, value) {
         value = Math.round(value * 100) / 100;
-        this.data.chartOptions.subtitle.text = name + " " + value;
+        this.subtitles.push(name + " " + value);
     }
     //* ============================================
     // サブタイトルを作成する
@@ -127,8 +127,10 @@ export class LineGraphOptions {
             if (text.length > 0) text += " / ";
             text += item;
         }
-        let yesterday = new moment().add(-1, 'day').format("MM / DD");
-        this.data.chartOptions.subtitle.text = text + " " + yesterday;
+        if (text.length > 0) {
+            let yesterday = new moment().add(-1, 'day').format("(MM月DD日現在)");
+            this.data.chartOptions.subtitle.text = text + " " + yesterday;
+        }
     }
     //* ============================================
     // X軸のタイトルを作成する
@@ -139,6 +141,46 @@ export class LineGraphOptions {
     //* ============================================ 
     setYScaleTitle(ytitle) { this.data.chartOptions.yaxis.title.text = ytitle; }
     //* ============================================
+    // 複合線グラフの宣言をする
+    //* ============================================
+    declareMultiGraph() {
+        this.data.chartOptions.yaxis = [];
+    }
+    //* ============================================
+    // 複合線グラフのY軸を設定する
+    //* ============================================
+    declareYScaleTitle(title, max, opposite) {
+        let unit = this.#setStep(max);
+        let step = this.#setMax(max, unit);
+        const item = {
+            opposite: opposite,
+            //   seriseriesName: title,
+            title: {
+                text: title,
+            },
+            stepSize: unit,
+            max: step,
+            labels: {
+                formatter: function (val) {
+                    return Math.round(val * 100) / 100;
+                },
+            },
+        }
+        this.data.chartOptions.yaxis.push(item);
+    }
+    //* ============================================
+    // 複合線グラフのY軸を追加する
+    //* ============================================
+    addYScaleTitle(title) {
+        console.log(title);
+        const item = {
+            //          seriesName: title,
+            show: false
+        };
+        this.data.chartOptions.yaxis.push(item);
+    }
+
+    //* ============================================
     // Y軸の逆タイトルを作成する
     //* ============================================ 
     setYScaleOppositeTitle(nameA, titleA, maxA, nameB, titleB, maxB) {
@@ -148,7 +190,7 @@ export class LineGraphOptions {
         let stepB = this.#setMax(maxB, unitB);
 
         this.data.chartOptions.yaxis = [{
-            seriesName: nameA,
+            //  seriesName: "nameA",
             title: {
                 text: titleA,
             },
@@ -162,7 +204,7 @@ export class LineGraphOptions {
 
         }, {
             opposite: true,
-            seriesName: nameB,
+            //     seriesName: "nameB",
             title: {
                 text: titleB,
             },
