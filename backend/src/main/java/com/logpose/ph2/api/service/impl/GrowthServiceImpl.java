@@ -147,16 +147,18 @@ public class GrowthServiceImpl implements GrowthService
 	// ###############################################
 	/**
 	 * 生育推定実績値更新
-	 *
+	 * 
+	 * @param deviceId デバイスID
+	 * @param date 日付
 	 * @param dto FDataListDTO
 	 * @throws ParseException 
 	 */
 	// ###############################################
 	@Override
 	@Transactional(rollbackFor = Exception.class)
-	public void updateFData(FDataListDTO dto) throws ParseException
+	public void updateFData(long deviceId, short year, FDataListDTO dto) throws ParseException
 		{
-		this.growthDomain.updateFValues(dto);
+		this.growthDomain.updateFValues(deviceId, year, dto);
 // * モデルデータの更新
 		this.modelDataDomain.doService(dto.getDeviceId(), dto.getYear());
 		}

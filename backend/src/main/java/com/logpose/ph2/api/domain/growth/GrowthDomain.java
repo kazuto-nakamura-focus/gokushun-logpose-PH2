@@ -84,11 +84,15 @@ public class GrowthDomain
 	/**
 	 * 生育推定実績値更新
 	 *
+	 * @param deviceId デバイスID
+	 * @param date 日付
 	 * @param dto FDataListDTO
 	 */
 	// ###############################################
-	public void updateFValues(FDataListDTO dto)
+	public void updateFValues(long deviceId, short year, FDataListDTO dto)
 		{
+// * 更新時刻の設定
+		Date updateTime = new Timestamp(System.currentTimeMillis());
 		for (Ph2RealGrowthFStageEntity item : dto.getList())
 			{
 			// * IDがある場合
@@ -105,18 +109,23 @@ public class GrowthDomain
 				entity.setActualDate(item.getActualDate());
 				entity.setEstimateDate(item.getEstimateDate());
 				entity.setColor(item.getColor());
-				entity.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+				entity.setUpdatedAt(updateTime);
 				this.ph2RealGrowthFStageMapper.updateByPrimaryKey(entity);
 				}
 			else
 				{
 				item.setDeviceId(dto.getDeviceId());
 				item.setYear(dto.getYear());
-				item.setCreatedAt(new Timestamp(System.currentTimeMillis()));
-				item.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+				item.setCreatedAt(updateTime);
+				item.setUpdatedAt(updateTime);
 				this.ph2RealGrowthFStageMapper.insert(item);
 				}
 			}
+// * 未更新の削除処理
+		Ph2RealGrowthFStageEntityExample exp = new Ph2RealGrowthFStageEntityExample();
+		exp.createCriteria().andDeviceIdEqualTo(deviceId)
+				.andYearEqualTo(year).andUpdatedAtNotEqualTo(updateTime);
+		this.ph2RealGrowthFStageMapper.deleteByExample(exp);
 		}
 
 	}

@@ -231,12 +231,14 @@ public class GrowthController
 	// --------------------------------------------------
 	@PutMapping("/F/data")
 	public ResponseDTO updateFData(HttpServletRequest httpReq,
+			@RequestParam("deviceId") Long deviceId,
+			@RequestParam("year") Short year,
 			@RequestBody @Validated FDataListDTO dto)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.growthService.updateFData(dto);
+			this.growthService.updateFData(deviceId, year, dto);
 			as_dto.setSuccess(null);
 			}
 		catch (Exception e)

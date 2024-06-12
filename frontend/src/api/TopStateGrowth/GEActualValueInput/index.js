@@ -17,9 +17,10 @@ const useGrowthFDataByDate = (id, date) => {
 };
 
 //生育推定実績値更新
-const useGrowthFDataUpdate = (data) => {
+const useGrowthFDataUpdate = (deviceId, year, data) => {
   const config = {
     params: {
+      deviceId, year
     },
   };
   return axios.put("/growth/F/data", data, config);

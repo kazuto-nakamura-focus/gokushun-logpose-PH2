@@ -91,7 +91,7 @@ public interface GrowthService
 	 * @throws ParseException 
 	 */
 	// ###############################################
-	public void updateFData(FDataListDTO dto) throws ParseException;
+	public void updateFData(long deviceId, short year, FDataListDTO dto) throws ParseException;
 
 	// ###############################################
 	/**

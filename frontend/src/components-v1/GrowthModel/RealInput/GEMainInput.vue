@@ -40,7 +40,13 @@
           </v-container>
 
           <div class="GS_ButtonArea">
-            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close()">閉じる</v-btn>
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              @click="close()"
+              >閉じる</v-btn
+            >
           </div>
         </v-card>
       </v-dialog>
@@ -327,7 +333,7 @@ export default {
       };
 
       //生育推定実績値更新
-      useGrowthFDataUpdate(data)
+      useGrowthFDataUpdate(this.deviceId, this.year, data)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];

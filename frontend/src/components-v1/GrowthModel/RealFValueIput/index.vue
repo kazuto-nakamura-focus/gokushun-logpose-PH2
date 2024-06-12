@@ -54,12 +54,30 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <div v-if="!isEditMode" class="GS_ButtonArea">
-                <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
+                <v-btn
+                  color="gray"
+                  class="ma-2 black--text"
+                  elevation="2"
+                  @click="close"
+                  >キャンセル</v-btn
+                >
               </div>
               <div v-if="isEditMode" class="GS_ButtonArea">
                 <!-- <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="reset">戻る</v-btn> -->
-                <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="save">保存</v-btn>
-                <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="close">キャンセル</v-btn>
+                <v-btn
+                  color="primary"
+                  class="ma-2 white--text"
+                  elevation="2"
+                  @click="save"
+                  >保存</v-btn
+                >
+                <v-btn
+                  color="gray"
+                  class="ma-2 black--text"
+                  elevation="2"
+                  @click="close"
+                  >キャンセル</v-btn
+                >
               </div>
             </v-card-actions>
           </v-container>
@@ -294,7 +312,7 @@ export default {
         list: GrowthRowData,
       };
       //生育推定実績値更新
-      useGrowthFDataUpdate(data)
+      useGrowthFDataUpdate(this.deviceId, this.year, data)
         .then((response) => {
           //成功時
           const { status, message } = response["data"];
