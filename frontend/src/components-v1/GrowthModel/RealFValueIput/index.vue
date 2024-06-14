@@ -267,14 +267,21 @@ export default {
       let changeData = data;
       let dataTypeArr = [];
       changeData.map((data) => {
-        let elStageData = data.elStage.split("-");
         let targetDateSet = "0000-00-00";
         if (data.targetDate) targetDateSet = data.targetDate;
+        // E-Lステージが数値-数値のフォーマットに変換する
+        let elStageData = data.elStage.split("-");
+        let stageStart = parseInt(elStageData[0]);
+        let stageEnd = stageStart;
+        if (elStageData.length > 1) {
+          stageEnd = elStageData[1];
+        }
+
         let dataType = {
           id: data.id,
           stageName: data.stageName,
-          stageStart: parseInt(elStageData[0]),
-          stageEnd: parseInt(elStageData[1]),
+          stageStart: stageStart,
+          stageEnd: stageEnd,
           intervalF: parseInt(data.intervalF),
           accumulatedF: data.accumulatedF,
           deviceId: parseInt(this.deviceId),
