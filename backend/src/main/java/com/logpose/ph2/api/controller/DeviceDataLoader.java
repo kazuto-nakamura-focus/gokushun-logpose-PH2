@@ -22,15 +22,17 @@ import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.element.ObjectStatus;
-import com.logpose.ph2.api.service.DataLoadService;
+import com.logpose.ph2.api.service.data_load.AllDataLoadService;
+import com.logpose.ph2.api.service.data_load.DataLoadService;
+import com.logpose.ph2.api.service.data_load.DataUpdateService;
 
 import jakarta.servlet.http.HttpServletRequest;
+import reactor.core.publisher.Mono;
 
-@CrossOrigin(
-		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com", "https://gokushun-ph2-staging-e2e7adc0c3d1.herokuapp.com" },
-		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
-		allowedHeaders ="*", exposedHeaders="*",
-		allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com",
+		"https://gokushun-ph2-staging-e2e7adc0c3d1.herokuapp.com" }, methods = { RequestMethod.GET, RequestMethod.POST,
+				RequestMethod.PUT,
+				RequestMethod.DELETE }, allowedHeaders = "*", exposedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/bulk")
 public class DeviceDataLoader
@@ -41,6 +43,10 @@ public class DeviceDataLoader
 	private static Logger LOG = LogManager.getLogger(DeviceDataLoader.class);
 	@Autowired
 	private DataLoadService dataLoadService;
+	@Autowired
+	private DataUpdateService dataUpdateService;
+	@Autowired
+	private AllDataLoadService allDataLoadService;
 
 	// ===============================================
 	// 公開関数群
@@ -52,7 +58,7 @@ public class DeviceDataLoader
 	 */
 	// --------------------------------------------------------
 	@GetMapping("/load/info")
-	public ResponseDTO load(HttpServletRequest httpReq, 
+	public ResponseDTO load(HttpServletRequest httpReq,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
@@ -67,7 +73,7 @@ public class DeviceDataLoader
 			}
 		return as_dto;
 		}
-	
+
 	// --------------------------------------------------------
 	/**
 	 * 全デバイスの最新のセンサーデータを加工し、DBへロードする。
@@ -81,7 +87,7 @@ public class DeviceDataLoader
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.dataLoadService.updateData();
+			this.dataUpdateService.updateData();
 			as_dto.setSuccess(null);
 			}
 		catch (Exception e)
@@ -100,22 +106,12 @@ public class DeviceDataLoader
 	 */
 	// --------------------------------------------------------
 	@PostMapping("/load")
-	public ResponseDTO masters(HttpServletRequest httpReq,
+	public Mono<String> masters(HttpServletRequest httpReq,
 			@RequestBody @Validated DataLoadDTO dto)
 		{
 		LOG.info("/api/bulk/load の実行開始");
-		ResponseDTO as_dto = new ResponseDTO();
-		try
-			{
-			this.dataLoadService.createAllData();
-			as_dto.setSuccess(null);
-			}
-		catch (Exception e)
-			{
-			as_dto.setError(e);
-			}
-		LOG.info("/api/bulk/load の実行終了");
-		return as_dto;
+		this.allDataLoadService.createAllData().subscribe();
+		return Mono.just("accept");
 		}
 
 	// --------------------------------------------------------
@@ -130,7 +126,7 @@ public class DeviceDataLoader
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<Ph2DevicesEntity> fisnishList = this.dataLoadService.getSchedule();
+			List<Ph2DevicesEntity> fisnishList = this.allDataLoadService.getSchedule();
 			as_dto.setSuccess(fisnishList);
 			}
 		catch (Exception e)
@@ -148,21 +144,11 @@ public class DeviceDataLoader
 	 */
 	// --------------------------------------------------------
 	@GetMapping("/load/device/{deviceId}")
-	public ResponseDTO load(HttpServletRequest httpReq,
+	public Mono<String> load(HttpServletRequest httpReq,
 			@PathVariable Long deviceId)
 		{
 		LOG.info("/api/bulk/load の実行開始");
-		ResponseDTO as_dto = new ResponseDTO();
-		try
-			{
-			List<ObjectStatus> fisnishList = this.dataLoadService.createData(deviceId);
-			as_dto.setSuccess(fisnishList);
-			}
-		catch (Exception e)
-			{
-			as_dto.setError(e);
-			}
-		LOG.info("/api/bulk/load の実行終了");
-		return as_dto;
+		this.allDataLoadService.createData(deviceId).subscribe();
+		return Mono.just("accept");
 		}
 	}

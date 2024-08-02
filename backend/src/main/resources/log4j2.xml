@@ -12,10 +12,30 @@
         <Console name="consoleAppender" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy/MM/dd HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n%ex"/>
         </Console>
+ 		<RollingFile name="update" fileName="logs/update.log" filePattern="logs/update-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="%d [%t] %-5level: %msg%n%throwable"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="4"/>
+        </RollingFile>
+		<RollingFile name="load" fileName="logs/load.log" filePattern="logs/load-%d{yyyy-MM-dd}.log.gz">
+            <PatternLayout pattern="%d [%t] %-5level: %msg%n%throwable"/>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true"/>
+            </Policies>
+            <DefaultRolloverStrategy max="4"/>
+        </RollingFile>
     </Appenders>
 
     <!-- パッケージ×ログレベル毎のログ出力先（Appender）を定義 -->
     <Loggers>
+   		<Logger name="com.logpose.ph2.api.service.data_load.DataUpdateService" level="info" additivity="false">
+            <AppenderRef ref="update"/>
+        </Logger>
+        <Logger name="com.logpose.ph2.api.service.data_load.AllDataLoadService" level="info" additivity="false">
+            <AppenderRef ref="load"/>
+        </Logger>
         <Root level="info">
             <AppenderRef ref="consoleAppender"/>
         </Root>

@@ -123,11 +123,12 @@
 			mapperName="Ph2ParamsetCatalogMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table> -->
-
+<!--
 			<table tableName="ph2_paramset_history" domainObjectName="Ph2ParamsetHistoryEntity" 
 			mapperName="Ph2ParamsetHistoryMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
+-->
 			<!-- <table tableName="ph2_paramset_growth" domainObjectName="Ph2ParamsetGrowthEntity" 
 			mapperName="Ph2ParamsetGrowthMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
@@ -250,5 +251,9 @@
 		enableSelectByPrimaryKey="true" enableUpdateByPrimaryKey="true"
 		enableDeleteByPrimaryKey="true" modelType="flat">
 	</table> -->
+				<table tableName="ph2_device_log" domainObjectName="Ph2DeviceLogEntity" 
+			mapperName="Ph2DeviceLogMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
+			</table>
 	</context>
 </generatorConfiguration>

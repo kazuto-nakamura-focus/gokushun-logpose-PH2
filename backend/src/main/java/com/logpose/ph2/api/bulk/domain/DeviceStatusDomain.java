@@ -245,7 +245,7 @@ public class DeviceStatusDomain
 	 * @return ロックされたデバイスのIDリスト
 	 */
 	// --------------------------------------------------
-	@Transactional(rollbackFor = Exception.class)
+/*	@Transactional(rollbackFor = Exception.class)
 	public List<Long> lockDevices(List<Ph2DevicesEntity> devices)
 		{
 		List<Long> rockList = new ArrayList<>();
@@ -260,7 +260,7 @@ public class DeviceStatusDomain
 			rockList.add(device.getId());
 			}
 		return rockList;
-		}
+		}*/
 
 	// --------------------------------------------------
 	/**
