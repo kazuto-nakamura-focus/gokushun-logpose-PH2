@@ -23,7 +23,6 @@ import com.logpose.ph2.api.bulk.service.S8ModelDataApplyrService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
-import com.logpose.ph2.api.dto.element.ObjectStatus;
 
 /**
  * データロードを実行するサービス
@@ -312,15 +311,4 @@ public class DataLoadService
 			}
 		}
 
-	// --------------------------------------------------------
-	/**
-	 * デバイスのロード情報を得る
-	 * @param date 取得するステータスデータの日付
-	 * @return List<ObjectStatus>
-	 */
-	// --------------------------------------------------------
-	public List<ObjectStatus> getInfo(Date date)
-		{
-		return this.statusDomain.getAllStatusList(date);
-		}
 	}

@@ -76,11 +76,9 @@ public class SigFoxDomain
 		nextUrl = this.setSigfoxIdList(data, sigfoxIds);
 		while (null != nextUrl)
 			{
-			Thread.sleep(1000);
 			data = api.getDeviceList(nextUrl);
 			nextUrl = this.setSigfoxIdList(data, sigfoxIds);
 			}
-		Thread.sleep(1000);
 		return sigfoxIds;
 		}
 
@@ -145,14 +143,6 @@ public class SigFoxDomain
 // * DB登録用のキャッシュを生成
 		MessagesCacher cache = new MessagesCacher(this.ph2MessagesMapper);
 // * SigFoxデータの最終取得する日以降のものを取得
-		try
-			{
-			Thread.sleep(2000);
-			}
-		catch(Exception e)
-			{
-			
-			}
 		SigFoxMessagesEntity data;
 		try
 			{

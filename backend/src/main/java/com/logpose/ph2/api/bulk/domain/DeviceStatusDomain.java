@@ -45,7 +45,16 @@ public class DeviceStatusDomain
 		{
 		return this.ph2DevicesMapper.selectAll(null);
 		}
-
+	// --------------------------------------------------
+	/**
+	 * デバイスを取得する
+	 * @return Ph2DevicesEntity
+	 */
+	// --------------------------------------------------
+	public Ph2DevicesEntity getDevice(Long deviceId)
+		{
+		return this.ph2DevicesMapper.selectByPrimaryKey(deviceId);
+		}
 	// --------------------------------------------------
 	/**
 	 * オブジェクトステータスリストを取得する

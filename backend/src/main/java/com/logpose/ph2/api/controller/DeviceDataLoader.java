@@ -7,28 +7,21 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.server.ServerResponse;
 
-import com.logpose.ph2.api.controller.dto.DataLoadDTO;
+import com.logpose.ph2.api.controller.dto.TimeMessage;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dto.ResponseDTO;
 import com.logpose.ph2.api.dto.element.ObjectStatus;
-import com.logpose.ph2.api.service.data_load.AllDataLoadService;
-import com.logpose.ph2.api.service.data_load.DataLoadService;
-import com.logpose.ph2.api.service.data_load.DataUpdateService;
+import com.logpose.ph2.api.service.data_load.DataLoadTopService;
 
 import jakarta.servlet.http.HttpServletRequest;
-import reactor.core.publisher.Mono;
 
 @CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com",
 		"https://gokushun-ph2-staging-e2e7adc0c3d1.herokuapp.com" }, methods = { RequestMethod.GET, RequestMethod.POST,
@@ -40,14 +33,10 @@ public class DeviceDataLoader
 	{
 	// ===============================================
 	// クラスメンバー
-	// ===============================================
+	// ===============================================	
 	private static Logger LOG = LogManager.getLogger(DeviceDataLoader.class);
 	@Autowired
-	private DataLoadService dataLoadService;
-	@Autowired
-	private DataUpdateService dataUpdateService;
-	@Autowired
-	private AllDataLoadService allDataLoadService;
+	private DataLoadTopService dataLoadTopService;
 
 	// ===============================================
 	// 公開関数群
@@ -55,7 +44,7 @@ public class DeviceDataLoader
 	// --------------------------------------------------------
 	/**
 	 * デバイスのロード情報を得る
-	 * @return List<ObjectStatus>
+	 * @return List<String>
 	 */
 	// --------------------------------------------------------
 	@GetMapping("/load/info")
@@ -65,7 +54,7 @@ public class DeviceDataLoader
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<ObjectStatus> fisnishList = this.dataLoadService.getInfo(date);
+			List<ObjectStatus> fisnishList = this.dataLoadTopService.getInfo(date);
 			as_dto.setSuccess(fisnishList);
 			}
 		catch (Exception e)
@@ -74,7 +63,49 @@ public class DeviceDataLoader
 			}
 		return as_dto;
 		}
-
+	// --------------------------------------------------------
+	/**
+	 * センサーロードのログ情報を得る
+	 * @param デバイスID
+	 * @return List<TimeMessage>
+	 */
+	// --------------------------------------------------------
+	@GetMapping("/load/log/{deviceId}")
+	public ResponseDTO log(HttpServletRequest httpReq, @PathVariable Long deviceId)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			List<TimeMessage> logData = this.dataLoadTopService.getLog(deviceId);
+			as_dto.setSuccess(logData);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;
+		}
+	// --------------------------------------------------------
+	/**
+	 * デバイス更新のリクエストを要求する
+	 */
+	// --------------------------------------------------------
+	@GetMapping("/load/device/{deviceId}")
+	public ResponseDTO request(HttpServletRequest httpReq,
+			@PathVariable Long deviceId)
+		{
+		ResponseDTO as_dto = new ResponseDTO();
+		try
+			{
+			this.dataLoadTopService.request(deviceId);
+			as_dto.setSuccess(null);
+			}
+		catch (Exception e)
+			{
+			as_dto.setError(e);
+			}
+		return as_dto;	
+		}
 	// --------------------------------------------------------
 	/**
 	 * 全デバイスの最新のセンサーデータを加工し、DBへロードする。
@@ -88,7 +119,7 @@ public class DeviceDataLoader
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			this.dataUpdateService.updateData();
+			this.dataLoadTopService.update();
 			as_dto.setSuccess(null);
 			}
 		catch (Exception e)
@@ -99,21 +130,6 @@ public class DeviceDataLoader
 		return as_dto;
 		}
 
-	// --------------------------------------------------------
-	/**
-	 * 全デバイスの全てのセンサーデータを加工し、DBへロードする。
-	 * モデルデータを生成し、DBに格納する。
-	 * @param dto パラメータ
-	 */
-	// --------------------------------------------------------
-	@PostMapping("/load")
-	public Mono<String> masters(HttpServletRequest httpReq,
-			@RequestBody @Validated DataLoadDTO dto)
-		{
-		LOG.info("/api/bulk/load の実行開始");
-		this.allDataLoadService.createAllData().subscribe();
-		return Mono.just("accept");
-		}
 
 	// --------------------------------------------------------
 	/**
@@ -127,7 +143,7 @@ public class DeviceDataLoader
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<Ph2DevicesEntity> fisnishList = this.allDataLoadService.getSchedule();
+			List<Ph2DevicesEntity> fisnishList = this.dataLoadTopService.getSchedule();
 			as_dto.setSuccess(fisnishList);
 			}
 		catch (Exception e)
@@ -138,18 +154,4 @@ public class DeviceDataLoader
 		return as_dto;
 		}
 
-	// --------------------------------------------------------
-	/**
-	 * 指定されたデバイスの全てのセンサーデータを加工し、DBへロードする。
-	 * モデルデータを生成し、DBに格納する。
-	 */
-	// --------------------------------------------------------
-	@GetMapping("/load/device/{deviceId}")
-	public Mono<ServerResponse> load(HttpServletRequest httpReq,
-			@PathVariable Long deviceId)
-		{
-        LOG.info("/api/bulk/load の実行開始");
-		return this.allDataLoadService.createData(deviceId)
-				.then(ServerResponse.ok().bodyValue("accept"));
-		}
 	}

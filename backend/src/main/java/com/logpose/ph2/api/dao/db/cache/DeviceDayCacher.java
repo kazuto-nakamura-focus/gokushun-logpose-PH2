@@ -17,7 +17,6 @@ public class DeviceDayCacher
 	// クラスメンバー
 	// ===============================================
 	private long id;
-	private static boolean lock = false;
 	private Ph2DeviceDayMapper ph2DeviceDayMapper;
 	private Ph2ModelDataMapper ph2ModelDataMapper;
 // * 分ベース関係データ
@@ -28,17 +27,6 @@ public class DeviceDayCacher
 	// ===============================================
 	// 公開関数群
 	// ===============================================
-	public static synchronized boolean lock()
-		{
-		if( lock) return false;
-		lock = true;
-		return lock;
-		}
-	public static synchronized void unlock()
-		{
-		lock = false;
-		}
-
 	public long addDeviceDayData(Ph2DeviceDayEntity entity)
 		{
 		id++;

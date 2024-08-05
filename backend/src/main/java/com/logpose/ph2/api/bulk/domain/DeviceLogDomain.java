@@ -1,6 +1,7 @@
 package com.logpose.ph2.api.bulk.domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,5 +59,20 @@ public class DeviceLogDomain
 		entity.setMessage(message);
 		this.ph2DeviceLogMapper.insert(entity);
 		logger.info(deviceId.toString() + ":" + message);
+		}
+	
+	// --------------------------------------------------
+	/**
+	 * ログを取得する
+	 * @param deviceId
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class, readOnly=true)
+	public List<Ph2DeviceLogEntity> getLog(Long deviceId)
+		{
+		Ph2DeviceLogEntityExample exm = new Ph2DeviceLogEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId);
+		exm.setOrderByClause("time asc");
+		return this.ph2DeviceLogMapper.selectByExample(exm);
 		}
 	}

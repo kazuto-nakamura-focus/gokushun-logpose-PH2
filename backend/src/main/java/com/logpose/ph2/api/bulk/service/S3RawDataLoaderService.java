@@ -31,6 +31,8 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
+import lombok.Synchronized;
+
 /**
  * Sigfoxのメッセージテーブルから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
  */
@@ -70,90 +72,71 @@ public class S3RawDataLoaderService
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
+	@Synchronized
 	public Date loadMessages(LoadCoordinator coordinator) throws IOException
 		{
-// * DBへの一括登録高速化のためのアクセスキャッシュを生成する
-// * START --------------------------------------
-// * RelBaseDataの最大IDを取得し、レコードを追加するときのID付与の準備をする
-		while (!MinutesCacher.lock())
-			{
-			try
-				{
-				Thread.sleep(1000);
-				}
-			catch (Exception e)
-				{
-				}
-			}
-		try
-			{
-			Long id = this.ph2RelBaseDataMapper.selectMaxId();
-			if (null == id) id = Long.valueOf(1);
+		Long id = this.ph2RelBaseDataMapper.selectMaxId();
+		if (null == id) id = Long.valueOf(1);
 // * アクセスキャッシュの生成
-			MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
-					ph2BaseDataMapper, rawDataMapper, ph2InsolationDataMapper, null);
+		MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
+				ph2BaseDataMapper, rawDataMapper, ph2InsolationDataMapper, null);
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
-			Ph2DevicesEntity device = coordinator.getDevice();
-			// * メッセージデータの抽出開始日
-			Date op_start_date = device.getOpStart();
-			// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
-			Date firstDate = coordinator.getLastHadledDate();
-			if (null != firstDate)
+		Ph2DevicesEntity device = coordinator.getDevice();
+		// * メッセージデータの抽出開始日
+		Date op_start_date = device.getOpStart();
+		// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
+		Date firstDate = coordinator.getLastHadledDate();
+		if (null != firstDate)
+			{
+			firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
+			if (null != op_start_date)
 				{
-				firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
-				if (null != op_start_date)
-					{
-					if (op_start_date.getTime() < firstDate.getTime())
-						{
-						op_start_date = firstDate;
-						}
-					}
-				else
+				if (op_start_date.getTime() < firstDate.getTime())
 					{
 					op_start_date = firstDate;
 					}
 				}
-// * メッセージデータの抽出終了日
-			Date op_end_date = device.getOpEnd();
-			String startDateString =(null != op_start_date) ? op_start_date.toString() : "最も古いSIGFOXデータの受信日時";
-			String endDateString = (null != op_end_date) ? op_end_date.toString() : "現時点";
-
-			this.deviceLogDomain.log(LOG, device.getId(), getClass(),
-					"対象となる期間は" + startDateString + "から" + endDateString + "までです。");
-
-// * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
-			Date startMessage = null;
-			try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
-					.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
-				{
-				Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
-				DataListModel messageData = new DataListModel();
-				while (messages.hasNext())
-					{
-					Ph2MessagesEntity message = messages.next();
-					if (null == startMessage) startMessage = message.getCastedAt();
-					messageData = this.createTables(device, coordinator.getSensors(), messageData,
-							message, cache);
-					}
-				}
-// * ローディング情報に最後の生データ登録時刻を返却する。
-			cache.flush();
-			if (null != startMessage)
-				{
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(),
-						"処理された期間は" + startMessage.toString() + "から" + cache.getLastCastedDate().toString() + "までです。");
-				return cache.getLastCastedDate();
-				}
 			else
 				{
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "期間中に該当するデータはありませんでした。");
-				return null;
+				op_start_date = firstDate;
 				}
 			}
-		finally
+// * メッセージデータの抽出終了日
+		Date op_end_date = device.getOpEnd();
+		String startDateString = (null != op_start_date) ? op_start_date.toString() : "最も古いSIGFOXデータの受信日時";
+		String endDateString = (null != op_end_date) ? op_end_date.toString() : "現時点";
+
+		this.deviceLogDomain.log(LOG, device.getId(), getClass(),
+				"対象となる期間は" + startDateString + "から" + endDateString + "までです。");
+
+// * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
+		Date startMessage = null;
+		try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
+				.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
 			{
-			MinutesCacher.unlock();
+			Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
+			DataListModel messageData = new DataListModel();
+			while (messages.hasNext())
+				{
+				Ph2MessagesEntity message = messages.next();
+				if (null == startMessage) startMessage = message.getCastedAt();
+				messageData = this.createTables(device, coordinator.getSensors(), messageData,
+						message, cache);
+				}
+			}
+// * ローディング情報に最後の生データ登録時刻を返却する。
+		cache.flush();
+		if (null != startMessage)
+			{
+			this.deviceLogDomain.log(LOG, device.getId(), getClass(),
+					"処理された期間は" + startMessage.toString() + "から" + cache.getLastCastedDate().toString() + "までです。");
+			return cache.getLastCastedDate();
+			}
+		else
+			{
+			this.deviceLogDomain.log(LOG, device.getId(), getClass(), "期間中に該当するデータはありませんでした。");
+			return null;
 			}
 		}
 
