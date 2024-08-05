@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.server.ServerResponse;
 
 import com.logpose.ph2.api.controller.dto.DataLoadDTO;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
@@ -144,11 +145,11 @@ public class DeviceDataLoader
 	 */
 	// --------------------------------------------------------
 	@GetMapping("/load/device/{deviceId}")
-	public Mono<String> load(HttpServletRequest httpReq,
+	public Mono<ServerResponse> load(HttpServletRequest httpReq,
 			@PathVariable Long deviceId)
 		{
-		LOG.info("/api/bulk/load の実行開始");
-		this.allDataLoadService.createData(deviceId).subscribe();
-		return Mono.just("accept");
+        LOG.info("/api/bulk/load の実行開始");
+		return this.allDataLoadService.createData(deviceId)
+				.then(ServerResponse.ok().bodyValue("accept"));
 		}
 	}

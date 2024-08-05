@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +19,7 @@ import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.bulk.domain.BaseDataGenerator;
 import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
+import com.logpose.ph2.api.bulk.domain.DeviceLogDomain;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
@@ -37,6 +40,9 @@ public class S3RawDataLoaderService
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	private static Logger LOG = LogManager.getLogger(S3RawDataLoaderService.class);
+	@Autowired
+	private DeviceLogDomain deviceLogDomain;
 	@Autowired
 	private Ph2MessagesMapper Ph2messagesMapper;
 	@Autowired
@@ -110,7 +116,14 @@ public class S3RawDataLoaderService
 				}
 // * メッセージデータの抽出終了日
 			Date op_end_date = device.getOpEnd();
+			String startDateString =(null != op_start_date) ? op_start_date.toString() : "最も古いSIGFOXデータの受信日時";
+			String endDateString = (null != op_end_date) ? op_end_date.toString() : "現時点";
+
+			this.deviceLogDomain.log(LOG, device.getId(), getClass(),
+					"対象となる期間は" + startDateString + "から" + endDateString + "までです。");
+
 // * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
+			Date startMessage = null;
 			try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
 					.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
 				{
@@ -119,12 +132,23 @@ public class S3RawDataLoaderService
 				while (messages.hasNext())
 					{
 					Ph2MessagesEntity message = messages.next();
+					if (null == startMessage) startMessage = message.getCastedAt();
 					messageData = this.createTables(device, coordinator.getSensors(), messageData,
 							message, cache);
 					}
+				}
 // * ローディング情報に最後の生データ登録時刻を返却する。
-				cache.flush();
+			cache.flush();
+			if (null != startMessage)
+				{
+				this.deviceLogDomain.log(LOG, device.getId(), getClass(),
+						"処理された期間は" + startMessage.toString() + "から" + cache.getLastCastedDate().toString() + "までです。");
 				return cache.getLastCastedDate();
+				}
+			else
+				{
+				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "期間中に該当するデータはありませんでした。");
+				return null;
 				}
 			}
 		finally
@@ -133,6 +157,9 @@ public class S3RawDataLoaderService
 			}
 		}
 
+	// ===============================================
+	// プライベート関数群
+	// ===============================================
 	// --------------------------------------------------
 	/**
 	 * メッセージから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
@@ -145,7 +172,7 @@ public class S3RawDataLoaderService
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-	public DataListModel createTables(
+	private DataListModel createTables(
 			Ph2DevicesEntity device,
 			List<SensorDataDTO> sensors,
 			DataListModel dataListModel,
@@ -164,9 +191,11 @@ public class S3RawDataLoaderService
 		return dataListModel;
 		}
 
-	// ===============================================
-	// プライベート関数群
-	// ===============================================
+	// --------------------------------------------------
+	/*
+	 * 文字列分割を行う共通処理
+	 */
+	// --------------------------------------------------
 	private List<String> splitByLength(String str, int length)
 		{
 		List<String> strs = new ArrayList<>();

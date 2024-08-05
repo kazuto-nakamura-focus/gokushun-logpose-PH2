@@ -4,10 +4,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.bulk.domain.DeviceLogDomain;
 import com.logpose.ph2.api.configration.DefaultWeatherlAPIParameters;
 import com.logpose.ph2.api.dao.api.FreeWeatherAPI;
 import com.logpose.ph2.api.dao.api.entity.FreeWeatherRequest;
@@ -29,6 +32,9 @@ public class S4HeadLineLoaderService
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	private static Logger LOG = LogManager.getLogger(S4HeadLineLoaderService.class);
+	@Autowired
+	private DeviceLogDomain deviceLogDomain;
 	@Autowired
 	private DefaultWeatherlAPIParameters param;
 	@Autowired
@@ -47,6 +53,7 @@ public class S4HeadLineLoaderService
 	public void createHealines(Ph2DevicesEntity device, Date lastTime)
 		{
 		long deviceId = device.getId();
+		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "最新の更新日時" + lastTime.toString() + "からのデータを取得します。");
 // * RawDataから最後の更新日付のデータを取得する
 		List<Ph2RawDataEntity> entities = this.rawDataMapper.selectByDevice(deviceId, lastTime);
 
@@ -75,6 +82,8 @@ public class S4HeadLineLoaderService
 		long diff = cal.getTimeInMillis() - lastTime.getTime();
 		if (4200000 > diff)
 			{
+			this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新を実行します。");
+
 			FreeWeatherAPI api = new FreeWeatherAPI();
 			// リクエストの作成
 			FreeWeatherRequest request = new FreeWeatherRequest();
@@ -85,11 +94,37 @@ public class S4HeadLineLoaderService
 			request.setUrl(param.getCurrentUrl());
 			request.setKey("355d4dae284c491da0825008240702");
 			// 天気コードの取得
-			List<Ph2WeatherForecastEntity> res = api.getForcastEntities(deviceId, request);
-			for (final Ph2WeatherForecastEntity item : res)
+			try
 				{
-				this.ph2WeatherForecastMapper.insert(item);
+				List<Ph2WeatherForecastEntity> res = api.getForcastEntities(deviceId, request);
+				for (final Ph2WeatherForecastEntity item : res)
+					{
+					this.ph2WeatherForecastMapper.insert(item);
+					}
+				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新が完了しました。");
 				}
+			catch (Exception e)
+				{
+				this.deviceLogDomain.log(LOG, device.getId(), getClass(), e.getMessage());
+				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新に失敗しました。");
+				throw e;
+				}
+			finally
+				{
+				List<String> urls = api.getUrlList();
+				if (urls.size() > 0)
+					{
+					this.deviceLogDomain.log(LOG, device.getId(), getClass(), "以下のAPIが実行されています。");
+					for (String url : urls)
+						{
+						this.deviceLogDomain.log(LOG, device.getId(), getClass(), url);
+						}
+					}
+				}
+			}
+		else
+			{
+			this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新はありませんでした。");
 			}
 		}
 	}

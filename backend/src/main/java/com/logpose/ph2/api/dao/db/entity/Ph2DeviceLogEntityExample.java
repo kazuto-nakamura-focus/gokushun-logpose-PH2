@@ -414,87 +414,87 @@ public class Ph2DeviceLogEntityExample {
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameIsNull()
+		public Criteria andClassNameIsNull()
 			{
-			addCriterion("className is null");
+			addCriterion("class_name is null");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameIsNotNull()
+		public Criteria andClassNameIsNotNull()
 			{
-			addCriterion("className is not null");
+			addCriterion("class_name is not null");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameEqualTo(String value)
+		public Criteria andClassNameEqualTo(String value)
 			{
-			addCriterion("className =", value, "classname");
+			addCriterion("class_name =", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameNotEqualTo(String value)
+		public Criteria andClassNameNotEqualTo(String value)
 			{
-			addCriterion("className <>", value, "classname");
+			addCriterion("class_name <>", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameGreaterThan(String value)
+		public Criteria andClassNameGreaterThan(String value)
 			{
-			addCriterion("className >", value, "classname");
+			addCriterion("class_name >", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameGreaterThanOrEqualTo(String value)
+		public Criteria andClassNameGreaterThanOrEqualTo(String value)
 			{
-			addCriterion("className >=", value, "classname");
+			addCriterion("class_name >=", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameLessThan(String value)
+		public Criteria andClassNameLessThan(String value)
 			{
-			addCriterion("className <", value, "classname");
+			addCriterion("class_name <", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameLessThanOrEqualTo(String value)
+		public Criteria andClassNameLessThanOrEqualTo(String value)
 			{
-			addCriterion("className <=", value, "classname");
+			addCriterion("class_name <=", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameLike(String value)
+		public Criteria andClassNameLike(String value)
 			{
-			addCriterion("className like", value, "classname");
+			addCriterion("class_name like", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameNotLike(String value)
+		public Criteria andClassNameNotLike(String value)
 			{
-			addCriterion("className not like", value, "classname");
+			addCriterion("class_name not like", value, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameIn(List<String> values)
+		public Criteria andClassNameIn(List<String> values)
 			{
-			addCriterion("className in", values, "classname");
+			addCriterion("class_name in", values, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameNotIn(List<String> values)
+		public Criteria andClassNameNotIn(List<String> values)
 			{
-			addCriterion("className not in", values, "classname");
+			addCriterion("class_name not in", values, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameBetween(String value1, String value2)
+		public Criteria andClassNameBetween(String value1, String value2)
 			{
-			addCriterion("className between", value1, value2, "classname");
+			addCriterion("class_name between", value1, value2, "className");
 			return (Criteria) this;
 			}
 
-		public Criteria andClassnameNotBetween(String value1, String value2)
+		public Criteria andClassNameNotBetween(String value1, String value2)
 			{
-			addCriterion("className not between", value1, value2, "classname");
+			addCriterion("class_name not between", value1, value2, "className");
 			return (Criteria) this;
 			}
 		}

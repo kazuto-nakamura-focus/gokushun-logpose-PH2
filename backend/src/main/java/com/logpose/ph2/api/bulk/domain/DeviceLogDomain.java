@@ -2,12 +2,14 @@ package com.logpose.ph2.api.bulk.domain;
 
 import java.sql.Timestamp;
 
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceLogEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DeviceLogEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceLogMapper;
 
 @Component
@@ -31,7 +33,10 @@ public class DeviceLogDomain
 	@Transactional(rollbackFor = Exception.class)
 	public void cleanUp(Long deviceId)
 		{
-		this.ph2DeviceLogMapper.deleteByPrimaryKey(deviceId);
+		Ph2DeviceLogEntityExample exm = new Ph2DeviceLogEntityExample();
+		exm.createCriteria().andDeviceIdEqualTo(deviceId);
+		
+		this.ph2DeviceLogMapper.deleteByExample(exm);
 		}
 
 	// --------------------------------------------------
@@ -43,14 +48,15 @@ public class DeviceLogDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-	public void log(Long deviceId, Class<?> classObj, String message)
+	public void log(Logger logger, Long deviceId, Class<?> classObj, String message)
 		{
 		Ph2DeviceLogEntity entity = new Ph2DeviceLogEntity();
 		entity.setDeviceId(deviceId);
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		entity.setTime(time);
-		entity.setClassname(classObj.getName());
+		entity.setClassName(classObj.getName());
 		entity.setMessage(message);
 		this.ph2DeviceLogMapper.insert(entity);
+		logger.info(deviceId.toString() + ":" + message);
 		}
 	}

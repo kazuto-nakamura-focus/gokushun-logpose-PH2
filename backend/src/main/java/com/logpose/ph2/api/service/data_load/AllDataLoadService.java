@@ -18,6 +18,7 @@ import com.logpose.ph2.api.bulk.service.S0Initializer;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 
 import reactor.core.publisher.Mono;
+import reactor.core.scheduler.Schedulers;
 
 /**
  * データロードを実行するサービス
@@ -123,9 +124,9 @@ public class AllDataLoadService
 	 * @throws Exception 
 	 */
 	// --------------------------------------------------
-	public Mono<Void> createData(Long deviceId)
+	public Mono<Object> createData(Long deviceId)
 		{
-		return Mono.fromRunnable(() ->
+		return Mono.defer(() ->
 			{
 			// * 処理済みハッシュリスト
 			Map<Long, Ph2DevicesEntity> finishList = new HashMap<>();
@@ -134,16 +135,13 @@ public class AllDataLoadService
 				{
 				// * コーディネーターを引数にデータロードを実行する
 				dataLoadService.loadDevices(true, device, finishList);
-				// List<Ph2DevicesEntity> devices = new
-				// ArrayList<>(finishList.values());
-				// return this.statusDomain.getStatusList(devices);
 				}
 			catch (Exception e)
 				{
-				LOG.error(device.getId() + "のロードに失敗しました。");
+				LOG.error(device.getId() + "のロードに失敗しました。", e);
 				e.printStackTrace();
 				}
-			});
+			return Mono.empty();
+			}).subscribeOn(Schedulers.boundedElastic()); // 非同期で実行されるようにスケジューラを指定
 		}
-
 	}

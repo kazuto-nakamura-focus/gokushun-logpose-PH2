@@ -8,13 +8,15 @@
         <v-row v-if="mode == 'update'">
           <!-- 更新モードの時表示-->
           <v-col align="right">
-            <v-icon right icon="mdi-vuetify" @click="deleteDeviceInfo()">mdi-trash-can-outline</v-icon>
+            <v-icon right icon="mdi-vuetify" @click="deleteDeviceInfo()"
+              >mdi-trash-can-outline</v-icon
+            >
           </v-col>
         </v-row>
 
         <v-row>
           <v-col cols="6">
-            <div style="margin-bottom:12px;">
+            <div style="margin-bottom: 12px">
               <v-text-field
                 label="デバイス名【必須】"
                 dense
@@ -24,7 +26,9 @@
                 background-color="#F4FCE0"
                 v-model.trim="deviceInfoData.name"
               ></v-text-field>
-              <p v-if="!isDeviceNotNull" class="error">{{this.messages.required}}</p>
+              <p v-if="!isDeviceNotNull" class="error">
+                {{ this.messages.required }}
+              </p>
             </div>
             <div>
               <v-select
@@ -38,11 +42,13 @@
                 item-value="id"
                 return-object
                 background-color="#F4FCE0"
-                style="margin:0;"
+                style="margin: 0"
               ></v-select>
-              <p v-if="!isFieldNotNull" class="error">{{this.messages.required}}</p>
+              <p v-if="!isFieldNotNull" class="error">
+                {{ this.messages.required }}
+              </p>
             </div>
-            <div style="margin-bottom:12px;">
+            <div style="margin-bottom: 12px">
               <v-text-field
                 label="品種"
                 dense
@@ -53,7 +59,7 @@
                 v-model.trim="deviceInfoData.brand"
               ></v-text-field>
             </div>
-            <div style="margin-bottom:12px;">
+            <div style="margin-bottom: 12px">
               <v-text-field
                 label="Sigfox Device ID【必須】"
                 dense
@@ -63,12 +69,17 @@
                 background-color="#F4FCE0"
                 v-model.trim="deviceInfoData.sigFoxDeviceId"
               ></v-text-field>
-              <p v-if="!isSigFoxNotNull" class="error">{{this.messages.required}}</p>
+              <p v-if="!isSigFoxNotNull" class="error">
+                {{ this.messages.required }}
+              </p>
             </div>
           </v-col>
           <v-col cols="6">
-            <div style="border-left:2px dotted gray;padding-left:10px;" class="deviceSet">
-              <div style="margin-bottom:20px;">
+            <div
+              style="border-left: 2px dotted gray; padding-left: 10px"
+              class="deviceSet"
+            >
+              <div style="margin-bottom: 20px">
                 <v-text-field
                   label="基準日【必須】"
                   dense
@@ -79,7 +90,9 @@
                   background-color="#F4FCE0"
                   v-model.trim="deviceInfoData.baseDateShort"
                 ></v-text-field>
-                <p v-if="!isBaseDateNotNull" class="error">{{this.messages.wrongDate}}</p>
+                <p v-if="!isBaseDateNotNull" class="error">
+                  {{ this.messages.wrongDate }}
+                </p>
               </div>
               <div>
                 <v-select
@@ -91,9 +104,11 @@
                   background-color="#F4FCE0"
                   dense
                 ></v-select>
-                <p v-if="!isTzNotNull" class="error">{{this.messages.required}}</p>
+                <p v-if="!isTzNotNull" class="error">
+                  {{ this.messages.required }}
+                </p>
               </div>
-              <div style="margin-bottom:16px;">
+              <div style="margin-bottom: 16px">
                 <v-text-field
                   label="運用開始日"
                   dense
@@ -106,8 +121,8 @@
                 ></v-text-field>
               </div>
 
-              <div style=" display: flex;margin-bottom:10px">
-                <div style="width:250px;">
+              <div style="display: flex; margin-bottom: 10px">
+                <div style="width: 250px">
                   <v-select
                     label="引継ぎデバイス"
                     v-bind:items="deviceList"
@@ -119,14 +134,17 @@
                     item-value="id"
                     return-object
                     background-color="#F4FCE0"
-                    style="margin:0;"
+                    style="margin: 0"
                   ></v-select>
                 </div>
-                <div style="width:230px;margin-left:15px">
-                  <v-checkbox v-model="transitFlag" label="更新時実績値の引継ぎ実行"></v-checkbox>
+                <div style="width: 230px; margin-left: 15px">
+                  <v-checkbox
+                    v-model="transitFlag"
+                    label="更新時実績値の引継ぎ実行"
+                  ></v-checkbox>
                 </div>
               </div>
-              <div style="margin-bottom:16px;">
+              <div style="margin-bottom: 16px">
                 <v-text-field
                   label="運用終了日"
                   dense
@@ -147,7 +165,9 @@
 
             <div>センサー</div>
             <div>
-              <p v-if="!isAllValueInputted" class="error">{{this.messages.NotFilledAll}}</p>
+              <p v-if="!isAllValueInputted" class="error">
+                {{ this.messages.NotFilledAll }}
+              </p>
             </div>
             <div style="height: 420px">
               <div style="height: 420px; box-sizing: border-box">
@@ -180,18 +200,26 @@
               class="ma-2 white--text"
               elevation="2"
               @click="update()"
-              :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
-            >{{ label }}</v-btn>
+              :disabled="buttonStatus != 0 || !isAllValueInputted"
+              >{{ label }}</v-btn
+            >
             <v-btn
               v-if="deviceInfoData.id != null"
               color="primary"
               class="ma-2 white--text"
               elevation="2"
               @click="dataLoad()"
-              :disabled="(buttonStatus!=0)||(!isAllValueInputted)"
-            >センサーデータのロード</v-btn>
+              :disabled="buttonStatus != 0 || !isAllValueInputted"
+              >センサーデータのロード</v-btn
+            >
 
-            <v-btn color="gray" class="ma-2 black--text" elevation="2" @click="back()">キャンセル</v-btn>
+            <v-btn
+              color="gray"
+              class="ma-2 black--text"
+              elevation="2"
+              @click="back()"
+              >キャンセル</v-btn
+            >
           </div>
         </v-card-actions>
       </template>
@@ -725,17 +753,17 @@ export default {
     },
 
     dataLoad: function () {
+      console.log("dddd");
       this.$refs.wait.start("センサーデータをアップデート中です。", true);
       useLoadData(this.deviceInfoData.id)
         .then((response) => {
           //成功時
-          const { status, message } = response["data"];
-          if (status === 0) {
+          if (response["data"] == "accepted") {
             alert("センサーデータのロードが完了しました。");
             this.$refs.wait.finish();
             this.onEnd(true);
           } else {
-            throw new Error(message);
+            throw new Error(response["data"]);
           }
         })
         .catch((error) => {
