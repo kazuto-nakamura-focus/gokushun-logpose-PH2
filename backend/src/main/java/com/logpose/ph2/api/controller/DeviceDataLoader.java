@@ -7,9 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -90,9 +93,9 @@ public class DeviceDataLoader
 	 * デバイス更新のリクエストを要求する
 	 */
 	// --------------------------------------------------------
-	@GetMapping("/load/device/{deviceId}")
+	@PostMapping("/load/device")
 	public ResponseDTO request(HttpServletRequest httpReq,
-			@PathVariable Long deviceId)
+			@RequestBody @Validated Long  deviceId)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try

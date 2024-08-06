@@ -1,6 +1,8 @@
 package com.logpose.ph2.api.bulk.domain;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.Logger;
@@ -22,9 +24,28 @@ public class DeviceLogDomain
 	@Autowired
 	private Ph2DeviceLogMapper ph2DeviceLogMapper;
 
+    private SimpleDateFormat FMT = new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒");
+
 	// ===============================================
 	// 公開関数群
 	// ===============================================
+	// --------------------------------------------------
+	/**
+	 * 日付を変換する
+	 * @param Date
+	 * @param 代替文
+	 */
+	// --------------------------------------------------
+	public String date(Date date, String sub)
+		{
+		if(null != date)
+			{
+        // フォーマットを適用してDateオブジェクトを文字列に変換
+			return FMT.format(date);
+			}
+		else return sub;
+
+		}
 	// --------------------------------------------------
 	/**
 	 * ログを初期化する

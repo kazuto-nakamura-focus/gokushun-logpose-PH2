@@ -136,7 +136,7 @@ public class SigFoxDomain
 			lastTime =deviceDayAlgorithm.addMilliscond(lastTime);
 			}
 		
-		this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfoxデータを"+lastTime.toString()+"から取り込みます。");
+		this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfoxデータを"+this.deviceLogDomain.date(lastTime, null)+"から取り込みます。");
 		
 // * 問合せを実行する
 		String nextUrl;
@@ -184,8 +184,12 @@ public class SigFoxDomain
 		cache.flush();
 // * 取得したデータを出力
 		this.deviceLogDomain.log(LOG, deviceId, getClass(), "取得したSigfoxデータの件数は"+ count + "件です。");
-		this.deviceLogDomain.log(LOG, deviceId, getClass(), "取得したSigfoxデータの期間は"
-					+ (new Date(startTime)).toString() + "から" +  (new Date(endTime)).toString() + "です。");
+		if(count > 0)
+			{
+			String startDate = this.deviceLogDomain.date(new Date(startTime), "不明時刻");
+			String endDate = this.deviceLogDomain.date(new Date(endTime), "不明時刻");
+			this.deviceLogDomain.log(LOG, deviceId, getClass(), "取得したSigfoxデータの期間は" + startDate + "から" +  endDate + "です。");
+			}
 		}
 	// ===============================================
 	// 非公開クラス群

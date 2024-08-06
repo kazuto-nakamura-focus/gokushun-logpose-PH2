@@ -91,8 +91,10 @@ public class S6DailyBaseDataGeneratorService
 					{
 					typeName = "天気予報APIからのデータ";
 					}
+				final String logStart = this.deviceLogDomain.date(item.getStartDate(), "不明時刻");
+				final String logEnd = this.deviceLogDomain.date(item.getEndDate(), "不明時刻");
 				this.deviceLogDomain.log(LOG, ldc.getDeviceId(), getClass(),
-						item.getStartDate().toString() + "～"+item.getEndDate() + " " + typeName);
+						logStart+ "～"+ logEnd + " " + typeName);
 				}
 			}
 		}

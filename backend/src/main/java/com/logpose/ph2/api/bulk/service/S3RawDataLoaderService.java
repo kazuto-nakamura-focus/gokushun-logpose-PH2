@@ -104,9 +104,8 @@ public class S3RawDataLoaderService
 			}
 // * メッセージデータの抽出終了日
 		Date op_end_date = device.getOpEnd();
-		String startDateString = (null != op_start_date) ? op_start_date.toString() : "最も古いSIGFOXデータの受信日時";
-		String endDateString = (null != op_end_date) ? op_end_date.toString() : "現時点";
-
+		String startDateString = this.deviceLogDomain.date(op_start_date, "最も古いSIGFOXデータの受信日時");
+		String endDateString = this.deviceLogDomain.date(op_end_date, "現時点(指定無し)");
 		this.deviceLogDomain.log(LOG, device.getId(), getClass(),
 				"対象となる期間は" + startDateString + "から" + endDateString + "までです。");
 
@@ -129,8 +128,10 @@ public class S3RawDataLoaderService
 		cache.flush();
 		if (null != startMessage)
 			{
+			final String logStart = this.deviceLogDomain.date(startMessage, "不明時刻");
+			final String logEnd = this.deviceLogDomain.date(cache.getLastCastedDate(), "現時点の時刻");
 			this.deviceLogDomain.log(LOG, device.getId(), getClass(),
-					"処理された期間は" + startMessage.toString() + "から" + cache.getLastCastedDate().toString() + "までです。");
+					"処理された期間は" + logStart + "から" + logEnd + "までです。");
 			return cache.getLastCastedDate();
 			}
 		else

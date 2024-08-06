@@ -90,13 +90,7 @@ public class FreeWeatherAPI
 	// -------------------------------------------------
 	public FreeWheatherResponse getWeather(FreeWeatherRequest request)
 		{
-		try
-			{
-			Thread.sleep(1000);
-			}
-		catch (Exception e)
-			{
-			}
+		try { Thread.sleep(1000); } catch(Exception e) {}
 
 // * URLの設定
 		StringBuilder builder = new StringBuilder();

@@ -53,7 +53,8 @@ public class S4HeadLineLoaderService
 	public void createHealines(Ph2DevicesEntity device, Date lastTime)
 		{
 		long deviceId = device.getId();
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "最新の更新日時" + lastTime.toString() + "からのデータを取得します。");
+		final String logTime = this.deviceLogDomain.date(lastTime, "不明時刻");
+		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "最新の更新日時" + logTime + "からのデータを取得します。");
 // * RawDataから最後の更新日付のデータを取得する
 		List<Ph2RawDataEntity> entities = this.rawDataMapper.selectByDevice(deviceId, lastTime);
 

@@ -80,6 +80,7 @@ public class S5DeviceDayService
 		final Long deviceId = ldc.getDeviceId();
 // * 現時点でのRelBaseDataのそのデバイスの最新更新日時を取得する
 		Date latest = ldc.getLatestBaseDate();
+		final String logTime = this.deviceLogDomain.date(latest, "不明時刻");
 // * データが無ければnullを返却して終了
 		if (null == latest)
 			{
@@ -88,7 +89,7 @@ public class S5DeviceDayService
 			}
 		else
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの最新の更新日時" + latest.toString() + "からのデータを取得します。");
+			this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの最新の更新日時" + logTime + "からのデータを取得します。");
 			}
 
 // * 最新更新日時をその日の始まりの前日に設定し、もしデバイスディに登録済みならば、終了
@@ -155,7 +156,8 @@ public class S5DeviceDayService
 			}
 		else
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの最新の更新日時" + oldest.toString() + "からのデータを取得します。");
+			final String logTime = this.deviceLogDomain.date(oldest, "不明時刻");
+			this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの最新の更新日時" + logTime + "からのデータを取得します。");
 			}
 
 // * 更新対象期間を得る
@@ -192,7 +194,8 @@ public class S5DeviceDayService
 // * デバイスの基準日
 		Calendar base_date = this.deviceDayAlgorithm.getBaseDate(device.getBaseDate());
 		this.deviceDayAlgorithm.setTimeZero(base_date);
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "デバイスの基準日は" + base_date.getTime().toString() + "です。");
+		final String logTime = this.deviceLogDomain.date(base_date.getTime(), "不明時刻");
+		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "デバイスの基準日は" + logTime + "です。");
 
 // * デバイスのデータ設定の開始日
 		final Calendar start_date = Calendar.getInstance();
@@ -249,8 +252,6 @@ public class S5DeviceDayService
 				daysBetween = ChronoUnit.DAYS.between(date1, date2);
 				}
 			}
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(),
-				"デバイスの対象データの開始日は" + start_date.getTime().toString() + "です。");
 
 // * デバイスのデータ設定の終了日を設定する
 		final Calendar end_date = Calendar.getInstance();
@@ -270,9 +271,13 @@ public class S5DeviceDayService
 			{
 			end_date.setTime(device.getOpEnd());
 			}
+		
 		this.deviceDayAlgorithm.setTimeZero(end_date);
+		final String logStart = this.deviceLogDomain.date(start_date.getTime(), "不明時刻");
+		final String logEnd = this.deviceLogDomain.date(end_date.getTime(), "不明時刻");
 		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "対象データ期間は" +
-				start_date.getTime().toString() + "～" + end_date.getTime().toString() + "までとなります。");
+				logStart + "～" + logEnd + "までとなります。");
+		
 		// * 開始日が終了日より後の場合はnullを返却する
 		if (start_date.getTimeInMillis() >= end_date.getTimeInMillis()) return null;
 // * 返却オブジェクトの作成と返却

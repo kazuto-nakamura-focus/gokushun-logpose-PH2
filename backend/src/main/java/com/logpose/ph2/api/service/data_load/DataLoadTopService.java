@@ -88,7 +88,7 @@ public class DataLoadTopService
 	public void request(Long deviceId)
 		{
 // * デバイスの指定がある場合
-		if (null != deviceId)
+		if (deviceId.longValue() >= 0)
 			{
 			List<Long> idList = new ArrayList<>();
 			idList.add(deviceId);
