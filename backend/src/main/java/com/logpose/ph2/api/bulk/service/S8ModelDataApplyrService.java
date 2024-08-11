@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.bulk.domain.DeviceLogDomain;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.domain.model.ModelDataDomain;
 
 @Service
@@ -35,7 +36,7 @@ public class S8ModelDataApplyrService
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public void doService(Long deviceId, List<Ph2DeviceDayEntity> deviceDays) throws Exception
+	public void doService(Ph2DevicesEntity device, List<Ph2DeviceDayEntity> deviceDays, boolean isAll) throws Exception
 		{
 		short year = 0;
 		for (Ph2DeviceDayEntity entity : deviceDays)
@@ -49,12 +50,12 @@ public class S8ModelDataApplyrService
 					{
 					try
 						{
-						this.modelDataDomain.doService(deviceId, entity.getYear());
-						this.deviceLogDomain.log(LOG, deviceId, getClass(), year+"年度の各モデルデータの作成を完了しました。");
+						this.modelDataDomain.doService(device.getId(), entity.getYear());
+						this.deviceLogDomain.log(LOG, device, getClass(), year+"年度の各モデルデータの作成を完了しました。", isAll);
 						}
 					catch(Exception e)
 						{
-						this.deviceLogDomain.log(LOG, deviceId, getClass(), year+"年度の各モデルデータの作成に失敗しました。");
+						this.deviceLogDomain.log(LOG, device, getClass(), year+"年度の各モデルデータの作成に失敗しました。", isAll);
 						throw e;
 						}
 					}

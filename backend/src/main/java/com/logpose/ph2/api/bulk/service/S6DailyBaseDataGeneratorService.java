@@ -54,8 +54,8 @@ public class S6DailyBaseDataGeneratorService
 // * 年度ごとに以下の処理を行う
 		for (final List<Ph2DeviceDayEntity> unsetDevices : unsetDevicesByYear)
 			{
-			this.deviceLogDomain.log(LOG, ldc.getDeviceId(), getClass(),
-					unsetDevices.get(0).getYear() + "年度のデータを処理します。");
+			this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(),
+					unsetDevices.get(0).getYear() + "年度のデータを処理します。",  ldc.isAll());
 // * 作成されなかった日付に対して、去年のデータを追加する
 			List<Ph2DeviceDayEntity> remainList = this.dailyBaseDataGenerator.loadFromPreviousYear(ldc.getDevice(),
 					unsetDevices);
@@ -70,7 +70,7 @@ public class S6DailyBaseDataGeneratorService
 // * データの状態を取得する
 			List<DataSourceType> dataTypes = (new DeviceDayDataSelector(this.ph2DeviceDayMapper, ldc.getDeviceId(),
 					unsetDevices.get(0).getYear())).createList();
-			this.deviceLogDomain.log(LOG, ldc.getDeviceId(), getClass(), "以下の期間のモデルデータの参照元は以下の通りです。");
+			this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "以下の期間のモデルデータの参照元は以下の通りです。",  ldc.isAll());
 			for(val item : dataTypes)
 				{
 				short status = item.getStatus();
@@ -93,8 +93,8 @@ public class S6DailyBaseDataGeneratorService
 					}
 				final String logStart = this.deviceLogDomain.date(item.getStartDate(), "不明時刻");
 				final String logEnd = this.deviceLogDomain.date(item.getEndDate(), "不明時刻");
-				this.deviceLogDomain.log(LOG, ldc.getDeviceId(), getClass(),
-						logStart+ "～"+ logEnd + " " + typeName);
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(),
+						logStart+ "～"+ logEnd + " " + typeName,  ldc.isAll());
 				}
 			}
 		}

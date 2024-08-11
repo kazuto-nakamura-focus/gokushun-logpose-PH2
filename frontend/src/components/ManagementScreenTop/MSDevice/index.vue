@@ -11,28 +11,38 @@
                   class="ma-2 white--text"
                   elevation="2"
                   @click="callLoader()"
-                >センサーデータのロード</v-btn>
+                  >センサーデータのロード</v-btn
+                >
               </v-col>
               <v-col align="right">
-                <v-icon v-if="!isDeleteMode" @click="add()" right icon="mdi-vuetify">mdi-plus</v-icon>
+                <v-icon
+                  v-if="!isDeleteMode"
+                  @click="add()"
+                  right
+                  icon="mdi-vuetify"
+                  >mdi-plus</v-icon
+                >
                 <v-icon
                   v-if="!isDeleteMode"
                   right
                   icon="mdi-vuetify"
                   @click="isDeleteMode = !isDeleteMode"
-                >mdi-trash-can-outline</v-icon>
+                  >mdi-trash-can-outline</v-icon
+                >
                 <v-icon
                   v-if="isDeleteMode"
                   right
                   icon="mdi-vuetify"
                   @click="deleteRow(item)"
-                >mdi-delete-empty</v-icon>
+                  >mdi-delete-empty</v-icon
+                >
                 <v-icon
                   v-if="isDeleteMode"
                   right
                   icon="mdi-vuetify"
                   @click="($event) => isDeleteModeTrue()"
-                >mdi-close</v-icon>
+                  >mdi-close</v-icon
+                >
               </v-col>
             </v-row>
             <v-row>
@@ -80,7 +90,6 @@
         :deviceList="useDeviceInfoDataList"
       />
       <confirmDailog :shared="sharedConfirm" ref="confirm" />
-      <loading-device-list :shared="loaderDialog" ref="loader" />
     </v-container>
   </v-app>
 </template>
@@ -89,10 +98,10 @@
 import {
   useDeviceList,
   useDeviceInfoRemove,
+  usePostRequest,
 } from "@/api/ManagementScreenTop/MSDevice";
 import MSEditDeviceWrapper from "./MSEditDevice/MSEditDeviceWrapper.vue";
 import confirmDailog from "@/components-v1/parts/dialog/confirmDialog";
-import LoadingDeviceList from "@/components-v1/DataLoaderDialog/LoadingDeviceList.vue";
 import { DialogController } from "@/lib/mountController.js";
 
 const HEADERS = [
@@ -141,7 +150,6 @@ export default {
   components: {
     MSEditDeviceWrapper,
     confirmDailog,
-    LoadingDeviceList,
   },
 
   methods: {
@@ -153,13 +161,22 @@ export default {
     // ロードボタン選択時
     // ======================================================
     callLoader: function () {
-      this.loaderDialog.setUp(
-        this.$refs.loader,
-        function (loader) {
-          loader.initialize(this.useDeviceInfoDataList);
-        }.bind(this),
-        function () {}
-      );
+      usePostRequest(-1)
+        .then((response) => {
+          const { status, message } = response["data"];
+          if (status == 0) {
+            alert(
+              "更新リクエストを受付ました。結果は左のメニューから確認してください。"
+            );
+          } else {
+            throw new Error(message);
+          }
+        })
+        .catch((error) => {
+          //失敗時
+          alert("更新リクエストに失敗しました。");
+          console.log(error);
+        });
     },
 
     add: function () {

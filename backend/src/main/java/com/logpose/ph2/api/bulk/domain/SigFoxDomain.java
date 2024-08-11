@@ -18,6 +18,7 @@ import com.logpose.ph2.api.dao.api.entity.SigFoxDeviceEntity;
 import com.logpose.ph2.api.dao.api.entity.SigFoxDeviceListEntity;
 import com.logpose.ph2.api.dao.api.entity.SigFoxMessagesEntity;
 import com.logpose.ph2.api.dao.db.cache.MessagesCacher;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2MessagesMapper;
 
@@ -109,17 +110,17 @@ public class SigFoxDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void createMessages(Long deviceId, String sigfoxId, SigFoxAPI api) throws InterruptedException
+	public void createMessages(Ph2DevicesEntity device, String sigfoxId, SigFoxAPI api, boolean isAll) throws InterruptedException
 		{
 		if (null == sigfoxId) 
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfox IDが定義されていません。処理はスキップされました。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "Sigfox IDが定義されていません。処理はスキップされました。", isAll);
 			return;
 			}
 // * sigfoxIdが正しいフォーマットか確認
 		if (!sigfoxId.matches("^[A-Z0-9]{6}$"))
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), sigfoxId + "は正しいsigfox IDではありません。処理はスキップされました。");
+			this.deviceLogDomain.log(LOG, device, getClass(), sigfoxId + "は正しいsigfox IDではありません。処理はスキップされました。", isAll);
 			return;
 			}
 // * メッセージテーブルからそのデバイスIDの最後の受信時間を得る
@@ -136,7 +137,7 @@ public class SigFoxDomain
 			lastTime =deviceDayAlgorithm.addMilliscond(lastTime);
 			}
 		
-		this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfoxデータを"+this.deviceLogDomain.date(lastTime, null)+"から取り込みます。");
+		this.deviceLogDomain.log(LOG, device, getClass(), "Sigfoxデータを"+this.deviceLogDomain.date(lastTime, null)+"から取り込みます。", isAll);
 		
 // * 問合せを実行する
 		String nextUrl;
@@ -150,8 +151,8 @@ public class SigFoxDomain
 			}
 		catch(Exception e)
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfoxデータの取り込みに失敗しました。");
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "エラー原因は「" + e.getMessage() + "」です。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "Sigfoxデータの取り込みに失敗しました。", isAll);
+			this.deviceLogDomain.log(LOG, device, getClass(), "エラー原因は「" + e.getMessage() + "」です。", isAll);
 			throw e;
 			}
 // * 取得したデータの状態を得る
@@ -169,7 +170,7 @@ public class SigFoxDomain
 // * 次のページがある場合、そのページのURLをコール
 		while (null != nextUrl)
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfoxデータを継続して取り込みます。" + nextUrl);
+			this.deviceLogDomain.log(LOG, device, getClass(), "Sigfoxデータを継続して取り込みます。" + nextUrl, isAll);
 			data = api.getMessages(nextUrl);
 // * メッセージデータを生成し、キャッシュに登録
 			if( data.getData().size() > 0)
@@ -183,12 +184,12 @@ public class SigFoxDomain
 // * キャッシュ内に残っているデータをDBに登録
 		cache.flush();
 // * 取得したデータを出力
-		this.deviceLogDomain.log(LOG, deviceId, getClass(), "取得したSigfoxデータの件数は"+ count + "件です。");
+		this.deviceLogDomain.log(LOG, device, getClass(), "取得したSigfoxデータの件数は"+ count + "件です。", isAll);
 		if(count > 0)
 			{
 			String startDate = this.deviceLogDomain.date(new Date(startTime), "不明時刻");
 			String endDate = this.deviceLogDomain.date(new Date(endTime), "不明時刻");
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "取得したSigfoxデータの期間は" + startDate + "から" +  endDate + "です。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "取得したSigfoxデータの期間は" + startDate + "から" +  endDate + "です。", isAll);
 			}
 		}
 	// ===============================================

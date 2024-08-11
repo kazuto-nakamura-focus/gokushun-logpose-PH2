@@ -77,19 +77,19 @@ public class S5DeviceDayService
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Ph2DeviceDayEntity> updateDeviceDays(LoadCoordinator ldc)
 		{
-		final Long deviceId = ldc.getDeviceId();
+		final Ph2DevicesEntity device = ldc.getDevice();
 // * 現時点でのRelBaseDataのそのデバイスの最新更新日時を取得する
 		Date latest = ldc.getLatestBaseDate();
 		final String logTime = this.deviceLogDomain.date(latest, "不明時刻");
 // * データが無ければnullを返却して終了
 		if (null == latest)
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "最新の更新データが存在しないため、処理を終了します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "最新の更新データが存在しないため、処理を終了します。", ldc.isAll());
 			return null;
 			}
 		else
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの最新の更新日時" + logTime + "からのデータを取得します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "生データの最新の更新日時" + logTime + "からのデータを取得します。", ldc.isAll());
 			}
 
 // * 最新更新日時をその日の始まりの前日に設定し、もしデバイスディに登録済みならば、終了
@@ -102,7 +102,7 @@ public class S5DeviceDayService
 				.andHasRealEqualTo(true);
 		if (this.ph2DeviceDayMapper.countByExample(exm) > 0)
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "最新の更新データはすでに登録済みなので、処理を終了します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "最新の更新データはすでに登録済みなので、処理を終了します。", ldc.isAll());
 			return null;
 			}
 
@@ -114,12 +114,12 @@ public class S5DeviceDayService
 		DeviceTerm trm = this.setEffectiveTerm(ldc, last_device_date);
 		if (null == trm)
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "データ更新に必要な期間が無いので、処理を終了します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "データ更新に必要な期間が無いので、処理を終了します。", ldc.isAll());
 			return null;
 			}
 
 // * デバイスディテーブルに期間中のレコードがあるか確認し、無ければ生成する
-		List<Ph2DeviceDayEntity> device_days = this.createDeviceDayTable(ldc.getDevice(), trm);
+		List<Ph2DeviceDayEntity> device_days = this.createDeviceDayTable(ldc.getDevice(), trm, ldc);
 		List<Ph2DeviceDayEntity> result = new ArrayList<>();
 		for (Ph2DeviceDayEntity entity : device_days)
 			{
@@ -145,31 +145,31 @@ public class S5DeviceDayService
 	@Transactional(readOnly = true, rollbackFor = Exception.class)
 	public List<Ph2DeviceDayEntity> addDeviceDays(LoadCoordinator ldc)
 		{
-		final Long deviceId = ldc.getDeviceId();
+		final Ph2DevicesEntity device = ldc.getDevice();
 // * 現時点でのRelBaseDataのそのデバイスの最新更新日時を取得する
 		Date oldest = ldc.getOldestBaseDate();
 // * データが無ければnullを返却して終了
 		if (null == oldest)
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "最新の更新データが存在しないため、処理を終了します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "最新の更新データが存在しないため、処理を終了します。", ldc.isAll());
 			return null;
 			}
 		else
 			{
 			final String logTime = this.deviceLogDomain.date(oldest, "不明時刻");
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの最新の更新日時" + logTime + "からのデータを取得します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "生データの最新の更新日時" + logTime + "からのデータを取得します。", ldc.isAll());
 			}
 
 // * 更新対象期間を得る
 		DeviceTerm trm = this.setEffectiveTerm(ldc, oldest);
 		if (null == trm)
 			{
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "データ更新に必要な期間が無いので、処理を終了します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "データ更新に必要な期間が無いので、処理を終了します。", ldc.isAll());
 			return null;
 			}
 
 // * デバイスディテーブルに期間中のレコードがあるか確認し、無ければ生成する
-		return this.createDeviceDayTable(ldc.getDevice(), trm);
+		return this.createDeviceDayTable(ldc.getDevice(), trm, ldc);
 		}
 
 	// ===============================================
@@ -195,7 +195,7 @@ public class S5DeviceDayService
 		Calendar base_date = this.deviceDayAlgorithm.getBaseDate(device.getBaseDate());
 		this.deviceDayAlgorithm.setTimeZero(base_date);
 		final String logTime = this.deviceLogDomain.date(base_date.getTime(), "不明時刻");
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "デバイスの基準日は" + logTime + "です。");
+		this.deviceLogDomain.log(LOG, device, getClass(), "デバイスの基準日は" + logTime + "です。", ldc.isAll());
 
 // * デバイスのデータ設定の開始日
 		final Calendar start_date = Calendar.getInstance();
@@ -275,8 +275,8 @@ public class S5DeviceDayService
 		this.deviceDayAlgorithm.setTimeZero(end_date);
 		final String logStart = this.deviceLogDomain.date(start_date.getTime(), "不明時刻");
 		final String logEnd = this.deviceLogDomain.date(end_date.getTime(), "不明時刻");
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "対象データ期間は" +
-				logStart + "～" + logEnd + "までとなります。");
+		this.deviceLogDomain.log(LOG, device, getClass(), "対象データ期間は" +
+				logStart + "～" + logEnd + "までとなります。", ldc.isAll());
 		
 		// * 開始日が終了日より後の場合はnullを返却する
 		if (start_date.getTimeInMillis() >= end_date.getTimeInMillis()) return null;
@@ -297,9 +297,9 @@ public class S5DeviceDayService
 	 */
 	// --------------------------------------------------
 	@Synchronized
-	private List<Ph2DeviceDayEntity> createDeviceDayTable(Ph2DevicesEntity device, DeviceTerm term)
+	private List<Ph2DeviceDayEntity> createDeviceDayTable(Ph2DevicesEntity device, DeviceTerm term, LoadCoordinator ldc)
 		{
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "日数分の該当期間のモデルデータテーブルを準備します。");
+		this.deviceLogDomain.log(LOG, device, getClass(), "日数分の該当期間のモデルデータテーブルを準備します。", ldc.isAll());
 		List<Ph2DeviceDayEntity> result = new ArrayList<>();
 
 // * デバイスディのIDとキャッシュ管理オブジェクトの生成

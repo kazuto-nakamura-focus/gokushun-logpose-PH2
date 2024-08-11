@@ -1,16 +1,13 @@
 package com.logpose.ph2.api.controller;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.logpose.ph2.api.controller.dto.TimeMessage;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dto.ResponseDTO;
-import com.logpose.ph2.api.dto.element.ObjectStatus;
+import com.logpose.ph2.api.dto.dataLoad.DataLoadInfo;
 import com.logpose.ph2.api.service.data_load.DataLoadTopService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -51,13 +48,12 @@ public class DeviceDataLoader
 	 */
 	// --------------------------------------------------------
 	@GetMapping("/load/info")
-	public ResponseDTO load(HttpServletRequest httpReq,
-			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam("date") Date date)
+	public ResponseDTO load(HttpServletRequest httpReq)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<ObjectStatus> fisnishList = this.dataLoadTopService.getInfo(date);
+			List<DataLoadInfo> fisnishList = this.dataLoadTopService.getInfo();
 			as_dto.setSuccess(fisnishList);
 			}
 		catch (Exception e)
@@ -73,13 +69,14 @@ public class DeviceDataLoader
 	 * @return List<TimeMessage>
 	 */
 	// --------------------------------------------------------
-	@GetMapping("/load/log/{deviceId}")
-	public ResponseDTO log(HttpServletRequest httpReq, @PathVariable Long deviceId)
+	@GetMapping("/load/log")
+	public ResponseDTO log(HttpServletRequest httpReq, 	@RequestParam("deviceId") Long deviceId,
+			@RequestParam("type") Short type)
 		{
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			List<TimeMessage> logData = this.dataLoadTopService.getLog(deviceId);
+			List<TimeMessage> logData = this.dataLoadTopService.getLog(deviceId, type);
 			as_dto.setSuccess(logData);
 			}
 		catch (Exception e)
@@ -116,7 +113,7 @@ public class DeviceDataLoader
 	 */
 	// --------------------------------------------------------
 	@GetMapping("/update")
-	public ResponseDTO masters(HttpServletRequest httpReq)
+	public ResponseDTO update(HttpServletRequest httpReq)
 		{
 		LOG.info("/api/bulk/update の実行開始");
 		ResponseDTO as_dto = new ResponseDTO();

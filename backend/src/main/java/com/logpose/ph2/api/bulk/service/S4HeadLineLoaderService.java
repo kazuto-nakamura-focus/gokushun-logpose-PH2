@@ -50,11 +50,11 @@ public class S4HeadLineLoaderService
 	// 公開関数群
 	// ===============================================
 	@Transactional(rollbackFor = Exception.class)
-	public void createHealines(Ph2DevicesEntity device, Date lastTime)
+	public void createHealines(Ph2DevicesEntity device, Date lastTime, boolean isAll)
 		{
 		long deviceId = device.getId();
 		final String logTime = this.deviceLogDomain.date(lastTime, "不明時刻");
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "最新の更新日時" + logTime + "からのデータを取得します。");
+		this.deviceLogDomain.log(LOG, device, getClass(), "最新の更新日時" + logTime + "からのデータを取得します。", isAll);
 // * RawDataから最後の更新日付のデータを取得する
 		List<Ph2RawDataEntity> entities = this.rawDataMapper.selectByDevice(deviceId, lastTime);
 
@@ -83,7 +83,7 @@ public class S4HeadLineLoaderService
 		long diff = cal.getTimeInMillis() - lastTime.getTime();
 		if (4200000 > diff)
 			{
-			this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新を実行します。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "天気情報の更新を実行します。", isAll);
 
 			FreeWeatherAPI api = new FreeWeatherAPI();
 			// リクエストの作成
@@ -102,12 +102,12 @@ public class S4HeadLineLoaderService
 					{
 					this.ph2WeatherForecastMapper.insert(item);
 					}
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新が完了しました。");
+				this.deviceLogDomain.log(LOG, device, getClass(), "天気情報の更新が完了しました。", isAll);
 				}
 			catch (Exception e)
 				{
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), e.getMessage());
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新に失敗しました。");
+				this.deviceLogDomain.log(LOG, device, getClass(), e.getMessage(), isAll);
+				this.deviceLogDomain.log(LOG, device, getClass(), "天気情報の更新に失敗しました。", isAll);
 				throw e;
 				}
 			finally
@@ -115,17 +115,17 @@ public class S4HeadLineLoaderService
 				List<String> urls = api.getUrlList();
 				if (urls.size() > 0)
 					{
-					this.deviceLogDomain.log(LOG, device.getId(), getClass(), "以下のAPIが実行されています。");
+					this.deviceLogDomain.log(LOG, device, getClass(), "以下のAPIが実行されています。", isAll);
 					for (String url : urls)
 						{
-						this.deviceLogDomain.log(LOG, device.getId(), getClass(), url);
+						this.deviceLogDomain.log(LOG, device, getClass(), url, isAll);
 						}
 					}
 				}
 			}
 		else
 			{
-			this.deviceLogDomain.log(LOG, device.getId(), getClass(), "天気情報の更新はありませんでした。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "天気情報の更新はありませんでした。", isAll);
 			}
 		}
 	}

@@ -69,20 +69,19 @@ public class DataLoadService
 	public void loadDevices(boolean mode, Ph2DevicesEntity device, Map<Long, Ph2DevicesEntity> finishList)
 			throws Exception
 		{
-// * デバイスのログの初期化
-		this.deviceLogDomain.cleanUp(device.getId());
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "デバイスのロックを開始します。");
 // * 最新のみ更新の場合
 		if (!mode)
 			{
-// * 終了リストに追加
-			finishList.put(device.getId(), device);
-// * 該当デバイスのロック
 			if (false == this.statusDomain.setDataOnLoad(device))
 				{
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "デバイスデータがロック中なので、処理を終了します。");
+				LOG.warn("デバイス" + device.getId() + "がロック中なので、処理を終了します。");
 				return;
 				}
+			this.deviceLogDomain.startBatch(false, device.getId());
+			this.deviceLogDomain.log(LOG, device, getClass(), "***START*** デバイスの更新バッチを開始します。", mode);
+			this.deviceLogDomain.log(LOG, device, getClass(), "デバイスのロックをロックします。", mode);
+// * 終了リストに追加
+			finishList.put(device.getId(), device);
 			try
 				{
 // * コーディネーターの作成
@@ -97,22 +96,16 @@ public class DataLoadService
 			finally
 				{
 // * 該当デバイスのロック解除
+				this.deviceLogDomain.log(LOG, device, getClass(), "デバイスのロックを解除します。", mode);
 				this.statusDomain.setDataNotLoading(device);
+				this.deviceLogDomain.log(LOG, device, getClass(), "***END*** デバイスの更新バッチを終了します。", mode);
+				this.deviceLogDomain.endBatch(false, device.getId());
 				}
 			}
 // * 全更新の場合
 		else
 			{
-			// * 該当デバイスのロック
-			if (false == this.statusDomain.setDataOnLoad(device))
-				{
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "デバイスデータがロック中なので、処理を終了します。");
-				return;
-				}
-
 			List<Ph2DevicesEntity> targets = new ArrayList<>();
-			List<Long> lockList = new ArrayList<>();
-			lockList.add(device.getId());
 			targets.add(0, device);
 			finishList.put(device.getId(), device);
 // * 対象となるデバイスデータを取得する
@@ -120,52 +113,53 @@ public class DataLoadService
 			while (null != prevId)
 				{
 				Ph2DevicesEntity curr = this.s0Initializer.getDeviceInfo(prevId);
-
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "引継ぎ元のデバイス" + curr.getName() + "をロックします。");
-				if (false == this.statusDomain.setDataOnLoad(curr))
-					{
-					this.deviceLogDomain.log(LOG, device.getId(), getClass(),
-							"引継ぎ元のデバイス" + curr.getId() + "がロック中なので、処理を終了します。");
-					return;
-					}
-				// まだ実行されていなければ、ロックリストと実行リストに入れる
+// まだ実行されていなければ、ロックリストと実行リストに入れる
 				if (!finishList.containsKey(curr.getId()))
 					{
-					lockList.add(curr.getId());
 					targets.add(0, curr);
 					finishList.put(curr.getId(), curr);
 					}
-				else
-					{
-					lockList.add(curr.getId());
-					}
 				prevId = curr.getPreviousDeviceId();
 				}
-			try
-				{
 // * 各対象デバイスに対して処理を実行する
-				for (Ph2DevicesEntity target : targets)
+			for (Ph2DevicesEntity target : targets)
+				{
+// * 既にロード済みならば、処理をしない
+				if (!this.statusDomain.isAll(target)) continue;
+
+				if (!this.deviceLogDomain.startBatch(true, target.getId()))
 					{
-// * コーディネーターを生成する
-					LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(target, true);
-// * コーディネーターを引数にデータロードを実行する
+					LOG.warn("他のデバイス" + device.getId() + "が実行中なので、処理を終了します。", mode);
+					return;
+					}
+				LoadCoordinator ldc = this.s0Initializer.initializeCoordinator(target, true);
+				this.deviceLogDomain.log(LOG, target, getClass(), "***START*** デバイスのデータロードを開始します。", mode);
+				this.deviceLogDomain.log(LOG, target, getClass(), "デバイスのロックを開始します。", mode);
+				if (false == this.statusDomain.setDataOnLoad(target))
+					{
+					this.deviceLogDomain.log(LOG, target, getClass(),
+							"***END*** 引継ぎ元のデバイス" + target.getId() + "がロック中なので、処理を終了します。", mode);
+					this.deviceLogDomain.endBatch(true, target.getId());
+					return;
+					}
+				try
+					{
+					// * コーディネーターを引数にデータロードを実行する
 					this.loadDevice(ldc);
 // * 全ロードモードになっていれば、解除する
-					if (this.statusDomain.isAll(target))
-						{
-						this.statusDomain.setUpdateNotAll(target);
-						}
+					this.statusDomain.setUpdateNotAll(target);
 					}
-				}
-			catch (Exception e)
-				{
-				throw e;
-				}
-			finally
-				{
-				this.deviceLogDomain.log(LOG, device.getId(), getClass(), "この処理中に発生した全てのデバイスのロックを解除します。");
-// * 該当デバイスのロック解除
-				this.statusDomain.unLockDevices(lockList);
+				catch (Exception e)
+					{
+					throw e;
+					}
+				finally
+					{
+					this.deviceLogDomain.log(LOG, target, getClass(), "デバイスのロックを解除します。", mode);
+					this.statusDomain.setDataNotLoading(target);
+					this.deviceLogDomain.log(LOG, device, getClass(), "***END*** デバイスのデータロードを終了します。***", mode);
+					this.deviceLogDomain.endBatch(true, target.getId());
+					}
 				}
 			}
 		}
@@ -188,7 +182,7 @@ public class DataLoadService
 			// * 必要な情報が揃っていなければ、処理をしないで終了する
 			if (!ldc.isLoadable())
 				{
-				this.deviceLogDomain.log(LOG, ldc.getDeviceId(), getClass(), "デバイス情報が未定義なので、処理を終了します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "デバイス情報が未定義なので、処理を終了します。", ldc.isAll());
 				return;
 				}
 			Long deviceId = ldc.getDeviceId();
@@ -196,68 +190,68 @@ public class DataLoadService
 // * 指定されたデバイスに対してSigFoxのデータを取り込む
 			try
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfox データの取り込みを開始します。");
-				this.s1SigFoxMessageService.doService(ldc.getDevice());
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfox データの取り込みが完了しました。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "Sigfox データの取り込みを開始します。", ldc.isAll());
+				this.s1SigFoxMessageService.doService(ldc.getDevice(), ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "Sigfox データの取り込みが完了しました。", ldc.isAll());
 				}
 			catch (Exception e)
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "Sigfox データの取り込みに失敗しました。処理を終了します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "Sigfox データの取り込みに失敗しました。処理を終了します。", ldc.isAll());
 				throw e;
 				}
 // * 全データ更新モードの場合、テーブルを初期化する
 			if (ldc.isAll())
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "過去のモデル関連データを全削除します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "過去のモデル関連データを全削除します。", ldc.isAll());
 				try
 					{
 					this.s2deviceDataInitService.deleteTables(deviceId, null);
 					this.statusDomain.setDataInitialized(ldc.getDevice());
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "過去のモデル関連データの全削除を完了しました。");
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "過去のモデル関連データの全削除を完了しました。", ldc.isAll());
 					}
 				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "テーブルの削除に失敗しました。処理を終了します。");
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "テーブルの削除に失敗しました。処理を終了します。", ldc.isAll());
 					throw e;
 					}
 				}
 // * メッセージテーブルから基本情報のDBへのロードを実行する
-			this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの生成を開始します。");
+			this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "生データの生成を開始します。", ldc.isAll());
 			Date lastUpdated;
 			try
 				{
 				lastUpdated = this.s3RawDataLoaderService.loadMessages(ldc);
 				this.statusDomain.setRawDataLoaded(ldc.getDevice());
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの生成が完了しました。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "生データの生成が完了しました。", ldc.isAll());
 				}
 			catch (Exception e)
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの生成に失敗しました。処理を終了します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "生データの生成に失敗しました。処理を終了します。", ldc.isAll());
 				throw e;
 				}
 
 // * メッセージテーブルから基本情報のDBへのロードを実行する
 			if (lastUpdated != null)
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "ヘッドラインデータの生成を開始します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "ヘッドラインデータの生成を開始します。", ldc.isAll());
 				try
 					{
-					this.s4HeadLineLoaderService.createHealines(ldc.getDevice(), lastUpdated);
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "ヘッドラインデータの生成が完了しました。");
+					this.s4HeadLineLoaderService.createHealines(ldc.getDevice(), lastUpdated, ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "ヘッドラインデータの生成が完了しました。", ldc.isAll());
 					}
 				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "ヘッドラインデータの生成に失敗しました。処理を終了します。");
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "ヘッドラインデータの生成に失敗しました。処理を終了します。", ldc.isAll());
 					throw e;
 					}
 				}
 			else
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "生データの更新は無かったので、ヘッドラインデータに変更はありませんでした。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "生データの更新は無かったので、ヘッドラインデータに変更はありませんでした。", ldc.isAll());
 				}
 // * 日付をまたがった場合、以下の処理を行う
-			this.deviceLogDomain.log(LOG, deviceId, getClass(),
-					"データが日付をまたがっているか、またがっている場合、何日分の処理が必要か確認処理を行います。");
+			this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(),
+					"データが日付をまたがっているか、またがっている場合、何日分の処理が必要か確認処理を行います。", ldc.isAll());
 			List<Ph2DeviceDayEntity> deviceDays;
 			try
 				{
@@ -265,49 +259,49 @@ public class DataLoadService
 				}
 			catch (Exception e)
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "確認処理ができませんでした。処理を終了します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "確認処理ができませんでした。処理を終了します。", ldc.isAll());
 				throw e;
 				}
 			if ((null != deviceDays) && (deviceDays.size() > 0))
 				{
 				this.statusDomain.setUpdateNotModel(ldc.getDevice());
 
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "日付単位でのモデル基礎データを生成します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "日付単位でのモデル基礎データを生成します。", ldc.isAll());
 				try
 					{
 					this.s6dailyBaseDataGeneratorService.doService(ldc, deviceDays);
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "日付単位でのモデル基礎データの生成が完了しました。");
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "日付単位でのモデル基礎データの生成が完了しました。", ldc.isAll());
 					}
 				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "日付単位でのモデル基礎データを生成できませんでした。処理を終了します。");
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "日付単位でのモデル基礎データを生成できませんでした。処理を終了します。", ldc.isAll());
 					throw e;
 					}
-				
-				this.deviceLogDomain.log(LOG, deviceId, getClass(), "モデルデータの生成を開始します。");
+
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "モデルデータの生成を開始します。", ldc.isAll());
 				try
 					{
-					this.s8modelDataApplyrService.doService(deviceId, deviceDays);
+					this.s8modelDataApplyrService.doService(ldc.getDevice(), deviceDays, ldc.isAll());
 					this.statusDomain.setModelDataCreated(ldc.getDevice());
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "モデルデータの生成が完了しました。処理を完了します。");
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "モデルデータの生成が完了しました。処理を完了します。", ldc.isAll());
 					}
-				catch(Exception e)
+				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, deviceId, getClass(), "モデルデータの生成に失敗しました。処理を終了します。");
-					throw e;				
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "モデルデータの生成に失敗しました。処理を終了します。", ldc.isAll());
+					throw e;
 					}
 				}
 			else
 				{
-				this.deviceLogDomain.log(LOG, deviceId, getClass(),
-						"日付をまたがったデータはないので、モデルデータの更新は必要ありませんでした。処理を完了します。");
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(),
+						"日付をまたがったデータはないので、モデルデータの更新は必要ありませんでした。処理を完了します。", ldc.isAll());
 				}
 			}
 		catch (Exception e)
 			{
 			e.printStackTrace();
-			this.deviceLogDomain.log(LOG, ldc.getDeviceId(), getClass(),
-					"デバイスデータのローディングに失敗しました。処理を終了します。");
+			this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(),
+					"デバイスデータのローディングに失敗しました。処理を終了します。", ldc.isAll());
 			}
 		}
 

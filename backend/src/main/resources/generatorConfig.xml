@@ -255,5 +255,10 @@
 			mapperName="Ph2DeviceLogMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
 			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat"> 
 			</table>
+			
+		<!--<table tableName="ph2_batch_log" domainObjectName="Ph2BatchLogEntity" 
+			mapperName="Ph2BatchLogMapper" enableInsert="true" enableSelectByPrimaryKey="true" 
+			enableUpdateByPrimaryKey="true" enableDeleteByPrimaryKey="true" modelType="flat">
+	</table>-->
 	</context>
 </generatorConfiguration>

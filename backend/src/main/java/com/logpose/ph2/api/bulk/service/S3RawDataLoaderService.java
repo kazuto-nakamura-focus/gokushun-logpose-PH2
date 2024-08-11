@@ -106,8 +106,8 @@ public class S3RawDataLoaderService
 		Date op_end_date = device.getOpEnd();
 		String startDateString = this.deviceLogDomain.date(op_start_date, "最も古いSIGFOXデータの受信日時");
 		String endDateString = this.deviceLogDomain.date(op_end_date, "現時点(指定無し)");
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(),
-				"対象となる期間は" + startDateString + "から" + endDateString + "までです。");
+		this.deviceLogDomain.log(LOG, device, getClass(),
+				"対象となる期間は" + startDateString + "から" + endDateString + "までです。", coordinator.isAll());
 
 // * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
 		Date startMessage = null;
@@ -130,13 +130,13 @@ public class S3RawDataLoaderService
 			{
 			final String logStart = this.deviceLogDomain.date(startMessage, "不明時刻");
 			final String logEnd = this.deviceLogDomain.date(cache.getLastCastedDate(), "現時点の時刻");
-			this.deviceLogDomain.log(LOG, device.getId(), getClass(),
-					"処理された期間は" + logStart + "から" + logEnd + "までです。");
+			this.deviceLogDomain.log(LOG, device, getClass(),
+					"処理された期間は" + logStart + "から" + logEnd + "までです。", coordinator.isAll());
 			return cache.getLastCastedDate();
 			}
 		else
 			{
-			this.deviceLogDomain.log(LOG, device.getId(), getClass(), "期間中に該当するデータはありませんでした。");
+			this.deviceLogDomain.log(LOG, device, getClass(), "期間中に該当するデータはありませんでした。", coordinator.isAll());
 			return null;
 			}
 		}

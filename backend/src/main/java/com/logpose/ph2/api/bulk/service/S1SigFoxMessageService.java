@@ -42,7 +42,7 @@ public class S1SigFoxMessageService
 	 * @throws InterruptedException 
 	 */
 	// --------------------------------------------------
-	public void doService(Ph2DevicesEntity device) throws InterruptedException
+	public void doService(Ph2DevicesEntity device, boolean isAll) throws InterruptedException
 		{
 // * APIのDAOを作成し、アクセス情報を設定する
 		SigFoxAPI api = new SigFoxAPI();
@@ -51,7 +51,7 @@ public class S1SigFoxMessageService
 		String timeZone = device.getTz();
 		String baseAuth = securityParams.getBaseAuthSigFoxTK();
 		
-		this.deviceLogDomain.log(LOG, device.getId(), getClass(), "タイムゾーンは"+timeZone+"です。");
+		this.deviceLogDomain.log(LOG, device, getClass(), "タイムゾーンは"+timeZone+"です。", isAll);
 		
 		if (timeZone.equals("Pacific/Auckland"))
 			{
@@ -59,6 +59,6 @@ public class S1SigFoxMessageService
 			}
 		api.setBasicAuth(baseAuth);
 		
-		this.sigFoxDomain.createMessages(device.getId(), device.getSigfoxDeviceId(), api);
+		this.sigFoxDomain.createMessages(device, device.getSigfoxDeviceId(), api, isAll);
 		}
 	}

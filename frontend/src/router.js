@@ -7,7 +7,7 @@ import GrowthModel from "@/components/GrowthModel";
 //import TopStageGrowthOld from "@/components/TopStageGrouth";
 //import TopStageGrowth from "@/components/TopStageGrowth";
 import RawDataView from "@/components/RawDataView.vue";
-
+import Log from "@/components-v1/データロード/LoadingDeviceList.vue";
 import ManagementScreenTop from "@/components/ManagementScreenTop";
 import Login from "@/components/Login/login.vue";
 
@@ -19,7 +19,7 @@ const router = new Router({
   mode: "history",
   routes: [
     //ログイン画面
-    { path: "/login", name: "login", component: Login, meta: { requiresAuth:false } },
+    { path: "/login", name: "login", component: Login, meta: { requiresAuth: false } },
     // トップ画面
     { path: "/", name: "top", component: Top, meta: { requiresAuth: true } },
     // 成長予測画面
@@ -52,6 +52,13 @@ const router = new Router({
       component: RawDataView,
       meta: { requiresAuth: true },
     },
+    // ログ画面
+    {
+      path: "/log",
+      name: "Log",
+      component: Log,
+      meta: { requiresAuth: true },
+    },
   ],
 });
 
@@ -62,14 +69,14 @@ router.beforeEach((to, from, next) => {
       .then(isLoggedIn => {
         const path = to["path"];
         console.log(path.includes("/login"), isLoggedIn);
-        
-        if(path.includes("/login")){
-          if(!isLoggedIn){
+
+        if (path.includes("/login")) {
+          if (!isLoggedIn) {
             next();
-          }else{
+          } else {
             next("/");
           }
-        }else if (!isLoggedIn) {
+        } else if (!isLoggedIn) {
           alert("ログインセッションがタイムアウトしました。再ログインしてください");
           next('/login');
         } else {

@@ -497,6 +497,150 @@ public class Ph2DeviceLogEntityExample {
 			addCriterion("class_name not between", value1, value2, "className");
 			return (Criteria) this;
 			}
+
+		public Criteria andStatusIsNull()
+			{
+			addCriterion("status is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusIsNotNull()
+			{
+			addCriterion("status is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusEqualTo(Integer value)
+			{
+			addCriterion("status =", value, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusNotEqualTo(Integer value)
+			{
+			addCriterion("status <>", value, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusGreaterThan(Integer value)
+			{
+			addCriterion("status >", value, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusGreaterThanOrEqualTo(Integer value)
+			{
+			addCriterion("status >=", value, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusLessThan(Integer value)
+			{
+			addCriterion("status <", value, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusLessThanOrEqualTo(Integer value)
+			{
+			addCriterion("status <=", value, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusIn(List<Integer> values)
+			{
+			addCriterion("status in", values, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusNotIn(List<Integer> values)
+			{
+			addCriterion("status not in", values, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusBetween(Integer value1, Integer value2)
+			{
+			addCriterion("status between", value1, value2, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andStatusNotBetween(Integer value1, Integer value2)
+			{
+			addCriterion("status not between", value1, value2, "status");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeIsNull()
+			{
+			addCriterion("mode is null");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeIsNotNull()
+			{
+			addCriterion("mode is not null");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeEqualTo(Short value)
+			{
+			addCriterion("mode =", value, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeNotEqualTo(Short value)
+			{
+			addCriterion("mode <>", value, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeGreaterThan(Short value)
+			{
+			addCriterion("mode >", value, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeGreaterThanOrEqualTo(Short value)
+			{
+			addCriterion("mode >=", value, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeLessThan(Short value)
+			{
+			addCriterion("mode <", value, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeLessThanOrEqualTo(Short value)
+			{
+			addCriterion("mode <=", value, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeIn(List<Short> values)
+			{
+			addCriterion("mode in", values, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeNotIn(List<Short> values)
+			{
+			addCriterion("mode not in", values, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeBetween(Short value1, Short value2)
+			{
+			addCriterion("mode between", value1, value2, "mode");
+			return (Criteria) this;
+			}
+
+		public Criteria andModeNotBetween(Short value1, Short value2)
+			{
+			addCriterion("mode not between", value1, value2, "mode");
+			return (Criteria) this;
+			}
 		}
 
 	/**

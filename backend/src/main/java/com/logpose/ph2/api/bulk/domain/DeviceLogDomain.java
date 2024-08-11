@@ -11,8 +11,12 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.logpose.ph2.api.dao.db.entity.Ph2BatchLogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceLogEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceLogEntityExample;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
+import com.logpose.ph2.api.dao.db.entity.joined.Ph2BatchLogEntityExtendDevices;
+import com.logpose.ph2.api.dao.db.mappers.Ph2BatchLogMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceLogMapper;
 
 @Component
@@ -21,10 +25,14 @@ public class DeviceLogDomain
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	public static final short TYPE_UPLOAD = 1;
+	public static final short TYPE_UPDATE = 2;
 	@Autowired
 	private Ph2DeviceLogMapper ph2DeviceLogMapper;
+	@Autowired
+	private Ph2BatchLogMapper ph2BatchLogMapper;
 
-    private SimpleDateFormat FMT = new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒");
+	private SimpleDateFormat FMT = new SimpleDateFormat("yyyy年MM月dd日 HH時mm分ss秒");
 
 	// ===============================================
 	// 公開関数群
@@ -38,27 +46,80 @@ public class DeviceLogDomain
 	// --------------------------------------------------
 	public String date(Date date, String sub)
 		{
-		if(null != date)
+		if (null != date)
 			{
-        // フォーマットを適用してDateオブジェクトを文字列に変換
+			// フォーマットを適用してDateオブジェクトを文字列に変換
 			return FMT.format(date);
 			}
-		else return sub;
+		else
+			return sub;
 
 		}
+
 	// --------------------------------------------------
 	/**
-	 * ログを初期化する
+	 * バッチログの開始
 	 * @param deviceId
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void cleanUp(Long deviceId)
+	public boolean startBatch(boolean isAll, Long deviceId)
 		{
+		Ph2BatchLogEntity entity;
+		entity = this.ph2BatchLogMapper.selectByPrimaryKey(deviceId);
+		if( null == entity)
+			{
+			entity = new Ph2BatchLogEntity();
+			}
+// * ログの削除
 		Ph2DeviceLogEntityExample exm = new Ph2DeviceLogEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId);
-		
+		short mode = isAll ? TYPE_UPLOAD : TYPE_UPDATE;
+		exm.createCriteria().andDeviceIdEqualTo(deviceId).andModeEqualTo(mode);
 		this.ph2DeviceLogMapper.deleteByExample(exm);
+		
+		Date now = new Timestamp(System.currentTimeMillis());
+		if (isAll)
+			{
+			entity.setUploadBeginTime(now);
+			entity.setUploadEndTime(null);
+			}
+		else
+			{
+			entity.setUpdateBeginTime(now);
+			entity.setUpdateEndTime(null);
+			}
+		if (null != entity.getDeviceId())
+			{
+			this.ph2BatchLogMapper.updateByPrimaryKey(entity);
+			}
+		else
+			{
+			entity.setDeviceId(deviceId);
+			this.ph2BatchLogMapper.insert(entity);
+			}
+		return true;
+		}
+
+	// --------------------------------------------------
+	/**
+	 * バッチログの終了
+	 * @param deviceId
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class)
+	public void endBatch(boolean isAll, Long deviceId)
+		{
+		Ph2BatchLogEntity entity = this.ph2BatchLogMapper.selectByPrimaryKey(deviceId);
+		Date now = new Timestamp(System.currentTimeMillis());
+		if (isAll)
+			{
+			entity.setUploadEndTime(now);
+			}
+		else
+			{
+			entity.setUpdateEndTime(now);
+			}
+		this.ph2BatchLogMapper.updateByPrimaryKey(entity);
 		}
 
 	// --------------------------------------------------
@@ -70,29 +131,42 @@ public class DeviceLogDomain
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-	public void log(Logger logger, Long deviceId, Class<?> classObj, String message)
+	public void log(Logger logger, Ph2DevicesEntity device, Class<?> classObj, String message, boolean isAll)
 		{
 		Ph2DeviceLogEntity entity = new Ph2DeviceLogEntity();
-		entity.setDeviceId(deviceId);
+		entity.setDeviceId(device.getId());
 		Timestamp time = new Timestamp(System.currentTimeMillis());
 		entity.setTime(time);
 		entity.setClassName(classObj.getName());
 		entity.setMessage(message);
+		entity.setStatus(device.getDataStatus());
+		short mode = isAll ? TYPE_UPLOAD : TYPE_UPDATE;
+		entity.setMode(mode);
 		this.ph2DeviceLogMapper.insert(entity);
-		logger.info(deviceId.toString() + ":" + message);
+		logger.info(device.getId() + ":" + message);
 		}
-	
+	// --------------------------------------------------
+	/**
+	 * バッチ状態を取得する
+	 * @param deviceId
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class, readOnly = true)
+	public List<Ph2BatchLogEntityExtendDevices> getLog()
+		{
+		return this.ph2BatchLogMapper.selectWithStatus();
+		}
 	// --------------------------------------------------
 	/**
 	 * ログを取得する
 	 * @param deviceId
 	 */
 	// --------------------------------------------------
-	@Transactional(rollbackFor = Exception.class, readOnly=true)
-	public List<Ph2DeviceLogEntity> getLog(Long deviceId)
+	@Transactional(rollbackFor = Exception.class, readOnly = true)
+	public List<Ph2DeviceLogEntity> getBatchStatus(Long deviceId, short type)
 		{
 		Ph2DeviceLogEntityExample exm = new Ph2DeviceLogEntityExample();
-		exm.createCriteria().andDeviceIdEqualTo(deviceId);
+		exm.createCriteria().andDeviceIdEqualTo(deviceId).andModeEqualTo(type);
 		exm.setOrderByClause("time asc");
 		return this.ph2DeviceLogMapper.selectByExample(exm);
 		}

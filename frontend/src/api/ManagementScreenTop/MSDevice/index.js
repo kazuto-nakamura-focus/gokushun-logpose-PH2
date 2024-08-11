@@ -56,30 +56,65 @@ const useDeviceMastersAPI = () => {
   };
   return axios.get("/device/masters", config);
 };
-
+// ======================================================
+// デバイスのロードスケジュールを得る
+// ======================================================
 //ロード対象の取得
-const useGetSchedule = (deviceId) => {
+const useGetSchedule = () => {
   const config = {
-    params: { deviceId },
+    params: {},
   };
   return axios.get("/bulk/load/schedule", config);
 };
 
-// デバイスデータのロード
-const useLoadData = (deviceId) => {
+// ======================================================
+// デバイスのロード情報を得る
+// ======================================================
+const useGetAllDataLoadStatus = () => {
   const config = {
     params: {},
-    timeout: 900000
-  };
-  return axios.get("/bulk/load/device/" + deviceId, config);
-};
-// デバイスデータのロード
-const useGetAllDataLoadStatus = (date) => {
-  const config = {
-    params: { date },
   };
   return axios.get("/bulk/load/info", config);
+  /* 以下のリスト
+    {
+    private String name;
+    private Long id;
+    private String status;
+    private String loadTime;
+    private String updateTime;
+  }
+  */
 };
+// ======================================================
+// センサーロードのログ情報を得る
+// ======================================================
+const useGetLog = (deviceId, type) => {
+  const config = {
+    params: { deviceId, type },
+  };
+  return axios.get("/bulk/load/log", config);
+  /* 以下のリスト
+    {
+    private String date;
+    private String message;
+    }
+  */
+};
+// ======================================================
+// デバイス更新のリクエストを要求する
+// ======================================================
+const usePostRequest = (data) => {
+  /*
+    {
+    deviceId : "デバイスID"
+    }
+  */
+  const config = {
+    params: {},
+  };
+  return axios.post("/bulk/load/device", data, config);
+};
+
 
 export {
   useDeviceList,
@@ -90,6 +125,7 @@ export {
   useDeviceInfoUpdate,
   useDeviceMastersAPI,
   useGetSchedule,
-  useLoadData,
   useGetAllDataLoadStatus,
+  useGetLog,
+  usePostRequest
 };

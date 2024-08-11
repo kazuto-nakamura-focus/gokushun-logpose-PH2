@@ -224,7 +224,6 @@
         </v-card-actions>
       </template>
     </v-container>
-    <wait-dialog ref="wait" />
   </v-app>
 </template>
 
@@ -233,12 +232,11 @@ import {
   useDeviceInfoAdd,
   useDeviceInfoUpdate, //* 更新モードの時使用
   useDeviceInfoRemove,
-  useLoadData,
+  usePostRequest,
 } from "@/api/ManagementScreenTop/MSDevice";
 import { AgGridVue } from "ag-grid-vue";
 //import moment from "moment-timezone";
 import "moment/locale/ja";
-import WaitDialog from "@/components-v1/parts/dialog/WaitDialog.vue";
 import messages from "@/assets/messages.json";
 
 function RemoveCellRenderer() {
@@ -528,7 +526,6 @@ export default {
 
   components: {
     AgGridVue,
-    WaitDialog,
   },
   beforeMount() {
     if (null == this.deviceInfoData) {
@@ -753,23 +750,21 @@ export default {
     },
 
     dataLoad: function () {
-      console.log("dddd");
-      this.$refs.wait.start("センサーデータをアップデート中です。", true);
-      useLoadData(this.deviceInfoData.id)
+      usePostRequest(this.deviceInfoData.id)
         .then((response) => {
           //成功時
-          if (response["data"] == "accepted") {
-            alert("センサーデータのロードが完了しました。");
-            this.$refs.wait.finish();
-            this.onEnd(true);
+          const { status, message } = response["data"];
+          if (status == 0) {
+            alert(
+              "更新リクエストを受付ました。結果は左のメニューから確認してください。"
+            );
           } else {
-            throw new Error(response["data"]);
+            throw new Error(message);
           }
         })
         .catch((error) => {
           //失敗時
-          alert("センサーデータのロードが失敗しました。");
-          this.$refs.wait.finish();
+          alert("更新リクエストに失敗しました。");
           console.log(error);
         });
     },
