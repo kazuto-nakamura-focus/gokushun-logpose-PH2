@@ -2,7 +2,6 @@ package com.logpose.ph2.api.bulk.domain;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +35,27 @@ public class DeviceStatusDomain
 	// 公開関数群
 	// ===============================================
 	// --------------------------------------------------
+	public String getValue(int value)
+		{
+		if( (value & MODEL_DATA_CREATED) > 0 )
+			{
+			return "モデルデータが作成されました。";
+			}
+		else if( (value & RAW_DATA_LOADED)>0 )
+			{
+			return "生データが作成されました。";
+			}
+		else if( (value & DATA_INITIALIZED)>0 )
+			{
+			return "データが初期化されました。";
+			}
+		else
+			{
+			return "処理は実行されていません。";
+			}
+		}
+
+	// --------------------------------------------------
 	/**
 	 * デバイスリストを取得する
 	 * @return List<Ph2DevicesEntity>
@@ -44,6 +64,17 @@ public class DeviceStatusDomain
 	public List<Ph2DevicesEntity> selectAll()
 		{
 		return this.ph2DevicesMapper.selectAll(null);
+		}
+
+	// --------------------------------------------------
+	/**
+	 * デバイスを取得する
+	 * @return Ph2DevicesEntity
+	 */
+	// --------------------------------------------------
+	public Ph2DevicesEntity getDevice(Long deviceId)
+		{
+		return this.ph2DevicesMapper.selectByPrimaryKey(deviceId);
 		}
 
 	// --------------------------------------------------
@@ -71,6 +102,22 @@ public class DeviceStatusDomain
 	public boolean isAll(Ph2DevicesEntity device)
 		{
 		return (device.getDataStatus() & ALL_LOAD_NEEDED) > 0;
+		}
+
+	public boolean isAll(int deviceStatus)
+		{
+		return (deviceStatus & ALL_LOAD_NEEDED) > 0;
+		}
+
+	// --------------------------------------------------
+	/**
+	 * 指定されたデバイスがロック中かどうかチェックする
+	 * @return boolean
+	 */
+	// --------------------------------------------------
+	public boolean isLocked(Ph2DevicesEntity device)
+		{
+		return (device.getDataStatus() & ON_LOADING) > 0;
 		}
 
 	// --------------------------------------------------
@@ -245,22 +292,24 @@ public class DeviceStatusDomain
 	 * @return ロックされたデバイスのIDリスト
 	 */
 	// --------------------------------------------------
-	@Transactional(rollbackFor = Exception.class)
-	public List<Long> lockDevices(List<Ph2DevicesEntity> devices)
-		{
-		List<Long> rockList = new ArrayList<>();
-// * デバイスに対してロックを試みる
-		for (Ph2DevicesEntity device : devices)
-			{
-			if (!this.setDataOnLoad(device))
-				{
-				new RuntimeException(ONLOAD_ERROR);
-				}
-// * ロックリストに追加する
-			rockList.add(device.getId());
-			}
-		return rockList;
-		}
+/*
+ * @Transactional(rollbackFor = Exception.class)
+ * public List<Long> lockDevices(List<Ph2DevicesEntity> devices)
+ * {
+ * List<Long> rockList = new ArrayList<>();
+ * // * デバイスに対してロックを試みる
+ * for (Ph2DevicesEntity device : devices)
+ * {
+ * if (!this.setDataOnLoad(device))
+ * {
+ * new RuntimeException(ONLOAD_ERROR);
+ * }
+ * // * ロックリストに追加する
+ * rockList.add(device.getId());
+ * }
+ * return rockList;
+ * }
+ */
 
 	// --------------------------------------------------
 	/**
@@ -298,19 +347,42 @@ public class DeviceStatusDomain
 		{
 		this.ph2DevicesMapper.updateAllStatus(ALL_LOAD_NEEDED, devices);
 		}
-
-	// --------------------------------------------------------
+	// --------------------------------------------------
 	/**
-	 * デバイスのロード情報を得る
-	 * @param date 取得するステータスデータの日付
-	 * @return List<ObjectStatus>
+	 * 指定されたデバイスとその関連デバイスに対してバッチ実行時に全更新をさせるモードを設定する
+	 * @param devices
 	 */
-	// --------------------------------------------------------
-	public List<ObjectStatus> getAllStatusList(Date date)
+	// --------------------------------------------------
+	public void prepareForUpdate(Long deviceId)
 		{
-		return this.ph2DevicesMapper.selectAllStatus(date);
+		Long targetId = deviceId;
+		List<Long> devices = new ArrayList<>();
+		while(null != targetId)
+			{
+			Ph2DevicesEntity entity = this.ph2DevicesMapper.selectByPrimaryKey(targetId);
+			devices.add(entity.getId());
+			targetId = entity.getPreviousDeviceId();
+			}
+		targetId = deviceId;
+		while(null != targetId)
+			{
+			Ph2DevicesEntityExample exm = new Ph2DevicesEntityExample();
+			exm.createCriteria().andPreviousDeviceIdEqualTo(targetId);
+			List<Ph2DevicesEntity> entities = this.ph2DevicesMapper.selectByExample(exm);
+			if(entities.size() > 0)
+				{
+				targetId = entities.get(0).getId();
+				if(devices.contains(targetId)) break;
+				devices.add(targetId);
+				}
+			else
+				{
+				break;
+				}
+			}
+		this.ph2DevicesMapper.updateAllStatus(ALL_LOAD_NEEDED, devices);
 		}
-
+	
 	// ===============================================
 	// 保護関数群
 	// ===============================================

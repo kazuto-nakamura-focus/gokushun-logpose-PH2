@@ -8,7 +8,9 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.logpose.ph2.api.bulk.domain.DeviceLogDomain;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.domain.model.ModelDataDomain;
 
 @Service
@@ -17,8 +19,9 @@ public class S8ModelDataApplyrService
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	private static Logger LOG = LogManager
-			.getLogger(S8ModelDataApplyrService.class);
+	private static Logger LOG = LogManager.getLogger(S8ModelDataApplyrService.class);
+	@Autowired
+	private DeviceLogDomain deviceLogDomain;
 	@Autowired
 	private ModelDataDomain modelDataDomain;
 
@@ -33,9 +36,8 @@ public class S8ModelDataApplyrService
 	 * @throws ParseException
 	 */
 	// --------------------------------------------------
-	public void doService(Long deviceId, List<Ph2DeviceDayEntity> deviceDays) throws Exception
+	public void doService(Ph2DevicesEntity device, List<Ph2DeviceDayEntity> deviceDays, boolean isAll) throws Exception
 		{
-		LOG.info("モデルデータの作成を開始します。", deviceId);
 		short year = 0;
 		for (Ph2DeviceDayEntity entity : deviceDays)
 			{
@@ -46,11 +48,18 @@ public class S8ModelDataApplyrService
 // * 経過日が１で、実データがある場合
 				if (entity.getLapseDay().shortValue() == 1)
 					{
-					LOG.info(year + "年度モデルデータの作成。", deviceId);
-					this.modelDataDomain.doService(deviceId, entity.getYear());
+					try
+						{
+						this.modelDataDomain.doService(device.getId(), entity.getYear());
+						this.deviceLogDomain.log(LOG, device, getClass(), year+"年度の各モデルデータの作成を完了しました。", isAll);
+						}
+					catch(Exception e)
+						{
+						this.deviceLogDomain.log(LOG, device, getClass(), year+"年度の各モデルデータの作成に失敗しました。", isAll);
+						throw e;
+						}
 					}
 				}
 			}
-		LOG.info("モデルデータの作成が終了しました。", deviceId);
 		}
 	}

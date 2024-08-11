@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.cursor.Cursor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
@@ -17,6 +19,7 @@ import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.bulk.domain.BaseDataGenerator;
 import com.logpose.ph2.api.bulk.domain.BaseDataGeneratorModules;
 import com.logpose.ph2.api.bulk.domain.DataListModel;
+import com.logpose.ph2.api.bulk.domain.DeviceLogDomain;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.cache.MinutesCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
@@ -28,6 +31,8 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelBaseDataMapper;
 import com.logpose.ph2.api.dto.SensorDataDTO;
 
+import lombok.Synchronized;
+
 /**
  * Sigfoxのメッセージテーブルから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
  */
@@ -37,6 +42,9 @@ public class S3RawDataLoaderService
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	private static Logger LOG = LogManager.getLogger(S3RawDataLoaderService.class);
+	@Autowired
+	private DeviceLogDomain deviceLogDomain;
 	@Autowired
 	private Ph2MessagesMapper Ph2messagesMapper;
 	@Autowired
@@ -64,75 +72,78 @@ public class S3RawDataLoaderService
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
+	@Synchronized
 	public Date loadMessages(LoadCoordinator coordinator) throws IOException
 		{
-// * DBへの一括登録高速化のためのアクセスキャッシュを生成する
-// * START --------------------------------------
-// * RelBaseDataの最大IDを取得し、レコードを追加するときのID付与の準備をする
-		while (!MinutesCacher.lock())
-			{
-			try
-				{
-				Thread.sleep(1000);
-				}
-			catch (Exception e)
-				{
-				}
-			}
-		try
-			{
-			Long id = this.ph2RelBaseDataMapper.selectMaxId();
-			if (null == id) id = Long.valueOf(1);
+		Long id = this.ph2RelBaseDataMapper.selectMaxId();
+		if (null == id) id = Long.valueOf(1);
 // * アクセスキャッシュの生成
-			MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
-					ph2BaseDataMapper, rawDataMapper, ph2InsolationDataMapper, null);
+		MinutesCacher cache = new MinutesCacher(id, ph2RelBaseDataMapper,
+				ph2BaseDataMapper, rawDataMapper, ph2InsolationDataMapper, null);
 // * END --------------------------------------
 // * 指定デバイスから指定タイムゾーンでの指定時刻からのメッセージテーブルのデータを取得する。
-			Ph2DevicesEntity device = coordinator.getDevice();
-			// * メッセージデータの抽出開始日
-			Date op_start_date = device.getOpStart();
-			// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
-			Date firstDate = coordinator.getLastHadledDate();
-			if (null != firstDate)
+		Ph2DevicesEntity device = coordinator.getDevice();
+		// * メッセージデータの抽出開始日
+		Date op_start_date = device.getOpStart();
+		// * もしメッセージデータの抽出開始日が無いか指定抽出開始日より古い場合は、抽出開始日を優先する。
+		Date firstDate = coordinator.getLastHadledDate();
+		if (null != firstDate)
+			{
+			firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
+			if (null != op_start_date)
 				{
-				firstDate = deviceDayAlgorithm.addMilliscond(firstDate);
-				if (null != op_start_date)
-					{
-					if (op_start_date.getTime() < firstDate.getTime())
-						{
-						op_start_date = firstDate;
-						}
-					}
-				else
+				if (op_start_date.getTime() < firstDate.getTime())
 					{
 					op_start_date = firstDate;
 					}
 				}
-// * メッセージデータの抽出終了日
-			Date op_end_date = device.getOpEnd();
-// * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
-			try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
-					.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
+			else
 				{
-				Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
-				DataListModel messageData = new DataListModel();
-				while (messages.hasNext())
-					{
-					Ph2MessagesEntity message = messages.next();
-					messageData = this.createTables(device, coordinator.getSensors(), messageData,
-							message, cache);
-					}
-// * ローディング情報に最後の生データ登録時刻を返却する。
-				cache.flush();
-				return cache.getLastCastedDate();
+				op_start_date = firstDate;
 				}
 			}
-		finally
+// * メッセージデータの抽出終了日
+		Date op_end_date = device.getOpEnd();
+		String startDateString = this.deviceLogDomain.date(op_start_date, "最も古いSIGFOXデータの受信日時");
+		String endDateString = this.deviceLogDomain.date(op_end_date, "現時点(指定無し)");
+		this.deviceLogDomain.log(LOG, device, getClass(),
+				"対象となる期間は" + startDateString + "から" + endDateString + "までです。", coordinator.isAll());
+
+// * メッセージデータを5000件ごとに抽出して、各種テーブルデータの作成とロードを行う
+		Date startMessage = null;
+		try (Cursor<Ph2MessagesEntity> messageCorsor = this.Ph2messagesMapper
+				.selectByCastedAt(device.getSigfoxDeviceId(), device.getTz(), op_start_date, op_end_date))
 			{
-			MinutesCacher.unlock();
+			Iterator<Ph2MessagesEntity> messages = messageCorsor.iterator();
+			DataListModel messageData = new DataListModel();
+			while (messages.hasNext())
+				{
+				Ph2MessagesEntity message = messages.next();
+				if (null == startMessage) startMessage = message.getCastedAt();
+				messageData = this.createTables(device, coordinator.getSensors(), messageData,
+						message, cache);
+				}
+			}
+// * ローディング情報に最後の生データ登録時刻を返却する。
+		cache.flush();
+		if (null != startMessage)
+			{
+			final String logStart = this.deviceLogDomain.date(startMessage, "不明時刻");
+			final String logEnd = this.deviceLogDomain.date(cache.getLastCastedDate(), "現時点の時刻");
+			this.deviceLogDomain.log(LOG, device, getClass(),
+					"処理された期間は" + logStart + "から" + logEnd + "までです。", coordinator.isAll());
+			return cache.getLastCastedDate();
+			}
+		else
+			{
+			this.deviceLogDomain.log(LOG, device, getClass(), "期間中に該当するデータはありませんでした。", coordinator.isAll());
+			return null;
 			}
 		}
 
+	// ===============================================
+	// プライベート関数群
+	// ===============================================
 	// --------------------------------------------------
 	/**
 	 * メッセージから値を抽出し、全チャンネルに達したら、各値を計算し、各種DBに登録する。
@@ -145,7 +156,7 @@ public class S3RawDataLoaderService
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-	public DataListModel createTables(
+	private DataListModel createTables(
 			Ph2DevicesEntity device,
 			List<SensorDataDTO> sensors,
 			DataListModel dataListModel,
@@ -164,9 +175,11 @@ public class S3RawDataLoaderService
 		return dataListModel;
 		}
 
-	// ===============================================
-	// プライベート関数群
-	// ===============================================
+	// --------------------------------------------------
+	/*
+	 * 文字列分割を行う共通処理
+	 */
+	// --------------------------------------------------
 	private List<String> splitByLength(String str, int length)
 		{
 		List<String> strs = new ArrayList<>();

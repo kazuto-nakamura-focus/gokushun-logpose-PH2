@@ -1,16 +1,10 @@
 package com.logpose.ph2.api.security.oauth2.handler;
 
-import com.logpose.ph2.api.security.jwt.TokenProvider;
-import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
-import com.logpose.ph2.api.security.oauth2.service.OAuth2UserPrincipal;
-import com.logpose.ph2.api.security.oauth2.util.CookieUtils;
-import com.logpose.ph2.api.security.user.OAuth2Provider;
-import com.logpose.ph2.api.security.user.OAuth2UserUnlinkManager;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
-import lombok.RequiredArgsConstructor;
+import static com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.*;
+
+import java.io.IOException;
+import java.util.Optional;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,17 +14,21 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import java.io.IOException;
-import java.util.Optional;
+import com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
+import com.logpose.ph2.api.security.oauth2.service.OAuth2UserPrincipal;
+import com.logpose.ph2.api.security.oauth2.util.CookieUtils;
+import com.logpose.ph2.api.security.user.OAuth2Provider;
+import com.logpose.ph2.api.security.user.OAuth2UserUnlinkManager;
 
-import static com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.MODE_PARAM_COOKIE_NAME;
-import static com.logpose.ph2.api.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository.REDIRECT_URI_PARAM_COOKIE_NAME;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @Component
 public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
-    private static final String AUTHORIZATION_HEADER = "Authorization";
-    private static final String BEARER_PREFIX = "Bearer ";
     private static Logger LOG = LogManager.getLogger(OAuth2AuthenticationSuccessHandler.class);
     @Value("${spring.security.oauth2.client.registration.heroku.redirect-uri}")
     private String backendRedirectUri;

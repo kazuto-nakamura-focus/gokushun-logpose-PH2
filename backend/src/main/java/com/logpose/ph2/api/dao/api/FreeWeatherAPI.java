@@ -27,6 +27,7 @@ public class FreeWeatherAPI
 	// クラスメンバー
 	// ===============================================
 	private RestTemplate restTemplate = new RestTemplate();
+	private List<String> urlList = new ArrayList<>();
 
 	// ===============================================
 	// 公開関数群
@@ -89,13 +90,7 @@ public class FreeWeatherAPI
 	// -------------------------------------------------
 	public FreeWheatherResponse getWeather(FreeWeatherRequest request)
 		{
-		try
-			{
-			Thread.sleep(1000);
-			}
-		catch (Exception e)
-			{
-			}
+		try { Thread.sleep(1000); } catch(Exception e) {}
 
 // * URLの設定
 		StringBuilder builder = new StringBuilder();
@@ -105,9 +100,10 @@ public class FreeWeatherAPI
 		builder.append(",").append(request.getLongitude());
 		builder.append(request.getDefaults());
 		builder.append("&key=").append(request.getKey());
-
+		String url = builder.toString();
+		urlList.add(url);
 // * 問合せの実行
-		return this.getData(builder.toString());
+		return this.getData(url);
 		}
 
 	// --------------------------------------------------

@@ -1,8 +1,11 @@
 package com.logpose.ph2.api.bulk.service;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.logpose.ph2.api.bulk.domain.DeviceLogDomain;
 import com.logpose.ph2.api.bulk.domain.SigFoxDomain;
 import com.logpose.ph2.api.configration.DefaultSecurityParameters;
 import com.logpose.ph2.api.configration.DefaultSigFoxParameters;
@@ -19,6 +22,9 @@ public class S1SigFoxMessageService
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	private static Logger LOG = LogManager.getLogger(S1SigFoxMessageService.class);
+	@Autowired
+	private DeviceLogDomain deviceLogDomain;
 	@Autowired
 	private DefaultSigFoxParameters params;
 	@Autowired
@@ -36,7 +42,7 @@ public class S1SigFoxMessageService
 	 * @throws InterruptedException 
 	 */
 	// --------------------------------------------------
-	public void doService(Ph2DevicesEntity device) throws InterruptedException
+	public void doService(Ph2DevicesEntity device, boolean isAll) throws InterruptedException
 		{
 // * APIのDAOを作成し、アクセス情報を設定する
 		SigFoxAPI api = new SigFoxAPI();
@@ -44,12 +50,15 @@ public class S1SigFoxMessageService
 // * timezoneから認証を設定する。
 		String timeZone = device.getTz();
 		String baseAuth = securityParams.getBaseAuthSigFoxTK();
+		
+		this.deviceLogDomain.log(LOG, device, getClass(), "タイムゾーンは"+timeZone+"です。", isAll);
+		
 		if (timeZone.equals("Pacific/Auckland"))
 			{
 			baseAuth = securityParams.getBaseAuthSigFoxNZ();
 			}
 		api.setBasicAuth(baseAuth);
-// * デバイスに対して最新のSigfox データを取り込む
-		this.sigFoxDomain.createMessages(device.getSigfoxDeviceId(), api);
+		
+		this.sigFoxDomain.createMessages(device, device.getSigfoxDeviceId(), api, isAll);
 		}
 	}

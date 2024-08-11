@@ -84,6 +84,13 @@ public class SigFoxAPI
 	// -------------------------------------------------
 	public SigFoxMessagesEntity getMessages(String url) throws InterruptedException
 		{
+		try
+			{
+			Thread.sleep(2000);
+			}
+		catch (Exception e)
+			{
+			}
 		ResponseEntity<SigFoxMessagesEntity> response = null;
 		HttpEntity<String> request = new HttpEntity<>(headers);
 
@@ -95,10 +102,6 @@ public class SigFoxAPI
 		catch (Exception e)
 			{
 			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
-			}
-		finally
-			{
-			Thread.sleep(1000);
 			}
 
 // * 戻り値のチェックと返却
@@ -122,6 +125,8 @@ public class SigFoxAPI
 	// --------------------------------------------------
 	public SigFoxDeviceListEntity getDeviceList(String url) throws InterruptedException
 		{
+		try { Thread.sleep(1000); } catch(Exception e) {}
+
 		ResponseEntity<SigFoxDeviceListEntity> response = null;
 		HttpEntity<String> request = new HttpEntity<>(headers);
 
@@ -133,10 +138,6 @@ public class SigFoxAPI
 		catch (Exception e)
 			{
 			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
-			}
-		finally
-			{
-			Thread.sleep(1000);
 			}
 
 // * 戻り値のチェックと返却

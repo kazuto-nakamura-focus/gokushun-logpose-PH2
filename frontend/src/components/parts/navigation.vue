@@ -45,6 +45,16 @@
             >管理（管理者のみ）</v-list-item-title
           >
         </v-list-item>
+
+        <v-list-item link to="/log">
+          <v-list-item-icon>
+            <img src="@/assets/log.jpg" />
+          </v-list-item-icon>
+          <v-list-item-title class="green--text green--darken-3"
+            >デバイスログ</v-list-item-title
+          >
+        </v-list-item>
+
         <v-list-item link v-if="userName != null">
           <v-list-item-icon>
             <v-icon>mdi-account</v-icon>
