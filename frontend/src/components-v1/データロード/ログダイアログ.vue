@@ -5,9 +5,16 @@
       <v-container>
         <div class="text-container">
           <div v-for="(line, index) in textLines" :key="index">
-            <I
-              ><small>{{ line.date }}</small></I
-            ><br />&nbsp;&nbsp;{{ line.message }}
+            <div v-if="line.status">
+              <I
+                ><small>{{ line.date }}</small></I
+              ><br />&nbsp;&nbsp;{{ line.message }}
+            </div>
+            <div v-else style="color: red">
+              <I
+                ><small>{{ line.date }}</small></I
+              ><br />&nbsp;&nbsp;{{ line.message }}
+            </div>
           </div>
         </div>
       </v-container>
@@ -57,6 +64,10 @@ export default {
           console.log(error);
         });
     },
+    // ======================================================
+    // ダイアログを閉じる
+    // ======================================================
+
     // ======================================================
     // ダイアログを閉じる
     // ======================================================

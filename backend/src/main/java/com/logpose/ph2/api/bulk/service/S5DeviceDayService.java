@@ -108,8 +108,27 @@ public class S5DeviceDayService
 
 // * 該当デバイスの最後の実データを持った日付の翌日を得る
 		Date last_device_date = this.ph2DeviceDayMapper.selectMaxTrueDate(ldc.getDeviceId());
-		last_device_date = this.deviceDayAlgorithm.getNextDayZeroHour(last_device_date);
-
+		if(null == last_device_date)
+			{
+			DeviceDayAlgorithm alg = new DeviceDayAlgorithm();
+// * 実データが開始する日にち
+			last_device_date = calendar.getTime();
+			Calendar last = Calendar.getInstance();
+			last.setTime(last_device_date);
+			alg.setTimeZero(last);
+			Calendar base_date = this.deviceDayAlgorithm.getBaseDate(device.getBaseDate());
+			base_date.set(Calendar.YEAR, last.get(Calendar.YEAR));
+			alg.setTimeZero(base_date);
+			if( base_date.getTimeInMillis() > last.getTimeInMillis())
+				{
+				base_date.add(Calendar.YEAR, -1);
+				}
+			last_device_date = base_date.getTime();
+			}
+		else
+			{
+			last_device_date = this.deviceDayAlgorithm.getNextDayZeroHour(last_device_date);
+			}
 // * 更新対象期間を得る
 		DeviceTerm trm = this.setEffectiveTerm(ldc, last_device_date);
 		if (null == trm)
@@ -299,7 +318,7 @@ public class S5DeviceDayService
 	@Synchronized
 	private List<Ph2DeviceDayEntity> createDeviceDayTable(Ph2DevicesEntity device, DeviceTerm term, LoadCoordinator ldc)
 		{
-		this.deviceLogDomain.log(LOG, device, getClass(), "日数分の該当期間のモデルデータテーブルを準備します。", ldc.isAll());
+		this.deviceLogDomain.log(LOG, device, getClass(), "上記日数分の該当期間のモデルデータテーブルを準備します。", ldc.isAll());
 		List<Ph2DeviceDayEntity> result = new ArrayList<>();
 
 // * デバイスディのIDとキャッシュ管理オブジェクトの生成
@@ -324,7 +343,8 @@ public class S5DeviceDayService
 			{
 			year--;
 			}
-
+		Date startDate = null;
+		Date endDate = null;
 // * デバイスディテーブルのレコードを追加する
 		for (; seek.getTimeInMillis() < term.getEndDate().getTimeInMillis(); seek.add(Calendar.DATE, 1), dayCount++)
 			{
@@ -358,6 +378,17 @@ public class S5DeviceDayService
 			entity.setYear((short) year);
 			cacher.addDeviceDayData(entity);
 			result.add(entity);
+			if(startDate==null) 
+				{
+				startDate = entity.getDate();
+				endDate = entity.getDate();
+				}
+			else endDate = entity.getDate();
+			}
+		if(startDate != null)
+			{
+			LOG.info("インサート開始日:" + startDate);
+			LOG.info("インサート終了日:" + endDate);
 			}
 		cacher.flush();
 		return result;

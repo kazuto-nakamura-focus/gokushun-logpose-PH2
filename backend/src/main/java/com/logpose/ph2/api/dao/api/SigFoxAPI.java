@@ -9,6 +9,7 @@ import org.springframework.web.client.RestTemplate;
 
 import com.logpose.ph2.api.dao.api.entity.SigFoxDeviceListEntity;
 import com.logpose.ph2.api.dao.api.entity.SigFoxMessagesEntity;
+import com.logpose.ph2.api.exception.APIException;
 
 import lombok.Data;
 
@@ -46,7 +47,7 @@ public class SigFoxAPI
 	 * @throws InterruptedException 
 	 */
 	// --------------------------------------------------
-	public SigFoxDeviceListEntity getDeviceList() throws InterruptedException
+	public SigFoxDeviceListEntity getDeviceList() throws APIException
 		{
 // * 問合せの実行
 		return this.getDeviceList(sigFoxUrl);
@@ -58,10 +59,11 @@ public class SigFoxAPI
 	 * @param sigFoxDeviceId
 	 * @param sinceTimeStamp
 	 * @return SigFoxMessagesEntity
+	 * @throws APIException 
 	 * @throws InterruptedException 
 	 */
 	// -------------------------------------------------
-	public SigFoxMessagesEntity getMessages(String sigFoxDeviceId, long sinceTimeStamp) throws InterruptedException
+	public SigFoxMessagesEntity getMessages(String sigFoxDeviceId, long sinceTimeStamp) throws APIException 
 		{
 // * URLの設定
 		String url = sigFoxUrl.replace("%deviceId", sigFoxDeviceId);
@@ -82,7 +84,7 @@ public class SigFoxAPI
 	 * @throws InterruptedException 
 	 */
 	// -------------------------------------------------
-	public SigFoxMessagesEntity getMessages(String url) throws InterruptedException
+	public SigFoxMessagesEntity getMessages(String url) throws APIException
 		{
 		try
 			{
@@ -101,7 +103,7 @@ public class SigFoxAPI
 			}
 		catch (Exception e)
 			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
+			throw new APIException(url, e);
 			}
 
 // * 戻り値のチェックと返却
@@ -112,7 +114,7 @@ public class SigFoxAPI
 			}
 		else
 			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。");
+			throw new APIException(url, response);
 			}
 		}
 
@@ -123,7 +125,7 @@ public class SigFoxAPI
 	 * @throws InterruptedException 
 	 */
 	// --------------------------------------------------
-	public SigFoxDeviceListEntity getDeviceList(String url) throws InterruptedException
+	public SigFoxDeviceListEntity getDeviceList(String url) throws APIException
 		{
 		try { Thread.sleep(1000); } catch(Exception e) {}
 
@@ -137,7 +139,7 @@ public class SigFoxAPI
 			}
 		catch (Exception e)
 			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
+			throw new APIException(url, e);
 			}
 
 // * 戻り値のチェックと返却
@@ -148,7 +150,7 @@ public class SigFoxAPI
 			}
 		else
 			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。");
+			throw new APIException(url, response);
 			}
 		}
 	}

@@ -67,7 +67,7 @@ public class DeviceLogDomain
 		{
 		Ph2BatchLogEntity entity;
 		entity = this.ph2BatchLogMapper.selectByPrimaryKey(deviceId);
-		if( null == entity)
+		if (null == entity)
 			{
 			entity = new Ph2BatchLogEntity();
 			}
@@ -76,7 +76,7 @@ public class DeviceLogDomain
 		short mode = isAll ? TYPE_UPLOAD : TYPE_UPDATE;
 		exm.createCriteria().andDeviceIdEqualTo(deviceId).andModeEqualTo(mode);
 		this.ph2DeviceLogMapper.deleteByExample(exm);
-		
+
 		Date now = new Timestamp(System.currentTimeMillis());
 		if (isAll)
 			{
@@ -130,6 +130,14 @@ public class DeviceLogDomain
 	 * @param message
 	 */
 	// --------------------------------------------------
+	public void log(Logger logger, Ph2DevicesEntity device, Class<?> classObj, List<String> message, boolean isAll)
+		{
+		for(String val : message)
+			{
+			this.log(logger, device, classObj, val, isAll);
+			}
+		}
+
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public void log(Logger logger, Ph2DevicesEntity device, Class<?> classObj, String message, boolean isAll)
 		{
@@ -145,6 +153,7 @@ public class DeviceLogDomain
 		this.ph2DeviceLogMapper.insert(entity);
 		logger.info(device.getId() + ":" + message);
 		}
+
 	// --------------------------------------------------
 	/**
 	 * バッチ状態を取得する
@@ -156,6 +165,7 @@ public class DeviceLogDomain
 		{
 		return this.ph2BatchLogMapper.selectWithStatus();
 		}
+
 	// --------------------------------------------------
 	/**
 	 * ログを取得する

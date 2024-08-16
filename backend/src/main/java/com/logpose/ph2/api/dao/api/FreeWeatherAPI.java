@@ -14,6 +14,7 @@ import com.logpose.ph2.api.dao.api.entity.FreeWheatherDay;
 import com.logpose.ph2.api.dao.api.entity.FreeWheatherHour;
 import com.logpose.ph2.api.dao.api.entity.FreeWheatherResponse;
 import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntity;
+import com.logpose.ph2.api.exception.APIException;
 
 import lombok.Data;
 
@@ -38,9 +39,10 @@ public class FreeWeatherAPI
 	 * @param deviceId
 	 * @param request
 	 * @return FreeWheatherResponse
+	 * @throws APIException 
 	 */
 	// -------------------------------------------------
-	public List<Ph2WeatherForecastEntity> getForcastEntities(Long deviceId, FreeWeatherRequest request)
+	public List<Ph2WeatherForecastEntity> getForcastEntities(Long deviceId, FreeWeatherRequest request) throws APIException
 		{
 		Calendar cal = Calendar.getInstance();
 		
@@ -86,9 +88,10 @@ public class FreeWeatherAPI
 	 * Weather APIから天気予報情報を取得する
 	 * @param request
 	 * @return FreeWheatherResponse
+	 * @throws APIException 
 	 */
 	// -------------------------------------------------
-	public FreeWheatherResponse getWeather(FreeWeatherRequest request)
+	public FreeWheatherResponse getWeather(FreeWeatherRequest request) throws APIException
 		{
 		try { Thread.sleep(1000); } catch(Exception e) {}
 
@@ -111,9 +114,10 @@ public class FreeWeatherAPI
 	 * Weather APIからデータを取得する
 	 * @param url
 	 * @return FreeWheatherResponse
+	 * @throws APIException 
 	 */
 	// -------------------------------------------------
-	private FreeWheatherResponse getData(String url)
+	private FreeWheatherResponse getData(String url) throws APIException
 		{
 		ResponseEntity<FreeWheatherResponse> response = null;
 // * Get処理の実行
@@ -123,7 +127,7 @@ public class FreeWeatherAPI
 			}
 		catch (Exception e)
 			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。", e);
+			throw new APIException(url, e);
 			}
 
 // * 戻り値のチェックと返却
@@ -134,7 +138,7 @@ public class FreeWeatherAPI
 			}
 		else
 			{
-			throw new RuntimeException("クエリ" + url + "は失敗しました。");
+			throw new APIException(url, response);
 			}
 		}
 	}

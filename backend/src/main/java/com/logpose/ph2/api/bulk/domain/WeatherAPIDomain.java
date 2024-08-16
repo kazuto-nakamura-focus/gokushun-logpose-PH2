@@ -6,8 +6,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,6 +22,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2WeatherDailyMasterEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WeatherDailyMasterMapper;
+import com.logpose.ph2.api.exception.APIException;
 
 @Component
 public class WeatherAPIDomain
@@ -31,8 +30,6 @@ public class WeatherAPIDomain
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	private static Logger LOG = LogManager.getLogger(WeatherAPIDomain.class);
-
 	@Autowired
 	private DefaultWeatherlAPIParameters params;
 	@Autowired
@@ -46,11 +43,12 @@ public class WeatherAPIDomain
 	 * APIへのリクエストリストを作成する
 	 * @param device
 	 * @param deviceDays
+	 * @throws APIException 
 	 * @throws Exception 
 	 */
 	// --------------------------------------------------
 	public Weather createRequests(Ph2FieldsEntity field, Ph2DevicesEntity device, Date startDate, Date endDate)
-			throws ParseException
+			throws ParseException, APIException
 		{
 		WeatherRequest request = new WeatherRequest();
 // * URL

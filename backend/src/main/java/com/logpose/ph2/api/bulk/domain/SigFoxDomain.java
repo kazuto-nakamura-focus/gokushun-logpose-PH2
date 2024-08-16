@@ -21,6 +21,7 @@ import com.logpose.ph2.api.dao.db.cache.MessagesCacher;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2MessagesEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2MessagesMapper;
+import com.logpose.ph2.api.exception.APIException;
 
 @Component
 public class SigFoxDomain
@@ -45,10 +46,11 @@ public class SigFoxDomain
 	 *
 	 * @param api SigFoxへのAPIオブジェクト
 	 * @return List<String>
+	 * @throws APIException 
 	 * @throws Exception 
 	 */
 	// --------------------------------------------------
-	public List<String> getDeviceList(Long deviceId, SigFoxAPI api) throws Exception
+	public List<String> getDeviceList(Long deviceId, SigFoxAPI api) throws APIException  
 		{
 		LOG.info("SigFoxIDリストの取得処理開始");
 // * 返却用オブジェクトの生成
@@ -65,11 +67,12 @@ public class SigFoxDomain
 	 *	@param api SigFoxへのAPIオブジェクト
 	 * @param sigfoxIds
 	 * @return List<String>
+	 * @throws APIException 
 	 * 	@throws Exception
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public List<String> getDeviceList(SigFoxAPI api, List<String> sigfoxIds) throws Exception
+	public List<String> getDeviceList(SigFoxAPI api, List<String> sigfoxIds) throws APIException
 		{
 		String nextUrl;
 
@@ -106,21 +109,22 @@ public class SigFoxDomain
 	 * Sigfoxのセンサーデータをメッセージテーブルに代入する
 	 * @param device
 	 * @param api
+	 * @throws APIException 
 	 * @throws InterruptedException 
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
-	public void createMessages(Ph2DevicesEntity device, String sigfoxId, SigFoxAPI api, boolean isAll) throws InterruptedException
+	public void createMessages(Ph2DevicesEntity device, String sigfoxId, SigFoxAPI api, boolean isAll) throws APIException 
 		{
 		if (null == sigfoxId) 
 			{
-			this.deviceLogDomain.log(LOG, device, getClass(), "Sigfox IDが定義されていません。処理はスキップされました。", isAll);
+			this.deviceLogDomain.log(LOG, device, getClass(), "#Sigfox IDが定義されていません。処理はスキップされました。", isAll);
 			return;
 			}
 // * sigfoxIdが正しいフォーマットか確認
 		if (!sigfoxId.matches("^[A-Z0-9]{6}$"))
 			{
-			this.deviceLogDomain.log(LOG, device, getClass(), sigfoxId + "は正しいsigfox IDではありません。処理はスキップされました。", isAll);
+			this.deviceLogDomain.log(LOG, device, getClass(), "#" + sigfoxId + "は正しいsigfox IDではありません。処理はスキップされました。", isAll);
 			return;
 			}
 // * メッセージテーブルからそのデバイスIDの最後の受信時間を得る
@@ -149,10 +153,9 @@ public class SigFoxDomain
 			{
 			data = api.getMessages(sigfoxId, lastTime.getTime());
 			}
-		catch(Exception e)
+		catch(APIException e)
 			{
-			this.deviceLogDomain.log(LOG, device, getClass(), "Sigfoxデータの取り込みに失敗しました。", isAll);
-			this.deviceLogDomain.log(LOG, device, getClass(), "エラー原因は「" + e.getMessage() + "」です。", isAll);
+			this.deviceLogDomain.log(LOG, device, getClass(), "Sigfoxデータの取り込みに失敗しました", isAll);
 			throw e;
 			}
 // * 取得したデータの状態を得る

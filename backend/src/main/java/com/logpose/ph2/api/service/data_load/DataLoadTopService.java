@@ -155,9 +155,12 @@ public class DataLoadTopService
 					inLog = 2;
 					}
 				}
-			TimeMessage mssg = new TimeMessage();
-			mssg.setDate(DateTimeUtility.getStringFromDateTime(item.getTime()));
-			mssg.setMessage(item.getMessage());
+			boolean isError = (null != item.getMessage()) &&(item.getMessage().length()>0)&&(item.getMessage().charAt(0)=='#');
+			String message = (isError)?item.getMessage().substring(1):item.getMessage();
+			TimeMessage mssg = TimeMessage.builder()
+					.date(DateTimeUtility.getStringFromDateTime(item.getTime()))
+					.status(!isError)
+					.message(message).build();
 			log.add(mssg);
 			if (inLog == 2) break;
 			}

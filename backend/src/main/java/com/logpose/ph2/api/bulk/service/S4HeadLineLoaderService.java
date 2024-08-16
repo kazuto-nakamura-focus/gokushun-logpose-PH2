@@ -25,6 +25,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2HeadLinesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WeatherForecastMapper;
+import com.logpose.ph2.api.exception.APIException;
 
 @Service
 public class S4HeadLineLoaderService
@@ -50,7 +51,7 @@ public class S4HeadLineLoaderService
 	// 公開関数群
 	// ===============================================
 	@Transactional(rollbackFor = Exception.class)
-	public void createHealines(Ph2DevicesEntity device, Date lastTime, boolean isAll)
+	public void createHealines(Ph2DevicesEntity device, Date lastTime, boolean isAll) throws APIException
 		{
 		long deviceId = device.getId();
 		final String logTime = this.deviceLogDomain.date(lastTime, "不明時刻");
@@ -103,6 +104,11 @@ public class S4HeadLineLoaderService
 					this.ph2WeatherForecastMapper.insert(item);
 					}
 				this.deviceLogDomain.log(LOG, device, getClass(), "天気情報の更新が完了しました。", isAll);
+				}
+			catch(APIException e)
+				{
+				this.deviceLogDomain.log(LOG, device, getClass(), e.getCauseText(), isAll);
+				this.deviceLogDomain.log(LOG, device, getClass(), "天気情報の更新に失敗しました。", isAll);
 				}
 			catch (Exception e)
 				{

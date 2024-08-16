@@ -23,6 +23,7 @@ import com.logpose.ph2.api.bulk.service.S8ModelDataApplyrService;
 import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
+import com.logpose.ph2.api.exception.APIException;
 
 /**
  * データロードを実行するサービス
@@ -182,7 +183,7 @@ public class DataLoadService
 			// * 必要な情報が揃っていなければ、処理をしないで終了する
 			if (!ldc.isLoadable())
 				{
-				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "デバイス情報が未定義なので、処理を終了します。", ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#デバイス情報が未定義なので、処理を終了します。", ldc.isAll());
 				return;
 				}
 			Long deviceId = ldc.getDeviceId();
@@ -194,9 +195,15 @@ public class DataLoadService
 				this.s1SigFoxMessageService.doService(ldc.getDevice(), ldc.isAll());
 				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "Sigfox データの取り込みが完了しました。", ldc.isAll());
 				}
+			catch(APIException e)
+				{
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), e.getCauseText(), ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#Sigfox データの取り込みに失敗しました。処理を終了します。", ldc.isAll());
+				throw e;
+				}
 			catch (Exception e)
 				{
-				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "Sigfox データの取り込みに失敗しました。処理を終了します。", ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#Sigfox データの取り込みに失敗しました。処理を終了します。", ldc.isAll());
 				throw e;
 				}
 // * 全データ更新モードの場合、テーブルを初期化する
@@ -211,7 +218,8 @@ public class DataLoadService
 					}
 				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "テーブルの削除に失敗しました。処理を終了します。", ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#" + e.getMessage(), ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#テーブルの削除に失敗しました。処理を終了します。", ldc.isAll());
 					throw e;
 					}
 				}
@@ -226,7 +234,8 @@ public class DataLoadService
 				}
 			catch (Exception e)
 				{
-				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "生データの生成に失敗しました。処理を終了します。", ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#" + e.getMessage(), ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#生データの生成に失敗しました。処理を終了します。", ldc.isAll());
 				throw e;
 				}
 
@@ -241,7 +250,8 @@ public class DataLoadService
 					}
 				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "ヘッドラインデータの生成に失敗しました。処理を終了します。", ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#" + e.getMessage(), ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#ヘッドラインデータの生成に失敗しました。処理を終了します。", ldc.isAll());
 					throw e;
 					}
 				}
@@ -259,7 +269,8 @@ public class DataLoadService
 				}
 			catch (Exception e)
 				{
-				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "確認処理ができませんでした。処理を終了します。", ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#" + e.getMessage(), ldc.isAll());
+				this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#確認処理ができませんでした。処理を終了します。", ldc.isAll());
 				throw e;
 				}
 			if ((null != deviceDays) && (deviceDays.size() > 0))
@@ -272,9 +283,15 @@ public class DataLoadService
 					this.s6dailyBaseDataGeneratorService.doService(ldc, deviceDays);
 					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "日付単位でのモデル基礎データの生成が完了しました。", ldc.isAll());
 					}
+				catch(APIException e)
+					{
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), e.getCauseText(), ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#日付単位でのモデル基礎データを生成できませんでした。処理を終了します。", ldc.isAll());
+					throw e;
+					}
 				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "日付単位でのモデル基礎データを生成できませんでした。処理を終了します。", ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#日付単位でのモデル基礎データを生成できませんでした。処理を終了します。", ldc.isAll());
 					throw e;
 					}
 
@@ -287,7 +304,8 @@ public class DataLoadService
 					}
 				catch (Exception e)
 					{
-					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "モデルデータの生成に失敗しました。処理を終了します。", ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#" + e.getMessage(), ldc.isAll());
+					this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(), "#モデルデータの生成に失敗しました。処理を終了します。", ldc.isAll());
 					throw e;
 					}
 				}
@@ -301,7 +319,7 @@ public class DataLoadService
 			{
 			e.printStackTrace();
 			this.deviceLogDomain.log(LOG, ldc.getDevice(), getClass(),
-					"デバイスデータのローディングに失敗しました。処理を終了します。", ldc.isAll());
+					"#デバイスデータのローディングに失敗しました。処理を終了します。", ldc.isAll());
 			}
 		}
 

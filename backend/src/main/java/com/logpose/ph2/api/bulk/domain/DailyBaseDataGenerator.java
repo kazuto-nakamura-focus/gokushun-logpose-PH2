@@ -27,6 +27,7 @@ import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2WeatherDailyMasterMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2JoinedModelMapper;
 import com.logpose.ph2.api.dto.BaseDataDTO;
+import com.logpose.ph2.api.exception.APIException;
 import com.logpose.ph2.api.master.DeviceDayMaster;
 
 import lombok.Data;
@@ -218,11 +219,12 @@ public class DailyBaseDataGenerator
 	 *  天気予報APIをコールし、天気予報マスターを作成する
 	 * @param device
 	 * @param List<Ph2DeviceDayEntity>
+	 * @throws APIException 
 	 */
 	// --------------------------------------------------
 	@Transactional(rollbackFor = Exception.class)
 	public void createWheatherMaster(Ph2DevicesEntity device, List<Ph2DeviceDayEntity> unsetDevices)
-			throws ParseException
+			throws ParseException, APIException
 		{
 		Ph2FieldsEntity field = this.ph2FieldsMapper.selectByPrimaryKey(device.getFieldId());
 

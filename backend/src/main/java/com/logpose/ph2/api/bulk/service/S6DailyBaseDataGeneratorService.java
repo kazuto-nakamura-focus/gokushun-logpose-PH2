@@ -16,6 +16,7 @@ import com.logpose.ph2.api.bulk.vo.LoadCoordinator;
 import com.logpose.ph2.api.dao.db.entity.Ph2DeviceDayEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2DeviceDayMapper;
 import com.logpose.ph2.api.dto.DataSourceType;
+import com.logpose.ph2.api.exception.APIException;
 import com.logpose.ph2.api.master.DeviceDayMaster;
 
 import lombok.val;
@@ -43,9 +44,10 @@ public class S6DailyBaseDataGeneratorService
 	 * 10分単位データから日単位のデータを作成し、ディリーデータ・テーブルに登録する
 	 * @param ldc
 	 * @param deviceDays
+	 * @throws APIException 
 	 */
 	// --------------------------------------------------
-	public void doService(LoadCoordinator ldc, List<Ph2DeviceDayEntity> deviceDays) throws ParseException
+	public void doService(LoadCoordinator ldc, List<Ph2DeviceDayEntity> deviceDays) throws ParseException, APIException
 		{
 // * センサーデータから日単位のデータに変換し、ディリーデータ・テーブルに登録する。
 		List<Ph2DeviceDayEntity> allUnsetDevices = this.dailyBaseDataGenerator.loadData(deviceDays);
