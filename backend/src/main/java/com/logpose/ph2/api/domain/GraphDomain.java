@@ -100,7 +100,7 @@ public class GraphDomain
 					{
 					EventDaysDTO eventDay = EventDaysDTO.builder()
 							.name(item.getStageName())
-							.date(value.getDate())
+							.date(targetData)
 							.value(value.getValue())
 							.color(item.getColor()).build();
 					resultData.add(eventDay);
@@ -111,7 +111,7 @@ public class GraphDomain
 // * 該当日付が無い場合、空のデータを追加する
 			if (!hasDate)
 				{
-				log.info("以下のF値実績に該当日はありません。" + deviceId + " : " + item.getStageName());
+				log.warn("以下のF値実績に該当日はありません。" + deviceId + " : " + item.getStageName());
 				EventDaysDTO eventDay = EventDaysDTO.builder()
 						.name(item.getStageName())
 						.date(null)
