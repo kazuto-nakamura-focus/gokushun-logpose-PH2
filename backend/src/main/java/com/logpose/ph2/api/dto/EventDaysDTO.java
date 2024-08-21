@@ -2,12 +2,14 @@ package com.logpose.ph2.api.dto;
 
 import java.util.Date;
 
-import lombok.Data;
+import lombok.Builder;
+import lombok.Getter;
 
 /**
  * 生育推定イベントデータ取得
  */
-@Data
+@Getter
+@Builder
 public class EventDaysDTO 
 	{
 	private String name;

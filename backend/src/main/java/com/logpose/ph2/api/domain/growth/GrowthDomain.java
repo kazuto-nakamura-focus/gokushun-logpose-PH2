@@ -6,6 +6,8 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
@@ -89,6 +91,7 @@ public class GrowthDomain
 	 * @param dto FDataListDTO
 	 */
 	// ###############################################
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public void updateFValues(long deviceId, short year, FDataListDTO dto)
 		{
 // * 更新時刻の設定

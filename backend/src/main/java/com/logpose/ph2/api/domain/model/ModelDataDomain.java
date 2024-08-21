@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.configration.DefaultFtageValues;
@@ -78,7 +79,7 @@ public class ModelDataDomain
 	 * @throws ParseException
 	 */
 	// ###############################################
-	@Transactional(rollbackFor = Exception.class)
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
 	public void doService(long deviceId, short year) throws ParseException
 		{
 // * モデルデータを日ごとデータとともに取得する

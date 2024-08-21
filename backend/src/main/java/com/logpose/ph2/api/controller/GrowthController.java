@@ -108,7 +108,7 @@ public class GrowthController
 
 	// --------------------------------------------------
 	/**
-	 * 生育推定イベントデータ取得
+	 * 生育推定イベントデータ取得(未使用中)
 	 *
 	 * @param deviceId 圃場ID
 	 * @param year 年度

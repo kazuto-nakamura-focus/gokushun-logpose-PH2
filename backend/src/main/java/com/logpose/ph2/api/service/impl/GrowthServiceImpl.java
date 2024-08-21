@@ -155,7 +155,6 @@ public class GrowthServiceImpl implements GrowthService
 	 */
 	// ###############################################
 	@Override
-	@Transactional(rollbackFor = Exception.class)
 	public void updateFData(long deviceId, short year, FDataListDTO dto) throws ParseException
 		{
 		this.growthDomain.updateFValues(deviceId, year, dto);

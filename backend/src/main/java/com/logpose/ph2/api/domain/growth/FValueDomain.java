@@ -44,10 +44,11 @@ public class FValueDomain
 	// ###############################################
 	public void resetActualDate(Long deviceId, Short year) throws ParseException
 		{
+// * 生育推定のF値実績テーブルから該当デバイスと年度のレコードを取得する	
 		List<Ph2RealGrowthFStageEntity> fstages = this.ph2RealGrowthFStageMapper.selectByDeviceAndYear(deviceId, year);
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
-		// * 指定デバイスの年度からF値のリストを得る
+// * モデルデータテーブルから該当デバイスと年度のレコードを取得する	
 		List<ValueDateDTO> allData = this.ph2ModelDataMapper.selectFValueByYear(deviceId, year);
 		int index = 0;
 		for (Ph2RealGrowthFStageEntity entity : fstages)
@@ -63,6 +64,7 @@ public class FValueDomain
 					if (value.getValue() >= entity.getAccumulatedF())
 						{
 						Date date = sdf.parse(value.getDate());
+						// * 見積値を訂正する
 						entity.setEstimateDate(date);
 						this.ph2RealGrowthFStageMapper.updateByPrimaryKey(entity);
 						index++;
