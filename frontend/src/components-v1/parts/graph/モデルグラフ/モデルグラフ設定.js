@@ -66,7 +66,6 @@ export class ModelGraphSettings {
     //* ============================================
     setGrowthGraph(source) {
         this.#setTitles(source, "生育ステージ推定モデル", "累積F値");
-        console.log("annotations", source.annotations);
         this.#setAnnotationAndScale(source);
         this.#setData(source.values, source.predictValues, source.meauredValues);
     }

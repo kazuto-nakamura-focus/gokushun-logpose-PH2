@@ -78,6 +78,7 @@ export default {
           .then((response) => {
             // 成功時
             const results = response["data"].data;
+            console.log("useModelData", results);
             if (results == null) {
               alert("データがありません。");
               return;
