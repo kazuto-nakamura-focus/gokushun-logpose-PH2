@@ -58,7 +58,7 @@ const HEADERS = [
   { text: "ID", value: "id", sortable: true, width: "5%" },
   { text: "ステータス", value: "status", sortable: true, width: "20%" },
   {
-    text: "最後の全センサーロード",
+    text: "最後のセンサーロード",
     value: "loadTime",
     sortable: true,
     width: "20%",

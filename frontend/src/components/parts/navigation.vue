@@ -80,21 +80,16 @@
     <v-card style="margin: 5px; background-color: #ffedff">
       <div style="margin: 5px; padding: 5px; font-size: 9pt">
         <h4>変更点</h4>
-        <i>2024/06/10</i>
+        <i>2024/08/22</i>
         <div style="margin-left: 8px">
-          [成長予測]葉面積・出葉枚数<br />
-          ●&nbsp;葉面積・出葉枚数のグラフの統合<br />
-          ●&nbsp;葉枚数のグラフの廃棄<br />
-          [グラフ全体]<br />
-          ●&nbsp;目盛の数値の調整<br />
-          ●&nbsp;"お待ちください"表示の削除<br />
+          デバイスログページの追加<br />
+          ●&nbsp;センサーロードのバッチログ表示<br />
+          ●&nbsp;更新バッチログ表示<br />
         </div>
-        <i>2024/05/26</i>
+        <i>2024/08/22</i>
         <div style="margin-left: 8px">
-          [トップ画面]<br />
-          ●&nbsp;表示設定機能の追加<br />
-          [成長予測]着果量・着果負担<br />
-          ●&nbsp;ソート機能の追加<br />
+          [デバイス画面]<br />
+          ●&nbsp;センサーロードを登録制に変更<br />
         </div>
       </div>
     </v-card>
