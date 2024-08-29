@@ -1,7 +1,10 @@
 package com.logpose.ph2.api.dao.api;
 
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.http.HttpMethod;
@@ -13,6 +16,7 @@ import com.logpose.ph2.api.dao.api.entity.FreeWeatherRequest;
 import com.logpose.ph2.api.dao.api.entity.FreeWheatherDay;
 import com.logpose.ph2.api.dao.api.entity.FreeWheatherHour;
 import com.logpose.ph2.api.dao.api.entity.FreeWheatherResponse;
+import com.logpose.ph2.api.dao.db.entity.Ph2DevicesEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2WeatherForecastEntity;
 import com.logpose.ph2.api.exception.APIException;
 
@@ -42,24 +46,34 @@ public class FreeWeatherAPI
 	 * @throws APIException 
 	 */
 	// -------------------------------------------------
-	public List<Ph2WeatherForecastEntity> getForcastEntities(Long deviceId, FreeWeatherRequest request) throws APIException
+	public List<Ph2WeatherForecastEntity> getForcastEntities(Ph2DevicesEntity device, FreeWeatherRequest request)
+			throws APIException
 		{
-		Calendar cal = Calendar.getInstance();
-		
+		ZoneId deviceZoneId = ZoneId.of(device.getTz());
+		ZoneId tokyoeZoneId = ZoneId.of("Asia/Tokyo");
+		// 現在の日時を指定タイムゾーンで取得
+		ZoneOffset deviceZoneOffset = ZonedDateTime.now(deviceZoneId).getOffset();
+		ZoneOffset tokyoZoneOffset = ZonedDateTime.now(tokyoeZoneId).getOffset();
+		// オフセットを秒単位で取得
+		int offsetInSeconds = deviceZoneOffset.getTotalSeconds() - tokyoZoneOffset.getTotalSeconds();
+
 		final List<Ph2WeatherForecastEntity> result = new ArrayList<>();
 		Ph2WeatherForecastEntity data;
 
 		FreeWheatherResponse res = this.getWeather(request);
+		final Long epoch = res.getCurrent().getEpoch();
+
 		data = new Ph2WeatherForecastEntity();
-		data.setDeviceId(deviceId);
+		data.setDeviceId(device.getId());
 		data.setCode(res.getCurrent().getCondition().getCode());
 		data.setUrl(res.getCurrent().getCondition().getIcon());
-		cal.setTimeInMillis(res.getCurrent().getEpoch()*1000);
-		data.setTime(cal.getTime());
+		
+		Date date = new Date();
+		date.setTime((epoch.longValue()+offsetInSeconds)*1000);
+		data.setTime(date);
 		result.add(data);
 
 		int count = 0;
-		Long epoch = res.getCurrent().getEpoch();
 		List<FreeWheatherDay> forecast = res.getForecast().getForecastday();
 		for (final FreeWheatherDay dayItem : forecast)
 			{
@@ -68,15 +82,17 @@ public class FreeWeatherAPI
 				{
 				if (hourItem.getTimeEpoch() > epoch)
 					{
-					count ++;
+					count++;
 					data = new Ph2WeatherForecastEntity();
-					data.setDeviceId(deviceId);
+					data.setDeviceId(device.getId());
 					data.setCode(hourItem.getCondition().getCode());
 					data.setUrl(hourItem.getCondition().getIcon());
-					cal.setTimeInMillis(hourItem.getTimeEpoch()*1000);
-					data.setTime(cal.getTime());
+
+					date = new Date();
+					date.setTime((hourItem.getTimeEpoch()+offsetInSeconds)*1000);
+					data.setTime(date);
 					result.add(data);
-					if(count ==3) break;
+					if (count == 3) break;
 					}
 				}
 			}
@@ -93,7 +109,13 @@ public class FreeWeatherAPI
 	// -------------------------------------------------
 	public FreeWheatherResponse getWeather(FreeWeatherRequest request) throws APIException
 		{
-		try { Thread.sleep(1000); } catch(Exception e) {}
+		try
+			{
+			Thread.sleep(1000);
+			}
+		catch (Exception e)
+			{
+			}
 
 // * URLの設定
 		StringBuilder builder = new StringBuilder();

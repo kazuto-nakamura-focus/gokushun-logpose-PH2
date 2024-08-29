@@ -98,7 +98,7 @@ public class S4HeadLineLoaderService
 			// 天気コードの取得
 			try
 				{
-				List<Ph2WeatherForecastEntity> res = api.getForcastEntities(deviceId, request);
+				List<Ph2WeatherForecastEntity> res = api.getForcastEntities(device, request);
 				for (final Ph2WeatherForecastEntity item : res)
 					{
 					this.ph2WeatherForecastMapper.insert(item);
