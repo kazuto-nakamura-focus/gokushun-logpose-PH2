@@ -40,6 +40,7 @@ export default {
     //* --------------------------------------------
     setGraphData: function (
       titlePaths,
+      deviceId,
       contentId,
       sensorId,
       startDate,
@@ -52,6 +53,7 @@ export default {
         function () {
           this.setSonsorData(
             titlePaths,
+            deviceId,
             contentId,
             sensorId,
             startDate,
@@ -65,6 +67,7 @@ export default {
     },
     setSonsorData(
       titlePaths,
+      deviceId,
       contentId,
       sensorId,
       startDate,
@@ -73,7 +76,7 @@ export default {
       name,
       title
     ) {
-      useSensoreData(sensorId, startDate, endDate, interval)
+      useSensoreData(deviceId, sensorId, startDate, endDate, interval)
         .then((response) => {
           // 成功時
           const { status, message, data } = response["data"];

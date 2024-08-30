@@ -13,6 +13,7 @@ import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
+import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.SensorJoinMapper;
 import com.logpose.ph2.api.dto.sensorData.SenseorDataDTO;
@@ -27,6 +28,8 @@ public class SensorDataDomain
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
+	@Autowired
+	private Ph2DevicesMapper ph2DeviceMapper;
 	@Autowired
 	private SensorJoinMapper sensorJoinMapper;
 	@Autowired
@@ -64,9 +67,9 @@ public class SensorDataDomain
 			Long sensorId, Date startDate, Date endDate, Short type, short hour)
 			throws ParseException
 		{
-		// * ダッシュボードテーブルからデータを取得する
+// * ダッシュボードテーブルからデータを取得する
 		List<Ph2RawDataEntity> records;
-		// デイリーベースでの取得
+// デイリーベースでの取得
 		if (type.shortValue() == 0)
 			{
 			Calendar cal = Calendar.getInstance();
@@ -111,7 +114,7 @@ public class SensorDataDomain
 				}
 			year = cal.get(Calendar.YEAR);
 			month = cal.get(Calendar.MONTH);
-			day = cal.get(Calendar.MONTH);
+			day = cal.get(Calendar.DATE);
 
 			String rowVal = entity.getValue();
 			Double value = Double.valueOf(rowVal);
@@ -120,8 +123,7 @@ public class SensorDataDomain
 			if (max < value)
 				max = value;
 			dto.getValues().add(value);
-			// * カテゴリーの設定
-			Date dateTime = entity.getCastedAt();
+
 			// ディリーベースの場合
 			String label;
 			if (type == 0)
@@ -132,7 +134,7 @@ public class SensorDataDomain
 			// 時間ベースの場合
 			else
 				{
-				if(isDayChanged)
+				if (isDayChanged)
 					{
 					label = String.valueOf(cal.get(Calendar.MONTH) + 1)
 							+ "/" + String.valueOf(cal.get(Calendar.DATE)) + " ";
@@ -148,69 +150,110 @@ public class SensorDataDomain
 		dto.setYEnd(max);
 		return dto;
 		}
+
 	// --------------------------------------------------
 	/**
 	 * ある期間内のセンサーのデータを返す。
 	 * 	
+	 * @param deviceId - デバイスID // * 使用しないが今後のために保存
 	 * @param sensorId - センサーID
 	 * @param startDate - 取得期間の開始日
 	 * @paraｍ endDate - 取得期間の終了日
+	 * 	@param interval - 取得間隔(分)
 	 * @return GraphDataDTO
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public SenseorDataDTO getSensorGraphDataByInterval(
+	public SenseorDataDTO getSensorGraphDataByInterval(Long deviceId,
 			Long sensorId, Date startDate, Date endDate, long minutes)
 			throws ParseException
 		{
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		SenseorDataDTO results = new SenseorDataDTO();// * 返却用データ
-		double min = Double.MAX_VALUE;//* 最小値
-		double max = Double.MIN_VALUE;//*最大値
-// * 開始時刻の調整
+		double min = Double.MAX_VALUE;// * グラフのY軸最小値
+		double max = Double.MIN_VALUE;// *グラフのY軸最大値
+		DeviceDayAlgorithm deviceDayAlgorithm = new DeviceDayAlgorithm();
+		Date date = new Date();
+
+// * 検索の開始時刻の設定
 		Calendar startTime = Calendar.getInstance();
 		startTime.setTime(startDate);
-		new DeviceDayAlgorithm().setTimeZero(startTime);
-// * 終了時刻の調整
+		deviceDayAlgorithm.setTimeZero(startTime);
+		results.setXStart(DateTimeUtility.getStringFromDate(startDate));
+
+		long seek_time = startTime.getTimeInMillis();
+		long min_time = seek_time - 1000 * 60 * 6;
+		long max_time = seek_time + 1000 * 60 * 6;
+
+// * 10分前に設定
+		startTime.add(Calendar.MINUTE, -10);
+// * 検索の終了時刻の設定
 		Calendar endTime = Calendar.getInstance();
 		endTime.setTime(endDate);
 		endTime.add(Calendar.DATE, 1);
-		new DeviceDayAlgorithm().setTimeZero(endTime);
-// * 対象となるデータを取得する
+		deviceDayAlgorithm.setTimeZero(endTime);
+		results.setXEnd(DateTimeUtility.getStringFromDate(endDate));
+		long end_time = endTime.getTimeInMillis();
+
+// * 開始日時から終了日時までのデータを取得する
 		Ph2RawDataEntityExample exm = new Ph2RawDataEntityExample();
 		exm.createCriteria().andSensorIdEqualTo(sensorId)
 				.andCastedAtGreaterThanOrEqualTo(startTime.getTime())
 				.andCastedAtLessThan(endTime.getTime());
 		exm.setOrderByClause("casted_at");
-		
 		List<Ph2RawDataEntity> records = this.ph2RawDataMapper.selectByExample(exm);
+		if (records.size() == 0) return results;
+
 // * インターバルは分単位なので、millisecondsに変換する
 		long interval = 60000 * minutes;
-		long prevtime = 0;// * 前の時刻
-		for (Ph2RawDataEntity entity : records)
+		Ph2RawDataEntity prev_data = records.get(0);
+
+		int index = 0;
+		for (; seek_time < end_time; seek_time += interval, min_time += interval, max_time += interval)
 			{
-// * 対象データの取得時刻を得る
-			long data_time = entity.getCastedAt().getTime();
-// * 前の時刻に対してインターバルを超えた場合
-			if( (data_time - prevtime) >= interval )
+			Double value = null;
+			for (; index < records.size(); index++)
 				{
-// * TODO 値の取得
-				double value = Double.valueOf(entity.getValue());
-// * 値の代入
-				results.getValues().add(value);
-// * 最大値・最小値
-				if (min > value) min = value;
-				if (max < value) max = value;
-// * カテゴリーの設定
-				StringBuilder sb = new StringBuilder(dateFormat.format(entity.getCastedAt()));
-//				sb.replace(10,11, "0");
-				results.getCategory().add(sb.toString());
-// * 次のインターバルの設定
-				prevtime = data_time;
+				Ph2RawDataEntity entity = records.get(index);
+// * 検査するデータの取得時刻を得る
+				long data_time = entity.getCastedAt().getTime();
+// * 検査するデータが求める時刻の前後６分以内で無い場合、
+// * ---- ６分前であるならば、次のデータを取り出す
+				if (data_time < min_time)
+					{
+					prev_data = entity;
+					continue;
+					}
+// * ---- ６分後であるならば、空のデータとして処理する
+				else if (data_time > max_time)
+					{
+					prev_data = entity;
+					break;
+					}
+				else
+					{
+// * 検査するデータが求める時刻の範囲以内の場合
+// * --- 現在求める時間に対して、最も近い時刻のデータを選択する
+					long prev_diff = seek_time - prev_data.getCastedAt().getTime();
+					long next_diff = data_time - seek_time;
+					Ph2RawDataEntity target = Math.abs(prev_diff) <= Math.abs(next_diff) ? prev_data : entity;
+					// * 値の代入
+					value = Double.valueOf(target.getValue());
+					// * 最大値・最小値
+					if (min > value) min = value;
+					if (max < value) max = value;
+					prev_data = entity;
+					break;
+					}
 				}
+// * 値の追加
+			results.getValues().add(value);
+// * カテゴリーの追加
+			date.setTime(seek_time);
+			StringBuilder sb = new StringBuilder(dateFormat.format(date));
+			results.getCategory().add(sb.toString());
 			}
-		results.setXStart(DateTimeUtility.getStringFromDate(startDate));
-		results.setXEnd(DateTimeUtility.getStringFromDate(endDate));
+
 		results.setYStart(min);
 		results.setYEnd(max);
 		return results;

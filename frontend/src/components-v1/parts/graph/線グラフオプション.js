@@ -18,6 +18,12 @@ export class LineGraphOptions {
                         enabled: true,
                         autoScaleYaxis: false
                     },
+                    events: {
+                        zoomed: (chartContext, { xaxis }) => {
+                            console.log("Zoomed from:", xaxis.min);
+                            console.log("Zoomed to:", xaxis.max);
+                        }
+                    },
                     toolbar: {
                         autoSelected: 'zoom'
                     },
@@ -73,7 +79,7 @@ export class LineGraphOptions {
                 },
                 xaxis: {
                     categories: [],
-                    type: 'datetime',
+                    type: 'category',
                     tickAmount: 12, // 365日の12分割
                     axisTicks: { show: true, },
                     title: {
@@ -82,7 +88,7 @@ export class LineGraphOptions {
                     },
                     labels: {
                         formatter: function (val) {
-                            return moment(val).format("YYYY/MM/DD");
+                            return moment(val).format("YYYY/MM/DD HH:mm");
                         },
                     },
                 },

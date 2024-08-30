@@ -45,6 +45,7 @@ public class SensorDataServiceImpl implements SensorDataService
 	/**
 	 * ある期間内のセンサーのデータを返す。
 	 * 	
+	 * @param deviceId - デバイスID
 	 * @param sensorId - センサーID
 	 * @param startDate - 取得期間の開始日
 	 * @paraｍ endDate - 取得期間の終了日
@@ -54,8 +55,8 @@ public class SensorDataServiceImpl implements SensorDataService
 	 */
 	// --------------------------------------------------
 	@Override
-	public SenseorDataDTO getSensorGraphDataByInterval(Long sensorId, Date startDate, Date endDate, Long interval) throws ParseException
+	public SenseorDataDTO getSensorGraphDataByInterval(Long deviceId, Long sensorId, Date startDate, Date endDate, Long interval) throws ParseException
 		{
-		return this.sensorDomain.getSensorGraphDataByInterval(sensorId, startDate, endDate, interval);
+		return this.sensorDomain.getSensorGraphDataByInterval(deviceId, sensorId, startDate, endDate, interval);
 		}
 	}

@@ -246,6 +246,7 @@ export default {
 
       this.$refs.gfa.setGraphData(
         title,
+        this.selectedItems.selectedDevice.id,
         this.selectedSensor.contentId,
         this.selectedSensor.id,
         this.startDate,

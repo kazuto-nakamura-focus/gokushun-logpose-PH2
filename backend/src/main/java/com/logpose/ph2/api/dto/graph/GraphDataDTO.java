@@ -13,9 +13,9 @@ import lombok.Data;
 public class GraphDataDTO
 	{
 	//* Y軸最小値
-	private Double YStart;
+	private Double YStart = (double) 0;
 	//* Y軸最大値
-	private Double YEnd;
+	private Double YEnd = (double) 0;
 	//* X軸最小値(起点日)
 	private String XStart;
 	//* X軸最大値(終点日)

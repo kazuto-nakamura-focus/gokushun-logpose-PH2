@@ -19,11 +19,10 @@ import com.logpose.ph2.api.service.SensorDataService;
 
 import jakarta.servlet.http.HttpServletRequest;
 
-@CrossOrigin(
-		origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com", "https://gokushun-ph2-staging-e2e7adc0c3d1.herokuapp.com" },
-		methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE},
-		allowedHeaders ="*", exposedHeaders="*",
-		allowCredentials = "true")
+@CrossOrigin(origins = { "http://localhost:8080", "http://localhost:3000", "https://gokushun-ph2-it.herokuapp.com",
+		"https://gokushun-ph2-staging-e2e7adc0c3d1.herokuapp.com" }, methods = { RequestMethod.GET, RequestMethod.POST,
+				RequestMethod.PUT,
+				RequestMethod.DELETE }, allowedHeaders = "*", exposedHeaders = "*", allowCredentials = "true")
 @RestController
 @RequestMapping(path = "/api/sensor/")
 public class SensorDataController
@@ -70,12 +69,14 @@ public class SensorDataController
 	 * @param sensorId - センサーID
 	 * @param startDate - 取得期間の開始日
 	 * @paraｍ endDate - 取得期間の終了日
+	 * @param interval - 取得時間間隔
 	 * @return GraphDataDTO
 	 */
 	// --------------------------------------------------
 	@GetMapping("graph")
 	public ResponseDTO getSensorGraphData(
 			HttpServletRequest httpReq,
+			@RequestParam("deviceId") Long deviceId,
 			@RequestParam("sensorId") Long sensorId,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date startDate,
 			@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date endDate,
@@ -84,15 +85,15 @@ public class SensorDataController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			SenseorDataDTO as_result =
-					this.sensorDataService.getSensorGraphDataByInterval(sensorId, startDate, endDate,interval);
+			SenseorDataDTO as_result = this.sensorDataService.getSensorGraphDataByInterval(deviceId, sensorId, startDate, endDate,
+					interval);
 			as_dto.setSuccess(as_result);
 			}
 		catch (Exception e)
 			{
 			as_dto.setError(e);
 			}
-		return as_dto;		
+		return as_dto;
 
 		}
 	}
