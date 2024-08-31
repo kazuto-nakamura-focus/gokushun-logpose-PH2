@@ -86,11 +86,11 @@ export class LineGraphOptions {
                         text: '',
                         offsetY: -20,
                     },
-                    labels: {
-                        formatter: function (val) {
-                            return moment(val).format("YYYY/MM/DD HH:mm");
-                        },
-                    },
+                    /*    labels: {
+                            formatter: function (val) {
+                                return moment(val).format(this.dateFormat);
+                            }.bind(this),
+                        },*/
                 },
                 tooltip: {
                     shared: false,
@@ -107,6 +107,13 @@ export class LineGraphOptions {
             }
         }
     }
+    //* ============================================
+    // グラフのタイトルを設定する
+    //* ============================================
+    setDateFormat(format) {
+        this.dateFormat = format;
+    }
+
     //* ============================================
     // オブジェクトリファレンス
     //* ============================================

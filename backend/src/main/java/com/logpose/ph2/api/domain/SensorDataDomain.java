@@ -155,7 +155,7 @@ public class SensorDataDomain
 	/**
 	 * ある期間内のセンサーのデータを返す。
 	 * 	
-	 * @param deviceId - デバイスID // * 使用しないが今後のために保存
+	 * @param deviceId - デバイスID
 	 * @param sensorId - センサーID
 	 * @param startDate - 取得期間の開始日
 	 * @paraｍ endDate - 取得期間の終了日
@@ -168,6 +168,15 @@ public class SensorDataDomain
 			Long sensorId, Date startDate, Date endDate, long minutes)
 			throws ParseException
 		{
+// * デバイス情報を得る
+//		Ph2DevicesEntity device = this.ph2DeviceMapper.selectByPrimaryKey(deviceId);
+//		ZoneId deviceZoneId = ZoneId.of(device.getTz());
+//		ZoneId tokyoeZoneId = ZoneId.of("Asia/Tokyo");
+// 現在の日時を指定タイムゾーンで取得
+//		ZoneOffset deviceZoneOffset = ZonedDateTime.now(deviceZoneId).getOffset();
+//		ZoneOffset tokyoZoneOffset = ZonedDateTime.now(tokyoeZoneId).getOffset();
+// オフセットを秒単位で取得
+	//	long offsetInSeconds = (deviceZoneOffset.getTotalSeconds() - tokyoZoneOffset.getTotalSeconds()) * 1000;	
 		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
 		SenseorDataDTO results = new SenseorDataDTO();// * 返却用データ
 		double min = Double.MAX_VALUE;// * グラフのY軸最小値
@@ -179,21 +188,21 @@ public class SensorDataDomain
 		Calendar startTime = Calendar.getInstance();
 		startTime.setTime(startDate);
 		deviceDayAlgorithm.setTimeZero(startTime);
-		results.setXStart(DateTimeUtility.getStringFromDate(startDate));
+		results.setXStart(DateTimeUtility.getStringFromDate(startDate));// 表示用時刻
 
-		long seek_time = startTime.getTimeInMillis();
+		long seek_time = startTime.getTimeInMillis(); // * 時差分遡る
 		long min_time = seek_time - 1000 * 60 * 6;
 		long max_time = seek_time + 1000 * 60 * 6;
 
 // * 10分前に設定
-		startTime.add(Calendar.MINUTE, -10);
+		startTime.setTimeInMillis(seek_time - 10*60*1000);
 // * 検索の終了時刻の設定
 		Calendar endTime = Calendar.getInstance();
 		endTime.setTime(endDate);
 		endTime.add(Calendar.DATE, 1);
 		deviceDayAlgorithm.setTimeZero(endTime);
-		results.setXEnd(DateTimeUtility.getStringFromDate(endDate));
-		long end_time = endTime.getTimeInMillis();
+		results.setXEnd(DateTimeUtility.getStringFromDate(endDate));// 表示用時刻
+		long end_time = endTime.getTimeInMillis(); // * 時差分遡る
 
 // * 開始日時から終了日時までのデータを取得する
 		Ph2RawDataEntityExample exm = new Ph2RawDataEntityExample();
