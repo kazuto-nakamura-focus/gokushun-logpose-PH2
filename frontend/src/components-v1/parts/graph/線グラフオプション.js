@@ -5,6 +5,7 @@ export class LineGraphOptions {
         this.subtitles = [];
         // * 仮の基本設定
         this.data = {
+            interval: null,
             chartOptions: {
                 chart: {
                     type: 'line',
@@ -19,10 +20,19 @@ export class LineGraphOptions {
                         autoScaleYaxis: false
                     },
                     events: {
-                        zoomed: (chartContext, { xaxis }) => {
-                            console.log("Zoomed from:", xaxis.min);
-                            console.log("Zoomed to:", xaxis.max);
-                        }
+                        zoomed: function (chartContext, { xaxis }) {
+                            // * インターバルの設定がある場合（生データグラフである場合）
+                            if (this.data.interval != null) {
+                                chartContext.updateOptions({
+                                    xaxis: {
+                                        tickAmount: this.setTickamount(xaxis.min, xaxis.max),
+                                        type: 'category',  // 追加: typeを再設定
+                                        categories: chartContext.opts.xaxis.categories  // 追加: カテゴリーも再設定
+
+                                    }
+                                });
+                            }
+                        }.bind(this)
                     },
                     toolbar: {
                         autoSelected: 'zoom'
@@ -86,6 +96,29 @@ export class LineGraphOptions {
                         text: '',
                         offsetY: -20,
                     },
+                    labels: {
+                        formatter: function (value) {
+                            // * インターバルの設定がある場合（生データグラフである場合）
+                            if (this.data.interval != null) {
+                                if (typeof value === "undefined") {
+                                    return "";
+                                } else {
+                                    // 日付と時刻を分割して2段表示
+                                    const date = value.split(' ')[0];  // 日付部分
+                                    const time = value.split(' ')[1];  // 時刻部分
+                                    return [date, time]
+                                }
+
+                            } else
+                                return value;
+                        }.bind(this),
+                        style: {
+                            fontSize: '12px',
+                            colors: [],  // 必要に応じて色を設定
+                            whiteSpace: 'pre'  // 改行文字を適用するためにpreを使用
+                        },
+                        offsetY: 5  // ラベルを少し下にオフセット
+                    },
                     /*    labels: {
                             formatter: function (val) {
                                 return moment(val).format(this.dateFormat);
@@ -98,7 +131,8 @@ export class LineGraphOptions {
                         formatter: function (val) {
                             return val;
                         }
-                    }
+                    },
+
                 },
                 annotations: {
                     yaxis: [],
@@ -113,7 +147,6 @@ export class LineGraphOptions {
     setDateFormat(format) {
         this.dateFormat = format;
     }
-
     //* ============================================
     // オブジェクトリファレンス
     //* ============================================
@@ -153,6 +186,34 @@ export class LineGraphOptions {
     // Y軸のタイトルを作成する
     //* ============================================ 
     setYScaleTitle(ytitle) { this.data.chartOptions.yaxis.title.text = ytitle; }
+    //* ============================================
+    // インターバルを設定する
+    //* ============================================ 
+    setInterval(interval, min, max) {
+        this.data.interval = interval;
+        this.data.chartOptions.xaxis.tickAmount = this.setTickamount(min, max);
+    }
+    //* ============================================
+    // tickamountを設定する
+    //* ============================================
+    setTickamount(min, max) {
+        // * 表示されるX軸目盛の数
+        let showNumber = max - min;
+        // * 表示され目盛数が示す時間幅(分)
+        let time = this.data.interval * showNumber;
+        // * 一日以内
+        if (time <= 1440) return 24;
+        // * ２日以内
+        else if (time <= 2880) return time / 120;
+        // * ２週間以内
+        else if (time <= 20160) return time / 720;
+        // * ひと月以内
+        else if (time <= 44640) return time / 1440;
+        else {
+            return time / 1440;
+        }
+
+    }
     //* ============================================
     // 複合線グラフの宣言をする
     //* ============================================

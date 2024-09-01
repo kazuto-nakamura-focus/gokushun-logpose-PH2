@@ -12,5 +12,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class SenseorDataDTO extends GraphDataDTO
 	{
+	private long interval = 0;
 	private List<String> category = new ArrayList<>();
 	}
