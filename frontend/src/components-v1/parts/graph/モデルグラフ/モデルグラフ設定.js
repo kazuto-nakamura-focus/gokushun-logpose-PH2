@@ -19,6 +19,7 @@ export class ModelGraphSettings {
     #setTitles(source, title, ytitle) {
         // タイトル
         this.optionsMapper.setGraphTitle(title);
+        this.optionsMapper.setInterval(null, 0, source.category.length);
         // サブタイトル
         if (null != source.estimated) {
             this.optionsMapper.addSubTitleElement(ytitle, source.estimated);
@@ -75,6 +76,8 @@ export class ModelGraphSettings {
     setLeafAreaGraph(area, count) {
         // タイトル
         this.optionsMapper.setGraphTitle("葉面積と出葉枚数");
+        this.optionsMapper.setInterval(null, 0, area.category.length);
+
         // サブタイトル
         let subtitleCount = 0;
         if (null != area.estimated) {
@@ -133,6 +136,7 @@ export class ModelGraphSettings {
     //* ============================================
     setPhotoSynthesysGraph(source) {
         this.#setTitles(source, "光合成推定モデル", "光合成量(kgCO2 vine^-1)");
+        this.optionsMapper.setInterval(null, 0, source.category.length);
         this.#setAnnotationAndScale(source);
         this.#setData(source.values, source.predictValues, source.meauredValues);
     }

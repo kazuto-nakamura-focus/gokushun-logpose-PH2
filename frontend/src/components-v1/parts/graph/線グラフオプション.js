@@ -6,6 +6,11 @@ export class LineGraphOptions {
         // * 仮の基本設定
         this.data = {
             interval: null,
+            zoomed: {
+                max: 0,
+                min: 0,
+                diff: 0
+            },
             chartOptions: {
                 chart: {
                     type: 'line',
@@ -21,17 +26,11 @@ export class LineGraphOptions {
                     },
                     events: {
                         zoomed: function (chartContext, { xaxis }) {
-                            // * インターバルの設定がある場合（生データグラフである場合）
-                            if (this.data.interval != null) {
-                                chartContext.updateOptions({
-                                    xaxis: {
-                                        tickAmount: this.setTickamount(xaxis.min, xaxis.max),
-                                        type: 'category',  // 追加: typeを再設定
-                                        categories: chartContext.opts.xaxis.categories  // 追加: カテゴリーも再設定
-
-                                    }
-                                });
-                            }
+                            let zoomed = this.data.zoomed;
+                            zoomed.max = xaxis.max;
+                            zoomed.min = xaxis.min;
+                            zoomed.diff = xaxis.max - xaxis.min;
+                            alert(zoomed.diff);
                         }.bind(this)
                     },
                     toolbar: {
@@ -90,43 +89,50 @@ export class LineGraphOptions {
                 xaxis: {
                     categories: [],
                     type: 'category',
-                    tickAmount: 12, // 365日の12分割
+                    //tickAmount: 12, // 365日の12分割
                     axisTicks: { show: true, },
                     title: {
                         text: '',
                         offsetY: -20,
                     },
                     labels: {
+                        style: {
+                            fontSize: '12px',
+                            colors: [],  // 必要に応じて色を設定
+                        },
+                        offsetY: 5,  // ラベルを少し下にオフセット
                         formatter: function (value) {
+                            let zoomed = this.data.zoomed;
+                            let newValue = this.setLabel(value, zoomed.min, zoomed.diff, this.data.interval);
                             // * インターバルの設定がある場合（生データグラフである場合）
                             if (this.data.interval != null) {
-                                if (typeof value === "undefined") {
-                                    return "";
-                                } else {
+                                if (newValue.length > 0) {
                                     // 日付と時刻を分割して2段表示
                                     const date = value.split(' ')[0];  // 日付部分
                                     const time = value.split(' ')[1];  // 時刻部分
                                     return [date, time]
                                 }
-
-                            } else
-                                return value;
+                            } else {
+                                if (newValue.length > 0) {
+                                    // 日付と時刻を分割して2段表示
+                                    let str = value.split('/')
+                                    return [str[0], str[1] + "/" + str[2]]
+                                }
+                            }
+                            return newValue;
                         }.bind(this),
-                        style: {
-                            fontSize: '12px',
-                            colors: [],  // 必要に応じて色を設定
-                            whiteSpace: 'pre'  // 改行文字を適用するためにpreを使用
-                        },
-                        offsetY: 5  // ラベルを少し下にオフセット
                     },
-                    /*    labels: {
-                            formatter: function (val) {
-                                return moment(val).format(this.dateFormat);
-                            }.bind(this),
-                        },*/
                 },
                 tooltip: {
-                    shared: false,
+                    enabled: true,  // ツールチップを有効にする
+                    shared: false,  // ポイントごとにツールチップを表示
+                    intersect: false,  // マウスオーバーしたポイントのみに表示
+                    x: {
+                        formatter: function (value) {
+                            // ツールチップではすべての値を表示
+                            return this.data.chartOptions.xaxis.categories[value];
+                        }.bind(this)
+                    },
                     y: {
                         formatter: function (val) {
                             return val;
@@ -140,12 +146,6 @@ export class LineGraphOptions {
                 },
             }
         }
-    }
-    //* ============================================
-    // グラフのタイトルを設定する
-    //* ============================================
-    setDateFormat(format) {
-        this.dateFormat = format;
     }
     //* ============================================
     // オブジェクトリファレンス
@@ -191,26 +191,98 @@ export class LineGraphOptions {
     //* ============================================ 
     setInterval(interval, min, max) {
         this.data.interval = interval;
-        this.data.chartOptions.xaxis.tickAmount = this.setTickamount(min, max);
+        this.data.zoomed.max = max;
+        this.data.zoomed.min = min;
+        this.data.zoomed.diff = max - min;
+        alert(this.data.zoomed.diff);
     }
     //* ============================================
-    // tickamountを設定する
+    // X軸の表示ラベルの設定
     //* ============================================
-    setTickamount(min, max) {
-        // * 表示されるX軸目盛の数
-        let showNumber = max - min;
-        // * 表示され目盛数が示す時間幅(分)
-        let time = this.data.interval * showNumber;
-        // * 一日以内
-        if (time <= 1440) return 24;
-        // * ２日以内
-        else if (time <= 2880) return time / 120;
-        // * ２週間以内
-        else if (time <= 20160) return time / 720;
-        // * ひと月以内
-        else if (time <= 44640) return time / 1440;
-        else {
-            return time / 1440;
+    setLabel(label, min, diff, interval) {
+        if (typeof label === "undefined") {
+            return "";
+        }
+        let value = new String(label);
+        // console.log("diff", diff, value);
+        // * 共通・最初
+        // if (min == 0) return value;
+        // * インターバルが無い場合（モデルグラフ）
+        if (null == interval) {
+            // * 共通・月初
+            if (value.endsWith("01")) return value;
+            // * ５か月以上１０か月以内
+            else {
+                // * 10か月以上
+                if (diff >= 300) {
+                    return "";
+                }
+                // * 6か月以上
+                else if (diff > 180) {
+                    if (value.endsWith("15")) {
+                        // console.log("150p", value)
+                        return value;
+                    }
+                }
+                //* 3か月以上
+                else if (diff > 90) {
+                    if (value.endsWith("0")) {
+                        //  console.log("90p", value)
+                        return value;
+                    }
+                }
+                // * 20日以上
+                else if (diff > 20) {
+                    if (value.endsWith("5") || value.endsWith("0")) {
+                        //   console.log("20p", value)
+                        return value;
+                    }
+                }
+                // * 20日以下
+                else return value;
+            }
+            return "";
+        } else {
+            // * 共通・月初
+            if (value.endsWith("/01 00:00")) return value;
+            else {
+                // * 日数計算
+                let days = (diff * interval) / 1440;
+                // * 10か月以上
+                if (days > 300) {
+                    return "";
+                }
+                // * 5か月以上
+                else if (days > 150) {
+                    if (value.endsWith("/15 00:00")) return value;
+                }
+                //* 3か月以上
+                else if (days > 90) {
+                    if (value.endsWith("0 00:00")) return value;
+                }
+                // * 20日以上
+                else if (days > 20) {
+                    if (value.endsWith("05 00:00") || value.endsWith("10 00:00")) return value;
+                }
+                // * 10日以上
+                else if (days > 10) {
+                    if (value.endsWith("00:00") || value.endsWith("12:00")) return value;
+                }
+                // * 5日以上
+                else if (days > 5) {
+                    if (value.endsWith("00:00") || value.endsWith("06:00") || value.endsWith("12:00") || value.endsWith("18:00")) return value;
+                }
+                // * 2日以上
+                else if (days > 2) {
+                    const hourString = value.substr(11, 2);
+                    const hour = parseInt(hourString, 10);
+                    if (hour % 2 === 0) return value;
+                }
+                else {
+                    if (value.endsWith(":00")) return value;
+                }
+            }
+            return "";
         }
 
     }
