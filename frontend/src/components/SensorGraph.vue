@@ -143,7 +143,7 @@ export default {
     sensorGraphContainer,
   },
   mounted() {
-    this.interval = this.intervalMenu[2];
+    this.interval = this.intervalMenu[1];
     this.sharedMenu.setUp(
       this.$refs.targetMenu,
       function (menu) {

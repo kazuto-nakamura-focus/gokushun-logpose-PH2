@@ -5,11 +5,19 @@ export class LineGraphOptions {
         this.subtitles = [];
         // * 仮の基本設定
         this.data = {
+            interval: null,
+            zoomed: {
+                max: 0,
+                min: 0,
+                diff: 0,
+                termby12: 0,
+            },
             chartOptions: {
                 chart: {
                     type: 'line',
                     stacked: false,
                     height: 500,
+                    //      margin: 40,
                     animations: {
                         enabled: false,
                     },
@@ -19,10 +27,30 @@ export class LineGraphOptions {
                         autoScaleYaxis: false
                     },
                     events: {
-                        zoomed: (chartContext, { xaxis }) => {
-                            console.log("Zoomed from:", xaxis.min);
-                            console.log("Zoomed to:", xaxis.max);
-                        }
+                        zoomed: function (chartContext, { xaxis }) {
+                            let zoomed = this.data.zoomed;
+                            zoomed.max = xaxis.max;
+                            zoomed.min = xaxis.min;
+                            zoomed.diff = xaxis.max - xaxis.min;
+                            // * (注)生データ
+                            if (this.data.interval != null) {
+                                zoomed.termby12 = (zoomed.diff * this.data.interval) / 1440;
+                            }
+                            // * モデルデータ
+                            else {
+                                zoomed.termby12 = zoomed.diff;
+                            }
+                            chartContext.updateOptions({
+                                xaxis: {
+                                    labels: {
+                                        formatter: function (value) {
+                                            let label = this.data.chartOptions.xaxis.categories[value];
+                                            return this.setLabel(label);
+                                        }.bind(this)
+                                    }
+                                }
+                            });
+                        }.bind(this)
                     },
                     toolbar: {
                         autoSelected: 'zoom'
@@ -80,25 +108,40 @@ export class LineGraphOptions {
                 xaxis: {
                     categories: [],
                     type: 'category',
-                    tickAmount: 12, // 365日の12分割
+                    //tickAmount: 12, // 365日の12分割
                     axisTicks: { show: true, },
                     title: {
                         text: '',
                         offsetY: -20,
                     },
-                    /*    labels: {
-                            formatter: function (val) {
-                                return moment(val).format(this.dateFormat);
-                            }.bind(this),
-                        },*/
+                    labels: {
+                        rotate: 0,
+                        style: {
+                            fontSize: '10pt',
+                            colors: [],  // 必要に応じて色を設定
+                        },
+                        offsetY: 0,  // ラベルを少し下にオフセット
+                        formatter: function (value) {
+                            return this.setLabel(value);
+                        }.bind(this),
+                    },
                 },
                 tooltip: {
-                    shared: false,
+                    enabled: true,  // ツールチップを有効にする
+                    shared: false,  // ポイントごとにツールチップを表示
+                    intersect: false,  // マウスオーバーしたポイントのみに表示
+                    x: {
+                        formatter: function (value) {
+                            // ツールチップではすべての値を表示
+                            return this.data.chartOptions.xaxis.categories[value];
+                        }.bind(this)
+                    },
                     y: {
                         formatter: function (val) {
                             return val;
                         }
-                    }
+                    },
+
                 },
                 annotations: {
                     yaxis: [],
@@ -107,13 +150,6 @@ export class LineGraphOptions {
             }
         }
     }
-    //* ============================================
-    // グラフのタイトルを設定する
-    //* ============================================
-    setDateFormat(format) {
-        this.dateFormat = format;
-    }
-
     //* ============================================
     // オブジェクトリファレンス
     //* ============================================
@@ -153,6 +189,152 @@ export class LineGraphOptions {
     // Y軸のタイトルを作成する
     //* ============================================ 
     setYScaleTitle(ytitle) { this.data.chartOptions.yaxis.title.text = ytitle; }
+    //* ============================================
+    // インターバルを設定する
+    //* ============================================ 
+    setInterval(interval, min, max) {
+        this.data.interval = interval;
+        this.data.zoomed.max = max;
+        this.data.zoomed.min = min;
+        this.data.zoomed.diff = max - min;
+        // * (注)生データ
+        if (interval != null) {
+            this.data.zoomed.termby12 = (this.data.zoomed.diff * interval) / 1440;
+        }
+        // * モデルデータ
+        else {
+            this.data.zoomed.termby12 = this.data.zoomed.diff;
+        }
+    }
+    //* ============================================
+    // X軸の表示ラベルの設定
+    //* ============================================
+    #pickupCategory(label) {
+        let termby12 = this.data.zoomed.termby12;
+        if (typeof label === "undefined") {
+            return "";
+        }
+        let value = new String(label);
+        // console.log("diff", diff, value);
+        // * 共通・最初
+        // if (min == 0) return value;
+        // * インターバルが無い場合（モデルグラフ）
+        if (null == this.data.interval) {
+            // * 共通・月初
+            if (value.endsWith("01")) return value;
+            // * ５か月以上１０か月以内
+            else {
+                // * 30日単位
+                if (termby12 >= 182) {
+                    return "";
+                }
+                //* 15日単位：６か月以下
+                else if (termby12 > 121) {
+                    if (value.endsWith("15")) {
+                        //  console.log("90p", value)
+                        return value;
+                    }
+                }
+                // * 10日単位：４か月以下
+                else if (termby12 > 60) {
+                    if (!value.endsWith("30") && value.endsWith("0")) {
+                        return value;
+                    }
+                }
+                //
+                // * 5日単位：２か月以下
+                else if (termby12 > 24) {
+                    if (!value.endsWith("30") && (value.endsWith("5") || value.endsWith("0"))) {
+                        return value;
+                    }
+                }
+                // ２日単位：２４日以下
+                else if (termby12 > 12) {
+                    // 末尾の2文字を取得
+                    const dayString = value.substring(8, 10);  // "23"
+                    // 数値に変換して奇数かチェック
+                    if (parseInt(dayString, 10) % 2 !== 0) return value;
+                }
+                // * 12日以下
+                else return value;
+            }
+            return "";
+        } else {
+            // * 共通・月初
+            if (value.endsWith("01 00:00")) return value;
+            else {
+                // * 1か月単位：１年以下
+                if (termby12 > 182) {
+                    return ""
+                }
+                //* 15日単位 : ６か月以下 
+                else if (termby12 > 121) {
+                    if (value.endsWith("15 00:00")) return value;
+                }
+                // * 30日を除く10日単位：120日以下
+                else if (termby12 > 60) {
+                    if (value.endsWith("0 00:00")) return value;
+                }
+                // * 30日を除く５日単位：６０日以下
+                else if (termby12 > 12) {
+                    if (!value.endsWith("30 00:00") && (value.endsWith("5 00:00") || value.endsWith("0 00:00"))) return value;
+                }
+                // * 1日単位：12日以下
+                else if (termby12 > 6) {
+                    if (value.endsWith("00:00") || value.endsWith("12:00")) return value;
+                }
+                // * 12時間単位：６日以下
+                else if (termby12 > 3) {
+                    if (value.endsWith("00:00") || value.endsWith("12:00")) return value;
+                }
+                // * ６時間単位:３日以下
+                else if (termby12 > 2) {
+                    const hourString = value.substring(11, 13);
+                    const hour = parseInt(hourString, 10);
+                    if (hour % 6 === 0) return value;
+                }
+                // * ４時間単位；2日以下
+                else if (termby12 > 1) {
+                    const hourString = value.substring(11, 13);
+                    const hour = parseInt(hourString, 10);
+                    if (hour % 4 === 0) return value;
+                }
+                // * ２時間単位：２４時間以下
+                else if (termby12 > 0.5) {
+                    const hourString = value.substring(11, 13);
+                    const hour = parseInt(hourString, 10);
+                    if (hour % 2 === 0) return value;
+                }
+                // * １時間単位：12時間以下
+                else {
+                    if (value.endsWith(":00")) return value;
+                }
+            }
+            return "";
+        }
+    }
+    //* ============================================
+    // X軸の表示ラベルの設定
+    //* ============================================
+    setLabel(label) {
+        let newValue = this.#pickupCategory(label);
+
+        if (this.data.interval != null) {
+            if (newValue.length > 0) {
+                // 日付と時刻を分割して2段表示
+                const date = newValue.split(' ')[0];  // 日付部分
+                const time = newValue.split(' ')[1];  // 時刻部分
+                return [date, time]
+            }
+        } else {
+            if (newValue.length > 0) {
+                // 日付と時刻を分割して2段表示
+                let str = newValue.split('/')
+                return [str[0], str[1] + "/" + str[2]]
+            }
+        }
+        return newValue;
+    }
     //* ============================================
     // 複合線グラフの宣言をする
     //* ============================================

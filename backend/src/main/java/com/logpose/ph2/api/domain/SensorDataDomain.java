@@ -13,7 +13,6 @@ import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
-import com.logpose.ph2.api.dao.db.mappers.Ph2DevicesMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.SensorJoinMapper;
 import com.logpose.ph2.api.dto.sensorData.SenseorDataDTO;
@@ -28,8 +27,6 @@ public class SensorDataDomain
 	// ===============================================
 	// クラスメンバー
 	// ===============================================
-	@Autowired
-	private Ph2DevicesMapper ph2DeviceMapper;
 	@Autowired
 	private SensorJoinMapper sensorJoinMapper;
 	@Autowired
@@ -265,6 +262,7 @@ public class SensorDataDomain
 
 		results.setYStart(min);
 		results.setYEnd(max);
+		results.setInterval(minutes);
 		return results;
 		}
 	}
