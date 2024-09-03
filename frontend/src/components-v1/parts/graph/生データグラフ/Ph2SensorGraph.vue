@@ -11,6 +11,7 @@
     </v-container>
     <!-- グラフ表示 -->
     <ph-2-graphic-tool
+      style="height: 550px"
       v-if="chartDisplay == true"
       :options="chart.options"
       :series="chart.series"
