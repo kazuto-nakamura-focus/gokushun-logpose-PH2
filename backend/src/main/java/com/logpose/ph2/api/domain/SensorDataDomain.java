@@ -2,6 +2,9 @@ package com.logpose.ph2.api.domain;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -165,6 +168,15 @@ public class SensorDataDomain
 			Long sensorId, Date startDate, Date endDate, long minutes)
 			throws ParseException
 		{
+		   LocalDate startLocalDate = startDate.toInstant()
+                   .atZone(ZoneId.systemDefault())  // システムのデフォルトのタイムゾーンを使用
+                   .toLocalDate();
+	        LocalDate endLocalDate = endDate.toInstant()
+	                   .atZone(ZoneId.systemDefault())  // システムのデフォルトのタイムゾーンを使用
+	                   .toLocalDate();
+	        // 日数差を計算
+	        long differenceInDays = ChronoUnit.DAYS.between(startLocalDate, endLocalDate);
+	        
 // * デバイス情報を得る
 //		Ph2DevicesEntity device = this.ph2DeviceMapper.selectByPrimaryKey(deviceId);
 //		ZoneId deviceZoneId = ZoneId.of(device.getTz());
