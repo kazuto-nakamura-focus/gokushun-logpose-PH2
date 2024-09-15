@@ -1,7 +1,6 @@
 package com.logpose.ph2.api.domain.leaf;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -10,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
+import com.logpose.ph2.api.container.ModelGraphDataContainer;
 import com.logpose.ph2.api.dao.db.entity.joined.LeafModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
@@ -48,15 +48,11 @@ public class LeafGraphDomain extends GraphDomain
 		if (0 == entites.size()) return null;
 		if (null == entites.get(0).getfValue()) return null;
 
-		ModelGraphDataDTO areaModel = new ModelGraphDataDTO();
-		ModelGraphDataDTO countModel = new ModelGraphDataDTO();
+		ModelGraphDataContainer areaModel = new ModelGraphDataContainer();
+		ModelGraphDataContainer countModel = new ModelGraphDataContainer();
 
 // * 前日の日付
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
-
-// * 日付カテゴリ
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
-		List<String> category = new ArrayList<>();
 
 		MaxValue maxArea = new MaxValue();
 		MaxValue maxCount = new MaxValue();
@@ -110,7 +106,7 @@ public class LeafGraphDomain extends GraphDomain
 				countModel.setEstimated(entity.getLeafCount());
 				}
 // * 日付カテゴリの設定
-			category.add(sdf.format(entity.getDate()));
+			areaModel.addCategory(entity.getDate());
 			}
 // * 実測値のモデルデータ作成
 		if (measureDataList.size() > 0)
@@ -122,18 +118,12 @@ public class LeafGraphDomain extends GraphDomain
 			areaModel.getMeauredValues().clear();
 			}
 // * 最小値・最大値の設定
-		String first = category.get(0);
-		String last = category.get(category.size() - 1);
-		areaModel.setXStart(first);
-		areaModel.setXEnd(last);
+		areaModel.setX();
+		areaModel.setY(0, maxArea.getMax());
 
-		areaModel.setYStart((double) 0);
-		areaModel.setYEnd(maxArea.getMax());
 // * 葉面積グラフのコメント設定
 		super.setComment(deviceId, year, areaModel);
 // * 葉面積グラフの日付カテゴリの設定
-		areaModel.setCategory(category);
-
 		countModel.setXStart(areaModel.getXStart());
 		countModel.setXEnd(areaModel.getXEnd());
 		countModel.setYStart((double) 0);
@@ -141,7 +131,7 @@ public class LeafGraphDomain extends GraphDomain
 // * 葉枚数グラフのコメント設定
 		super.setComment(deviceId, year, countModel);
 // * 葉枚数グラフの日付カテゴリの設定
-		countModel.setCategory(category);
+		countModel.setCategory(areaModel.getCategory());
 		// * 値の設定
 		List<ModelGraphDataDTO> resultData = new ArrayList<>();
 		resultData.add(areaModel);

@@ -15,7 +15,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.SensorJoinMapper;
-import com.logpose.ph2.api.dto.sensorData.SenseorDataDTO;
+import com.logpose.ph2.api.dto.sensorData.SensorDataDTO;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
 /**
@@ -60,7 +60,7 @@ public class SensorDataDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public SenseorDataDTO getSensorGraphData(
+	public SensorDataDTO getSensorGraphData(
 			Long sensorId, Date startDate, Date endDate, Short type, short hour)
 			throws ParseException
 		{
@@ -89,7 +89,7 @@ public class SensorDataDomain
 			records = this.ph2RawDataMapper.selectByExample(exm);
 			}
 		// * 取得したレコードを返却用オブジェクトに代入する
-		SenseorDataDTO dto = new SenseorDataDTO();
+		SensorDataDTO dto = new SensorDataDTO();
 		double min = Double.MAX_VALUE;
 		double max = Double.MIN_VALUE;
 		int year = 0;
@@ -161,7 +161,7 @@ public class SensorDataDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public SenseorDataDTO getSensorGraphDataByInterval(Long deviceId,
+	public SensorDataDTO getSensorGraphDataByInterval(Long deviceId,
 			Long sensorId, Date startDate, Date endDate, long minutes)
 			throws ParseException
 		{
@@ -176,7 +176,7 @@ public class SensorDataDomain
 // long offsetInSeconds = (deviceZoneOffset.getTotalSeconds() -
 // tokyoZoneOffset.getTotalSeconds()) * 1000;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
-		SenseorDataDTO results = new SenseorDataDTO();// * 返却用データ
+		SensorDataDTO results = new SensorDataDTO();// * 返却用データ
 		double min = Double.MAX_VALUE;// * グラフのY軸最小値
 		double max = Double.MIN_VALUE;// *グラフのY軸最大値
 		DeviceDayAlgorithm deviceDayAlgorithm = new DeviceDayAlgorithm();
@@ -281,57 +281,57 @@ public class SensorDataDomain
 			{
 			if (30 != minutes) return 0;
 			else
-				return SenseorDataDTO.THIRTY;
+				return SensorDataDTO.THIRTY;
 			}
 		int flag = 6; // THIRTY|HOUR;
 		int hour = cal.get(Calendar.HOUR_OF_DAY);
 		if (hour == 0) // ０時
 			{
-			flag = (short) (flag | SenseorDataDTO.HOUR_0);
+			flag = (short) (flag | SensorDataDTO.HOUR_0);
 			}
 		// 0 時でない場合
 		else
 			{
-			flag = flag | SenseorDataDTO.HOUR;
+			flag = flag | SensorDataDTO.HOUR;
 			if (hour % 2 == 0)
 				{
-				flag = flag | SenseorDataDTO.HOUR2;
+				flag = flag | SensorDataDTO.HOUR2;
 				}
 			if (hour % 4 == 0)
 				{
-				flag = flag | SenseorDataDTO.HOUR4;
+				flag = flag | SensorDataDTO.HOUR4;
 				}
 			if (hour % 6 == 0)
 				{
-				flag = flag | SenseorDataDTO.HOUR6;
+				flag = flag | SensorDataDTO.HOUR6;
 				}
 			if (hour % 12 == 0)
 				{
-				flag = flag | SenseorDataDTO.HOUR12;
+				flag = flag | SensorDataDTO.HOUR12;
 				}
 			return (short) flag;
 			}
 		int date = cal.get(Calendar.DATE);
 		if (date == 1) // １日
 			{
-			return (short) (flag | SenseorDataDTO.DAY_1);
+			return (short) (flag | SensorDataDTO.DAY_1);
 			}
 		else
 			{
-			flag = flag | SenseorDataDTO.DAY;
+			flag = flag | SensorDataDTO.DAY;
 			if (date != 30)
 				{
 				if (date % 5 == 0)
 					{
-					flag = flag | SenseorDataDTO.DAYS5;
+					flag = flag | SensorDataDTO.DAYS5;
 					}
-				if (hour % 10 == 0)
+				if (date % 10 == 0)
 					{
-					flag = flag | SenseorDataDTO.DAYS10;
+					flag = flag | SensorDataDTO.DAYS10;
 					}
-				if (hour % 15 == 0)
+				if (date % 15 == 0)
 					{
-					flag = flag | SenseorDataDTO.DAYS15;
+					flag = flag | SensorDataDTO.DAYS15;
 					}
 				}
 			return (short) flag;

@@ -5,7 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
-import com.logpose.ph2.api.dto.sensorData.SenseorDataDTO;
+import com.logpose.ph2.api.dto.sensorData.SensorDataDTO;
 
 /**
  * グラフページに対応するサービスの集まり
@@ -35,10 +35,10 @@ public interface SensorDataService
 	 * @param startDate - 取得期間の開始日
 	 * @paraｍ endDate - 取得期間の終了日
 	 * @param interval - 取得間隔(分)
-	 * @return SenseorDataDTO
+	 * @return SensorDataDTO
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	SenseorDataDTO getSensorGraphDataByInterval(Long deviceId, Long sensorId, Date startDate, Date endDate, Long interval)
+	SensorDataDTO getSensorGraphDataByInterval(Long deviceId, Long sensorId, Date startDate, Date endDate, Long interval)
 			throws ParseException;
 	}

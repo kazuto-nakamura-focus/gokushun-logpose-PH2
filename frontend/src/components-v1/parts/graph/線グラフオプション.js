@@ -135,6 +135,8 @@ export class LineGraphOptions {
                                 } else {
                                     return this.setLabel(value, this.data.showIndex++);
                                 }
+                            } else {
+                                return "";
                             }
                         }.bind(this),
                     },
@@ -297,29 +299,36 @@ export class LineGraphOptions {
     // X軸の表示ラベルの設定
     //* ============================================
     setLabel(label, index) {
+        let value = this.getValue(label, index);
+        if (value.length > 0) {
+            // 生データの場合
+            if (this.data.interval != null) {
+                // 日付と時刻を分割して2段表示
+                const date = value.split(' ')[0];  // 日付部分
+                const time = value.split(' ')[1];  // 時刻部分
+                return [date, time]
+
+            }
+            // モデルデータの場合
+            else {
+                let str = value.split('/')
+                return [str[0], str[1] + "/" + str[2]]
+            }
+        } else return "";
+    }
+    getValue(label, index) {
         if (index == -1) return "";
+        if (label === undefined) return "";
         // * インデックスがある場合、ラベル表示をするべきかどうかをフラグ値をベースに判定する
         if ((this.data.labelFlag & this.data.flags[index]) == 0) {
             return "";
         }
         // ラベルが無い場合はインデックスから取得する
         if (label == null) {
-            label = this.data.chartOptions.xaxis.categories[index];
+            return this.data.chartOptions.xaxis.categories[index];
+        } else {
+            return label;
         }
-        // 生データの場合
-        if (this.data.interval != null) {
-            // 日付と時刻を分割して2段表示
-            const date = label.split(' ')[0];  // 日付部分
-            const time = label.split(' ')[1];  // 時刻部分
-            return [date, time]
-
-        }
-        // モデルデータの場合
-        else {
-            let str = label.split('/')
-            return [str[0], str[1] + "/" + str[2]]
-        }
-
     }
     //* ============================================
     // 複合線グラフの宣言をする
