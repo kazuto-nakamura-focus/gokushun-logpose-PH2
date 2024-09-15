@@ -10,7 +10,7 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper=false)
-public class SenseorDataDTO extends GraphDataDTO
+public class SensorDataDTO extends GraphDataDTO
 	{
 	public static short TEN = 1;	// １０分おき
 	public static short THIRTY = 2;	// 3０分おき
