@@ -135,7 +135,6 @@ export class LineGraphOptions {
                                         this.data.firstCategory = null;
                                     }
                                 }
-                                console.log("-", this.data.chartOptions.xaxis.categories[this.data.showIndex]);
                                 if (this.data.oldValue != null) {
                                     let returnValue = this.data.oldValue;
                                     this.data.oldValue = null;
@@ -145,10 +144,8 @@ export class LineGraphOptions {
                                     return returnValue;
                                 } else {
                                     if (this.checkFlag(this.data.showIndex++)) {
-                                        console.log("〇", value);
                                         this.data.oldValue = this.formatLabel(value);
                                     } else {
-                                        console.log("●", value);
                                         this.data.oldValue = "";
                                     }
                                     return this.data.oldValue;

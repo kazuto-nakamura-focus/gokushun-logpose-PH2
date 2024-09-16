@@ -11,6 +11,7 @@ import { RawDataSettings } from "@/components-v1/parts/graph/生データグラ�
 import { RawDataGraphPanel } from "@/components-v1/parts/graph/生データグラフ/生データパネル設定.js";
 import Ph2GraphArea from "@/components-v1/parts/graph/Ph2GraphTab.vue";
 import { useSensoreData } from "@/api/SensorDataAPI.js";
+import { LabelFlags } from "@/components-v1/parts/graph/カテゴリー.js";
 
 export default {
   data() {
@@ -29,6 +30,7 @@ export default {
       ],
 
       xTitle: [{ text: "" }],
+      flags: null,
     };
   },
   components: {
@@ -81,8 +83,11 @@ export default {
           // 成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
+            console.log("ccc");
             // グラフの表示オプションを設定
             let settings = new RawDataSettings();
+            data.flags = new Object();
+            data.flags = this.flags.flags;
             settings.setGrowthGraph(
               title,
               this.xTitle[0].text,
@@ -105,6 +110,10 @@ export default {
           //失敗時
           console.log(error);
         });
+
+      this.flags = new LabelFlags();
+      this.flags.getSensorGraphDataByInterval(startDate, endDate, interval);
+      console.log("sss");
     },
   },
 };

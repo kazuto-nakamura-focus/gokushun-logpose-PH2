@@ -52,7 +52,6 @@ export default {
     // 単一グラフを作成する
     //* ============================================
     initialize() {
-      console.log("sensorGraph");
       this.chart.options = this.arguments.chartOption;
       this.chart.series = this.arguments.chartData;
       this.chartDisplay = true;
