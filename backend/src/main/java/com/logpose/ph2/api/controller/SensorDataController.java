@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
 import com.logpose.ph2.api.dto.ResponseDTO;
-import com.logpose.ph2.api.dto.sensorData.SenseorDataDTO;
+import com.logpose.ph2.api.dto.sensorData.SensorDataDTO;
 import com.logpose.ph2.api.service.SensorDataService;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -85,7 +85,7 @@ public class SensorDataController
 		ResponseDTO as_dto = new ResponseDTO();
 		try
 			{
-			SenseorDataDTO as_result = this.sensorDataService.getSensorGraphDataByInterval(deviceId, sensorId, startDate, endDate,
+			SensorDataDTO as_result = this.sensorDataService.getSensorGraphDataByInterval(deviceId, sensorId, startDate, endDate,
 					interval);
 			as_dto.setSuccess(as_result);
 			}
