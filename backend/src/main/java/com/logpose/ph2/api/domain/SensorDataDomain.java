@@ -257,8 +257,8 @@ public class SensorDataDomain
 			results.getValues().add(value);
 // * 時刻フラグ
 			cal.setTimeInMillis(seek_time);
-			short flg = this.getFlag(cal);
-			results.getFlags().add(flg);
+//			short flg = this.getFlag(cal);
+//			results.getFlags().add(flg);
 
 // * カテゴリーの追加
 			StringBuilder sb = new StringBuilder(dateFormat.format(cal.getTime()));
@@ -274,7 +274,7 @@ public class SensorDataDomain
 	// ===============================================
 	// 非公開関数群
 	// ===============================================
-	private short getFlag(Calendar cal)
+/*	private short getFlag(Calendar cal)
 		{
 		int minutes = cal.get(Calendar.MINUTE);
 		if (0 != minutes)
@@ -336,5 +336,5 @@ public class SensorDataDomain
 				}
 			return (short) flag;
 			}
-		}
+		}*/
 	}

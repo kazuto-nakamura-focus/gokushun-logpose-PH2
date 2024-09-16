@@ -83,7 +83,6 @@ export default {
           // 成功時
           const { status, message, data } = response["data"];
           if (status === 0) {
-            console.log("ccc");
             // グラフの表示オプションを設定
             let settings = new RawDataSettings();
             data.flags = new Object();
@@ -113,7 +112,6 @@ export default {
 
       this.flags = new LabelFlags();
       this.flags.getSensorGraphDataByInterval(startDate, endDate, interval);
-      console.log("sss");
     },
   },
 };

@@ -77,13 +77,12 @@ public class ModelGraphDataContainer extends ModelGraphDataDTO
 		else
 			{
 			short flag = DAY;
-
+			if (date % 2 == 0)
+				{
+				flag = (short) (flag | DAYS2);
+				}
 			if (date != 30)
 				{
-				if (date % 2 == 0)
-					{
-					flag = (short) (flag | DAYS2);
-					}
 				if (date % 5 == 0)
 					{
 					flag = (short) (flag | DAYS5);
