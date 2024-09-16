@@ -56,6 +56,7 @@ export default {
     // グラフ追加処理
     //* ============================================
     addGraph: function (graphPanel) {
+      console.log("addGraph");
       graphPanel.id = this.id;
       this.graphList.push(graphPanel);
       this.tab = this.graphList.length - 1;

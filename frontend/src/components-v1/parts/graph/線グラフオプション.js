@@ -5,7 +5,10 @@ export class LineGraphOptions {
         this.subtitles = [];
         // * 仮の基本設定
         this.data = {
+            flags: null,        // * 表示フラグのリスト
+            labelFlag: null,    // * 表示フラグ
             interval: null,
+            showIndex: 0,
             zoomed: {
                 max: 0,
                 min: 0,
@@ -35,17 +38,18 @@ export class LineGraphOptions {
                             // * (注)生データ
                             if (this.data.interval != null) {
                                 zoomed.termby12 = (zoomed.diff * this.data.interval) / 1440;
+                                this.data.labelFlag = this.setSensorlabelFlag(this.data.zoomed.termby12);
                             }
                             // * モデルデータ
                             else {
                                 zoomed.termby12 = zoomed.diff;
+                                this.data.labelFlag = this.setModellabelFlag(this.data.zoomed.termby12);
                             }
                             chartContext.updateOptions({
                                 xaxis: {
                                     labels: {
                                         formatter: function (value) {
-                                            let label = this.data.chartOptions.xaxis.categories[value];
-                                            return this.setLabel(label);
+                                            return this.formatLabel(null, value);
                                         }.bind(this)
                                     }
                                 }
@@ -106,7 +110,7 @@ export class LineGraphOptions {
                     },
                 },
                 xaxis: {
-                    categories: [],
+                    categories: null,
                     type: 'category',
                     //tickAmount: 12, // 365日の12分割
                     axisTicks: { show: true, },
@@ -122,7 +126,18 @@ export class LineGraphOptions {
                         },
                         offsetY: 0,  // ラベルを少し下にオフセット
                         formatter: function (value) {
-                            return this.setLabel(value);
+                            if (value !== undefined) {
+                                if (this.data.showIndex == this.data.chartOptions.xaxis.categories.length) {
+                                    return this.setLabel(value);
+                                } else {
+                                    if ((this.data.labelFlag & this.data.flags[this.data.showIndex++]) == 0) {
+                                        return "";
+                                    }
+                                    else value;
+                                }
+                            } else {
+                                return "";
+                            }
                         }.bind(this),
                     },
                 },
@@ -192,18 +207,127 @@ export class LineGraphOptions {
     //* ============================================
     // インターバルを設定する
     //* ============================================ 
-    setInterval(interval, min, max) {
+    setInterval(interval, min, max, labelFlag) {
         this.data.interval = interval;
+        this.data.flags = labelFlag;
+        this.data.showIndex = 0;
         this.data.zoomed.max = max;
         this.data.zoomed.min = min;
         this.data.zoomed.diff = max - min;
         // * (注)生データ
         if (interval != null) {
             this.data.zoomed.termby12 = (this.data.zoomed.diff * interval) / 1440;
+            this.data.labelFlag = this.setSensorlabelFlag(this.data.zoomed.termby12);
         }
         // * モデルデータ
         else {
             this.data.zoomed.termby12 = this.data.zoomed.diff;
+            this.data.labelFlag = this.setModellabelFlag(this.data.zoomed.termby12);
+        }
+    }
+    //* ============================================
+    // センサーラベルフラグの設定
+    //* ============================================
+    setSensorlabelFlag(termby12) {
+        // 一年以上
+        if (termby12 > 182) {
+            return 2048;
+        }
+        //* ６か月以上 15日間隔（３０日を除く）
+        else if (termby12 > 121) {
+            return 1024;
+        }
+        // * ２か月以上 10日間隔（３０日を除く）
+        else if (termby12 > 60) {
+            return 512;
+        }
+        // * 12日以上 ５日間隔（３０日を除く）
+        else if (termby12 > 12) {
+            return 256;
+        }
+        else if (termby12 > 6) {
+            return 128;
+        }
+        // * 3日以上 十二時間おき
+        else if (termby12 > 3) {
+            return 64;
+        }
+        // * ２日以上、六時間おき
+        else if (termby12 > 2) {
+            return 32;
+        }
+        // * 一日以上 四時間おき
+        else if (termby12 > 1) {
+            return 16;
+        }
+        // * 半日以上
+        else if (termby12 > 0.5) {
+            return 8;
+        }
+        // * １時間単位：12時間以下
+        else return 2;
+    }
+    //* ============================================
+    // センサーラベルフラグの設定
+    //* ============================================
+    setModellabelFlag(termby12) {
+        // * インターバルが無い場合（モデルグラフ）
+        if (termby12 >= 182) {
+            return 2048;
+        }
+        //* 15日単位：６か月以下
+        else if (termby12 > 121) {
+            return 1024;
+        }
+        // * 10日単位：４か月以下
+        else if (termby12 > 60) {
+            return 512;
+        }
+        // * 5日単位：２か月以下
+        else if (termby12 > 24) {
+            return 256;
+        }
+        // ２日単位：２４日以下
+        else if (termby12 > 12) {
+            return 128;
+        }
+        // * 12日以下
+        else return 64;
+
+    }
+    //* ============================================
+    // X軸の表示ラベルの設定
+    //* ============================================
+    formatLabel(label, index) {
+        let value = this.getValue(label, index);
+        if (value.length > 0) {
+            // 生データの場合
+            if (this.data.interval != null) {
+                // 日付と時刻を分割して2段表示
+                const date = value.split(' ')[0];  // 日付部分
+                const time = value.split(' ')[1];  // 時刻部分
+                return [date, time]
+
+            }
+            // モデルデータの場合
+            else {
+                let str = value.split('/')
+                return [str[0], str[1] + "/" + str[2]]
+            }
+        } else return "";
+    }
+    getValue(label, index) {
+        if (index == -1) return "";
+        if (label === undefined) return "";
+        // * インデックスがある場合、ラベル表示をするべきかどうかをフラグ値をベースに判定する
+        if ((this.data.labelFlag & this.data.flags[index]) == 0) {
+            return "";
+        }
+        // ラベルが無い場合はインデックスから取得する
+        if (label == null) {
+            return this.data.chartOptions.xaxis.categories[index];
+        } else {
+            return label;
         }
     }
     //* ============================================
@@ -313,6 +437,9 @@ export class LineGraphOptions {
             return "";
         }
     }
+
+
+
     //* ============================================
     // X軸の表示ラベルの設定
     //* ============================================
