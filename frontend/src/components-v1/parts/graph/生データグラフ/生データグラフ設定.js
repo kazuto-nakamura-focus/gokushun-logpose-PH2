@@ -34,7 +34,7 @@ export class RawDataSettings {
         this.optionsMapper.setXCategory(source.category);
         // 目盛
         this.optionsMapper.setYScale(max);
-        this.optionsMapper.setInterval(source.interval, 0, source.category.length);
+        this.optionsMapper.setInterval(source.interval, 0, source.category.length, source.flags);
     }
     //* ============================================
     // データ設定

@@ -15,7 +15,7 @@ import com.logpose.ph2.api.dao.db.entity.Ph2RawDataEntityExample;
 import com.logpose.ph2.api.dao.db.entity.joined.SensorItemDTO;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RawDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.SensorJoinMapper;
-import com.logpose.ph2.api.dto.sensorData.SenseorDataDTO;
+import com.logpose.ph2.api.dto.sensorData.SensorDataDTO;
 import com.logpose.ph2.api.utility.DateTimeUtility;
 
 /**
@@ -60,7 +60,7 @@ public class SensorDataDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public SenseorDataDTO getSensorGraphData(
+	public SensorDataDTO getSensorGraphData(
 			Long sensorId, Date startDate, Date endDate, Short type, short hour)
 			throws ParseException
 		{
@@ -89,7 +89,7 @@ public class SensorDataDomain
 			records = this.ph2RawDataMapper.selectByExample(exm);
 			}
 		// * 取得したレコードを返却用オブジェクトに代入する
-		SenseorDataDTO dto = new SenseorDataDTO();
+		SensorDataDTO dto = new SensorDataDTO();
 		double min = Double.MAX_VALUE;
 		double max = Double.MIN_VALUE;
 		int year = 0;
@@ -161,25 +161,25 @@ public class SensorDataDomain
 	 * @throws ParseException 
 	 */
 	// --------------------------------------------------
-	public SenseorDataDTO getSensorGraphDataByInterval(Long deviceId,
+	public SensorDataDTO getSensorGraphDataByInterval(Long deviceId,
 			Long sensorId, Date startDate, Date endDate, long minutes)
 			throws ParseException
 		{
 // * デバイス情報を得る
-//		Ph2DevicesEntity device = this.ph2DeviceMapper.selectByPrimaryKey(deviceId);
-//		ZoneId deviceZoneId = ZoneId.of(device.getTz());
-//		ZoneId tokyoeZoneId = ZoneId.of("Asia/Tokyo");
+// Ph2DevicesEntity device = this.ph2DeviceMapper.selectByPrimaryKey(deviceId);
+// ZoneId deviceZoneId = ZoneId.of(device.getTz());
+// ZoneId tokyoeZoneId = ZoneId.of("Asia/Tokyo");
 // 現在の日時を指定タイムゾーンで取得
-//		ZoneOffset deviceZoneOffset = ZonedDateTime.now(deviceZoneId).getOffset();
-//		ZoneOffset tokyoZoneOffset = ZonedDateTime.now(tokyoeZoneId).getOffset();
+// ZoneOffset deviceZoneOffset = ZonedDateTime.now(deviceZoneId).getOffset();
+// ZoneOffset tokyoZoneOffset = ZonedDateTime.now(tokyoeZoneId).getOffset();
 // オフセットを秒単位で取得
-	//	long offsetInSeconds = (deviceZoneOffset.getTotalSeconds() - tokyoZoneOffset.getTotalSeconds()) * 1000;	
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-		SenseorDataDTO results = new SenseorDataDTO();// * 返却用データ
+// long offsetInSeconds = (deviceZoneOffset.getTotalSeconds() -
+// tokyoZoneOffset.getTotalSeconds()) * 1000;
+		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
+		SensorDataDTO results = new SensorDataDTO();// * 返却用データ
 		double min = Double.MAX_VALUE;// * グラフのY軸最小値
 		double max = Double.MIN_VALUE;// *グラフのY軸最大値
 		DeviceDayAlgorithm deviceDayAlgorithm = new DeviceDayAlgorithm();
-		Date date = new Date();
 
 // * 検索の開始時刻の設定
 		Calendar startTime = Calendar.getInstance();
@@ -192,7 +192,7 @@ public class SensorDataDomain
 		long max_time = seek_time + 1000 * 60 * 6;
 
 // * 10分前に設定
-		startTime.setTimeInMillis(seek_time - 10*60*1000);
+		startTime.setTimeInMillis(seek_time - 10 * 60 * 1000);
 // * 検索の終了時刻の設定
 		Calendar endTime = Calendar.getInstance();
 		endTime.setTime(endDate);
@@ -214,6 +214,7 @@ public class SensorDataDomain
 		long interval = 60000 * minutes;
 		Ph2RawDataEntity prev_data = records.get(0);
 
+		Calendar cal = Calendar.getInstance();
 		int index = 0;
 		for (; seek_time < end_time; seek_time += interval, min_time += interval, max_time += interval)
 			{
@@ -254,9 +255,13 @@ public class SensorDataDomain
 				}
 // * 値の追加
 			results.getValues().add(value);
+// * 時刻フラグ
+			cal.setTimeInMillis(seek_time);
+//			short flg = this.getFlag(cal);
+//			results.getFlags().add(flg);
+
 // * カテゴリーの追加
-			date.setTime(seek_time);
-			StringBuilder sb = new StringBuilder(dateFormat.format(date));
+			StringBuilder sb = new StringBuilder(dateFormat.format(cal.getTime()));
 			results.getCategory().add(sb.toString());
 			}
 
@@ -265,4 +270,71 @@ public class SensorDataDomain
 		results.setInterval(minutes);
 		return results;
 		}
+
+	// ===============================================
+	// 非公開関数群
+	// ===============================================
+/*	private short getFlag(Calendar cal)
+		{
+		int minutes = cal.get(Calendar.MINUTE);
+		if (0 != minutes)
+			{
+			if (30 != minutes) return 0;
+			else
+				return SensorDataDTO.THIRTY;
+			}
+		int flag = 6; // THIRTY|HOUR;
+		int hour = cal.get(Calendar.HOUR_OF_DAY);
+		if (hour == 0) // ０時
+			{
+			flag = (short) (flag | SensorDataDTO.HOUR_0);
+			}
+		// 0 時でない場合
+		else
+			{
+			flag = flag | SensorDataDTO.HOUR;
+			if (hour % 2 == 0)
+				{
+				flag = flag | SensorDataDTO.HOUR2;
+				}
+			if (hour % 4 == 0)
+				{
+				flag = flag | SensorDataDTO.HOUR4;
+				}
+			if (hour % 6 == 0)
+				{
+				flag = flag | SensorDataDTO.HOUR6;
+				}
+			if (hour % 12 == 0)
+				{
+				flag = flag | SensorDataDTO.HOUR12;
+				}
+			return (short) flag;
+			}
+		int date = cal.get(Calendar.DATE);
+		if (date == 1) // １日
+			{
+			return (short) (flag | SensorDataDTO.DAY_1);
+			}
+		else
+			{
+			flag = flag | SensorDataDTO.DAY;
+			if (date != 30)
+				{
+				if (date % 5 == 0)
+					{
+					flag = flag | SensorDataDTO.DAYS5;
+					}
+				if (date % 10 == 0)
+					{
+					flag = flag | SensorDataDTO.DAYS10;
+					}
+				if (date % 15 == 0)
+					{
+					flag = flag | SensorDataDTO.DAYS15;
+					}
+				}
+			return (short) flag;
+			}
+		}*/
 	}

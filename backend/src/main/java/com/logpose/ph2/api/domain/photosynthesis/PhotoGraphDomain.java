@@ -1,7 +1,5 @@
 package com.logpose.ph2.api.domain.photosynthesis;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
+import com.logpose.ph2.api.container.ModelGraphDataContainer;
 import com.logpose.ph2.api.dao.db.entity.joined.ModelDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.domain.GraphDomain;
@@ -48,16 +47,15 @@ public class PhotoGraphDomain extends GraphDomain
 		// * 前日の日付
 		Date titlleDate = new DeviceDayAlgorithm().getPreviousDay();
 
-		ModelGraphDataDTO areaModel = new ModelGraphDataDTO();
+		ModelGraphDataContainer resultData = new ModelGraphDataContainer();
 // * 日付カテゴリ
-		List<String> category = new ArrayList<>();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		MaxValue max = new MaxValue();
 		Double prev = null;
 
 		for (ModelDataEntity entity : entites)
 			{
-			category.add(sdf.format(entity.getDate()));
+			// * 取得日
+			resultData.addCategory(entity.getDate());
 
 			Double value = entity.getCulmitiveCnopyPs();
 
@@ -65,7 +63,7 @@ public class PhotoGraphDomain extends GraphDomain
 			// * タイトルに表示する値
 			if (entity.getDate().getTime() == titlleDate.getTime())
 				{
-				areaModel.setEstimated(value.doubleValue());
+				resultData.setEstimated(value.doubleValue());
 				}
 			
 			value = ((double) Math.round(value * 1000)) / 1000;
@@ -76,31 +74,25 @@ public class PhotoGraphDomain extends GraphDomain
 			prev = value;
 			if (entity.getIsReal())
 				{
-				areaModel.getValues().add(value.doubleValue());
-				areaModel.getPredictValues().add(null);
+				resultData.getValues().add(value.doubleValue());
+				resultData.getPredictValues().add(null);
 				}
 			else
 				{
-				areaModel.getValues().add(null);
-				areaModel.getPredictValues().add(value.doubleValue());
+				resultData.getValues().add(null);
+				resultData.getPredictValues().add(value.doubleValue());
 				}
 // * 日付カテゴリの設定
 			max.setMax(value);
-
 			}
-// * 最小値・最大値の設定
-		String first = category.get(0);
-		String last = category.get(category.size() - 1);
-		areaModel
-				.setXStart(first);
-		areaModel.setXEnd(last);
-		areaModel.setYStart((double) 0);
-		areaModel.setYEnd(max.getMax());
-// * コメント
-		super.setComment(deviceId, year, areaModel);
+		
+// * カテゴリーから X軸の最大値と最小値を設定する
+		resultData.setX();
+		resultData.setY(0, max.getMax());
 
-// * 光合成推定グラフの日付カテゴリの設定
-		areaModel.setCategory(category);
-		return areaModel;
+// * コメント
+		super.setComment(deviceId, year, resultData);
+
+		return resultData;
 		}
 	}

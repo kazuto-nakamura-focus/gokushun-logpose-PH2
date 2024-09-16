@@ -24,6 +24,8 @@ public class ModelGraphDataDTO extends GraphDataDTO
 	private List<EventDaysDTO> annotations;
 	// * カテゴリー
 	private List<String> category = new ArrayList<>();
+	// * 表示グラフ
+	private List<Short> flags = new ArrayList<>();
 	// * コメント
 	private String comment;
 	// * 本日の推定値
