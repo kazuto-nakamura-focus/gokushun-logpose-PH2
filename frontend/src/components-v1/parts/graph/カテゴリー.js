@@ -15,6 +15,7 @@ export class LabelFlags {
         this.MONTH = 2048;    // 1月間隔
         this.DAY_1 = this.DAY | this.DAYS5 | this.DAYS10 | this.DAYS15 | this.MONTH;
         this.flags = [];
+        this.category = [];
 
     }
 
@@ -38,6 +39,9 @@ export class LabelFlags {
         while (seekTime < endTimeMillis) {
             // 時刻フラグ
             cal.setTime(seekTime);
+            // 日付を "MM/dd hh:mm" 形式で追加 (UTC)
+            let formattedDate = this.formatDateUTC(cal);
+            this.category.push(formattedDate);  // 日付をdaysに追加
             let flag = this.getFlag(cal);
             this.flags.push(flag);
             seekTime += interval;
@@ -80,5 +84,12 @@ export class LabelFlags {
             }
             return flag;
         }
+    }
+    formatDateUTC(cal) {
+        let month = (cal.getUTCMonth() + 1).toString().padStart(2, '0');  // 月 (0埋め)
+        let day = cal.getUTCDate().toString().padStart(2, '0');            // 日 (0埋め)
+        let hours = cal.getUTCHours().toString().padStart(2, '0');         // 時 (0埋め)
+        let minutes = cal.getUTCMinutes().toString().padStart(2, '0');     // 分 (0埋め)
+        return `${month}/${day} ${hours}:${minutes}`;                      // "MM/dd hh:mm" 形式で返す
     }
 }
