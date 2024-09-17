@@ -1,7 +1,6 @@
 package com.logpose.ph2.api.domain;
 
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -175,7 +174,7 @@ public class SensorDataDomain
 // オフセットを秒単位で取得
 // long offsetInSeconds = (deviceZoneOffset.getTotalSeconds() -
 // tokyoZoneOffset.getTotalSeconds()) * 1000;
-		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
+//		SimpleDateFormat dateFormat = new SimpleDateFormat("MM/dd HH:mm");
 		SensorDataDTO results = new SensorDataDTO();// * 返却用データ
 		double min = Double.MAX_VALUE;// * グラフのY軸最小値
 		double max = Double.MIN_VALUE;// *グラフのY軸最大値
@@ -261,8 +260,8 @@ public class SensorDataDomain
 //			results.getFlags().add(flg);
 
 // * カテゴリーの追加
-			StringBuilder sb = new StringBuilder(dateFormat.format(cal.getTime()));
-			results.getCategory().add(sb.toString());
+//			StringBuilder sb = new StringBuilder(dateFormat.format(cal.getTime()));
+//			results.getCategory().add(sb.toString());
 			}
 
 		results.setYStart(min);

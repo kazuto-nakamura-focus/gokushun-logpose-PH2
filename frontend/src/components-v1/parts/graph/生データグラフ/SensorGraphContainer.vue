@@ -87,6 +87,8 @@ export default {
             let settings = new RawDataSettings();
             data.flags = new Object();
             data.flags = this.flags.flags;
+            data.category = new Object();
+            data.category = this.flags.category;
             settings.setGrowthGraph(
               title,
               this.xTitle[0].text,
