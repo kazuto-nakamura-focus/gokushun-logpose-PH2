@@ -253,7 +253,7 @@ public class SensorDataDomain
 					}
 				}
 // * 値の追加
-			results.getValues().add(value);
+			results.setValue(value);
 // * 時刻フラグ
 			cal.setTimeInMillis(seek_time);
 //			short flg = this.getFlag(cal);

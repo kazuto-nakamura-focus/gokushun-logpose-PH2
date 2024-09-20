@@ -12,22 +12,40 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper=false)
 public class SensorDataDTO extends GraphDataDTO
 	{
-	/*public static short TEN = 1;	// １０分おき
-	public static short THIRTY = 2;	// 3０分おき
-	public static short HOUR = 4;	// 一時間おき
-	public static short HOUR2 = 8;	 // 二時間おき
-	public static short HOUR4 = 16;	 // 四時間おき
-	public static short HOUR6 = 32; // 六時間おき
-	public static short HOUR12 = 64; // 十二時間おき
-	public static int HOUR_0 = HOUR|HOUR2|HOUR4|HOUR6|HOUR12;
-	public static short DAY = 128; // 一日おき
-	public static short DAYS5 = 256; // ５日間隔（３０日を除く）
-	public static short DAYS10 = 512; // 10日間隔（３０日を除く）
-	public static short DAYS15 = 1024; // 15日間隔（３０日を除く）
-	public static short MONTH = 2048; // 1月間隔
-	public static int DAY_1 = DAY|DAYS5|DAYS10|DAYS15|MONTH;*/
 	
 	private long interval = 0;
 	private List<String> category = new ArrayList<>();
-//	private List<Short> flags = new ArrayList<>();
+	private List<Double> nullData = new ArrayList<>();
+	
+	private int lastNullIndex = -1;
+	
+	public void setValue(Double value)
+		{
+		this.getValues().add(value);
+		this.nullData.add(null);
+		if( value != null )
+			{
+// * 途中でNULLデータがある場合
+			if( lastNullIndex != -1)
+				{
+				double lastValue = this.getValues().get(lastNullIndex-1);
+				double diffIndex = this.getValues().size() - lastNullIndex;
+				double avediff = (value - lastValue) /diffIndex;
+				this.nullData.set(lastNullIndex-1, lastValue);
+				for(int i = lastNullIndex; i < this.getValues().size() ; i++)
+					{
+					lastValue += avediff;
+					this.nullData.set(i, lastValue);
+					}
+				}
+			lastNullIndex = -1;
+			}
+		else
+			{
+			if( lastNullIndex == -1 )
+				{
+				lastNullIndex = this.getValues().size() -1;
+				}
+			}
+		}
 	}

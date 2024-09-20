@@ -157,8 +157,11 @@ export class LineGraphOptions {
                 },
                 tooltip: {
                     enabled: true,  // ツールチップを有効にする
-                    shared: false,  // ポイントごとにツールチップを表示
+                    shared: true,  // ポイントごとにツールチップを表示
                     intersect: false,  // マウスオーバーしたポイントのみに表示
+                    position: 'topRight',
+                    offsetX: 10, // ツールチップをX軸方向に10pxシフト
+                    offsetY: 10,  // ツールチップをY軸方向に20pxシフト
                     x: {
                         formatter: function (value) {
                             // ツールチップではすべての値を表示
