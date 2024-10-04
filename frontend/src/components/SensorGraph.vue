@@ -77,8 +77,8 @@
                 </v-col>
                 <v-col cols="3">
                   <v-row>
-                    <v-col cols="4">インターバル</v-col>
-                    <v-col>
+                    <v-col cols="5">インターバル</v-col>
+                    <v-col cols="7">
                       <v-select
                         v-model="interval"
                         :items="intervalMenu"
