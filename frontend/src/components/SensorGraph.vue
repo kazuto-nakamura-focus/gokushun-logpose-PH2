@@ -93,6 +93,20 @@
                   </v-row>
                 </v-col>
               </v-row>
+              <v-row v-if="isInervalChanged">
+                <v-col cols="12">
+                  <b
+                    >期間が５日以上の表示の場合は１時間単位の表示となります。</b
+                  >
+                </v-col>
+              </v-row>
+              <v-row v-if="is10MinutesEnabled">
+                <v-col cols="12">
+                  <b
+                    >期間が５日以内の表示の場合は１０分単位の表示が可能です。</b
+                  >
+                </v-col>
+              </v-row>
             </v-container>
           </template>
           <!-- 時間選択 -->
@@ -121,12 +135,14 @@ export default {
 
       // インターバルメニュー
       intervalMenu: [
-        { interval: 10, name: "10分" },
+        //     { interval: 10, name: "10分" },
         { interval: 60, name: "1時間" },
         { interval: 120, name: "2時間" },
       ],
       // インターバル
-      interval: null, // 初期値
+      interval: null,
+      isInervalChanged: false,
+      is10MinutesEnabled: false,
 
       menuTitle: "センサー",
       sensorList: [],
@@ -143,7 +159,7 @@ export default {
     sensorGraphContainer,
   },
   mounted() {
-    this.interval = this.intervalMenu[1];
+    this.interval = this.intervalMenu[0];
     this.sharedMenu.setUp(
       this.$refs.targetMenu,
       function (menu) {
@@ -207,18 +223,35 @@ export default {
     // 日付変更時
     //* -------------------------------------------
     handleChangeDate: function () {
+      // * インターバル変更表示のクリア
+      this.isInervalChanged = false;
+      this.is10MinutesEnabled = false;
+      //*********************************
+      //* インターバルの調整とリストの調整
+      //*********************************
+      // * 表示期間の取得
       const std = moment(this.startDate, "YYYY-MM-DD");
       const end = moment(this.endDate, "YYYY-MM-DD");
       const elapsedDate = end.diff(std, "days");
-      // * ３日以内
-      if (elapsedDate <= 3) {
-        this.interval = this.intervalMenu[0];
-      } else {
-        var monthsDiff = end.diff(std, "months", true);
-        if (monthsDiff < 1) {
-          this.interval = this.intervalMenu[1];
-        } else {
-          this.interval = this.intervalMenu[2];
+      // * 表示期間が５日以内の場合、メニューに１０分間隔を追加する
+      if (elapsedDate <= 5) {
+        this.intervalMenu = [
+          { interval: 10, name: "10分" },
+          { interval: 60, name: "1時間" },
+          { interval: 120, name: "2時間" },
+        ];
+        this.is10MinutesEnabled = true;
+      }
+      // * 表示期間が５日以上の場合、メニューから１０分間隔を削除する
+      else {
+        this.intervalMenu = [
+          { interval: 60, name: "1時間" },
+          { interval: 120, name: "2時間" },
+        ];
+        //  インターバルが１０分間隔の場合は一時間に変更し、表示を変える
+        if (this.interval.interval < 60) {
+          this.interval = { interval: 60, name: "1時間" };
+          this.isInervalChanged = true;
         }
       }
       this.setGraph();
@@ -243,7 +276,13 @@ export default {
         "|" +
         this.selectedItems.selectedDevice.name;
       title.sub = this.selectedSensor.name;
-
+      /*  console.log(
+        this.startDate,
+        this.endDate,
+        this.interval.interval,
+        this.selectedSensor.name,
+        dateText
+      );*/
       this.$refs.gfa.setGraphData(
         title,
         this.selectedItems.selectedDevice.id,
