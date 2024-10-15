@@ -49,6 +49,7 @@
       <!-- グラフ表示 -->
       <ph-2-graphic-tool
         v-if="chartDisplay == true"
+        ref="graphTool"
         :options="chart.options"
         :series="chart.series"
       ></ph-2-graphic-tool>
@@ -174,6 +175,13 @@ export default {
           if (status) this.$emit("doGraphAction", this.selectedMenu);
         }.bind(this)
       );
+    },
+    //* ============================================
+    // タブが切り替わった時にX軸のラベルが消える問題の対応
+    //  再表示を強制する
+    //* ============================================
+    setXLabel() {
+      this.$refs.graphTool.setXLabel();
     },
     //* ============================================
     // 閉じる実行

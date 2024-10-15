@@ -11,6 +11,7 @@
     </v-container>
     <!-- グラフ表示 -->
     <ph-2-graphic-tool
+      ref="graphTool"
       style="height: 550px"
       v-if="chartDisplay == true"
       :options="chart.options"
@@ -55,6 +56,13 @@ export default {
       this.chart.options = this.arguments.chartOption;
       this.chart.series = this.arguments.chartData;
       this.chartDisplay = true;
+    },
+    //* ============================================
+    // タブが切り替わった時にX軸のラベルが消える問題の対応
+    //  再表示を強制する
+    //* ============================================
+    setXLabel() {
+      this.$refs.graphTool.setXLabel();
     },
     //* ============================================
     // 閉じる実行

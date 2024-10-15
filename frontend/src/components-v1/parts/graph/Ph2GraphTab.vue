@@ -17,12 +17,14 @@
             :target="item"
             @delete="deleteItem"
             @doGraphAction="doGraphAction"
+            :ref="'graph-' + item.id"
           />
           <ph-2-sensor-graph
             v-if="graphType == '2'"
             :key="item.id"
             :target="item"
             @delete="deleteItem"
+            :ref="'graph-' + item.id"
           />
         </v-tab-item>
       </v-tabs-items>
@@ -50,6 +52,14 @@ export default {
       id: 0,
       tab: null,
     };
+  },
+  watch: {
+    //* ============================================
+    // タブが切り替わった時に対応する関数を呼び出す
+    //* ============================================
+    tab(newTab) {
+      this.handleTabChange(newTab);
+    },
   },
   methods: {
     //* ============================================
@@ -80,6 +90,14 @@ export default {
       if (this.graphList.length > 0) {
         this.tab = this.graphList.length - 1;
       }
+    },
+    //* ============================================
+    // タブが切り替わった時にX軸のラベルが消える問題の対応
+    //  再表示を強制する
+    //* ============================================
+    handleTabChange(tabIndex) {
+      const graphRef = this.$refs[`graph-${tabIndex}`];
+      if (graphRef !== undefined) graphRef[0].setXLabel();
     },
   },
 };
