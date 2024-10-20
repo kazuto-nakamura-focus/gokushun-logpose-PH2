@@ -40,3 +40,5 @@ pnpm-debug.log*
 /backend/src/main/java/com/logpose/ph2/api/configration/TestConfig.java
 *.xlsx
 *.bak
+/backend/logs/*.gz
+/backend/logs/*.log
