@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2FieldsEntityExample;
-import com.logpose.ph2.api.dao.db.entity.Ph2RelFieldDeviceEntityExample;
 import com.logpose.ph2.api.dao.db.mappers.Ph2FieldsMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RelFieldDeviceMapper;
 import com.logpose.ph2.api.dao.db.mappers.joined.Ph2FieldDeviceJoinMapper;
@@ -80,10 +79,6 @@ public class FIeldService
 	public void delete(Long fieldId)
 		{
 		this.ph2FieldsMapper.deleteByPrimaryKey(fieldId);
-		
-		Ph2RelFieldDeviceEntityExample exm  = new Ph2RelFieldDeviceEntityExample();
-		exm.createCriteria().andFieldIdEqualTo(fieldId);
-		this.ph2RelFieldDeviceMapper.deleteByExample(exm);
 		
 		this.deviceDomain.deleteByFieldId(fieldId);
 		}
