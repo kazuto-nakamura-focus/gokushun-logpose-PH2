@@ -17,6 +17,7 @@ const BACKEND_JAR_PATH =
 
 //バックエンドアプリを起動
 const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=stg",]);
+// const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=prd",]);
 //const batchProcess = spawn("java", ["-jar", BATCH_JAR_PATH, "--spring.profiles.active=prd", "-", "true", "-"]);
 
 //バックエンド起動時のコールバック関数登録
