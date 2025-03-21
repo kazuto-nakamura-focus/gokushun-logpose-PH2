@@ -9,6 +9,10 @@ const { spawn, spawnSync } = require("child_process");
 
 const app = express();
 
+var backend_options = process.env.backend_options;
+
+if(backend_options == null) backend_options = "--spring.profiles.active=prd";
+
 //バックエンドアプリのJARファイルパス
 const BACKEND_JAR_PATH =
   "./backend/jar/logpose-ph2-api-0.0.1-SNAPSHOT.jar";
@@ -16,8 +20,7 @@ const BACKEND_JAR_PATH =
 //   "./batch/jar/logpose-ph2-batch-0.0.1-SNAPSHOT.jar";
 
 //バックエンドアプリを起動
-const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=stg",]);
-// const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, "--spring.profiles.active=prd",]);
+const backendProcess = spawn("java", ["-jar", BACKEND_JAR_PATH, backend_options,]);
 //const batchProcess = spawn("java", ["-jar", BATCH_JAR_PATH, "--spring.profiles.active=prd", "-", "true", "-"]);
 
 //バックエンド起動時のコールバック関数登録
