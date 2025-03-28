@@ -139,6 +139,7 @@ export default {
       gridApi: null,
       defaultColDef: null,
       sharedPicker: new DialogController(),
+      selectedItems: null,
     };
   },
   beforeMount() {
@@ -154,17 +155,18 @@ export default {
     this.gridColumnApi = this.gridOptions.columnApi;
   },
   methods: {
-    initialize: function () {
+    initialize: function (data) {
       this.isDialog = true;
       this.isUpdated = false;
+      this.selectedItems = data.menu;
       //圃場名
-      this.fieldName = this.$store.getters.selectedField.name;
-      this.fieldId = this.$store.getters.selectedField.id;
+      this.fieldName = this.selectedItems.selectedField.name;
+      this.fieldId = this.selectedItems.selectedField.id;
       //デバイス名
-      this.deviceName = this.$store.getters.selectedDevice.name;
-      this.deviceId = this.$store.getters.selectedDevice.id;
+      this.deviceName = this.selectedItems.selectedDevice.name;
+      this.deviceId = this.selectedItems.selectedDevice.id;
       //年度
-      this.year = this.$store.getters.selectedYear.id;
+      this.year = this.selectedItems.selectedYear.id;
       this.getUseGrowthFAll();
     },
     close: function () {

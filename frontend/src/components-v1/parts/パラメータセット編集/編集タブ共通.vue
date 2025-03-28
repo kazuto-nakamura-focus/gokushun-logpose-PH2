@@ -400,7 +400,6 @@ export default {
         .then((response) => {
           const results = response["data"];
           if (results.status != 0) {
-            console.log(results.message);
             alert("パラメータセットの削除に失敗しました。");
           } else {
             this.$emit("reset");
@@ -415,7 +414,6 @@ export default {
     // 閉じるアクション
     //*----------------------------
     close() {
-      console.log("close", this.isUpdated);
       this.$emit("close", this.isUpdated);
     },
 

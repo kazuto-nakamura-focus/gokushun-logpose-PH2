@@ -138,7 +138,6 @@ export default {
       .then((response) => {
         //成功時
         const results = response["data"];
-        console.log("MSDevice_useDeviceList_results", results);
         this.useDeviceInfoDataList = results.data;
       })
       .catch((error) => {

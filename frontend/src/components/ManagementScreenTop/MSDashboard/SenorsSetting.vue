@@ -143,7 +143,6 @@ export default {
           sensorId: selectedId == -1 ? null : selectedId,
         };
         args.push(item);
-        console.log(item);
       }
       const dashboardSet = {
         deviceId: this.deviceId,
