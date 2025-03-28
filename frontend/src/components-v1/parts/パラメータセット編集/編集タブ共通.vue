@@ -19,7 +19,7 @@
       <!--<v-subheader class="ma-0 pa-0" v-show="!isEditMode">{{
         title
       }}</v-subheader>-->
-      <div style="border:1px dotted gray;margin-top:10px;">
+      <div style="border: 1px dotted gray; margin-top: 10px">
         <geParameterSets
           ref="refParameterSets"
           v-if="modelId == 1"
@@ -52,7 +52,7 @@
         ></peParameterSets>
       </div>
 
-      <div style="margin-top:30px">
+      <div style="margin-top: 30px">
         <div v-if="!isEditMode">
           <v-text-field
             label="説明"
@@ -92,9 +92,15 @@
     </div>
 
     <v-card-actions>
-      <div style="display: grid;place-content: center;width:100%">
-        <div style="display:flex;margin-left:auto;margin-right:auto;">
-          <v-btn color="primary" class="ma-2 white--text" elevation="2" @click="setDefault">デフォルトに設定</v-btn>
+      <div style="display: grid; place-content: center; width: 100%">
+        <div style="display: flex; margin-left: auto; margin-right: auto">
+          <v-btn
+            color="primary"
+            class="ma-2 white--text"
+            elevation="2"
+            @click="setDefault"
+            >デフォルトに設定</v-btn
+          >
           <v-btn
             v-if="isEditMode"
             color="primary"
@@ -102,14 +108,16 @@
             elevation="2"
             @click="overwriteSave"
             :disabled="isDisableButtos"
-          >上書き保存</v-btn>
+            >上書き保存</v-btn
+          >
           <v-btn
             v-if="isEditMode"
             color="primary"
             class="ma-2 white--text"
             elevation="2"
             @click="aliasSave"
-          >別名保存</v-btn>
+            >別名保存</v-btn
+          >
           <v-btn
             v-if="isEditMode"
             color="primary"
@@ -118,21 +126,24 @@
             v-show="parameterSetList.length > 2"
             @click="deleteParameterSet"
             :disabled="isDisabledDeleteBtn"
-          >削除</v-btn>
+            >削除</v-btn
+          >
           <v-btn
             v-if="!isEditMode"
             color="gray"
             class="ma-2 black--text"
             elevation="2"
             @click="close"
-          >閉じる</v-btn>
+            >閉じる</v-btn
+          >
           <v-btn
             v-if="isEditMode"
             color="gray"
             class="ma-2 black--text"
             elevation="2"
             @click="close"
-          >キャンセル</v-btn>
+            >キャンセル</v-btn
+          >
         </div>
       </div>
     </v-card-actions>
@@ -272,7 +283,7 @@ export default {
         {},
         this.beforeParameterSetData
       );
-      this.isUpdated = true;
+      // this.isUpdated = false; // 更新フラグの初期化
     },
     //*----------------------------
     // 子コンポーネントからの追加実施
@@ -378,7 +389,7 @@ export default {
       this.isShowParameterSetName = false;
       this.afterParameterSetData.parameterName = name;
       this.$refs.refParameterSets.addData(this.afterParameterSetData); // 追加処理
-    //  this.$emit("changeItem", this.paramId);
+      //  this.$emit("changeItem", this.paramId);
     },
     //*----------------------------
     // 削除
@@ -404,6 +415,7 @@ export default {
     // 閉じるアクション
     //*----------------------------
     close() {
+      console.log("close", this.isUpdated);
       this.$emit("close", this.isUpdated);
     },
 

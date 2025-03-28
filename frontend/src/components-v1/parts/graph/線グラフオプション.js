@@ -165,7 +165,7 @@ export class LineGraphOptions {
                     x: {
                         formatter: function (value) {
                             // ツールチップではすべての値を表示
-                            return this.data.chartOptions.xaxis.categories[value];
+                            return this.data.chartOptions.xaxis.categories[value - 1];
                         }.bind(this)
                     },
                     y: {
