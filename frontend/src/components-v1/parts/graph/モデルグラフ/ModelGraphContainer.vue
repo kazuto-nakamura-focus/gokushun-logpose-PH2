@@ -57,6 +57,7 @@ export default {
     // グラフデータを取得し、表示する
     //* ============================================
     setData(selectedItems) {
+      console.log("aaa");
       // * グラフがすでに描画済みであるならば、削除する
       if (selectedItems.selectedYear.graphId === undefined) {
         selectedItems.selectedYear.graphId = [];

@@ -15,6 +15,12 @@ export default {
   props: { options: { required: true }, series: { required: true } },
   components: { apexchart: VueApexCharts },
 
+  mounted() {
+    this.setXLabel();
+  },
+  updated() {
+    this.setXLabel();
+  },
   methods: {
     //* ============================================
     // タブが切り替わった時にX軸のラベルが消える問題の対応
