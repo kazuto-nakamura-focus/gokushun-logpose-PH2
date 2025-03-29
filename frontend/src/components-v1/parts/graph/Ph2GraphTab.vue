@@ -53,14 +53,14 @@ export default {
       tab: null,
     };
   },
-  watch: {
+  /*watch: {
     //* ============================================
     // タブが切り替わった時に対応する関数を呼び出す
     //* ============================================
     tab(newTab) {
       this.handleTabChange(newTab);
     },
-  },
+  },*/
   methods: {
     //* ============================================
     // グラフ追加処理
@@ -95,10 +95,10 @@ export default {
     // タブが切り替わった時にX軸のラベルが消える問題の対応
     //  再表示を強制する
     //* ============================================
-    handleTabChange(tabIndex) {
+    /* handleTabChange(tabIndex) {
       const graphRef = this.$refs[`graph-${tabIndex}`];
       if (graphRef !== undefined) graphRef[0].setXLabel();
-    },
+    },*/
   },
 };
 </script>
