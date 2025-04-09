@@ -344,6 +344,7 @@ export default {
           this.gridApi.refreshCells({ force: true });
           this.isDialogEdit = false;
           this.isUpdated = true;
+          this.getUseGrowthFAll();
         })
         .catch((error) => {
           //失敗時

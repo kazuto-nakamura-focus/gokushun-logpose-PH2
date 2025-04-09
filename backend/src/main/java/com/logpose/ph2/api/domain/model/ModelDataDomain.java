@@ -97,6 +97,25 @@ public class ModelDataDomain
 		}
 	// ###############################################
 	/**
+	 * モデルデータを更新し、DBを更新する
+	 * 
+	 * @param deviceId
+	 * @param year
+	 * @throws ParseException
+	 */
+	// ###############################################
+	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
+	public void doService(long deviceId, short year, List<ModelAndDailyDataEntity> data) throws ParseException
+		{
+// * 各モデルデータの作成
+		this.leafModelDomain.updateModelData(deviceId, year, data);
+		this.pSModelDataDomain.updateModelData(deviceId, year, data);
+		
+// * モデルデータを更新する
+		this.upate(data);
+		}
+	// ###############################################
+	/**
 	 * 生育推定パラメータセット更新時のモデルデータ変更
 	 *
 	 * @param deviceId

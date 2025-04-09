@@ -12,10 +12,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.logpose.ph2.api.algorythm.DeviceDayAlgorithm;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntityExample;
+import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.dao.db.mappers.Ph2ModelDataMapper;
 import com.logpose.ph2.api.dao.db.mappers.Ph2RealGrowthFStageMapper;
 import com.logpose.ph2.api.dto.FDataListDTO;
 import com.logpose.ph2.api.dto.ValueDateDTO;
+import com.logpose.ph2.api.utility.DateTimeUtility;
 
 @Component
 public class GrowthDomain
@@ -92,37 +94,73 @@ public class GrowthDomain
 	 */
 	// ###############################################
 	@Transactional(rollbackFor = Exception.class, propagation = Propagation.REQUIRES_NEW)
-	public void updateFValues(long deviceId, short year, FDataListDTO dto)
+	public void updateFValues(long deviceId, short year, FDataListDTO dto, List<ModelAndDailyDataEntity> data)
 		{
 // * 更新時刻の設定
 		Date updateTime = new Timestamp(System.currentTimeMillis());
+		int i = 0;
+		double prevf = 0;
 		for (Ph2RealGrowthFStageEntity item : dto.getList())
 			{
-			// * IDがある場合
+			Ph2RealGrowthFStageEntity entity;
+			boolean isNew = false;
+// * IDがある場合
 			if (null != item.getId())
 				{
-				// * 該当のFstageデータを取得する
-				Ph2RealGrowthFStageEntity entity = this.ph2RealGrowthFStageMapper
-						.selectByPrimaryKey(item.getId());
-				entity.setAccumulatedF(item.getAccumulatedF());
-				entity.setIntervalF(item.getIntervalF());
-				entity.setStageStart(item.getStageStart());
-				entity.setStageEnd(item.getStageEnd());
-				entity.setStageName(item.getStageName());
-				entity.setActualDate(item.getActualDate());
-				entity.setEstimateDate(item.getEstimateDate());
-				entity.setColor(item.getColor());
-				entity.setUpdatedAt(updateTime);
-				this.ph2RealGrowthFStageMapper.updateByPrimaryKey(entity);
+// * 該当のFstageデータを取得する
+				entity = this.ph2RealGrowthFStageMapper.selectByPrimaryKey(item.getId());
 				}
 			else
 				{
-				item.setDeviceId(dto.getDeviceId());
-				item.setYear(dto.getYear());
-				item.setCreatedAt(updateTime);
-				item.setUpdatedAt(updateTime);
-				this.ph2RealGrowthFStageMapper.insert(item);
+				isNew = true;
+				entity = new Ph2RealGrowthFStageEntity();
 				}
+			entity.setActualDate(item.getActualDate());
+			entity.setEstimateDate(item.getEstimateDate());
+// * 実績値がある場合
+			if (null != item.getActualDate())
+				{
+				Date actualDate = DateTimeUtility.getStartOfDay(item.getActualDate());
+				entity.setActualDate(actualDate);
+				for (; i < data.size(); i++)
+					{
+					if (data.get(i).getDate().getTime() == actualDate.getTime())
+						{
+						entity.setAccumulatedF(data.get(i).getfValue());
+						entity.setIntervalF(entity.getAccumulatedF() - prevf);
+						break;
+						}
+					}
+				}
+			else
+				{
+				Date estimatedDate = DateTimeUtility.getStartOfDay(item.getEstimateDate());
+				entity.setEstimateDate(estimatedDate);
+				double accumulatedD = prevf + item.getIntervalF();
+				for (; i < data.size(); i++)
+					{
+					if (data.get(i).getfValue() >= accumulatedD)
+						{
+						entity.setAccumulatedF(data.get(i).getfValue());
+						entity.setIntervalF(entity.getAccumulatedF() - prevf);
+						entity.setEstimateDate(data.get(i).getDate());
+						break;
+						}
+					}
+				}
+			prevf = entity.getAccumulatedF();
+			entity.setStageStart(item.getStageStart());
+			entity.setStageEnd(item.getStageEnd());
+			entity.setStageName(item.getStageName());
+			entity.setColor(item.getColor());
+			entity.setUpdatedAt(updateTime);
+			entity.setDeviceId(dto.getDeviceId());
+			entity.setYear(dto.getYear());
+			entity.setCreatedAt(updateTime);
+			if (!isNew)
+				this.ph2RealGrowthFStageMapper.updateByPrimaryKey(entity);
+			else
+				this.ph2RealGrowthFStageMapper.insert(item);
 			}
 // * 未更新の削除処理
 		Ph2RealGrowthFStageEntityExample exp = new Ph2RealGrowthFStageEntityExample();

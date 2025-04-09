@@ -9,9 +9,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.logpose.ph2.api.dao.db.entity.Ph2RealGrowthFStageEntity;
+import com.logpose.ph2.api.dao.db.entity.joined.ModelAndDailyDataEntity;
 import com.logpose.ph2.api.domain.growth.FValueDomain;
 import com.logpose.ph2.api.domain.growth.GrowthDomain;
 import com.logpose.ph2.api.domain.growth.GrowthGraphDomain;
+import com.logpose.ph2.api.domain.growth.GrowthModelDomain;
 import com.logpose.ph2.api.domain.growth.GrowthParameterDomain;
 import com.logpose.ph2.api.domain.model.ModelDataDomain;
 import com.logpose.ph2.api.dto.EventDaysDTO;
@@ -41,8 +43,10 @@ public class GrowthServiceImpl implements GrowthService
 	@Autowired
 	private GrowthParameterDomain growthParameterDomain;
 	@Autowired
+	private GrowthModelDomain growthModelDomain;
+	@Autowired
 	private ModelDataDomain modelDataDomain;
-	
+
 	// ===============================================
 	// パブリック関数群（検索系)
 	// ===============================================
@@ -155,11 +159,13 @@ public class GrowthServiceImpl implements GrowthService
 	 */
 	// ###############################################
 	@Override
+	@Transactional(rollbackFor = Exception.class)
 	public void updateFData(long deviceId, short year, FDataListDTO dto) throws ParseException
 		{
-		this.growthDomain.updateFValues(deviceId, year, dto);
+		List<ModelAndDailyDataEntity> data = this.growthModelDomain.updateModelDataByFValue(deviceId, year, dto);
+		this.growthDomain.updateFValues(deviceId, year, dto, data);
 // * モデルデータの更新
-		this.modelDataDomain.doService(dto.getDeviceId(), dto.getYear());
+		this.modelDataDomain.doService(dto.getDeviceId(), dto.getYear(), data);
 		}
 
 	// ###############################################
@@ -177,7 +183,7 @@ public class GrowthServiceImpl implements GrowthService
 	public void setDefault(Long deviceId, Short year, Long paramId)
 			throws ParseException
 		{
-		GrowthParamSetDTO  params = this.growthParameterDomain.setDefault(deviceId, year, paramId);
+		GrowthParamSetDTO params = this.growthParameterDomain.setDefault(deviceId, year, paramId);
 // * モデルデータの更新
 		this.modelDataDomain.updateByGrowthParams(deviceId, year, params);
 		}
