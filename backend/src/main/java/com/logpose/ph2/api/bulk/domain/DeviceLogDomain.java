@@ -180,4 +180,52 @@ public class DeviceLogDomain
 		exm.setOrderByClause("time asc");
 		return this.ph2DeviceLogMapper.selectByExample(exm);
 		}
+
+	// --------------------------------------------------
+	/**
+	 * 更新バッチのタイムアウト判定 update_begin_time が入り、update_end_time が null のまま
+	 * 指定時間以上経過している場合 true
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class, readOnly = true)
+	public boolean isUpdateBatchTimedOut(Long deviceId, long timeoutMillis)
+		{
+		Ph2BatchLogEntity entity = this.ph2BatchLogMapper.selectByPrimaryKey(deviceId);
+		if (null == entity)
+			return false;
+
+		Date begin = entity.getUpdateBeginTime();
+		Date end = entity.getUpdateEndTime();
+
+		// 開始していない or すでに終了している ⇒ タイムアウト扱いにはしない
+		if (null == begin || null != end)
+			return false;
+
+		long diff = System.currentTimeMillis() - begin.getTime();
+		return diff >= timeoutMillis;
+		}
+
+	// --------------------------------------------------
+	/**
+	 * 全ロード(UPLOAD)バッチのタイムアウト判定 upload_begin_time が入り、upload_end_time が null のまま
+	 * 指定時間以上経過している場合 true
+	 */
+	// --------------------------------------------------
+	@Transactional(rollbackFor = Exception.class, readOnly = true)
+	public boolean isUploadBatchTimedOut(Long deviceId, long timeoutMillis)
+		{
+		Ph2BatchLogEntity entity = this.ph2BatchLogMapper.selectByPrimaryKey(deviceId);
+		if (null == entity)
+			return false;
+
+		Date begin = entity.getUploadBeginTime();
+		Date end = entity.getUploadEndTime();
+
+		if (null == begin || null != end)
+			return false;
+
+		long diff = System.currentTimeMillis() - begin.getTime();
+		return diff >= timeoutMillis;
+		}
+
 	}

@@ -28,8 +28,14 @@ public class DeviceStatusDomain
 	private static final int DATA_INITIALIZED = 2 | ON_LOADING;
 	private static final int RAW_DATA_LOADED = 4 | DATA_INITIALIZED;
 	private static final int MODEL_DATA_CREATED = 8 | RAW_DATA_LOADED;
-	@Autowired
-	private Ph2DevicesMapper ph2DevicesMapper;
+    // ロックタイムアウト時間（例：30分。要件に合わせて調整してください）
+    private static final long LOCK_TIMEOUT_MILLIS = 30L * 60L * 1000L;
+
+    @Autowired
+    private Ph2DevicesMapper ph2DevicesMapper;
+
+    @Autowired
+    private DeviceLogDomain deviceLogDomain;
 
 	// ===============================================
 	// 公開関数群
@@ -137,36 +143,53 @@ public class DeviceStatusDomain
 	 * @param device
 	 */
 	// --------------------------------------------------
-	@Transactional(rollbackFor = Exception.class)
-	public boolean setDataOnLoad(Ph2DevicesEntity device)
-		{
-// * 最新の情報を得る
-		Ph2DevicesEntity entity = this.ph2DevicesMapper.selectByPrimaryKey(device.getId());
-		int prevStatus = (null != entity.getDataStatus()) ? entity.getDataStatus().intValue() : 0;
-		int newStatus = 0;
-// * ロックされていない場合
-		if ((prevStatus & ON_LOADING) == 0)
-			{
-			// ロック
-			newStatus = ON_LOADING;
-			// 全てのロード要求がある場合、そのステータスを保持
-			if ((prevStatus & ALL_LOAD_NEEDED) > 0)
-				{
-				newStatus = newStatus | ALL_LOAD_NEEDED;
-				}
-			// 通常のロードの場合モデル情報を保持
-			else if ((prevStatus & MODEL_DATA_CREATED) > 0)
-				{
-				newStatus = newStatus | MODEL_DATA_CREATED;
-				}
-			device.setDataStatus(newStatus);
-			// DBへ更新
-			this.update(device, false);
-			return true;
-			}
-		else
-			return false;
-		}
+    @Transactional(rollbackFor = Exception.class)
+    public boolean setDataOnLoad(Ph2DevicesEntity device)
+        {
+        // * 最新の情報を得る
+        Ph2DevicesEntity entity = this.ph2DevicesMapper.selectByPrimaryKey(device.getId());
+        int prevStatus = (null != entity.getDataStatus()) ? entity.getDataStatus().intValue() : 0;
+        int newStatus = 0;
+
+        // * すでにロックされている場合はタイムアウト判定
+        if ((prevStatus & ON_LOADING) != 0)
+            {
+            boolean updateTimedOut =
+                    this.deviceLogDomain.isUpdateBatchTimedOut(device.getId(), LOCK_TIMEOUT_MILLIS);
+            boolean uploadTimedOut =
+                    this.deviceLogDomain.isUploadBatchTimedOut(device.getId(), LOCK_TIMEOUT_MILLIS);
+
+            // どちらのバッチログも「タイムアウト状態」ではない ⇒ 普通にロック中扱い
+            if (!updateTimedOut && !uploadTimedOut)
+                {
+                return false;
+                }
+
+            // タイムアウトしている ⇒ ロックを強制解除
+            int unlocked = (prevStatus | ON_LOADING) - ON_LOADING;
+            entity.setDataStatus(unlocked);
+            this.update(entity, false);   // dataStatusDate の意味を変えないように false のまま
+            prevStatus = unlocked;
+            }
+
+        // * ここまで来た時点でロックは存在しないので、改めてロックを設定
+        newStatus = ON_LOADING;
+        // 全てのロード要求がある場合、そのステータスを保持
+        if ((prevStatus & ALL_LOAD_NEEDED) > 0)
+            {
+            newStatus = newStatus | ALL_LOAD_NEEDED;
+            }
+        // 通常のロードの場合モデル情報を保持
+        else if ((prevStatus & MODEL_DATA_CREATED) > 0)
+            {
+            newStatus = newStatus | MODEL_DATA_CREATED;
+            }
+        device.setDataStatus(newStatus);
+        // DBへ更新（従来通り dataStatusDate は更新しない）
+        this.update(device, false);
+        return true;
+        }
+
 
 	// --------------------------------------------------
 	/**
@@ -240,50 +263,53 @@ public class DeviceStatusDomain
 	 * @return ロックされたデバイスのIDリスト
 	 */
 	// --------------------------------------------------
-	@Transactional(rollbackFor = Exception.class)
-	public List<Long> lockDevices(Ph2DevicesEntity device)
-		{
-		List<Long> rockList = new ArrayList<>();
-// * デバイスに対してロックを試みる
-		if (!this.setDataOnLoad(device))
-			{
-			new RuntimeException(ONLOAD_ERROR);
-			}
-// * ロックリストに追加する
-		rockList.add(device.getId());
-// * 引継ぎ元のデバイスがあれば、ロックを掛ける
-		if (null != device.getPreviousDeviceId())
-			{
-			Ph2DevicesEntity tmp = this.ph2DevicesMapper.selectByPrimaryKey(device.getPreviousDeviceId());
-			if (null != tmp)
-				{
-				tmp.setId(device.getPreviousDeviceId());
-				if (!this.setDataOnLoad(tmp))
-					{
-					new RuntimeException(ONLOAD_ERROR);
-					}
-				rockList.add(device.getPreviousDeviceId());
-				}
-			else
-				{
-				device.setPreviousDeviceId(null);
-				this.ph2DevicesMapper.updateByPrimaryKey(device);
-				}
-			}
-// * このデバイスを参照しているデバイスがあれば、ロックをかける
-		Ph2DevicesEntityExample exm = new Ph2DevicesEntityExample();
-		exm.createCriteria().andPreviousDeviceIdEqualTo(device.getId());
-		List<Ph2DevicesEntity> devices = this.ph2DevicesMapper.selectByExample(exm);
-		for (Ph2DevicesEntity ref : devices)
-			{
-			if (!this.setDataOnLoad(ref))
-				{
-				new RuntimeException(ONLOAD_ERROR);
-				}
-			rockList.add(ref.getId());
-			}
-		return rockList;
-		}
+    @Transactional(rollbackFor = Exception.class)
+    public List<Long> lockDevices(Ph2DevicesEntity device)
+        {
+        List<Long> rockList = new ArrayList<>();
+
+        // * デバイスに対してロックを試みる
+        if (!this.setDataOnLoad(device))
+            {
+            throw new RuntimeException(ONLOAD_ERROR);
+            }
+        // * ロックリストに追加する
+        rockList.add(device.getId());
+
+        // * 引継ぎ元のデバイスがあれば、ロックを掛ける
+        if (null != device.getPreviousDeviceId())
+            {
+            Ph2DevicesEntity tmp = this.ph2DevicesMapper.selectByPrimaryKey(device.getPreviousDeviceId());
+            if (null != tmp)
+                {
+                tmp.setId(device.getPreviousDeviceId());
+                if (!this.setDataOnLoad(tmp))
+                    {
+                    throw new RuntimeException(ONLOAD_ERROR);
+                    }
+                rockList.add(device.getPreviousDeviceId());
+                }
+            else
+                {
+                device.setPreviousDeviceId(null);
+                this.ph2DevicesMapper.updateByPrimaryKey(device);
+                }
+            }
+
+        // * このデバイスを参照しているデバイスがあれば、ロックをかける
+        Ph2DevicesEntityExample exm = new Ph2DevicesEntityExample();
+        exm.createCriteria().andPreviousDeviceIdEqualTo(device.getId());
+        List<Ph2DevicesEntity> devices = this.ph2DevicesMapper.selectByExample(exm);
+        for (Ph2DevicesEntity ref : devices)
+            {
+            if (!this.setDataOnLoad(ref))
+                {
+                throw new RuntimeException(ONLOAD_ERROR);
+                }
+            rockList.add(ref.getId());
+            }
+        return rockList;
+        }
 
 	// --------------------------------------------------
 	/**
